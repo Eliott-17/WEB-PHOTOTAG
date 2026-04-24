@@ -31,6 +31,7 @@
 # =============================================
 # Dossier
 # =============================================
-bootstrap-complete-admin
 sample
 multimedia
+*.tmp.driveupload
+*.log
