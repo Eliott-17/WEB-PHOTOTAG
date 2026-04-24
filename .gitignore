@@ -1,0 +1,37 @@
+# =============================================
+# IMAGES (tous les formats courants)
+# =============================================
+*.jpg
+*.jpeg
+*.jpe
+*.jfif
+*.pjpeg
+*.pjp
+*.png
+*.gif
+*.webp
+*.tiff
+*.tif
+*.bmp
+*.ico
+*.svg
+*.psd
+*.ai
+*.eps
+*.indd
+*.raw
+*.cr2
+*.nef
+*.orf
+*.sr2
+# =============================================
+# Projet Images
+# =============================================
+*.pdn
+# =============================================
+# Dossier
+# =============================================
+bootstrap-complete-admin
+core
+sample
+multimedia

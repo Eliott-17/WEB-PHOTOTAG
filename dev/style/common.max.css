@@ -1,0 +1,68 @@
+body {
+	margin: 0px;
+	padding: 0px;
+	font-family: calibri;
+}
+
+body.fullscreen {
+	overflow: hidden;
+}
+
+nav {
+	z-index: 0;
+}
+
+.alert-success 			{	background-color: #4CAF50;	}
+.alert-danger			{	background-color: #F44336;	} /*fail -> danger */
+.alert-warning			{	background-color: #FFC107;	} /*alert -> warning */
+.alert-info				{	background-color: #03A9F4;	}
+.alert-undefined		{   background-color: #eaeaea;  }
+
+div.loading, div.return
+{
+	margin-top: 10px;
+	margin-left: 35px;
+	padding: 10px;
+	border-radius: 5px;
+}
+
+div.loading span
+{
+	animation: rotation 2s linear infinite;
+}
+
+div.return
+{
+	color: white;
+}
+
+@keyframes rotation {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.cursor
+{
+	cursor: pointer !important;
+}
+
+button {
+    /* Supprime le style par défaut */
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    cursor: pointer; /* Garde le curseur "main" pour indiquer que c'est cliquable */
+    font: inherit; /* Hérite de la police du parent */
+    color: inherit; /* Hérite de la couleur du texte du parent */
+    outline: none; /* Supprime le contour au focus (optionnel) */
+}
+
+a {
+	text-decoration: none;
+		color: black;
+}

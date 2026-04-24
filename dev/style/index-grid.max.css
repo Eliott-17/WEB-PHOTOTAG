@@ -1,0 +1,119 @@
+
+/*-------------------------------------------
+--Main grid
+-------------------------------------------*/
+	
+section div.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 5px;
+  width: 100%;
+  grid-auto-rows: 300px;
+}
+
+section div.grid div.element {
+  box-sizing: border-box;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+section div.grid div.element img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit:cover;
+}
+
+section div.portrait {
+  grid-column: span 1; /* 1 colonne */
+  grid-row: span 1;    /* 1 ligne */
+}
+
+section div.landscape {
+  grid-column: span 3; /* 3 colonnes */
+  grid-row: span 1;    /* 1 ligne */
+}
+
+@media (max-width: 484px) {
+    section div.landscape 
+	{
+        grid-column: span 2;
+    }
+}
+
+@media (max-width: 328px) {
+    section div.landscape 
+	{
+        grid-column: span 1;
+    }
+}
+
+section div.grid h2 { margin: 10px; }
+
+section div.grid div.element div.button-select {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+}
+
+section div.grid div.element div.button-fullscreen {
+  position: absolute;
+  top: 10px;
+  left: 35px;
+}
+
+section div.grid div.element div.button-fullscreen span.material-symbols-outlined {
+  font-size: 15px;
+}
+
+section div.grid div.element div.button-select span.material-symbols-outlined {
+  font-size: 25px;
+}
+
+section div.grid div.element div.button-fullscreen:hover span {
+	font-size: 25px;
+	transition: font-size 0.3s ease;
+}
+
+section div.grid div.element span {
+  
+  line-height: 25px;
+  width: 25px;
+  transition: opacity 0.3s ease;
+  color: rgba(255, 255, 255, 0.90);
+  position: absolute;
+}
+
+section div.grid div.selected { background-color: #a8c7fa; border: 15px solid #a8c7fa; }
+section div.grid div.selected img { border-radius: 5px; }
+
+section div.grid div.notselected span.hover { opacity: 0; }
+section div.grid div.notselected span.caseselected { opacity: 0; }
+section div.grid div.notselected div.button-select:hover span.nothover { opacity: 0; }
+section div.grid div.notselected div.button-select:hover span.hover { opacity: 1; }
+section div.grid div.selected span.nothover { opacity: 0; }
+section div.grid div.selected span.hover { opacity: 0; }
+section div.grid div.selected span.caseselected {
+	opacity: 1;
+	background-color: white;
+	color: #0b57d0;
+	border-radius: 25px;
+	border: 0px;
+}
+
+.ux-infobox {
+	z-index: 4 !important;
+}
+
+div#select-status div span { padding: 15px;  }
+div#select-status div { text-align: center;  }
+div#select-status div span#tag:hover { color: #0b57d0 }
+div#select-status div span#delete:hover { color: #f44336 }
+
+div#select-status div div.selection { display: inline-block; }
+div#select-status div div.selection span{ transition: opacity 0.3s ease; }
+div#select-status div div.selection span.unselect { position: absolute; left: 75px; opacity: 1; }
+div#select-status div div.selection span.select { opacity: 1; }
+div#select-status div div.selection:hover span.select { opacity: 0; }
+/*#select-status div div.selection:hover span.unselect { opacity: 1; }*/

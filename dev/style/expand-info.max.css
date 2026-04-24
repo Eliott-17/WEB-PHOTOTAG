@@ -1,0 +1,94 @@
+div.infocontent
+{
+	overflow: scroll;
+	padding: 10px;
+}
+
+div.infocontent h2
+{
+	margin-top: 10px;
+	margin-bottom: 5px;
+}
+div.infocontent :where(h3,h4)
+{
+	color: #5e5e5e;
+	margin: 0px;
+}
+
+div.infocontent h4 button
+{
+	box-sizing: border-box;
+	border: 1px solid black;
+	border-radius: 5px;
+	width: fit-content;
+	margin-top: 10px;
+	padding: 2px 5px 2px 5px;
+}
+	
+div.infocontent :where(h2,h3,h4) {
+	
+	width: fit-content;
+}
+
+div.infocontent h2 span.material-symbols-outlined
+{
+	margin-right: 10px;
+}
+
+div.infocontent h3 span.material-symbols-outlined, #infocontent :where(h3,h4) button, h3.margin span
+{
+	margin-left: 35px;
+}
+
+div.infocontent :where(h2,h3,h4) span
+{
+	vertical-align: middle;
+}
+
+div.infocontent :where(input,select)
+{
+	padding: 5px;
+	margin-top: 10px;
+	margin-left: 35px;
+	border: 1px solid black;
+	border-radius: 5px;
+	display: none;
+	width: 300px;
+	box-sizing: border-box;
+}
+
+div.infocontent h4.edit_ux :where(button.cancel,button.save)
+{
+	display: none;
+}
+
+div.infocontent span.unedit
+{
+	/*color: gray;*/
+}
+
+div.infocontent h3#exif
+{
+	display: none;
+}
+
+div.infocontent button.cancel
+{
+	color: red;
+}
+
+div.infocontent button.save
+{
+	color: green;
+}
+
+div.infocontent h4.edit_ux button:hover, h4.button-exif button:hover
+{
+	border: 2px solid black;
+	padding: 1px 4px 1px 4px;
+}
+
+div.infocontent span.legend
+{
+	font-size: small;
+}

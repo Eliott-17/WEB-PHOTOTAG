@@ -1,0 +1,169 @@
+/*-------------------------------------------
+--Fullscreen image display
+-------------------------------------------*/
+
+/**rgb(168, 199, 250)**/
+
+aside#fullscreen_picture {
+	color: #333;
+	top: 0px;
+	left: 0px;
+	width: 100%;
+	height: 100vh;
+	display: none;
+	justify-content: center;
+	align-items: center;
+	overflow: hidden;
+	position: sticky;
+	background-color: black;
+	z-index: 1;
+}
+
+aside#fullscreen_picture.fullscreen
+{
+	display: inline-flex;
+}
+
+aside#fullscreen_picture.selected
+{
+	background-color: #a8c7fa;
+}
+/*
+aside#fullscreen_picture img {
+	width: 85%;
+	height: 100vh;
+	object-fit: contain;
+	display: inline-flex;
+}
+*/
+aside#fullscreen_picture div#maincontent img {
+	
+	width: 100%;
+	object-fit: contain;
+
+}
+
+
+aside#fullscreen_picture div#maincontent {
+	
+	display: flex;
+	width: 100%;
+	height: 100vh;
+	box-sizing: border-box;
+	/*border: 1px solid red;*/	
+}
+
+aside#fullscreen_picture div#infocontent {
+	
+	display: none;
+	width: 500px;
+	height: 100vh;
+	box-sizing: border-box;
+	background-color: #fafafa;
+	/*border: 1px solid green;*/
+	
+}
+
+aside#fullscreen_picture div#infocontent.displayinfo {
+	
+	display: block !important;
+	
+}
+
+aside#fullscreen_picture div.ux {
+	position: absolute;
+    top: 30px;
+	cursor: pointer;
+	height: 24px;
+	width: 24px;
+	display: flex;
+    align-items: center;
+    justify-content: center;
+	transition: opacity 0.3s ease;
+	z-index: 10;
+}
+
+aside#fullscreen_picture div.menubackground {
+
+    position: absolute;
+    box-sizing: border-box;
+    /*border: 1px solid green;*/
+    top: 20px;
+    left: 20px;
+    width: 105px;
+    height: 43px;
+    border-radius: 50px;
+
+}
+
+aside#fullscreen_picture div.button-selection span { position: absolute }
+aside#fullscreen_picture div.button-selection.notselected span.hover { opacity: 0; }
+aside#fullscreen_picture div.button-selection.notselected span.caseselected { opacity: 0; }
+aside#fullscreen_picture div.button-selection.notselected:hover span.nothover { opacity: 0; }
+aside#fullscreen_picture div.button-selection.notselected:hover span.hover { opacity: 1; }
+aside#fullscreen_picture div.button-selection.selected span.nothover { opacity: 0; }
+aside#fullscreen_picture div.button-selection.selected span.hover { opacity: 0; }
+aside#fullscreen_picture div.button-selection.selected span.caseselected {
+	opacity: 1;
+	background-color: white;
+	color: #0b57d0;
+	border-radius: 25px;
+	border: 0px;
+}
+
+aside#fullscreen_picture div.button-selection
+{
+	left: 30px;
+}
+
+aside#fullscreen_picture div.button-return
+{
+	left: 60px;
+}
+
+aside#fullscreen_picture div.button-info
+{
+	left: 90px;
+}
+
+aside#fullscreen_picture div.button-leftarrow
+{
+	left: 10px;
+	top: 50%;
+}
+
+aside#fullscreen_picture div.button-rightarrow
+{
+	right: 10px;
+	top: 50%;
+}
+
+aside#fullscreen_picture div.button-rightarrow.displayinfo
+{
+	right: 410px; !important;
+}
+
+aside#fullscreen_picture div.button-info:hover span {
+	transform: rotate(360deg);
+	transition: transform 0.75s ease;
+}
+
+aside#fullscreen_picture div.button-return:hover span{
+	
+	font-size: 16px !important;
+	transition: font-size 0.3s ease;
+}
+
+aside#fullscreen_picture div.arrows {
+    background-color: white;
+    border-radius: 20px;
+	padding: 3px;
+}
+
+aside#fullscreen_picture div.arrows:hover{
+    background-color: #333;
+	color: white;
+    border-radius: 20px;
+}
+
+aside#fullscreen_picture div.ux span { font-size: 30px !important; }
