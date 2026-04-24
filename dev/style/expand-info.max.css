@@ -52,9 +52,14 @@ div.infocontent :where(input,select)
 	margin-left: 35px;
 	border: 1px solid black;
 	border-radius: 5px;
-	display: none;
+
 	width: 300px;
 	box-sizing: border-box;
+}
+
+aside#fullscreen_picture div.infocontent :where(input,select)
+{
+	display: none;
 }
 
 div.infocontent h4.edit_ux :where(button.cancel,button.save)
@@ -82,7 +87,7 @@ div.infocontent button.save
 	color: green;
 }
 
-div.infocontent h4.edit_ux button:hover, h4.button-exif button:hover
+div.infocontent h4.edit_ux button:hover, h4.button-exif button:hover, aside#fullscreen_edit div.infocontent h4 button:hover
 {
 	border: 2px solid black;
 	padding: 1px 4px 1px 4px;

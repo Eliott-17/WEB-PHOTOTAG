@@ -26,7 +26,8 @@ $EasyPDO->execbdd("CREATE TABLE IF NOT EXISTS photos (
   file_orientation INTEGER DEFAULT 0,
   file_hash TEXT,
   file_status INTEGER DEFAULT 0,
-  file_size INTEGER,
+  file_size INTEGER DEFAULT 0,
+  file_type INTERGER DEFAULT 0,
   
   time_added_at TEXT,
   time_taken_at TEXT,

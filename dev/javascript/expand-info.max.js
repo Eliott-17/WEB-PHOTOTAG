@@ -31,7 +31,7 @@ g_loadinfoview = function loadinfoview(lform = "")
 {	
 	if($('div#infocontent').hasClass("displayinfo"))
 	{	
-		let hash = $('div#maincontent img').attr('src').split('-').pop();
+		let hash = $('div#maincontent img').attr('src').split('-').pop().replace('.webp','');
 		
 		$.get('actions/filelist.php?hash='+hash, function(data){
 
@@ -48,6 +48,9 @@ g_loadinfoview = function loadinfoview(lform = "")
 				}
 				
 				let datas = data.file[0];
+				
+				if(datas.file_type==1) $('h2 span#file_type').html('video_file');
+				else  $('h2 span#file_type').html('photo');
 				
 				$('h3#file_original_name span').html(datas.file_original_name);
 				$('h3#file_size span').html(formatBytes(datas.file_size));	

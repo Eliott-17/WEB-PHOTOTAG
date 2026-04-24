@@ -19,6 +19,11 @@ g_unselect_all = function unselect_all()
 	$('aside#fullscreen_picture').removeClass('selected');
 	$('aside#fullscreen_picture div.button-selection').addClass('notselected');
 	$('aside#fullscreen_picture div.button-selection').removeClass('selected');
+	
+	if($('aside#fullscreen_edit').hasClass('fullscreen'))
+	{	
+		g_fullscreen_edit();
+	}
 }
 
 g_load_files = function load_files()
@@ -169,7 +174,7 @@ function addElement(dir, bdd)
 	
 	let html ="";
 	html+= '<div id="'+uniqueid+'" class="element notselected wrapper '+file_orientationtxt+'">';
-	html+= '		<img src="sd-'+dir+'-'+bdd.file_hash+'" loading="lazy">';
+	html+= '		<img data-id="'+bdd.id+'" src="sd-'+dir+'-'+bdd.file_hash+'.webp" loading="lazy">';
 	html+= '	<div class="button-select cursor">';
 	html+= '		<span class="material-symbols-outlined nothover">radio_button_unchecked</span>';
 	html+= '		<span class="material-symbols-outlined hover">check_circle</span>';
@@ -201,5 +206,5 @@ g_display_global_selection = function display_global_selection()
 		$('#select-status').fadeIn(300); 
 	}
 	
-	console.log(selected_ids);
+	//console.log(selected_ids);
 }

@@ -20,6 +20,7 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/locations.php');
 		<link rel="stylesheet" href="style/index-top.<?php echo filemtime('style/index-top.'.DIM.'.css'); ?>.<?php echo DIM; ?>.css" type="text/css"/>				
 		<link rel="stylesheet" href="style/expand-info.<?php echo filemtime('style/expand-info.'.DIM.'.css'); ?>.<?php echo DIM; ?>.css" type="text/css"/>
 		<link rel="stylesheet" href="style/expand-view.<?php echo filemtime('style/expand-view.'.DIM.'.css'); ?>.<?php echo DIM; ?>.css" type="text/css"/>
+		<link rel="stylesheet" href="style/expand-edit.<?php echo filemtime('style/expand-edit.'.DIM.'.css'); ?>.<?php echo DIM; ?>.css" type="text/css"/>
 		<link rel="stylesheet" href="style/index-grid.<?php echo filemtime('style/index-grid.'.DIM.'.css'); ?>.<?php echo DIM; ?>.css" type="text/css"/>
 		<link rel="stylesheet" href="style/upload.<?php echo filemtime('style/upload.'.DIM.'.css'); ?>.<?php echo DIM; ?>.css" type="text/css"/>
 		<link rel="stylesheet" href="style/common.<?php echo filemtime('style/common.'.DIM.'.css'); ?>.<?php echo DIM; ?>.css" type="text/css"/>
@@ -72,10 +73,51 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/locations.php');
 			</div>					
 		</nav>
 
+		<aside id="fullscreen_edit">
+		
+			<div id="" class="infocontent">
+				<form method="post" id="fileinfopost" data-return="blockreturnfilesinfo" action="actions/filesinfo.php" class="post">
+					<input type="hidden" name="token" class="token" value=""/>
+					<input type="hidden" name="files_hash" id="fileshash" value=""/>
+				</form>
+				<form method="post" data-return="blockreturnfilesinfo" action="#" class="post">
+				<h2><span class="material-symbols-outlined">check_circle</span><span>Selection</span></h2>
+
+					<h3 class="ux-tag-location" id="continent"><span class="material-symbols-outlined" style="">files</span>&nbsp;<select id="filelist" name="filelist"></select></h3>				
+					<h3 class="ux-tag-location" id="country"><span class="material-symbols-outlined" style="">database</span>&nbsp;<input id="totalsize" type="text" value="" disabled></h3>
+
+				<h2><span class="material-symbols-outlined">globe_location_pin</span><span>Location</span></h2>
+
+					<h3 class="ux-tag-location" id="continent"><span class="material-symbols-outlined" style="">globe_asia</span>&nbsp;<select name="continent" ><?php foreach($contient as $key=>$value) echo '<option value="'.$key.'">'.$value.'</option>'; ?></select></h3>				
+					<h3 class="ux-tag-location" id="country"><span class="material-symbols-outlined" style="">flag</span>&nbsp;<select name="country"><?php foreach($country as $key=>$value) echo '<option value="'.$key.'">'.$value.'</option>'; ?></select></h3>
+					<h3 class="ux-tag-location" id="city"><span class="material-symbols-outlined" style="">location_city</span>&nbsp;</span><input name="city" type="text" placeholder="city"></h3>
+					<h3 class="ux-tag-location" id="place"><span class="material-symbols-outlined" style="">place</span>&nbsp;<input name="place" type="text" placeholder="place"></h3>
+
+				<h2><span class="material-symbols-outlined">tag</span><span>Tags</span></h2>
+
+					<h3 class="ux-tag-general" id="activity"><span class="material-symbols-outlined" style="">directions_run</span>&nbsp;<input name="activity" type="text" placeholder="activity"></h3>				
+					<h3 class="ux-tag-general" id="comment"><span class="material-symbols-outlined" style="">comment</span>&nbsp;<input name="comment" type="text" placeholder="comment"></h3>
+					<h3 class="ux-tag-general" id="people"><span class="material-symbols-outlined" style="">group</span>&nbsp;<input name="people" type="text" placeholder="people"></h3>
+					<h3 class="ux-tag-general" id="other"><span class="material-symbols-outlined" style="">info</span>&nbsp;<input name="information" type="text" placeholder="other information"></h3>
+					<br/>
+					<h4>
+						<button class="save submit">
+							<span class="material-symbols-outlined">Save</span><span>Save</span>
+						</button>
+					</h4>
+				</form>
+				<div id="blockreturnfilesinfo" class="cursor">
+					<div class="loading"><span class="material-symbols-outlined">cycle</span></div>		
+					<div class="return alert alert-success"></div>
+				</div>
+			</div>
+		
+		</aside>
+
 		<aside id="fullscreen_picture">
 			<div id="maincontent"><img src="" loading="lazy"></div>
 			<div id="infocontent" class="infocontent uxbackground">
-				<h2><span class="material-symbols-outlined">label</span><span>File</span></h2>
+				<h2><span id="file_type" class="material-symbols-outlined"></span><span>File</span></h2>
 				<h3 id="file_original_name" class="margin"></span><span></h3>
 				<h3 id="file_size" class="margin"></span><span></h3>
 				<h2><span class="material-symbols-outlined">calendar_clock</span><span>Date time</span></h2>
@@ -251,6 +293,7 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/locations.php');
 	<script src='javascript/index-top.<?php echo filemtime('javascript/index-top.'.DIM.'.js'); ?>.<?php echo DIM; ?>.js'></script>
 	<script src='javascript/expand-view.<?php echo filemtime('javascript/expand-view.'.DIM.'.js'); ?>.<?php echo DIM; ?>.js'></script>
 	<script src='javascript/expand-info.<?php echo filemtime('javascript/expand-info.'.DIM.'.js'); ?>.<?php echo DIM; ?>.js'></script>
+	<script src='javascript/expand-edit.<?php echo filemtime('javascript/expand-edit.'.DIM.'.js'); ?>.<?php echo DIM; ?>.js'></script>
 	<script src='javascript/upload.<?php echo filemtime('javascript/upload.'.DIM.'.js'); ?>.<?php echo DIM; ?>.js'></script>
 	<script src='core/post.<?php echo DIM; ?>.js'></script>
 

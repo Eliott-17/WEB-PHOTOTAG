@@ -1,5 +1,99 @@
 <?php
 
+define("SESSION_END_URL", "noredirect");
+require_once($_SERVER['DOCUMENT_ROOT'].'/core/securityheader.php');
+require_once($_SERVER['DOCUMENT_ROOT'].'/core/class.easypdo.php');
+require_once($_SERVER['DOCUMENT_ROOT'].'/includes/functions.php');
+
+$uploadDir = $_SERVER['DOCUMENT_ROOT'].'/multimedia/'.$_SESSION["USER"].'/';
+
+if (!empty($_FILES['file']) && !empty($_FILES['preview'])) {
+    $name = basename($_FILES['file']['name']);
+    $tmp = $_FILES['file']['tmp_name'];
+    $size = $_FILES['file']['size'];
+    $ext = strtolower(pathinfo($name, PATHINFO_EXTENSION));
+
+    // Listes d'extensions autorisées
+    $allowedImages = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp', 'tif', 'tiff'];
+    $allowedVideos = ['mp4', 'webm', 'mov', 'mkv', 'avi', '3gp'];
+
+    if (in_array($ext, $allowedImages)) {
+        $file_type = 0; // Image
+    } elseif (in_array($ext, $allowedVideos)) {
+        $file_type = 1; // Vidéo
+    } else {
+        exit("Invalid file $name");
+    }
+
+    // Vérifie si le fichier existe déjà
+    $targetHD = $uploadDir.$name;
+    if (is_file($targetHD)) exit("$name exist");
+
+    // Déplace le fichier original
+    if (!move_uploaded_file($tmp, $targetHD)) {
+        exit("Upload fail");
+    }
+
+    // Déplace la miniature (WebP générée côté client)
+	$hash = hash('sha256', $name . bin2hex(random_bytes(10)));
+    $previewName = $hash.'.webp';
+    $targetSD = $uploadDir.$previewName;
+    if (!move_uploaded_file($_FILES['preview']['tmp_name'], $targetSD)) {
+        exit("Preview upload fail");
+    }
+
+    // Détermine l'orientation à partir de la miniature WebP
+    $imageInfo = getimagesize($targetSD);
+    $width = $imageInfo[0];
+    $height = $imageInfo[1];
+    $orientation = ($width / $height > 1.3) ? 0 : 1; // 0 = paysage, 1 = portrait
+
+    // Date de prise de vue par défaut
+    $strdate_taken = "00000000+0000000000";
+
+    // Récupère la date de prise de vue (pour les images ou vidéos)
+    if ($file_type == 0) {
+        // Pour les images : utilise EXIF
+        $exif = @exif_read_data($targetHD);
+        if (isset($exif['DateTimeOriginal'])) {
+            $date = DateTime::createFromFormat('Y:m:d H:i:s', $exif['DateTimeOriginal']);
+            $fuseau = "+0000";
+            foreach ($exif as $value) {
+                if (is_string($value)) {
+                    $foundFuseau = extractTimezoneFromString($value);
+                    if ($foundFuseau !== null) {
+                        $fuseau = $foundFuseau;
+                        break;
+                    }
+                }
+            }
+            $strdate_taken = $date->format('Ymd').$fuseau.$date->format('His');
+        }
+    }
+    // Pour les vidéos, on ne peut pas extraire la date sans FFprobe,
+    // donc on garde la valeur par défaut (ou on utilise la date du fichier si nécessaire)
+    // $strdate_taken reste "00000000+0000000000"
+
+    // Enregistre en base de données
+    $date = new DateTime();
+    $date->setTimezone(new DateTimeZone('UTC'));
+    $strdate_added = $date->format('Y-m-d H:i:s');
+
+    $EasyPDO = new EasyPDO($_SESSION['DB']);
+    $EasyPDO->addFields('file_original_name', $name);
+    $EasyPDO->addFields('file_orientation', $orientation);
+    $EasyPDO->addFields('file_hash', $hash);
+    $EasyPDO->addFields('file_size', $size);
+    $EasyPDO->addFields('file_type', $file_type);
+    $EasyPDO->addFields('time_taken_at', $strdate_taken);
+    $EasyPDO->addFields('time_added_at', $strdate_added);
+    $EasyPDO->insert('photos');
+
+    exit("OK");
+} else {
+    exit("Upload fail");
+}
+/*
 define("SESSION_END_URL","noredirect");
 
 require_once($_SERVER['DOCUMENT_ROOT'].'/core/securityheader.php');
@@ -63,7 +157,7 @@ if(!empty($_FILES['file'])){
 
     if(move_uploaded_file($tmp,$targetHD)){
 		
-        /* charger image */
+        // charger image
         switch($ext){
 
             case 'jpg':
@@ -92,7 +186,7 @@ if(!empty($_FILES['file'])){
                 exit;
         }
 
-        /* dimensions */
+        // dimensions
         $width  = imagesx($img);
         $height = imagesy($img);
 
@@ -109,7 +203,7 @@ if(!empty($_FILES['file'])){
             $orientation = 1;
         }
 		
-        /* resize */
+        // resize 
         $preview = imagecreatetruecolor($newWidth,$newHeight);
 
         imagecopyresampled(
@@ -121,14 +215,14 @@ if(!empty($_FILES['file'])){
             $width,$height
         );
 
-        /* nom preview */
+        // nom preview 
 		
 		$hash_name = hash('sha256', $name . bin2hex(random_bytes(10)));
 
         $previewName = $hash_name;
         $targetSD = $uploadDir.$previewName;
 
-        /* export webp */
+        // export webp
         imagewebp($preview,$targetSD,10);
 
         imagedestroy($img);
@@ -156,4 +250,5 @@ if(!empty($_FILES['file'])){
     }
 
 }
+*/
 ?>

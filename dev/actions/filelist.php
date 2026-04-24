@@ -35,12 +35,14 @@ else
 	$EasyPDO->addFields('file_hash');
 	$EasyPDO->addFields('time_taken_at');
 	$EasyPDO->addFields('file_orientation');
+	$EasyPDO->addFields('id');
 
 	$array_lib=$EasyPDO->select('photos', 'tag_status = 1 AND time_taken_at != "00000000+0000000000" ORDER BY time_taken_at DESC');
 
 	$EasyPDO->addFields('file_hash');
 	$EasyPDO->addFields('time_taken_at');
 	$EasyPDO->addFields('file_orientation');
+	$EasyPDO->addFields('id');
 
 	$array_untaged=$EasyPDO->select('photos', 'tag_status = 0 OR time_taken_at = "00000000+0000000000" ORDER BY time_taken_at DESC, id ASC');
 }
