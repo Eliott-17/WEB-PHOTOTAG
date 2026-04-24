@@ -1,0 +1,4 @@
+[submodule "dev/core"]
+	path = dev/core
+	url = https://github.com/Eliott-17/WEB-CORE.git
+	branch = phototag
