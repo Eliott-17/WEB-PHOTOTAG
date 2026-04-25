@@ -15,7 +15,7 @@ aside#fullscreen_edit {
 	align-items: center;
 	overflow: hidden;
 	position: absolute;
-	background-color: color(srgb 1 1 1 / 0.98);
+	background-color: color(srgb 1 1 1 / 0.90);
 	z-index: 1;
 	box-sizing: border-box;
     padding: 20px 50px 20px 50px;
@@ -23,9 +23,10 @@ aside#fullscreen_edit {
 	border-bottom: 140px solid #a8c7fa;
 }
 
-aside#fullscreen_edit.fullscreen
+aside#fullscreen_edit.fullscreen, div#filelist
 {
-	display: block;
+	display: grid;
+	grid-template-columns: 1fr 1fr;
 }
 
 aside#fullscreen_edit div.infocontent
@@ -34,4 +35,21 @@ aside#fullscreen_edit div.infocontent
 	height: 100% !important;
 	scrollbar-width: none;       /* Firefox */
 	-ms-overflow-style: none;    /* IE / Edge legacy */
+}
+
+aside#fullscreen_edit h3.conflict span, aside#fullscreen_edit h3 span.cursor
+{
+	color: darkorange;
+}
+
+aside#fullscreen_edit h3 button
+{
+	display: none;
+	width: 300px;
+	background-color: white;
+}
+
+aside#fullscreen_edit h4 button.cancel, aside#fullscreen_edit h3 span.cursor
+{
+	display: none;
 }

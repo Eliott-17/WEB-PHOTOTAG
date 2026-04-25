@@ -15,7 +15,7 @@ div.infocontent :where(h3,h4)
 	margin: 0px;
 }
 
-div.infocontent h4 button
+div.infocontent button
 {
 	box-sizing: border-box;
 	border: 1px solid black;
@@ -23,6 +23,7 @@ div.infocontent h4 button
 	width: fit-content;
 	margin-top: 10px;
 	padding: 2px 5px 2px 5px;
+	height: 30px;
 }
 	
 div.infocontent :where(h2,h3,h4) {
@@ -35,7 +36,7 @@ div.infocontent h2 span.material-symbols-outlined
 	margin-right: 10px;
 }
 
-div.infocontent h3 span.material-symbols-outlined, #infocontent :where(h3,h4) button, h3.margin span
+div.infocontent h3 span.material-symbols-outlined, #infocontent :where(h3,h4) button, h3.margin span, #editcontent :where(h3,h4) button
 {
 	margin-left: 35px;
 }
@@ -47,14 +48,15 @@ div.infocontent :where(h2,h3,h4) span
 
 div.infocontent :where(input,select)
 {
-	padding: 5px;
+	padding-left: 5px;
 	margin-top: 10px;
 	margin-left: 35px;
 	border: 1px solid black;
 	border-radius: 5px;
-
+	background-color: white;
 	width: 300px;
 	box-sizing: border-box;
+	height: 30px;
 }
 
 aside#fullscreen_picture div.infocontent :where(input,select)

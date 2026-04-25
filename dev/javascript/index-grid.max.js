@@ -4,8 +4,6 @@ var data=null;
 
 $(document).ready(function(){
 
-	g_load_files();
-
 	$('nav').on('click', 'div#select-status div.selection', function() { g_unselect_all(); });		
 
 });
@@ -35,17 +33,7 @@ g_load_files = function load_files()
 	
 	if(data===null)
 	{
-		$.get('actions/filelist.php', function(ldata){
-			
-			console.log("reload file");
-			data=ldata;
-			load_grid();
-
-		}, "json")
-		.fail(function(xhr, status, error){
-			console.error("AJAX error:", status, error);
-			console.log(xhr.responseText);
-		});
+		get('actions/filelist.php');
 	}
 	else 
 	{
@@ -55,113 +43,109 @@ g_load_files = function load_files()
 
 }
 
-function load_grid()
+function load_grid(ldata=null)
 {
+	if(ldata!=null) data=ldata;
+	
 	let source=null;
 	
-	if(data.status === "ok") {
+	let html_undated = '<section><h3>Unknown date</h3><div class="grid">';
+	let html_dated = '<section>';
+	let html_mem_date="";
 
-		let html_undated = '<section><h3>Unknown date</h3><div class="grid">';
-		let html_dated = '<section>';
-		let html_mem_date="";
+	let count=0;
+	let undated_elements=0;
 
-		let count=0;
-		let undated_elements=0;
+	if($('div#mainmenu button.mylib').hasClass('selected')) source=data.library;
+	if($('div#mainmenu button.untag').hasClass('selected')) source=data.untagged;
 
-		if($('div#mainmenu button.mylib').hasClass('selected')) source=data.library;
-	    if($('div#mainmenu button.untag').hasClass('selected')) source=data.untagged;
+	$.each(source, function(i, bdd)
+	{				
+		if(bdd.time_taken_at=="00000000+0000000000")
+		{
+			//si on à pas de date
+			html_undated += addElement(data.dir, bdd);
+			undated_elements++;				
+			//console.log(bdd+" match html_untagged_undated");
+		}
+		else
+		{
+			//console.log(bdd+" match html_untagged_dated");
+									
+			let l_date_test = bdd.time_taken_at.substring(0,8);
 
-		$.each(source, function(i, bdd)
-		{				
-			if(bdd.time_taken_at=="00000000+0000000000")
-			{
-				//si on à pas de date
-				html_undated += addElement(data.dir, bdd);
-				undated_elements++;				
-				//console.log(bdd+" match html_untagged_undated");
-			}
-			else
-			{
-				//console.log(bdd+" match html_untagged_dated");
-										
-				let l_date_test = bdd.time_taken_at.substring(0,8);
-
-				let l_date_display = l_date_test.substring(6,8) + "/" + l_date_test.substring(4,6) + "/" + l_date_test.substring(0,4);	
-				
-				if(html_mem_date=="")
-				{
-					html_dated+='<h3>'+l_date_display+'</h3><div class="grid">'; //on démarre une nouvelle grille
-				}
-				else if(html_mem_date!=l_date_test)
-				{
-					html_dated+='</div><h3>'+l_date_display+'</h3><div class="grid">'; //on démarre une nouvelle grille en fermant la précédente
-				}
-
-				html_dated += addElement(data.dir, bdd);
-				
-				html_mem_date=l_date_test;
-			}
+			let l_date_display = l_date_test.substring(6,8) + "/" + l_date_test.substring(4,6) + "/" + l_date_test.substring(0,4);	
 			
-			count++;
-		});
+			if(html_mem_date=="")
+			{
+				html_dated+='<h3>'+l_date_display+'</h3><div class="grid">'; //on démarre une nouvelle grille
+			}
+			else if(html_mem_date!=l_date_test)
+			{
+				html_dated+='</div><h3>'+l_date_display+'</h3><div class="grid">'; //on démarre une nouvelle grille en fermant la précédente
+			}
+
+			html_dated += addElement(data.dir, bdd);
+			
+			html_mem_date=l_date_test;
+		}
 		
-				
-		html_undated+="<div></section>";
-		html_dated+="<div></section>";
-		
-		if(undated_elements==0) $("main").html(html_dated);
-		else $("main").html(html_dated+html_undated);
-
-		//$("main").html(html_untagged_dated+html_untagged_undated+html_tagged);
-			
-		$('main').on('click.gridSelect', 'div.button-select', function(e) {
-			
-			$(this).parent().toggleClass('selected notselected');
-			
-			let current_id = parseInt($(this).parent().attr('id'));
-			
-			if(e.shiftKey)
-			{
-				if(last_select>=0)
-				{
-					//console.log("select from "+last_select+" to "+current_id);
-					
-					if(current_id>last_select)
-					{
-						for(i=(last_select+1);i<current_id;i++) 
-						{
-							//console.log("switch #"+i);
-							$('#'+i).toggleClass('selected notselected');
-						}
-					}
-					else
-					{
-						
-						for(i=(current_id+1);i<last_select;i++) 
-						{
-							//console.log("switch #"+i);
-							$('#'+i).toggleClass('selected notselected');
-						}
-					}	
-				}
-			}
-
-			last_select=current_id;
-			
-			g_display_global_selection();
-
-		});
-					
-		$('main').on('click.gridOpen', 'div.button-fullscreen', function() {
-			
-			$('aside#fullscreen_picture img').attr("src",$(this).parent().find('img').attr('src').replace('sd','hd'));
-			g_fullscreen($(this).parent().attr('id'),(count-1));
-			$('nav div#mainmenu').hide();
-		});						
+		count++;
+	});
 	
-	} else {
-		console.log(data.message);
-	}	
+			
+	html_undated+="<div></section>";
+	html_dated+="<div></section>";
+	
+	if(undated_elements==0) $("main").html(html_dated);
+	else $("main").html(html_dated+html_undated);
+
+	//$("main").html(html_untagged_dated+html_untagged_undated+html_tagged);
+		
+	$('main').on('click.gridSelect', 'div.button-select', function(e) {
+		
+		$(this).parent().toggleClass('selected notselected');
+		
+		let current_id = parseInt($(this).parent().attr('id'));
+		
+		if(e.shiftKey)
+		{
+			if(last_select>=0)
+			{
+				//console.log("select from "+last_select+" to "+current_id);
+				
+				if(current_id>last_select)
+				{
+					for(i=(last_select+1);i<current_id;i++) 
+					{
+						//console.log("switch #"+i);
+						$('#'+i).toggleClass('selected notselected');
+					}
+				}
+				else
+				{
+					
+					for(i=(current_id+1);i<last_select;i++) 
+					{
+						//console.log("switch #"+i);
+						$('#'+i).toggleClass('selected notselected');
+					}
+				}	
+			}
+		}
+
+		last_select=current_id;
+		
+		g_display_global_selection();
+
+	});
+				
+	$('main').on('click.gridOpen', 'div.button-fullscreen', function() {
+		
+		$('aside#fullscreen_picture img').attr("src",$(this).parent().find('img').attr('src').replace('sd','hd'));
+		g_fullscreen($(this).parent().attr('id'),(count-1));
+		$('nav div#mainmenu').hide();
+	});						
 }
 
 function addElement(dir, bdd)

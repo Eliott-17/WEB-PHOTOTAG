@@ -1,83 +1,98 @@
 <?php
 
-header('Content-Type: application/json; charset=utf-8');
+	require_once($_SERVER['DOCUMENT_ROOT'].'/core/securityheader.php');
+	require_once($_SERVER['DOCUMENT_ROOT'].'/core/class.easypdo.php');
+	require_once($_SERVER['DOCUMENT_ROOT'].'/includes/functions.php');
+	require_once($_SERVER['DOCUMENT_ROOT'].'/includes/locations.php');
+	require_once($_SERVER['DOCUMENT_ROOT'].'/core/class.freturn.php');
 
-define("SESSION_END_URL", '[{"type":"message","content":"Disconnected","param":"info"}]');
+	$fReturn = new fReturn();
 
-require_once($_SERVER['DOCUMENT_ROOT'].'/core/securityheader.php');
-require_once($_SERVER['DOCUMENT_ROOT'].'/core/class.easypdo.php');
-require_once($_SERVER['DOCUMENT_ROOT'].'/includes/functions.php');
-require_once($_SERVER['DOCUMENT_ROOT'].'/core/class.freturn.php');
-
-$fReturn = new fReturn();
-
-if(isset($_POST['files_hash']))
-{
-	$ids = json_decode($_POST['files_hash'], true); // true pour obtenir un tableau associatif
-	
-	if(json_last_error() === JSON_ERROR_NONE)
+	if(isset($_POST['files_hash']))
 	{
-		$EasyPDO = new EasyPDO($_SESSION['DB']);
-		$EasyPDO->addFields('*');
-		$result = $EasyPDO->selectIN('photos', 'id', $ids);
-
-		$mem['tag_continent']=null;
-		$mem['tag_country']=null;
-		$mem['tag_city']=null;
-		$mem['tag_place']=null;
+		$ids = json_decode($_POST['files_hash'], true); // true pour obtenir un tableau associatif
 		
-		$mem['tag_activity']=null;
-		$mem['tag_comment']=null;
-		$mem['tag_people']=null;
-		$mem['tag_other']=null;
-		
-		$flag['tag_continent']=0;
-		$flag['tag_country']=0;
-		$flag['tag_city']=0;
-		$flag['tag_place']=0;
-		
-		$flag['tag_activity']=0;
-		$flag['tag_comment']=0;
-		$flag['tag_people']=0;
-		$flag['tag_other']=0;
-
-		foreach($result as $key => $value)
+		if(json_last_error() === JSON_ERROR_NONE)
 		{
-			if($value['tag_continent']===null) 	$mem['tag_continent']=$value['tag_continent'];
-			if($value['tag_country']===null) 	$mem['tag_country']=$value['tag_country'];
-			if($value['tag_city']===null) 		$mem['tag_city']=$value['tag_city'];
-			if($value['tag_place']===null) 		$mem['tag_place']=$value['tag_place'];
+			$total_size=0;
 			
-			if($value['tag_activity']===null) 	$mem['tag_activity']=$value['tag_activity'];
-			if($value['tag_comment']===null) 	$mem['tag_comment']=$value['tag_comment'];
-			if($value['tag_people']===null) 	$mem['tag_people']=$value['tag_people'];
-			if($value['tag_other']===null) 		$mem['tag_other']=$value['tag_other'];
+			$EasyPDO = new EasyPDO($_SESSION['DB']);
+			$EasyPDO->addFields('*');
+			$result = $EasyPDO->selectIN('photos', 'id', $ids);
 
-			if($mem['tag_continent']!=$value['tag_continent']) $flag['tag_continent']++;
-			if($mem['tag_country']!=$value['tag_country']) $flag['tag_country']++;
-			if($mem['tag_city']!=$value['tag_city']) $flag['tag_city']++;
-			if($mem['tag_place']!=$value['tag_place']) $flag['tag_place']++;
+			$mem['continent']=null;
+			$mem['country']=null;
+			$mem['city']=null;
+			$mem['place']=null;
 			
-			if($mem['tag_activity']!=$value['tag_activity']) $flag['tag_activity']++;
-			if($mem['tag_comment']!=$value['tag_comment']) $flag['tag_comment']++;
-			if($mem['tag_people']!=$value['tag_people']) $flag['tag_people']++;
-			if($mem['tag_other']!=$value['tag_other'])	 $flag['tag_other']++;	
+			$mem['activity']=null;
+			$mem['comment']=null;
+			$mem['people']=null;
+			$mem['other']=null;
+			
+			$flag['continent']=0;
+			$flag['country']=0;
+			$flag['city']=0;
+			$flag['place']=0;
+			
+			$flag['activity']=0;
+			$flag['comment']=0;
+			$flag['people']=0;
+			$flag['other']=0;
+
+			foreach($result as $key => $value)
+			{
+				//pour l'init
+				
+				if($mem['continent']==null) 	$mem['continent']=$value['tag_continent'];
+				if($mem['country']===null) 		$mem['country']=$value['tag_country'];
+				if($mem['city']===null) 		$mem['city']=$value['tag_city'];
+				if($mem['place']===null) 		$mem['place']=$value['tag_place'];
+				
+				if($mem['activity']===null) 	$mem['activity']=$value['tag_activity'];
+				if($mem['comment']===null) 		$mem['comment']=$value['tag_comment'];
+				if($mem['people']===null) 		$mem['people']=$value['tag_people'];
+				if($mem['other']===null) 		$mem['other']=$value['tag_other'];
+				
+				//pour le storage
+				
+				$filedata[$value['file_original_name']]['continent']=$contient[$value['tag_continent']];
+				$filedata[$value['file_original_name']]['country']=$country[$value['tag_country']];
+				$filedata[$value['file_original_name']]['city']=$value['tag_city'];
+				$filedata[$value['file_original_name']]['place']=$value['tag_place'];
+				
+				$filedata[$value['file_original_name']]['activity']=$value['tag_activity'];
+				$filedata[$value['file_original_name']]['comment']=$value['tag_comment'];
+				$filedata[$value['file_original_name']]['people']=$value['tag_people'];
+				$filedata[$value['file_original_name']]['other']=$value['tag_other'];			
+				
+				//pour le flag
+
+				if($mem['continent']!=$value['tag_continent']) $flag['continent']++;
+				if($mem['country']!=$value['tag_country']) $flag['country']++;
+				if($mem['city']!=$value['tag_city']) $flag['city']++;
+				if($mem['place']!=$value['tag_place']) $flag['place']++;
+				
+				if($mem['activity']!=$value['tag_activity']) $flag['activity']++;
+				if($mem['comment']!=$value['tag_comment']) $flag['comment']++;
+				if($mem['people']!=$value['tag_people']) $flag['people']++;
+				if($mem['other']!=$value['tag_other'])	 $flag['other']++;	
+				
+				$total_size+=$value['file_size'];
+				
+				//$fReturn->addConsole($key.":".$value['tag_continent']);
+			}
+			
+			$bigarray['flag']=$flag;
+			$bigarray['mem']=$mem;
+			$bigarray['total_size']=$total_size;			
+			$bigarray['filedata']=$filedata;
+			
+			$fReturn->addCallBack("g_edit_treat_data", $bigarray)->fetch();
+			
 		}
-		
-		$bigarray['flag']=$flag;
-		$bigarray['value']=$mem;
-		
-		$fReturn->addSuccessMessage("Fetched")->addCallBack("g_edit_treat_data", $bigarray)->fetch();
-		
 	}
-}
 
-$fReturn->addFailMessage("Internal error")->fetch();
+	$fReturn->addFailMessage("Internal error")->fetch();
 
-
-/*
-echo json_encode([
-	"status" => "ok"
-]);
-*/
 ?>

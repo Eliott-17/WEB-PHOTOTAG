@@ -1,7 +1,5 @@
 <?php
 
-header('Content-Type: application/json; charset=utf-8');
-
 define("NO_MANDATORY_SESSION","set");
 
 require_once($_SERVER['DOCUMENT_ROOT'].'/core/securityheader.php');

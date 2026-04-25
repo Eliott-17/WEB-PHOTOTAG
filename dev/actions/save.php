@@ -1,7 +1,5 @@
 <?php
 
-	define("SESSION_END_URL", 'index.php');
-
 	require_once($_SERVER['DOCUMENT_ROOT'].'/core/securityheader.php');
 	require_once($_SERVER['DOCUMENT_ROOT'].'/core/class.easypdo.php');
 	require_once($_SERVER['DOCUMENT_ROOT'].'/core/class.freturn.php');

@@ -27,12 +27,8 @@ g_fullscreen = function fullscreen(id, max)
 	$('aside#fullscreen_picture').toggleClass('fullscreen');
 	$('body').toggleClass('fullscreen');
 	
-	//console.log("open "+id+" to "+max);
-
 	max_id=parseInt(max);
 	current_id=parseInt(id);
-	
-	console.log(current_id);
 	
 	arrow_hide(current_id, max_id);
 	fullscreen_is_selected(current_id);
