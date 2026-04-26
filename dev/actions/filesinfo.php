@@ -39,6 +39,8 @@
 			$flag['comment']=0;
 			$flag['people']=0;
 			$flag['other']=0;
+			
+			$filedata=[];
 
 			foreach($result as $key => $value)
 			{
@@ -64,7 +66,9 @@
 				$filedata[$value['file_original_name']]['activity']=$value['tag_activity'];
 				$filedata[$value['file_original_name']]['comment']=$value['tag_comment'];
 				$filedata[$value['file_original_name']]['people']=$value['tag_people'];
-				$filedata[$value['file_original_name']]['other']=$value['tag_other'];			
+				$filedata[$value['file_original_name']]['other']=$value['tag_other'];	
+
+				$filedata[$value['file_original_name']]['id']=$value['id'];		
 				
 				//pour le flag
 

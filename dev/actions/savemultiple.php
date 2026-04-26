@@ -42,6 +42,14 @@
 	if($conflict->comment==0)		$EasyPDO->addFields('tag_comment',$_POST['comment']);
 	if($conflict->people==0)		$EasyPDO->addFields('tag_people',$_POST['people']);
 	if($conflict->other==0)			$EasyPDO->addFields('tag_other',$_POST['information']);
+
+	$date = new DateTime();
+    $date->setTimezone(new DateTimeZone('UTC'));
+    $strdate_updated = $date->format('Y-m-d H:i:s');		
+
+	$EasyPDO->addFields('time_status',$strdate_updated); //last updated info	
+	$EasyPDO->addFields('tag_status',1); //now file is tagged
+	
 	
 	$affectedrow = $EasyPDO->update('photos', 'id', json_decode($_POST['files_hash'], true));
 

@@ -1,12 +1,10 @@
 <?php
 
-define("NO_MANDATORY_SESSION","set");
-
 require_once($_SERVER['DOCUMENT_ROOT'].'/core/securityheader.php');
 
 $filename=$_SERVER['DOCUMENT_ROOT'].'/includes/401.webp';
 
-if(defined('SESSION_VALID') AND isset($_GET['hash']))
+if(is_session_valid() AND isset($_GET['hash']))
 {
 	require_once($_SERVER['DOCUMENT_ROOT'].'/core/class.easypdo.php');
 	require_once($_SERVER['DOCUMENT_ROOT'].'/includes/functions.php');

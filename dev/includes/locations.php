@@ -1,5 +1,6 @@
 <?php
 $country = [
+	 null  => 'Undefined',
 	'UNK' => 'Unknown',
 	'AFG' => 'Afghanistan',
     'ALB' => 'Albania',
@@ -200,6 +201,7 @@ $country = [
 ];
 
 $contient = [
+	 null  => 'Undefined',
 	'UN' => 'Unknown',
     'AF' => 'Africa',
     'AS' => 'Asia',

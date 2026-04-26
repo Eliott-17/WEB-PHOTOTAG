@@ -1,6 +1,6 @@
 <?php
 
-define("NO_MANDATORY_SESSION", "set");
+define("SESSION_TOKEN", "no-mandatory-session");
 require_once($_SERVER['DOCUMENT_ROOT'].'/core/securityheader.php');
 require_once($_SERVER['DOCUMENT_ROOT'].'/includes/locations.php');
 
@@ -15,7 +15,7 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/locations.php');
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 
 		<!-- HEADER SCRIPTS INCLUDED ON THIS PAGE - START -->
-		<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
+		<!--<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"/>-->
 
 		<link rel="stylesheet" href="style/index-top.<?php echo filemtime('style/index-top.'.DIM.'.css'); ?>.<?php echo DIM; ?>.css" type="text/css"/>				
 		<link rel="stylesheet" href="style/expand-info.<?php echo filemtime('style/expand-info.'.DIM.'.css'); ?>.<?php echo DIM; ?>.css" type="text/css"/>
@@ -36,18 +36,7 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/locations.php');
 	
 		<nav>
 			<?php
-			if(!defined('SESSION_VALID'))
-			{
-				?>
-					<div id="mainmenu" class="uxbackground">				
-						<div class="title">Phototag</div>
-						<div></div>
-						<div></div>
-						<div class="last"><a href="actions/login.php"><button><span class="material-symbols-outlined">login</span>&nbsp;<span>Login</span></button></button></a></div>
-					</div>
-				<?php	
-			}
-			else
+			if(is_session_valid())
 			{
 				?>
 					<div id="mainmenu" class="uxbackground">				
@@ -56,7 +45,18 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/locations.php');
 						<div class="search"><button class="search"><span class="material-symbols-outlined">search</span>&nbsp;<span>fast search</span></button><input type="text"/></div>
 						<div class="last"><a href="actions/logout.php"><button><span class="material-symbols-outlined">logout</span>&nbsp;<span>Logout</span></button></button></a></div>
 					</div>
-				<?php	
+				<?php
+			}
+			else
+			{
+				?>
+					<div id="mainmenu" class="uxbackground">				
+						<div class="title">Phototag</div>
+						<div></div>
+						<div></div>
+						<div class="last"><a href="actions/login.php"><button><span class="material-symbols-outlined">login</span>&nbsp;<span>Login</span></button></button></a></div>
+					</div>
+				<?php		
 			}
 			?>
 
@@ -76,6 +76,11 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/locations.php');
 		<aside id="fullscreen_edit">
 		
 			<div id="editcontent" class="infocontent">
+				<div id="conflict-quicklook">
+					
+					<img src=""/>
+					
+				</div>
 				<form method="post" id="fileinfopost" data-return="blockreturnfilesinfo" action="actions/filesinfo.php" class="post">
 					<input type="hidden" name="token" class="token" value=""/>
 					<input type="hidden" name="files_hash" class="fileshash" value=""/>
@@ -85,47 +90,42 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/locations.php');
 					<input type="hidden" name="files_hash" class="fileshash" value=""/>
 					<input type="hidden" name="conflict_edit" id="conflictedit" value=""/>
 					
-					<h2><span class="material-symbols-outlined">check_circle</span><span>Selection</span></h2>
-
-						<!--<h3 class="ux-tag-location"><span class="material-symbols-outlined" style="">files</span>&nbsp;<select id="filelist" name="filelist"></select></h3>-->				
-						<h3 class="ux-tag-location"><span class="material-symbols-outlined" style="">database</span>&nbsp;<input id="totalsize" type="text" value="" disabled></h3>
-
 					<h2><span class="material-symbols-outlined">globe_location_pin</span><span>Location</span></h2>
 
-					<h3 id="continent_edit"><span class="material-symbols-outlined" style="">globe_asia</span>&nbsp;<select name="continent" placeholder="Continent"><?php foreach($contient as $key=>$value) echo '<option value="'.$key.'">'.$value.'</option>'; ?></select><button>CONFLICT: Click to overwrite all</button>&nbsp;<span class="material-symbols-outlined cursor" style="">visibility_off</span></h3>				
-					<h3 id="country_edit"><span class="material-symbols-outlined" style="">flag</span>&nbsp;<select name="country" placeholder="Country"><?php foreach($country as $key=>$value) echo '<option value="'.$key.'">'.$value.'</option>'; ?></select><button>CONFLICT: Click to overwrite all</button>&nbsp;<span class="material-symbols-outlined cursor" style="">visibility_off</span></h3>
-					<h3 id="city_edit"><span class="material-symbols-outlined" style="">location_city</span>&nbsp;</span><input name="city" type="text" placeholder="City"><button>CONFLICT: Click to overwrite all</button>&nbsp;<span class="material-symbols-outlined cursor" style="">visibility_off</span></h3>
-					<h3 id="place_edit"><span class="material-symbols-outlined" style="">place</span>&nbsp;<input name="place" type="text" placeholder="Place"><button>CONFLICT: Click to overwrite all</button>&nbsp;<span class="material-symbols-outlined cursor" style="">visibility_off</span></h3>
+					<h3 id="continent_edit"><span class="material-symbols-outlined">globe_asia</span><select name="continent" placeholder="Continent"><?php foreach($contient as $key=>$value) echo '<option value="'.$key.'">'.$value.'</option>'; ?></select><button><span class="material-symbols-outlined hover-hide">visibility_off</span><span class="material-symbols-outlined hover-show">visibility</span>&nbsp;{ Different values }</button></h3>				
+					<h3 id="country_edit"><span class="material-symbols-outlined">flag</span><select name="country" placeholder="Country"><?php foreach($country as $key=>$value) echo '<option value="'.$key.'">'.$value.'</option>'; ?></select><button><span class="material-symbols-outlined hover-hide">visibility_off</span><span class="material-symbols-outlined hover-show">visibility</span>&nbsp;{ Different values }</button></h3>
+					<h3 id="city_edit"><span class="material-symbols-outlined">location_city</span></span><input name="city" type="text" placeholder="City"><button><span class="material-symbols-outlined hover-hide">visibility_off</span><span class="material-symbols-outlined hover-show">visibility</span>&nbsp;{ Different values }</button></h3>
+					<h3 id="place_edit"><span class="material-symbols-outlined">place</span><input name="place" type="text" placeholder="Place"><button><span class="material-symbols-outlined hover-hide">visibility_off</span><span class="material-symbols-outlined hover-show">visibility</span>&nbsp;{ Different values }</button></h3>
 
 					<h2><span class="material-symbols-outlined">tag</span><span>Tags</span></h2>
 
-					<h3 id="activity_edit"><span class="material-symbols-outlined" style="">directions_run</span>&nbsp;<input name="activity" type="text" placeholder="Activity"><button>CONFLICT: Click to overwrite all</button>&nbsp;<span class="material-symbols-outlined cursor" style="">visibility_off</span></h3>				
-					<h3 id="comment_edit"><span class="material-symbols-outlined" style="">comment</span>&nbsp;<input name="comment" type="text" placeholder="Comment"><button>CONFLICT: Click to overwrite all</button>&nbsp;<span class="material-symbols-outlined cursor" style="">visibility_off</span></h3>
-					<h3 id="people_edit"><span class="material-symbols-outlined" style="">group</span>&nbsp;<input name="people" type="text" placeholder="People"><button>CONFLICT: Click to overwrite all</button>&nbsp;<span class="material-symbols-outlined cursor" style="">visibility_off</span></h3>
-					<h3 id="other_edit"><span class="material-symbols-outlined" style="">info</span>&nbsp;<input name="information" type="text" placeholder="Other information"><button>CONFLICT: Click to overwrite all</button>&nbsp;<span class="material-symbols-outlined cursor" style="">visibility_off</span></h3>
-					<br/>
+					<h3 id="activity_edit"><span class="material-symbols-outlined">directions_run</span><input name="activity" type="text" placeholder="Activity"><button><span class="material-symbols-outlined hover-hide">visibility_off</span><span class="material-symbols-outlined hover-show">visibility</span>&nbsp;{ Different values }</button></h3>				
+					<h3 id="comment_edit"><span class="material-symbols-outlined">comment</span><input name="comment" type="text" placeholder="Comment"><button><span class="material-symbols-outlined hover-hide">visibility_off</span><span class="material-symbols-outlined hover-show">visibility</span>&nbsp;{ Different values }</button></h3>
+					<h3 id="people_edit"><span class="material-symbols-outlined">group</span><input name="people" type="text" placeholder="People"><button><span class="material-symbols-outlined hover-hide">visibility_off</span><span class="material-symbols-outlined hover-show">visibility</span>&nbsp;{ Different values }</button></h3>
+					<h3 id="other_edit"><span class="material-symbols-outlined">info</span><input name="information" type="text" placeholder="Other information"><button><span class="material-symbols-outlined hover-hide">visibility_off</span><span class="material-symbols-outlined hover-show">visibility</span>&nbsp;{ Different values }</button></h3>
+					<h3 id="conflict-info"><span class="material-symbols-outlined">warning</span>&nbsp;<span></span></h3>
 					<h4>
 						<button class="save submit">
 							<span class="material-symbols-outlined">Save</span><span>Save</span>
 						</button>
 						<button class="cancel">
 							<span class="material-symbols-outlined">cancel</span><span>Cancel</span>
-						</button>
+						</button>						
 					</h4>
 				</form>
 				<div id="blockreturnfilesinfo" class="cursor">
 					<div class="loading"><span class="material-symbols-outlined">cycle</span></div>		
 					<div class="return alert alert-success"></div>
-				</div>
+				</div>	
 			</div>
 			<div class="infocontent">
-				
-				<h2><span id="conflict-icon" class="material-symbols-outlined"></span><span id="conflict-title"></span></h2>
-
+	
+				<h2><span class="material-symbols-outlined">check_circle</span><span>Selection</span></h2>				
+				<h3 class="ux-tag-location"><span class="material-symbols-outlined">storage</span>&nbsp;<input id="totalsize" type="text" value="" disabled></h3>
+				<h2><span id="conflict-icon" class="material-symbols-outlined"></span>&nbsp;<span id="conflict-title"></span></h2>
 				<div id="filelist"></div>				
 
 			</div>
-	
 		</aside>
 
 		<aside id="fullscreen_picture">
@@ -197,10 +197,10 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/locations.php');
 				<form method="post" data-return="blockreturnloc" action="actions/save.php?form=tag-location" class="post">		
 					<input type="hidden" name="token" class="token" value=""/>
 					<input type="hidden" name="file_hash" class="filehash" value=""/>
-					<h3 class="ux-tag-location" id="continent"><span class="material-symbols-outlined" style="">globe_asia</span>&nbsp;<span class="unedit"></span><select name="continent" ><?php foreach($contient as $key=>$value) echo '<option value="'.$key.'">'.$value.'</option>'; ?></select></h3>				
-					<h3 class="ux-tag-location" id="country"><span class="material-symbols-outlined" style="">flag</span>&nbsp;<span class="unedit"></span><select name="country"><?php foreach($country as $key=>$value) echo '<option value="'.$key.'">'.$value.'</option>'; ?></select></h3>
-					<h3 class="ux-tag-location" id="city"><span class="material-symbols-outlined" style="">location_city</span>&nbsp;<span class="unedit"></span><input name="city" type="text" placeholder="city"></h3>
-					<h3 class="ux-tag-location" id="place"><span class="material-symbols-outlined" style="">place</span>&nbsp;<span class="unedit"></span><input name="place" type="text" placeholder="place"></h3>
+					<h3 class="ux-tag-location" id="continent"><span class="material-symbols-outlined">globe_asia</span><span class="unedit"></span><select name="continent" ><?php foreach($contient as $key=>$value) echo '<option value="'.$key.'">'.$value.'</option>'; ?></select></h3>				
+					<h3 class="ux-tag-location" id="country"><span class="material-symbols-outlined">flag</span><span class="unedit"></span><select name="country"><?php foreach($country as $key=>$value) echo '<option value="'.$key.'">'.$value.'</option>'; ?></select></h3>
+					<h3 class="ux-tag-location" id="city"><span class="material-symbols-outlined">location_city</span><span class="unedit"></span><input name="city" type="text" placeholder="city"></h3>
+					<h3 class="ux-tag-location" id="place"><span class="material-symbols-outlined">place</span><span class="unedit"></span><input name="place" type="text" placeholder="place"></h3>
 					<h4 class="edit_ux tag-location" data-form="tag-location">
 						<button class="save submit">
 							<span class="material-symbols-outlined">Save</span><span>Save</span>
@@ -221,10 +221,10 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/locations.php');
 				<form method="post" data-return="blockreturntags" action="actions/save.php?form=tag-general" class="post">
 					<input type="hidden" name="token" class="token" value=""/>
 					<input type="hidden" name="file_hash" class="filehash" value=""/>
-					<h3 class="ux-tag-general" id="activity"><span class="material-symbols-outlined" style="">directions_run</span>&nbsp;<span class="unedit"></span><input name="activity" type="text" placeholder="activity"></h3>				
-					<h3 class="ux-tag-general" id="comment"><span class="material-symbols-outlined" style="">comment</span>&nbsp;<span class="unedit"></span><input name="comment" type="text" placeholder="comment"></h3>
-					<h3 class="ux-tag-general" id="people"><span class="material-symbols-outlined" style="">group</span>&nbsp;<span class="unedit"></span><input name="people" type="text" placeholder="people"></h3>
-					<h3 class="ux-tag-general" id="other"><span class="material-symbols-outlined" style="">info</span>&nbsp;<span class="unedit"></span><input name="information" type="text" placeholder="other information"></h3>
+					<h3 class="ux-tag-general" id="activity"><span class="material-symbols-outlined">directions_run</span><span class="unedit"></span><input name="activity" type="text" placeholder="activity"></h3>				
+					<h3 class="ux-tag-general" id="comment"><span class="material-symbols-outlined">comment</span><span class="unedit"></span><input name="comment" type="text" placeholder="comment"></h3>
+					<h3 class="ux-tag-general" id="people"><span class="material-symbols-outlined">group</span><span class="unedit"></span><input name="people" type="text" placeholder="people"></h3>
+					<h3 class="ux-tag-general" id="other"><span class="material-symbols-outlined">info</span><span class="unedit"></span><input name="information" type="text" placeholder="other information"></h3>
 					<h4 class="edit_ux tag-general" data-form="tag-general">
 						<button class="save submit">
 							<span class="material-symbols-outlined">Save</span><span>Save</span>
@@ -273,24 +273,24 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/locations.php');
 			
 		</aside>
 		<?php
-			if(!defined('SESSION_VALID'))
+			if(is_session_valid())
+			{
+				echo "<main></main>";
+			}
+			else
 			{
 				echo '<main class="welcome"><img src="images/step1.png"><img src="images/step2.png"><img src="images/step3.png"></main>';
 				/*
 					No AI: No traitement or automatic sort using AI, no analytic or computer learning.
-	You photos are private and no human or not human will see it, only you.
-	<br/>
-	Advanced filters: use the tag power to retreive a place, an important moment, 
-	souvenir very fast, even if it was 10 years ago.
-	<br/>
-	You free to go, export you data. Take out you tag database if
-	anytime you want create you own app. Nothing is lost and everything
-	is documented to have easy acces*/
-	
-			}
-			else
-			{
-				echo "<main></main>";
+					You photos are private and no human or not human will see it, only you.
+					<br/>
+					Advanced filters: use the tag power to retreive a place, an important moment, 
+					souvenir very fast, even if it was 10 years ago.
+					<br/>
+					You free to go, export you data. Take out you tag database if
+					anytime you want create you own app. Nothing is lost and everything
+					is documented to have easy acces
+				*/
 			}
 		?>
 	</body>
@@ -311,8 +311,14 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/locations.php');
 	<script src='javascript/upload.<?php echo filemtime('javascript/upload.'.DIM.'.js'); ?>.<?php echo DIM; ?>.js'></script>
 	<script src='core/post.<?php echo DIM; ?>.js'></script>
 	
-	<?php if(defined('SESSION_VALID'))echo "<script>$(document).ready(function(){ g_load_files() });</script>"; ?>
-
+	<?php 
+	
+	if(is_session_valid()) 
+	{
+		?><script src='javascript/index-init.<?php echo filemtime('javascript/index-init.'.DIM.'.js'); ?>.<?php echo DIM; ?>.js'></script><?php
+	}
+	?>
+	
 	<!-- OTHER SCRIPTS INCLUDED ON THIS PAGE - END --> 
 
 </html>

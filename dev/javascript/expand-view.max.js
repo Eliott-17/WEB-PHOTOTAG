@@ -30,14 +30,13 @@ g_fullscreen = function fullscreen(id, max)
 	max_id=parseInt(max);
 	current_id=parseInt(id);
 	
-	arrow_hide(current_id, max_id);
+	arrow_hide(current_id, max_id); 
 	fullscreen_is_selected(current_id);
 	
 	if($('aside#fullscreen_picture').hasClass('fullscreen'))
 	{
 		arrow_hide(current_id, max_id);
 	}
-		
 }
 
 function LeftArrow()

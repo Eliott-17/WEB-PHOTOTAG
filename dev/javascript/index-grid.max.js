@@ -158,7 +158,7 @@ function addElement(dir, bdd)
 	
 	let html ="";
 	html+= '<div id="'+uniqueid+'" class="element notselected wrapper '+file_orientationtxt+'">';
-	html+= '		<img data-id="'+bdd.id+'" src="sd-'+dir+'-'+bdd.file_hash+'.webp" loading="lazy">';
+	html+= '		<img id="img_'+bdd.id+'" src="sd-'+dir+'-'+bdd.file_hash+'.webp" loading="lazy">';
 	html+= '	<div class="button-select cursor">';
 	html+= '		<span class="material-symbols-outlined nothover">radio_button_unchecked</span>';
 	html+= '		<span class="material-symbols-outlined hover">check_circle</span>';

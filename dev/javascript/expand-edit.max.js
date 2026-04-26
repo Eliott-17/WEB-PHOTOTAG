@@ -1,15 +1,51 @@
 
-var g_data_mem;
-var g_data;
-var g_clicked=0;
+var g_data_mem=null;
+var g_data=null;
+var clicked=0;
+var mode=0;
 
 $(document).ready(function(){
 
 	$('nav').on('click', 'div#select-status span#tag', function() { g_fullscreen_edit(); });
 
+	$('nav').on('click', 'div#select-status span#delete', function() 
+	{
+		$(this).addClass("delete");
+
+		if(!$('aside#fullscreen_edit').hasClass('fullscreen'))
+		{	
+			mode=1;
+			g_fullscreen_edit();	
+		}
+		else
+		{
+			g_trash_display();
+		}
+	
+		console.log('clicked');
+		
+	});
+
+	$('aside#fullscreen_edit').on('mouseenter', 'div#filelist div.fake-link', function() 
+	{
+		$("div#conflict-quicklook img").attr('src',$('img#img_'+$(this).attr('data-id')).attr('src'));
+		$('aside#fullscreen_edit div#editcontent form').hide();
+		$('div#conflict-quicklook').show();
+	})
+	.on('mouseleave', 'div#filelist div.fake-link', function() {
+		$('aside#fullscreen_edit div#editcontent form').show();
+		$('div#conflict-quicklook').hide();
+	});
+	
 	$('aside#fullscreen_edit h3 button').on('click.ConflictSolver', function() {
 		
+		if(clicked==1) g_cancel_conflict();
+		
+		clicked=1;
+		
 		let id = $(this).parent().attr('id');
+		
+		//display fields
 
 		$('aside#fullscreen_edit h3#'+id+' button').hide();
 		$('aside#fullscreen_edit h3#'+id+' select').show();
@@ -18,11 +54,8 @@ $(document).ready(function(){
 		
 		g_data['flag'][id.replace('_edit','')]=0;		
 		$('#conflictedit').val(JSON.stringify(g_data['flag']));
-	});
-	
-	$('aside#fullscreen_edit h3 span.cursor').on('click.ConflictSolver', function() {
-	
-		let id = $(this).parent().attr('id');
+
+		//open conflict
 		
 		let icon = $('aside#fullscreen_edit h3#'+id).children().html();
 		let selector = "input";
@@ -31,41 +64,25 @@ $(document).ready(function(){
 
 		$('aside#fullscreen_edit #conflict-icon').html(icon);
 		$('aside#fullscreen_edit #conflict-title').html(title+' conflict solver');	
-		$(this).html("visibility_lock");
-		$(this).removeClass("cursor");
-		
-		console.log('aside#fullscreen_edit h3#'+id+' span.cursor');
-	
 		$('aside#fullscreen_edit #filelist').html("");
+		$('aside#fullscreen_edit #conflict-info').show();
+		$('aside#fullscreen_edit #conflict-info span:not(.material-symbols-outlined)').html('Saving will overwrite '+title+' for all selected.');
 
 		$.each(g_data['filedata'], function(index, value) {
-			
-			$('aside#fullscreen_edit #filelist').append("<div>"+index+"</div><div>"+value[id.replace('_edit','')]+"</div>");			
+						
+			$('aside#fullscreen_edit #filelist').append('<div class="fake-link" data-id="'+value['id']+'">'+index+'</div><div>'+value[id.replace('_edit','')]+'</div>');			
 		});
+		
 	});
 
 	$('aside#fullscreen_edit h4 button.cancel').on('click.CancelSolver', function() {
 		
-		g_data['flag']=structuredClone(g_data_mem);
-		g_refresh_conflict();
-		$(this).hide();
-		g_hide_conflict();
-		
-	});
-	
-	$('aside#fullscreen_edit h3 span.cursor').hover(
-    function() {
-		
-		$(this).html("visibility");
-    },
-    function() {
-       $(this).html("visibility_off");
-    }
-);
-		
+		g_cancel_conflict();
+		$('nav div#select-status span#delete').removeClass('delete');		
+	});	
 });
 
-var g_fullscreen_edit = function fullscreen_edit()
+var g_fullscreen_edit = function fullscreen_edit(alertmessage)
 {
 	$('aside#fullscreen_edit').toggleClass('fullscreen');
 	$('body').toggleClass('fullscreen');
@@ -73,8 +90,12 @@ var g_fullscreen_edit = function fullscreen_edit()
 	
 	if($('aside#fullscreen_edit').hasClass('fullscreen'))
 	{	
-		//$('#filelist').html("");
-		
+		if($('aside#fullscreen_picture').hasClass('fullscreen'))
+		{
+			g_fullscreen(-1);
+			$('nav div#mainmenu').show();
+		}
+
 		var hash_array=[];
 
 		$('main div.grid div.element').each(function () 
@@ -83,10 +104,8 @@ var g_fullscreen_edit = function fullscreen_edit()
 			{ 
 
 				let hash=$(this).find("img").attr('src').split('-').pop().replace('.webp','');
-				let id=$(this).find("img").attr('data-id')
+				let id=$(this).find("img").attr('id').replace('img_','');
 
-				//$('#filelist').append('<option value="'+id+'">'+id+':'+hash+'</option>');
-				
 				hash_array.push(id);
 			}
 		});
@@ -115,16 +134,43 @@ var g_hide_conflict = function hide_conflict()
 	$('aside#fullscreen_edit #conflict-icon').html("");
 	$('aside#fullscreen_edit #conflict-title').html("");	
 	$('aside#fullscreen_edit #filelist').html("");	
-	g_clicked=0;	
+}
+
+var g_cancel_conflict = function cancel_conflict()
+{
+	g_data['flag']=structuredClone(g_data_mem);
+	g_refresh_conflict();
+	$(this).hide();
+	g_hide_conflict();
+	clicked=0;
+}
+
+var g_trash_display = function trash_display()
+{
+	$('aside#fullscreen_edit #conflict-info').show();
+	$('aside#fullscreen_edit h4 button.cancel').show();	
+	$('aside#fullscreen_edit #conflict-info span:not(.material-symbols-outlined)').html('Select files will be moved to trash');	
 }
 
 var g_refresh_conflict = function refresh_conflict()
 {
 	$('aside#fullscreen_edit h3').removeClass('conflict');
 	
+	$('aside#fullscreen_edit h3 input:not(#totalsize)').hide();
+	$('aside#fullscreen_edit h3 select').hide();
+	$('aside#fullscreen_edit h3 button').hide();
 	$('aside#fullscreen_edit h3 span.cursor').hide();
-	
-	console.log(g_data);
+	$('aside#fullscreen_edit #conflict-info').hide();
+
+	if(mode==1) 
+	{
+		g_trash_display();
+		mode=0;
+	}
+	else
+	{
+		$('aside#fullscreen_edit h4 button.cancel').hide();
+	}
 	
 	$.each(g_data['flag'], function(key, value)
 	{
@@ -133,18 +179,22 @@ var g_refresh_conflict = function refresh_conflict()
 			$('aside#fullscreen_edit h3#'+key+'_edit').addClass('conflict');
 			$('aside#fullscreen_edit h3#'+key+'_edit button').show();
 			$('aside#fullscreen_edit h3#'+key+'_edit span.cursor').show();
-			if(key=="continent" || key=="country") $('aside#fullscreen_edit h3#'+key+'_edit select').hide();
-			else $('aside#fullscreen_edit h3#'+key+'_edit input').hide();
 		}	
 		else
 		{
-			if(key=="continent" || key=="country") $('aside#fullscreen_edit h3#'+key+'_edit select').val(g_data['mem'][key]);
-			else $('aside#fullscreen_edit h3#'+key+'_edit input').val(g_data['mem'][key]);
+			if(key=="continent" || key=="country") 
+			{
+				$('aside#fullscreen_edit h3#'+key+'_edit select').val(g_data['mem'][key]);
+				$('aside#fullscreen_edit h3#'+key+'_edit select').show();
+			}
+			else 
+			{
+				$('aside#fullscreen_edit h3#'+key+'_edit input').val(g_data['mem'][key]);
+				$('aside#fullscreen_edit h3#'+key+'_edit input').show();
+			}
 		}
 	});
 
 	$('#conflictedit').val(JSON.stringify(g_data['flag']));
 	$('#totalsize').val(formatBytes(g_data['total_size']));
-	
-	$('aside#fullscreen_edit h4 button.cancel').hide();
 }

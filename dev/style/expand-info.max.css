@@ -36,9 +36,16 @@ div.infocontent h2 span.material-symbols-outlined
 	margin-right: 10px;
 }
 
-div.infocontent h3 span.material-symbols-outlined, #infocontent :where(h3,h4) button, h3.margin span, #editcontent :where(h3,h4) button
+div.infocontent h3 span.material-symbols-outlined, 
+h3.margin span,
+.infocontent :where(h3,h4) button:not(.cancel)
 {
 	margin-left: 35px;
+}
+
+.infocontent :where(h3,h4) button
+{
+	margin-left: 5px;
 }
 
 div.infocontent :where(h2,h3,h4) span
@@ -71,7 +78,7 @@ div.infocontent h4.edit_ux :where(button.cancel,button.save)
 
 div.infocontent span.unedit
 {
-	/*color: gray;*/
+	margin-left: 5px;
 }
 
 div.infocontent h3#exif

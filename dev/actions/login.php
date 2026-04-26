@@ -2,7 +2,7 @@
 
 header('Location: ../index.php');
 
-define("NO_MANDATORY_SESSION", "set");
+define("SESSION_TOKEN", "no-mandatory-session");
 require_once($_SERVER['DOCUMENT_ROOT'].'/core/securityheader.php');
 require_once($_SERVER['DOCUMENT_ROOT'].'/core/class.easypdo.php');
 
