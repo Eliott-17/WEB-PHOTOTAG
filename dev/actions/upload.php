@@ -71,6 +71,25 @@ if (!empty($_FILES['file']) && !empty($_FILES['preview'])) {
             $strdate_taken = $date->format('Ymd').$fuseau.$date->format('His');
         }
     }
+	
+	//Détermination de l'orientation de la photos
+	
+	$resolution = getimagesize($targetSD);
+
+	if ($resolution !== false) {
+		$width = $resolution[0];
+		$height = $resolution[1];
+
+		if ($height == 0) {
+			$orientation = null;
+		} else {
+			$ratio = $width / $height;
+
+			$orientation = ($ratio > 1.3) ? 0 : 1;
+		}
+	} else {
+		$orientation = 1; // ou gestion erreur
+	}
 
     // Enregistre en base de données
     $date = new DateTime();
@@ -79,15 +98,15 @@ if (!empty($_FILES['file']) && !empty($_FILES['preview'])) {
 
     $EasyPDO = new EasyPDO($_SESSION['DB']);
     $EasyPDO->addFields('file_original_name', $name);
-    $EasyPDO->addFields('file_orientation', ($file_type == 0) ? 0 : 1);
+    $EasyPDO->addFields('file_orientation', $orientation);
     $EasyPDO->addFields('file_hash', $hash);
     $EasyPDO->addFields('file_size', $size);
     $EasyPDO->addFields('file_type', $file_type);
     $EasyPDO->addFields('time_taken_at', $strdate_taken);
-    $EasyPDO->addFields('time_added_at', $strdate_added);
-    $EasyPDO->insert('photos');
+    $EasyPDO->addFields('time_added_at', $strdate_added);	
+    $return=$EasyPDO->insert('photos');
 
-	$fReturn->addRawText("Ok")->fetch();
+	$fReturn->addRawText("OK")->fetch();
 } else {
     $fReturn->addRawText("Upload fail")->fetch();
 }
