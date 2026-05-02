@@ -6,5 +6,4 @@ RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^style\/([a-z-]{3,30}).[0-9]+\.(min|max)\.css$ style/$1.$2.css [L]
 RewriteRule ^javascript\/([a-z-]{3,30}).[0-9]+\.(min|max)\.js$ javascript/$1.$2.js [L]
 
-RewriteRule ^sd-([a-f0-9]{64})-([a-f0-9]{64})\.webp$ multimedia/$1/$2.webp [L]
-RewriteRule ^hd-([a-f0-9]{64})-([a-f0-9]{64})\.webp$ actions/gethd.php?hash=$2 [L,QSA]
+RewriteRule ^(sd|hd)-([a-f0-9]{64})\.webp$ actions/fileget.php?type=$1&hash=$2 [L,QSA]

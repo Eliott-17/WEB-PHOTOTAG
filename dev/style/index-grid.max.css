@@ -3,80 +3,92 @@
 --Main grid
 -------------------------------------------*/
 	
-section div.grid {
+main section {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
   gap: 5px;
   width: 100%;
-  grid-auto-rows: 300px;
+  grid-auto-rows: auto;
 }
 
-section div.grid div.element {
+main section div.element {
   box-sizing: border-box;
   text-align: center;
   position: relative;
   overflow: hidden;
 }
 
-section div.grid div.element img {
+main section div.element img {
   width: 100%;
   height: 100%;
   display: block;
   object-fit:cover;
 }
 
-section div.portrait {
+main section div.portrait {
   grid-column: span 1; /* 1 colonne */
   grid-row: span 1;    /* 1 ligne */
 }
 
-section div.landscape {
+main section div.landscape {
   grid-column: span 3; /* 3 colonnes */
   grid-row: span 1;    /* 1 ligne */
 }
 
 @media (max-width: 484px) {
-    section div.landscape 
+    main section div.landscape 
 	{
         grid-column: span 2;
     }
 }
 
 @media (max-width: 328px) {
-    section div.landscape 
+    main section div.landscape 
 	{
         grid-column: span 1;
     }
 }
 
-section div.grid h2 { margin: 10px; }
+main section div.fullrow h2 { margin: 10px; }
 
-section div.grid div.element div.button-select {
+main section div.fullrow {
+    grid-column: 1 / -1;
+    height: auto;
+    min-height: unset;
+    align-self: start;
+}
+
+main section div.element
+{
+	 height: 300px;
+}
+
+main section div.element div.button-select {
   position: absolute;
   top: 10px;
   left: 10px;
 }
 
-section div.grid div.element div.button-fullscreen {
+main section div.element div.button-fullscreen {
   position: absolute;
   top: 10px;
   left: 35px;
 }
 
-section div.grid div.element div.button-fullscreen span.material-symbols-outlined {
+main section div.element div.button-fullscreen span.material-symbols-outlined {
   font-size: 15px;
 }
 
-section div.grid div.element div.button-select span.material-symbols-outlined {
+main section div.element div.button-select span.material-symbols-outlined {
   font-size: 25px;
 }
 
-section div.grid div.element div.button-fullscreen:hover span {
+main section div.element div.button-fullscreen:hover span {
 	font-size: 25px;
 	transition: font-size 0.3s ease;
 }
 
-section div.grid div.element span {
+main section div.element span {
   
   line-height: 25px;
   width: 25px;
@@ -85,16 +97,16 @@ section div.grid div.element span {
   position: absolute;
 }
 
-section div.grid div.selected { background-color: #a8c7fa; border: 15px solid #a8c7fa; }
-section div.grid div.selected img { border-radius: 5px; }
+main section div.selected { background-color: #a8c7fa; border: 15px solid #a8c7fa; }
+main section div.selected img { border-radius: 5px; }
 
-section div.grid div.notselected span.hover { opacity: 0; }
-section div.grid div.notselected span.caseselected { opacity: 0; }
-section div.grid div.notselected div.button-select:hover span.nothover { opacity: 0; }
-section div.grid div.notselected div.button-select:hover span.hover { opacity: 1; }
-section div.grid div.selected span.nothover { opacity: 0; }
-section div.grid div.selected span.hover { opacity: 0; }
-section div.grid div.selected span.caseselected {
+main section div.notselected span.hover { opacity: 0; }
+main section div.notselected span.caseselected { opacity: 0; }
+main section div.notselected div.button-select:hover span.nothover { opacity: 0; }
+main section div.notselected div.button-select:hover span.hover { opacity: 1; }
+main section div.selected span.nothover { opacity: 0; }
+main section div.selected span.hover { opacity: 0; }
+main section div.selected span.caseselected {
 	opacity: 1;
 	background-color: white;
 	color: #0b57d0;

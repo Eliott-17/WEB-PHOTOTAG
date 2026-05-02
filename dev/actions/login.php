@@ -6,9 +6,11 @@ define("SESSION_TOKEN", "no-mandatory-session");
 require_once($_SERVER['DOCUMENT_ROOT'].'/core/securityheader.php');
 require_once($_SERVER['DOCUMENT_ROOT'].'/core/class.easypdo.php');
 
+$structureversion=1;
+
 create_session();
 $_SESSION["USER"] = hash('sha256', "eliott.trotebas@gmail.com" . "salt_to_generate");
-$_SESSION["DB"] = 'sqlite:'.$_SERVER['DOCUMENT_ROOT'].'/multimedia/'.$_SESSION["USER"].'.db';
+$_SESSION["DB"] = 'sqlite:'.$_SERVER['DOCUMENT_ROOT'].'/multimedia/'.$_SESSION["USER"].'.'.$structureversion.'.db';
 
 
 $EasyPDO = new EasyPDO($_SESSION['DB']);
@@ -17,8 +19,15 @@ $EasyPDO = new EasyPDO($_SESSION['DB']);
 
 if (!file_exists($_SERVER['DOCUMENT_ROOT'].'/multimedia/'.$_SESSION["USER"])) {
     mkdir($_SERVER['DOCUMENT_ROOT'].'/multimedia/'.$_SESSION["USER"], 0777, true); // Le 3ème paramètre `true` permet de créer les répertoires parents si nécessaire
-
 }
+
+if (!file_exists($_SERVER['DOCUMENT_ROOT'].'/multimedia/'.$_SESSION["USER"].'/trash')) {
+    mkdir($_SERVER['DOCUMENT_ROOT'].'/multimedia/'.$_SESSION["USER"].'/trash', 0777, true); // Le 3ème paramètre `true` permet de créer les répertoires parents si nécessaire
+}
+
+//file_status 0 = normal
+//file_status 1 = archived
+//file_status 2 = trashed
 
 $EasyPDO->execbdd("CREATE TABLE IF NOT EXISTS photos (
   id INTEGER PRIMARY KEY,

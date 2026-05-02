@@ -88,12 +88,17 @@ div.infocontent h3#exif
 
 div.infocontent button.cancel
 {
-	color: red;
+	/*color: red;*/
 }
 
 div.infocontent button.save
 {
 	color: green;
+}
+
+div.infocontent button.warning
+{
+	color: red;
 }
 
 div.infocontent h4.edit_ux button:hover, h4.button-exif button:hover, aside#fullscreen_edit div.infocontent h4 button:hover

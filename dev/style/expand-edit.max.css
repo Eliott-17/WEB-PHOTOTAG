@@ -14,7 +14,7 @@ aside#fullscreen_edit {
 	justify-content: center;
 	align-items: center;
 	overflow: hidden;
-	position: absolute;
+	position: sticky;
 	background-color: color(srgb 1 1 1 / 0.90);
 	z-index: 1;
 	box-sizing: border-box;
@@ -117,6 +117,7 @@ aside#fullscreen_edit #filelist
 	margin-left: 35px;
 }
 
+aside#fullscreen_edit #trash-info span.material-symbols-outlined,
 aside#fullscreen_edit #conflict-info span.material-symbols-outlined,
 div#select-status span.delete
 {
@@ -138,4 +139,9 @@ aside#fullscreen_edit div#blockreturnfilesinfo div.return
 {
     margin-left: 93px;
     margin-right: 35px;
+}
+
+aside#fullscreen_edit form.hidden
+{
+	display: none;
 }

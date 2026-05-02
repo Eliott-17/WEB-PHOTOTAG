@@ -85,7 +85,7 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/locations.php');
 					<input type="hidden" name="token" class="token" value=""/>
 					<input type="hidden" name="files_hash" class="fileshash" value=""/>
 				</form>
-				<form method="post" data-return="blockreturnfilesinfo" action="actions/savemultiple.php" class="post">
+				<form id="editform" method="post" data-return="blockreturnfilesinfo" action="actions/savemultiple.php" class="post hidden">
 					<input type="hidden" name="token" class="token" value=""/>	
 					<input type="hidden" name="files_hash" class="fileshash" value=""/>
 					<input type="hidden" name="conflict_edit" id="conflictedit" value=""/>
@@ -116,7 +116,24 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/locations.php');
 				<div id="blockreturnfilesinfo" class="cursor">
 					<div class="loading"><span class="material-symbols-outlined">cycle</span></div>		
 					<div class="return alert alert-success"></div>
-				</div>	
+				</div>
+				<form id="trashform" method="post" data-return="blockreturnfilestrash" action="actions/delete.php" class="post hidden">
+					<input type="hidden" name="token" class="token" value=""/>	
+					<input type="hidden" name="files_hash" class="fileshash" value=""/>
+					<h3 id="trash-info"><span class="material-symbols-outlined">warning</span>&nbsp;<span>Selected files will be moved to the trash.</span></h3>
+					<h4>
+						<button class="warning submit">
+							<span class="material-symbols-outlined">Delete</span><span>Delete</span>
+						</button>
+						<button class="cancel">
+							<span class="material-symbols-outlined">cancel</span><span>Cancel</span>
+						</button>						
+					</h4>
+				</form>
+				<div id="blockreturnfilestrash" class="cursor">
+					<div class="loading"><span class="material-symbols-outlined">cycle</span></div>		
+					<div class="return alert alert-success"></div>
+				</div>
 			</div>
 			<div class="infocontent">
 	
@@ -275,7 +292,7 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/locations.php');
 		<?php
 			if(is_session_valid())
 			{
-				echo "<main></main>";
+				echo '<main><section class="date"></section><section class="nodate"></section></main>';
 			}
 			else
 			{

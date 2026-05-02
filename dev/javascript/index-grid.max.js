@@ -1,16 +1,38 @@
 var uniqueid;
 var last_select=-1;
 var data=null;
+var loaded_files=0;
+var loading_limit=0;
+let loading = false;
+let undated=0;
 
 $(document).ready(function(){
 
 	$('nav').on('click', 'div#select-status div.selection', function() { g_unselect_all(); });		
 
+	$(window).on('scroll', function() {
+
+		if (loading) return;
+
+		let scrollTop = $(window).scrollTop();
+		let windowHeight = $(window).height();
+		let docHeight = $(document).height();
+
+		let remaining = docHeight - (scrollTop + windowHeight);
+
+		// déclenche quand il reste 25%
+		if (remaining < docHeight * 0.25) {
+			loading=true;
+			load_grid(null, true);
+		}
+
+	});
+
 });
 
 g_unselect_all = function unselect_all()
 {
-	$('main div.grid div.element').each(function () { if ($(this).hasClass('selected')) $(this).toggleClass('selected notselected');	});
+	$('main div.element').each(function () { if ($(this).hasClass('selected')) $(this).toggleClass('selected notselected');	});
 	$('#select-status').fadeOut(300); 
 	
 	//copy fullscreenview.max.js 97-99
@@ -24,14 +46,11 @@ g_unselect_all = function unselect_all()
 	}
 }
 
-g_load_files = function load_files()
+g_load_files = function load_files(force_reload=false)
 {	
 	uniqueid=0;
-
-	$('main').off('click.gridSelect');
-	$('main').off('click.gridOpen');
 	
-	if(data===null)
+	if(data===null || force_reload==true)
 	{
 		get('actions/filelist.php');
 	}
@@ -43,64 +62,67 @@ g_load_files = function load_files()
 
 }
 
-function load_grid(ldata=null)
+function load_grid(ldata=null, ladd=false)
 {
+	$('main').off('click.gridSelect');
+	$('main').off('click.gridOpen');
+	
 	if(ldata!=null) data=ldata;
 	
 	let source=null;
-	
-	let html_undated = '<section><h3>Unknown date</h3><div class="grid">';
-	let html_dated = '<section>';
 	let html_mem_date="";
-
-	let count=0;
-	let undated_elements=0;
+	
 
 	if($('div#mainmenu button.mylib').hasClass('selected')) source=data.library;
 	if($('div#mainmenu button.untag').hasClass('selected')) source=data.untagged;
+	
+	if(ladd==false) 
+	{
+		loaded_files=0;
+		loading_limit=0;
+		undated=0;
+		$("main section").html("");
+		$("main section.nodate").append('<div class="fullrow"><h2>Undated</h2</div>');
+	}
 
 	$.each(source, function(i, bdd)
-	{				
-		if(bdd.time_taken_at=="00000000+0000000000")
-		{
-			//si on à pas de date
-			html_undated += addElement(data.dir, bdd);
-			undated_elements++;				
-			//console.log(bdd+" match html_untagged_undated");
-		}
-		else
-		{
-			//console.log(bdd+" match html_untagged_dated");
-									
-			let l_date_test = bdd.time_taken_at.substring(0,8);
-
-			let l_date_display = l_date_test.substring(6,8) + "/" + l_date_test.substring(4,6) + "/" + l_date_test.substring(0,4);	
-			
-			if(html_mem_date=="")
+	{
+		if(i>=loaded_files)
+		{	
+			if(bdd.time_taken_at=="00000000+0000000000")
 			{
-				html_dated+='<h3>'+l_date_display+'</h3><div class="grid">'; //on démarre une nouvelle grille
+				//si on à pas de date
+				$("main section.nodate").append(addElement(data.dir, bdd));
+				undated++;
 			}
-			else if(html_mem_date!=l_date_test)
-			{
-				html_dated+='</div><h3>'+l_date_display+'</h3><div class="grid">'; //on démarre une nouvelle grille en fermant la précédente
-			}
+			else
+			{										
+				let l_date_test = bdd.time_taken_at.substring(0,8);
 
-			html_dated += addElement(data.dir, bdd);
+				let l_date_display = l_date_test.substring(6,8) + "/" + l_date_test.substring(4,6) + "/" + l_date_test.substring(0,4);	
+				
+				if(html_mem_date=="" || html_mem_date!=l_date_test)
+				{
+					$("main section.date").append('<div class="fullrow"><h2>'+l_date_display+'</h2></div>'); //on démarre une nouvelle grille
+				}
+
+				$("main section.date").append(addElement(data.dir, bdd));
+				
+				html_mem_date=l_date_test;
+			}
+						
+			loaded_files++;
 			
-			html_mem_date=l_date_test;
+			//console.log("loaded: "+i);
 		}
 		
-		count++;
+		if(i>(50+loading_limit)) return false;
+
 	});
 	
-			
-	html_undated+="<div></section>";
-	html_dated+="<div></section>";
-	
-	if(undated_elements==0) $("main").html(html_dated);
-	else $("main").html(html_dated+html_undated);
+	loading_limit=loaded_files;
 
-	//$("main").html(html_untagged_dated+html_untagged_undated+html_tagged);
+	if(undated==0) $("main section.nodate").html('');
 		
 	$('main').on('click.gridSelect', 'div.button-select', function(e) {
 		
@@ -143,9 +165,11 @@ function load_grid(ldata=null)
 	$('main').on('click.gridOpen', 'div.button-fullscreen', function() {
 		
 		$('aside#fullscreen_picture img').attr("src",$(this).parent().find('img').attr('src').replace('sd','hd'));
-		g_fullscreen($(this).parent().attr('id'),(count-1));
+		g_fullscreen($(this).parent().attr('id'),(loaded_files-1));
 		$('nav div#mainmenu').hide();
-	});						
+	});	
+
+	loading=false;	
 }
 
 function addElement(dir, bdd)
@@ -158,7 +182,7 @@ function addElement(dir, bdd)
 	
 	let html ="";
 	html+= '<div id="'+uniqueid+'" class="element notselected wrapper '+file_orientationtxt+'">';
-	html+= '		<img id="img_'+bdd.id+'" src="sd-'+dir+'-'+bdd.file_hash+'.webp" loading="lazy">';
+	html+= '		<img id="img_'+bdd.id+'" src="sd-'+bdd.file_hash+'.webp" loading="lazy">';
 	html+= '	<div class="button-select cursor">';
 	html+= '		<span class="material-symbols-outlined nothover">radio_button_unchecked</span>';
 	html+= '		<span class="material-symbols-outlined hover">check_circle</span>';
@@ -180,13 +204,13 @@ g_display_global_selection = function display_global_selection()
 		return this.id;
 	}).get();
 	
-	let count=selected_ids.length;
+	let loaded_files=selected_ids.length;
 
-	if(count==0) $('#select-status').fadeOut(300); 
+	if(loaded_files==0) $('#select-status').fadeOut(300); 
 	else 
 	{ 
-		$('#elementscnt').html(count+" element");
-		if(count>1) $('#elementscnt').append("s");
+		$('#elementscnt').html(loaded_files+" element");
+		if(loaded_files>1) $('#elementscnt').append("s");
 		$('#select-status').fadeIn(300); 
 	}
 	

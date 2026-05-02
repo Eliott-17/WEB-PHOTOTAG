@@ -20,14 +20,14 @@
 		$array_file=$EasyPDO->select('photos', 'file_hash=:hash');
 		
 		// Parcourir chaque ligne du résultat
-		foreach ($array_file as &$file) {
+		foreach ($array_file['datas'] as &$file) {
 			// Ajouter la clé 'exif' à chaque ligne
 			$file['exif'] = getExifData($full_dir . $file['file_original_name']);
 			/*$file['time_friendly'] = formatDateTime($file['time_taken_at']);*/
 		}
 		unset($file); // Important : rompre la référence après la boucle
 
-		$bigarray['info']=$array_file;
+		$bigarray['info']=$array_file['datas'];
 		$bigarray['lform']=$_GET['lform'];
 		$bigarray['hash']=$_GET['hash'];
 		
@@ -35,22 +35,24 @@
 	}	
 	else
 	{
+		$EasyPDO->addFields('file_status');
 		$EasyPDO->addFields('file_hash');
 		$EasyPDO->addFields('time_taken_at');
 		$EasyPDO->addFields('file_orientation');
 		$EasyPDO->addFields('id');
-
-		$array_lib=$EasyPDO->select('photos', 'tag_status = 1 AND time_taken_at != "00000000+0000000000" ORDER BY time_taken_at DESC');
-
-		$EasyPDO->addFields('file_hash');
-		$EasyPDO->addFields('time_taken_at');
-		$EasyPDO->addFields('file_orientation');
-		$EasyPDO->addFields('id');
-
-		$array_untaged=$EasyPDO->select('photos', 'tag_status = 0 OR time_taken_at = "00000000+0000000000" ORDER BY time_taken_at DESC, id ASC');
 		
-		$bigarray['library']=$array_lib;
-		$bigarray['untagged']=$array_untaged;
+		$array_lib=$EasyPDO->select('photos', 'file_status = 0 AND tag_status = 1 AND time_taken_at != "00000000+0000000000" ORDER BY time_taken_at DESC');
+
+		$EasyPDO->addFields('file_status');
+		$EasyPDO->addFields('file_hash');
+		$EasyPDO->addFields('time_taken_at');
+		$EasyPDO->addFields('file_orientation');
+		$EasyPDO->addFields('id');
+
+		$array_untaged=$EasyPDO->select('photos', 'file_status = 0 AND (tag_status = 0 OR time_taken_at = "00000000+0000000000") ORDER BY time_taken_at DESC, id ASC');
+		
+		$bigarray['library']=$array_lib['datas'];
+		$bigarray['untagged']=$array_untaged['datas'];
 		$bigarray['dir']=$_SESSION["USER"];
 
 		$fReturn->addCallBack("load_grid", $bigarray)->fetch();

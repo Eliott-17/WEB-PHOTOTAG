@@ -17,8 +17,9 @@
 			$total_size=0;
 			
 			$EasyPDO = new EasyPDO($_SESSION['DB']);
-			$EasyPDO->addFields('*');
-			$result = $EasyPDO->selectIN('photos', 'id', $ids);
+			$EasyPDO->addFields('*');	
+			
+			$result = $EasyPDO->select('photos', 'id IN', $ids);
 
 			$mem['continent']=null;
 			$mem['country']=null;
@@ -42,7 +43,7 @@
 			
 			$filedata=[];
 
-			foreach($result as $key => $value)
+			foreach($result['datas'] as $key => $value)
 			{
 				//pour l'init
 				
