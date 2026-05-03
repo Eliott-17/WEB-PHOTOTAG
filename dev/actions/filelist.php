@@ -3,6 +3,7 @@
 	require_once($_SERVER['DOCUMENT_ROOT'].'/core/securityheader.php');
 	require_once($_SERVER['DOCUMENT_ROOT'].'/core/class.easypdo.php');
 	require_once($_SERVER['DOCUMENT_ROOT'].'/core/class.freturn.php');
+	require_once($_SERVER['DOCUMENT_ROOT'].'/core/class.validation.php');
 	require_once($_SERVER['DOCUMENT_ROOT'].'/includes/functions.php');
 
 	$fReturn = new fReturn();
@@ -15,6 +16,17 @@
 
 	if(isset($_GET['hash']))
 	{
+		$validation = new Validation();
+
+		$validation->addVerification('hash','sha256','Hash');
+		$validation->addVerification('lform','string','lform',0,20);	
+		$validation->Validate(true);
+
+		if(!$validation->isValidated())
+		{
+			$fReturn->addConsole($validation->Message())->fetch();	
+		}
+
 		$EasyPDO->addFields('*');
 		$EasyPDO->addConditionalData('hash',$_GET['hash']);
 		$array_file=$EasyPDO->select('photos', 'file_hash=:hash');

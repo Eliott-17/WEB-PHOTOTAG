@@ -2,11 +2,19 @@
 
 define("SESSION_TOKEN", "no-mandatory-session");
 require_once($_SERVER['DOCUMENT_ROOT'].'/core/securityheader.php');
+require_once($_SERVER['DOCUMENT_ROOT'].'/core/class.validation.php');
 
 $errorlink=$_SERVER['DOCUMENT_ROOT'].'/includes/401.webp';
 $filename=$errorlink;
 
-if(is_session_valid() AND isset($_GET['hash']) AND isset($_GET['type']))
+$validation = new Validation();
+
+$validation->addVerification('hash','sha256','hash');	
+$validation->addVerification('type','string','type',2,2);
+
+$validation->Validate(true);
+
+if(is_session_valid() AND $validation->isValidated())
 {
 	require_once($_SERVER['DOCUMENT_ROOT'].'/includes/functions.php');
 	
@@ -34,7 +42,6 @@ if(is_session_valid() AND isset($_GET['hash']) AND isset($_GET['type']))
 			$filename=$filenametest;
 		}	
 	}
-
 }
 
 if($filename!=$errorlink)

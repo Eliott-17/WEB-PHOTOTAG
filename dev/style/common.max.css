@@ -21,7 +21,7 @@ nav {
 div.loading, div.return
 {
 	margin-top: 10px;
-	margin-left: 35px;
+	/*margin-left: 35px;*/
 	padding: 10px;
 	border-radius: 5px;
 }

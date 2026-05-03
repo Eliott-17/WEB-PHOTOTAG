@@ -22,8 +22,10 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/locations.php');
 		<link rel="stylesheet" href="style/expand-view.<?php echo filemtime('style/expand-view.'.DIM.'.css'); ?>.<?php echo DIM; ?>.css" type="text/css"/>
 		<link rel="stylesheet" href="style/expand-edit.<?php echo filemtime('style/expand-edit.'.DIM.'.css'); ?>.<?php echo DIM; ?>.css" type="text/css"/>
 		<link rel="stylesheet" href="style/index-grid.<?php echo filemtime('style/index-grid.'.DIM.'.css'); ?>.<?php echo DIM; ?>.css" type="text/css"/>
+		<link rel="stylesheet" href="style/index-login.<?php echo filemtime('style/index-login.'.DIM.'.css'); ?>.<?php echo DIM; ?>.css" type="text/css"/>
 		<link rel="stylesheet" href="style/upload.<?php echo filemtime('style/upload.'.DIM.'.css'); ?>.<?php echo DIM; ?>.css" type="text/css"/>
 		<link rel="stylesheet" href="style/common.<?php echo filemtime('style/common.'.DIM.'.css'); ?>.<?php echo DIM; ?>.css" type="text/css"/>
+
 
 		<!-- HEADER SCRIPTS INCLUDED ON THIS PAGE - END -->
 
@@ -54,7 +56,7 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/locations.php');
 						<div class="title">Phototag</div>
 						<div></div>
 						<div></div>
-						<div class="last"><a href="actions/login.php"><button><span class="material-symbols-outlined">login</span>&nbsp;<span>Login</span></button></button></a></div>
+						<div class="last"><button class="login"><span class="material-symbols-outlined">login</span>&nbsp;<span>Login</span></button></button></div>
 					</div>
 				<?php		
 			}
@@ -70,7 +72,38 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/locations.php');
 					&nbsp;<span id="tag" class="material-symbols-outlined cursor">new_label</span>
 					&nbsp;<span id="delete" class="material-symbols-outlined cursor">delete</span>
 				</div>
-			</div>					
+			</div>		
+
+			<div id="login" class="uxbackground">
+			
+				<form method="post" data-return="blockreturnlogin" action="actions/login.php" class="post">
+					<input type="hidden" name="token" class="token" value=""/>
+					<h4>
+						<div>Email</div>
+						<input type="text" name="email"/>
+						<div>Password</div>
+						<input type="password" name="password"/>	
+						<div class="password-confirmation">Password confirmation</div>
+						<input class="password-confirmation" type="password" name="password_verif"/>					
+						<div class="code">Code</div>
+						<input class="code" type="text" name="code"/>
+					</h4>
+					<br/>
+					<h4>
+						<button class="submit">
+							<span class="material-symbols-outlined">login</span><span>Login or Signin</span>
+						</button>					
+						<button class="">
+							<span class="material-symbols-outlined">password</span><span>Forgot Password</span>
+						</button>	
+					</h4>	
+					<div id="blockreturnlogin" class="cursor">
+						<div class="loading"><span class="material-symbols-outlined">cycle</span></div>		
+						<div class="return alert alert-success"></div>
+					</div>						
+				</form>		
+			<div>
+			
 		</nav>
 
 		<aside id="fullscreen_edit">
@@ -322,6 +355,7 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/locations.php');
 	<script src='javascript/common.<?php echo filemtime('javascript/common.'.DIM.'.js'); ?>.<?php echo DIM; ?>.js'></script>
 	<script src='javascript/index-grid.<?php echo filemtime('javascript/index-grid.'.DIM.'.js'); ?>.<?php echo DIM; ?>.js'></script>
 	<script src='javascript/index-top.<?php echo filemtime('javascript/index-top.'.DIM.'.js'); ?>.<?php echo DIM; ?>.js'></script>
+	<script src='javascript/index-login.<?php echo filemtime('javascript/index-login.'.DIM.'.js'); ?>.<?php echo DIM; ?>.js'></script>
 	<script src='javascript/expand-view.<?php echo filemtime('javascript/expand-view.'.DIM.'.js'); ?>.<?php echo DIM; ?>.js'></script>
 	<script src='javascript/expand-info.<?php echo filemtime('javascript/expand-info.'.DIM.'.js'); ?>.<?php echo DIM; ?>.js'></script>
 	<script src='javascript/expand-edit.<?php echo filemtime('javascript/expand-edit.'.DIM.'.js'); ?>.<?php echo DIM; ?>.js'></script>

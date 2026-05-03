@@ -13,8 +13,8 @@
 
 	//VALIDATION FORMULAIRE
 
-	$validation->addVerification('token',		'string',				'Token',				64,64);	
-	$validation->addVerification('files_hash',	'string',				'Hash',					3,2000);	
+	$validation->addVerification('token',		'sha256',				'Token'					);	
+	$validation->addVerification('files_hash',	'jsonArrayString',		'Hash'					);	
 	$validation->addVerification('conflict_edit','string',				'Hash',					92,92);	
 	$validation->addVerification('continent',	'string',				'Continent',			0,2);	
 	$validation->addVerification('country',		'string',				'Country',				0,3);	

@@ -11,10 +11,8 @@
 	$fReturn = new fReturn();
 	$validation = new Validation();
 
-	//VALIDATION FORMULAIRE
-
-	$validation->addVerification('token',		'string',					'Token',					64,64);	
-	$validation->addVerification('file_hash',	'string',					'Hash',						64,64);	
+	$validation->addVerification('token',		'sha256',	'Token');	
+	$validation->addVerification('file_hash',	'sha256',	'Hash');
 	
 	switch($_GET['form'])
 	{
@@ -76,11 +74,11 @@
 		break;
 	}
 
-	$validation->Validate();
+	$validation->Validate();	
 
 	if(!$validation->isValidated())
 	{
-		$fReturn->addInfoMessage($validation->Message())->fetch();	
+		$fReturn->addFailMessage($validation->Message())->fetch();	
 	}
 	
 	$date = new DateTime();

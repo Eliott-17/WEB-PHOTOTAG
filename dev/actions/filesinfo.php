@@ -5,8 +5,19 @@
 	require_once($_SERVER['DOCUMENT_ROOT'].'/includes/functions.php');
 	require_once($_SERVER['DOCUMENT_ROOT'].'/includes/locations.php');
 	require_once($_SERVER['DOCUMENT_ROOT'].'/core/class.freturn.php');
+	require_once($_SERVER['DOCUMENT_ROOT'].'/core/class.validation.php');
 
 	$fReturn = new fReturn();
+	$validation = new Validation();
+
+	$validation->addVerification('token',		'sha256',	'Token');	
+	$validation->addVerification('files_hash',	'jsonArrayString',	'Hash');
+	$validation->Validate();
+
+	if(!$validation->isValidated())
+	{
+		$fReturn->addConsole($validation->Message())->fetch();	
+	}
 
 	if(isset($_POST['files_hash']))
 	{
