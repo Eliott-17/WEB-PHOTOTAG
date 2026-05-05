@@ -46,7 +46,6 @@ function Arrow(sens)
 	if(sens==0 || sens==1)
 	{	
 		g_load_media(current_id);
-		g_loadinfoview();
 		arrow_hide(current_id, max_id);
 		fullscreen_is_selected(current_id);	
 	}
