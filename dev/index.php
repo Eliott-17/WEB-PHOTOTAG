@@ -179,7 +179,7 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/locations.php');
 		</aside>
 
 		<aside id="fullscreen_picture">
-			<div id="maincontent"><img src="" loading="lazy"></div>
+			<div id="maincontent"></div>
 			<div id="infocontent" class="infocontent uxbackground">
 				<h2><span id="file_type" class="material-symbols-outlined"></span><span>File</span></h2>
 				<h3 id="file_original_name" class="margin"></span><span></h3>

@@ -82,9 +82,8 @@ function load_grid(ldata=null, ladd=false)
 		loading_limit=0;
 		undated=0;
 		$("main section").html("");
-		$("main section.nodate").append('<div class="fullrow"><h2>Undated</h2</div>');
 	}
-
+	
 	$.each(source, function(i, bdd)
 	{
 		if(i>=loaded_files)
@@ -92,6 +91,7 @@ function load_grid(ldata=null, ladd=false)
 			if(bdd.time_taken_at=="00000000+0000000000")
 			{
 				//si on à pas de date
+				if(undated==0) $("main section.nodate").append('<div class="fullrow"><h2>Undated</h2></div>');
 				$("main section.nodate").append(addElement(data.dir, bdd));
 				undated++;
 			}
@@ -164,12 +164,24 @@ function load_grid(ldata=null, ladd=false)
 				
 	$('main').on('click.gridOpen', 'div.button-fullscreen', function() {
 		
-		$('aside#fullscreen_picture img').attr("src",$(this).parent().find('img').attr('src').replace('sd','hd'));
-		g_fullscreen($(this).parent().attr('id'),(loaded_files-1));
+		let media_id = parseInt($(this).parent().attr('id').replace("grid_",""));
+		
+		g_load_media(media_id);
+		g_fullscreen(media_id,(loaded_files-1));
 		$('nav div#mainmenu').hide();
+		
 	});	
 
 	loading=false;	
+}
+
+var g_load_media = function load_media(id)
+{	
+	let file_type = $('div#grid_'+id+' div.media-container').attr("data-type");
+	let file_hash = $('div#grid_'+id+' div.media-container').attr("data-src");
+		
+	if(file_type == 0) $('div#maincontent').html('<img src="hd-'+file_hash+'" loading="lazy">');
+	if(file_type == 1) $('div#maincontent').html('<video src="hd-'+file_hash+'" poster="sd-'+file_hash+'" controls autoplay muted preload="auto" playsinline></video>></video>');		
 }
 
 function addElement(dir, bdd)
@@ -179,16 +191,31 @@ function addElement(dir, bdd)
 	
 	if(bdd.file_orientation==1) file_orientationtxt="portrait";
 	if(bdd.file_original_name) imglink=bdd.file_original_name;
-	
+		
 	let html ="";
-	html+= '<div id="'+uniqueid+'" class="element notselected wrapper '+file_orientationtxt+'">';
-	html+= '		<img id="img_'+bdd.id+'" src="sd-'+bdd.file_hash+'.webp" loading="lazy">';
+	let ux = "photo";
+	html+= '<div id="grid_'+uniqueid+'" class="element notselected wrapper '+file_orientationtxt+'">';
+	
+	html+= '	<div class="media-container" data-type="'+bdd.file_type+'" data-src="'+bdd.file_hash+'" data-id="'+bdd.id+'" >';
+	
+	if(bdd.file_type == 0) 
+	{
+		html+= '		<img src="sd-'+bdd.file_hash+'" loading="lazy">';
+	}
+	if(bdd.file_type == 1)
+	{
+		html+= '		<video src="hd-'+bdd.file_hash+'" poster="sd-'+bdd.file_hash+'" controlslist="nodownload nofullscreen noremoteplayback"></video>';
+		ux = "video";
+	}
+	
+	html+= '	</div>';
+	
 	html+= '	<div class="button-select cursor">';
 	html+= '		<span class="material-symbols-outlined nothover">radio_button_unchecked</span>';
 	html+= '		<span class="material-symbols-outlined hover">check_circle</span>';
 	html+= '		<span class="material-symbols-outlined caseselected">check</span>';
 	html+= '	</div>';
-	html+= '	<div class="button-fullscreen cursor">';			
+	html+= '	<div class="button-fullscreen cursor '+ux+'">';			
 	html+= '		<span class="material-symbols-outlined">open_in_full</span>';
 	html+= '	</div>';
 	html+= '</div>';

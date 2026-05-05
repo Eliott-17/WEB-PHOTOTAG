@@ -4,6 +4,7 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/core/securityheader.php');
 require_once($_SERVER['DOCUMENT_ROOT'].'/core/class.easypdo.php');
 require_once($_SERVER['DOCUMENT_ROOT'].'/core/class.freturn.php');
 require_once($_SERVER['DOCUMENT_ROOT'].'/includes/functions.php');
+require_once($_SERVER['DOCUMENT_ROOT'].'/includes/getid3/getid3.php');
 
 $uploadDir = $_SERVER['DOCUMENT_ROOT'].'/multimedia/'.$_SESSION["USER"].'/';
 
@@ -15,8 +16,8 @@ if (!empty($_FILES['file']) && !empty($_FILES['preview'])) {
     $size = $_FILES['file']['size'];
 
     // Vérifie la taille
-    if ($size > 55 * 1024 * 1024) {
-		$fReturn->addRawText("file is over 55Mo")->fetch();
+    if ($size > 256 * 1024 * 1024) {
+		$fReturn->addRawText("file is over 256Mo")->fetch();
         //exit("file is over 55 Mo)");
     }
 
@@ -53,7 +54,9 @@ if (!empty($_FILES['file']) && !empty($_FILES['preview'])) {
     }
 
     // Récupère la date de prise de vue
+	//				  YYYYMMDD+ZZZZHHMMSS
     $strdate_taken = "00000000+0000000000";
+	
     if ($file_type == 0) {
         $exif = @exif_read_data($targetHD);
         if (isset($exif['DateTimeOriginal'])) {
@@ -72,24 +75,35 @@ if (!empty($_FILES['file']) && !empty($_FILES['preview'])) {
         }
     }
 	
-	//Détermination de l'orientation de la photos
+	if ($file_type == 1) {
+		
+		$getID3 = new getID3;
 	
-	$resolution = getimagesize($targetSD);
+		$info = getVideoDate($getID3->analyze($targetHD),$name);
 
-	if ($resolution !== false) {
-		$width = $resolution[0];
-		$height = $resolution[1];
+		if (is_array($info)) 
+		{
+			//decoded strucutre info
+			
+			/*$decoded = [
+				"datetime" => "00000000000000",
+				"timezone_mode" => 3,
+				"offset" => "+0000",
+				"lat" => 0,
+				"lon" => 0
+			];*/
+			
+			//Generate stae format: YYYYMMDD+ZZZZHHMMSS
 
-		if ($height == 0) {
-			$orientation = null;
-		} else {
-			$ratio = $width / $height;
+			$datetime = $info['datetime'];
+			$offset = $info['offset'];
 
-			$orientation = ($ratio > 1.3) ? 0 : 1;
+			// YYYYMMDD + OFFSET + HHMMSS
+			$strdate_taken = substr($datetime, 0, 8) . $offset . substr($datetime, 8, 6);
 		}
-	} else {
-		$orientation = 1; // ou gestion erreur
 	}
+	
+	$orientation = (!empty($_POST['orientation']) && $_POST['orientation'] == "1") ? 1 : 0;
 
     // Enregistre en base de données
     $date = new DateTime();

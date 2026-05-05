@@ -36,7 +36,8 @@ aside#fullscreen_picture img {
 	display: inline-flex;
 }
 */
-aside#fullscreen_picture div#maincontent img {
+aside#fullscreen_picture div#maincontent img,
+aside#fullscreen_picture div#maincontent video {
 	
 	width: 100%;
 	object-fit: contain;

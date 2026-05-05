@@ -31,7 +31,7 @@ var g_loadinfoview = function loadinfoview(lform = "")
 {	
 	if($('div#infocontent').hasClass("displayinfo"))
 	{	
-		let hash = $('div#maincontent img').attr('src').split('-').pop().replace('.webp','');
+		let hash = $('div#maincontent img, div#maincontent video').attr('src').split('-').pop();
 		
 		get('actions/filelist.php?hash='+hash+'&lform='+lform);
 	}

@@ -77,6 +77,110 @@
 		return $exifData;
 	}
 	
+	//GET VIDEO TIME & timezone
+
+	function getVideoDate($info, $filename = null) 
+	{
+		$result = [
+			"datetime" => "00000000000000",
+			"timezone_mode" => 3,
+			"offset" => "+0000",
+			"lat" => 0,
+			"lon" => 0
+		];
+
+		$timestamp = null;
+
+		/*
+		1. METADATA
+		*/
+
+		if (!empty($info['tags']['quicktime']['creation_date'][0])) {
+
+			$dt = new DateTime($info['tags']['quicktime']['creation_date'][0]);
+
+			$timestamp = $dt->getTimestamp();
+
+			$result["offset"] = $dt->format('O');
+			$result["timezone_mode"] = 0;
+		}
+
+		if ($timestamp === null) {
+
+			if (!empty($info['quicktime']['timestamps_unix']['create'])) {
+
+				$ts = min($info['quicktime']['timestamps_unix']['create']);
+
+				if ($ts > 0 && $ts != -2082844800) {
+					$timestamp = $ts;
+					$result["timezone_mode"] = 1;
+				}
+			}
+		}
+
+		/*
+		2. GPS
+		*/
+
+		if ($result["timezone_mode"] === 1) {
+
+			if (!empty($info['tags']['quicktime']['gps_latitude'][0]) &&
+				!empty($info['tags']['quicktime']['gps_longitude'][0])) {
+
+				$result["lat"] = (float)$info['tags']['quicktime']['gps_latitude'][0];
+				$result["lon"] = (float)$info['tags']['quicktime']['gps_longitude'][0];
+
+				$result["timezone_mode"] = 2;
+			}
+		}
+
+		/*
+		3. FILENAME
+		*/
+
+		if ($timestamp === null && $filename !== null) {
+
+			$date = null;
+			$time = null;
+
+			if (preg_match('/(19\d{2}|20\d{2}|29\d{2})(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])/', $filename, $d)) {
+				$date = $d[0];
+			}
+
+			if (preg_match('/([01]\d|2[0-3])([0-5]\d)([0-5]\d)/', $filename, $t)) {
+				$time = $t[0];
+			}
+
+			if ($date && checkdate(substr($date,4,2), substr($date,6,2), substr($date,0,4))) {
+
+				if (!$time) $time = "000000";
+
+				$timestamp = strtotime(
+					substr($date,0,4) . "-" .
+					substr($date,4,2) . "-" .
+					substr($date,6,2) . " " .
+					substr($time,0,2) . ":" .
+					substr($time,2,2) . ":" .
+					substr($time,4,2)
+				);
+
+				$result["timezone_mode"] = 1;
+			}
+		}
+
+		/*
+		4. FINAL
+		*/
+
+		if ($timestamp === null) {
+			return $result;
+		}
+
+		$result["datetime"] = gmdate("YmdHis", $timestamp);
+
+		return $result;
+	}
+		
 	$loc_dir = 'multimedia/'.$_SESSION["USER"].'/';
 	$full_dir = $_SERVER['DOCUMENT_ROOT'].'/'.$loc_dir;
 

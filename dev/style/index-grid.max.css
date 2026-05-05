@@ -69,10 +69,16 @@ main section div.element div.button-select {
   left: 10px;
 }
 
-main section div.element div.button-fullscreen {
+main section div.element div.button-fullscreen.photo {
   position: absolute;
   top: 10px;
   left: 35px;
+}
+
+main section div.element div.button-fullscreen.video {
+  position: absolute;
+  top: 35px;
+  left: 10px;
 }
 
 main section div.element div.button-fullscreen span.material-symbols-outlined {

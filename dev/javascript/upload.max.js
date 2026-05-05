@@ -15,13 +15,32 @@ $(document).ready(function() {
         e.stopPropagation();
         let files = Array.from(e.originalEvent.dataTransfer.files);
         if (files.length > 0) {
-            uploadFiles(files);
-            $('#upload-status').fadeIn(300);
+			
+			$('#upload-status').fadeIn(300);
+				
+			$.get("../core/securitytoken.php")
+			.then(token => {
+				uploadFiles(files, token);
+			})
+			.catch(err => {
+				console.error("Can't get token", err);				
+				$('#upload-status').append(
+					`<div id="errorgeneral" class="text">
+						<span>Internal error</span>
+						&nbsp;<span class="material-symbols-outlined cursor"></span>
+					</div>`
+				);
+			});
         }
     });
 });
 
-function uploadFiles(files) {
+function orientation(width, height) {
+    if (height === 0) return 0;
+    return (width / height) > 1.3 ? 0 : 1;
+}
+
+function uploadFiles(files, token) {
     const bar = $('#progressbar');
     const totalSize = files.reduce((sum, f) => sum + f.size, 0);
     let uploadedSize = 0;
@@ -43,7 +62,7 @@ function uploadFiles(files) {
                     ctx.drawImage(img, 0, 0, width, height);
 
                     canvas.toBlob(blob => {
-                        resolve({ file: file, preview: blob });
+                        resolve({ file: file, preview: blob, orientation: orientation(img.width, img.height) });
                     }, 'image/webp', 0.3);
                 };
 
@@ -68,7 +87,7 @@ function uploadFiles(files) {
                 video.addEventListener('seeked', function() {
                     ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
                     canvas.toBlob(blob => {
-                        resolve({ file: file, preview: blob });
+                        resolve({ file: file, preview: blob, orientation: orientation(video.videoWidth, video.videoHeight) });
                     }, 'image/webp', 0.3);
                 });
 
@@ -83,7 +102,7 @@ function uploadFiles(files) {
     let chain = Promise.resolve();
     files.forEach(file => {
         chain = chain.then(() => {
-            if (file.size > 55 * 1024 * 1024) { // 55 Mo
+            if (file.size > 256 * 1024 * 1024) { // 256Mo
                 errorCount++;
                 $('#upload-status').append(
                     `<div id="error${errorCount}" class="text errorresponse">
@@ -98,10 +117,12 @@ function uploadFiles(files) {
             }
 
             return generateThumbnail(file)
-                .then(({ file, preview }) => {
+                .then(({ file, preview, orientation }) => {
                     const formData = new FormData();
                     formData.append('file', file);
                     formData.append('preview', preview, 'preview.webp');
+                    formData.append('orientation', orientation);
+					formData.append('token', token);
                     return uploadSingle(file, formData);
                 })
                 .catch(error => {

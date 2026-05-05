@@ -14,6 +14,8 @@ if(is_session_valid())
 }
 else
 {
+	if(!isset($_SESSION['try_a2f'])) $_SESSION['try_a2f']=1;
+	
 	$validation = new Validation();
 
 	$validation->addVerification('token',				'sha256',			'Token');	
@@ -127,9 +129,8 @@ else
 			else
 			{
 				if(!hash_equals((string)$result['datas'][0]['a2f_code'], (string)$_POST['code'])) 
-				{							
-					if(!isset($_SESSION['try_a2f'])) $_SESSION['try_a2f']=1;
-					else $_SESSION['try_a2f']++;
+				{								
+					$_SESSION['try_a2f']++;
 					
 					$fReturn->addWarningMessage("The code is incorrect")->fetch();
 				}	

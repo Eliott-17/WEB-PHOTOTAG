@@ -35,3 +35,4 @@ sample
 multimedia
 *.tmp.driveupload
 *.log
+/dev/test
