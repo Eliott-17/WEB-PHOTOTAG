@@ -72,11 +72,16 @@ function load_grid(ldata=null, ladd=false)
 	let source=null;
 	let html_mem_date="";
 	
-
+	let total_file_library=data.library.length;
+	let total_file_untagged=data.untagged.length;	
+	
+	$('#untaggedcount').html("&nbsp;("+total_file_untagged+")");
+	
 	if($('div#mainmenu button.mylib').hasClass('selected')) source=data.library;
 	if($('div#mainmenu button.untag').hasClass('selected')) source=data.untagged;
+
 	
-	if(ladd==false) 
+	if(ladd==false) //chargement progressif
 	{
 		loaded_files=0;
 		loading_limit=0;
@@ -128,29 +133,26 @@ function load_grid(ldata=null, ladd=false)
 		
 		$(this).parent().toggleClass('selected notselected');
 		
-		let current_id = parseInt($(this).parent().attr('id'));
+		let current_id = parseInt($(this).parent().attr('id').replace('grid_',''));
 		
 		if(e.shiftKey)
-		{
+		{	
 			if(last_select>=0)
 			{
-				//console.log("select from "+last_select+" to "+current_id);
-				
 				if(current_id>last_select)
 				{
 					for(i=(last_select+1);i<current_id;i++) 
 					{
-						//console.log("switch #"+i);
-						$('#'+i).toggleClass('selected notselected');
+						//console.log("switch #grid_"+i);
+						$('#grid_'+i).toggleClass('selected notselected');
 					}
 				}
 				else
-				{
-					
+				{				
 					for(i=(current_id+1);i<last_select;i++) 
 					{
-						//console.log("switch #"+i);
-						$('#'+i).toggleClass('selected notselected');
+						//console.log("switch #grid_"+i);
+						$('#grid_'+i).toggleClass('selected notselected');
 					}
 				}	
 			}
@@ -198,7 +200,7 @@ function addElement(dir, bdd)
 	let ux = "photo";
 	html+= '<div id="grid_'+uniqueid+'" class="element notselected wrapper '+file_orientationtxt+'">';
 	
-	html+= '	<div class="media-container" data-type="'+bdd.file_type+'" data-src="'+bdd.file_hash+'" data-id="'+bdd.id+'" >';
+	html+= '	<div class="media-container" data-type="'+bdd.file_type+'" data-src="'+bdd.file_hash+'" data-id="'+bdd.id+'" id="media_'+bdd.id+'">';
 	
 	if(bdd.file_type == 0) 
 	{

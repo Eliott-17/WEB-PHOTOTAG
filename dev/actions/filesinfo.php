@@ -81,6 +81,7 @@
 				$filedata[$value['file_original_name']]['other']=$value['tag_other'];	
 
 				$filedata[$value['file_original_name']]['id']=$value['id'];		
+				//$filedata[$value['file_original_name']]['file_hash']=$value['file_hash'];		
 				
 				//pour le flag
 

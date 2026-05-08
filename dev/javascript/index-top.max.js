@@ -10,7 +10,7 @@ $(document).ready(function(){
 		if(!$(this).hasClass('selected'))
 		{
 			$('div#mainmenu div button.untag').removeClass("selected");
-			$(this).addClass("selected");
+			$('div#mainmenu div button.mylib').addClass("selected");
 			g_load_files();
 			g_unselect_all();
 		}
@@ -20,10 +20,15 @@ $(document).ready(function(){
 		
 		if(!$(this).hasClass('selected'))
 		{
-			$('div#mainmenu div button.mylib').removeClass("selected");
-			$(this).addClass("selected");
-			g_load_files();
-			g_unselect_all();
+			g_load_untag();
 		}
 	});	
 });
+
+var g_load_untag = function load_untag(force_reload=false)
+{
+	$('div#mainmenu div button.mylib').removeClass("selected");
+	$('div#mainmenu div button.untag').addClass("selected");
+	g_load_files(force_reload);
+	g_unselect_all();
+}

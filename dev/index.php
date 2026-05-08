@@ -43,7 +43,7 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/locations.php');
 				?>
 					<div id="mainmenu" class="uxbackground">				
 						<div><button class="mylib selected"><span class="material-symbols-outlined">photo</span>&nbsp;<span>My library</span></button></div>
-						<div><button class="untag"><span class="material-symbols-outlined">new_label</span>&nbsp;<span>Untagged</span></button></div>
+						<div><button class="untag"><span class="material-symbols-outlined">new_label</span>&nbsp;<span>Untagged</span><span id="untaggedcount"></span></button></div>
 						<div class="search"><button class="search"><span class="material-symbols-outlined">search</span>&nbsp;<span>fast search</span></button><input type="text"/></div>
 						<div class="last"><a href="actions/logout.php"><button><span class="material-symbols-outlined">logout</span>&nbsp;<span>Logout</span></button></button></a></div>
 					</div>
@@ -91,10 +91,10 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/locations.php');
 					<br/>
 					<h4>
 						<button class="submit">
-							<span class="material-symbols-outlined">login</span><span>Login or Signin</span>
+							<span class="material-symbols-outlined">login</span>&nbsp;&nbsp;<span>Login or Signin</span>
 						</button>					
 						<button class="">
-							<span class="material-symbols-outlined">password</span><span>Forgot Password</span>
+							<span class="material-symbols-outlined">password</span>&nbsp;&nbsp;<span>Forgot Password</span>
 						</button>	
 					</h4>	
 					<div id="blockreturnlogin" class="cursor">
@@ -344,6 +344,21 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/locations.php');
 			}
 		?>
 	</body>
+	
+	
+	<footer>
+	
+	<?php	
+		if(ENV=="DEV")
+		{
+			echo "<br/>";
+			echo ini_get('session.gc_maxlifetime')."<br/>";
+			echo ini_get('display_errors')."<br/>";
+			echo ini_get('session.use_strict_mode')."<br/>";
+		}	
+	?>
+	
+	</footer>
 		
 	<!-- END BODY -->
 		

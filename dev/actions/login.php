@@ -66,7 +66,7 @@ else
 	{
 		if(empty($_POST['password_verif']))
 		{
-			$fReturn->addInfoMessage("Enter you password in the confirmation field")->addCallBack("g_login_password_verif")->fetch();	 //Callback fait apparaitre le deuxième champ password en javascript	
+			$fReturn->addInfoMessage("Confirm you password to create an account.")->addCallBack("g_login_password_verif")->fetch();	 //Callback fait apparaitre le deuxième champ password en javascript	
 		}
 		
 		if($_POST['password_verif']!=$_POST['password'])

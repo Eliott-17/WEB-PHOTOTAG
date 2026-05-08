@@ -50,8 +50,9 @@
 	$EasyPDO->addFields('time_status',$strdate_updated); //last updated info	
 	$EasyPDO->addFields('tag_status',1); //now file is tagged
 	
+	$affectedrow = $EasyPDO->update('photos', 'id IN', json_decode($_POST['files_hash'], true));
 	
-	$affectedrow = $EasyPDO->update('photos', 'id', json_decode($_POST['files_hash'], true));
+	//$fReturn->addConsole($affectedrow)->fetch();
 
-	$fReturn->addCallback("g_load_data_edit","")->addCallback("g_hide_conflict","")->addSuccessMessage("Database updated")->fetch();
+	$fReturn->addCallback("g_load_data_edit")->addCallback("g_hide_conflict","")->addSuccessMessage("Database updated")->fetch();
 ?>	

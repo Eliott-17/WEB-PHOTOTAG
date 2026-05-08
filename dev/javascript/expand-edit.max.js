@@ -3,6 +3,7 @@ var g_data_mem=null;
 var g_data=null;
 var clicked=0;
 var mode=0;
+var mode_mem=0;
 var last_open=0;
 
 $(document).ready(function(){
@@ -18,25 +19,29 @@ $(document).ready(function(){
 		last_open=2;
 		
 		$(this).addClass("delete");
+		$('nav div#select-status').fadeOut(300);
 
 		if(!$('aside#fullscreen_edit').hasClass('fullscreen'))
 		{	
 			mode=1;
+			mode_mem=1;
+			
 			g_fullscreen_edit();	
 		}
 		else
 		{
 			mode=0;
+			mode_mem=0;
 			g_trash_display();
 		}
 	
-		console.log('clicked');
+		console.log('clicked:',mode);
 		
 	});
 
 	$('aside#fullscreen_edit').on('mouseenter', 'div#filelist div.fake-link', function() 
 	{
-		$("div#conflict-quicklook img").attr('src',$('img#img_'+$(this).attr('data-id')).attr('src'));
+		$("div#conflict-quicklook").html($("div#"+$(this).attr('data-id')).html());
 		$('aside#fullscreen_edit div#editcontent form').hide();
 		$('div#conflict-quicklook').show();
 	})
@@ -88,7 +93,10 @@ $(document).ready(function(){
 	$('aside#fullscreen_edit h4 button.cancel').on('click.CancelSolver', function() {
 		
 		g_cancel_conflict();
-		$('nav div#select-status span#delete').removeClass('delete');		
+		$('nav div#select-status span#delete').removeClass('delete');	
+		$('nav div#select-status').fadeIn(300);
+
+		if($(this).hasClass('cancel') && mode_mem==1) g_fullscreen_edit();
 	});	
 });
 
@@ -115,8 +123,8 @@ var g_fullscreen_edit = function fullscreen_edit()
 			if($(this).hasClass('selected')) 
 			{ 
 
-				let hash=$(this).find("img").attr('src').split('-').pop().replace('.webp','');
-				let id=$(this).find("img").attr('id').replace('img_','');
+				//let hash=$(this).find("media-container").attr('data-src');
+				let id=$(this).find("div.media-container").attr('data-id');
 
 				hash_array.push(id);
 			}
@@ -141,10 +149,13 @@ var g_load_data_edit = function load_data_edit()
 	
 var g_edit_treat_data = function edit_treat_data(data)
 {	
+	//console.log("Data",data);
+	
 	g_data = structuredClone(data);
 	g_data_mem = structuredClone(data['flag']);
 	
 	g_refresh_conflict();
+	//g_load_untag();//enlever les élements de la grille
 }
 
 var g_hide_conflict = function hide_conflict()
@@ -228,8 +239,8 @@ function show_file_list(id=null)
 	
 	$.each(g_data['filedata'], function(index, value) {
 						
-		$('aside#fullscreen_edit #filelist').append('<div class="fake-link" data-id="'+value['id']+'">'+index+'</div>');
-		if(id!=null) $('aside#fullscreen_edit #filelist').append('<div>'+value[id.replace('_edit','')]+'</div>');
+		$('aside#fullscreen_edit #filelist').append('<div class="fake-link" data-id="media_'+value['id']+'">'+index+'</div>');
+		//if(id!=null) $('aside#fullscreen_edit #filelist').append('<div>'+value[id.replace('_edit','')]+'</div>');
 	
 	});
 }
