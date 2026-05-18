@@ -1,3 +1,7 @@
+//***********************************************
+//Gère l'affichage des informations des fichiers
+//en lot (bouton tag)
+//***********************************************
 
 var g_data_mem=null;
 var g_data=null;

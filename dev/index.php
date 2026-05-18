@@ -17,14 +17,17 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/locations.php');
 		<!-- HEADER SCRIPTS INCLUDED ON THIS PAGE - START -->
 		<!--<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"/>-->
 
-		<link rel="stylesheet" href="style/index-top.<?php echo filemtime('style/index-top.'.DIM.'.css'); ?>.<?php echo DIM; ?>.css" type="text/css"/>				
-		<link rel="stylesheet" href="style/expand-info.<?php echo filemtime('style/expand-info.'.DIM.'.css'); ?>.<?php echo DIM; ?>.css" type="text/css"/>
-		<link rel="stylesheet" href="style/expand-view.<?php echo filemtime('style/expand-view.'.DIM.'.css'); ?>.<?php echo DIM; ?>.css" type="text/css"/>
-		<link rel="stylesheet" href="style/expand-edit.<?php echo filemtime('style/expand-edit.'.DIM.'.css'); ?>.<?php echo DIM; ?>.css" type="text/css"/>
+		<link rel="stylesheet" href="style/common.<?php echo filemtime('style/common.'.DIM.'.css'); ?>.<?php echo DIM; ?>.css" type="text/css"/>
+
+		<link rel="stylesheet" href="style/file-infos.<?php echo filemtime('style/file-infos.'.DIM.'.css'); ?>.<?php echo DIM; ?>.css" type="text/css"/>
+		<link rel="stylesheet" href="style/file-multi-selection-edit.<?php echo filemtime('style/file-multi-selection-edit.'.DIM.'.css'); ?>.<?php echo DIM; ?>.css" type="text/css"/>
+		<link rel="stylesheet" href="style/file-open-fullscreen.<?php echo filemtime('style/file-open-fullscreen.'.DIM.'.css'); ?>.<?php echo DIM; ?>.css" type="text/css"/>
+		
+		
 		<link rel="stylesheet" href="style/index-grid.<?php echo filemtime('style/index-grid.'.DIM.'.css'); ?>.<?php echo DIM; ?>.css" type="text/css"/>
 		<link rel="stylesheet" href="style/index-login.<?php echo filemtime('style/index-login.'.DIM.'.css'); ?>.<?php echo DIM; ?>.css" type="text/css"/>
+		<link rel="stylesheet" href="style/index-top.<?php echo filemtime('style/index-top.'.DIM.'.css'); ?>.<?php echo DIM; ?>.css" type="text/css"/>
 		<link rel="stylesheet" href="style/upload.<?php echo filemtime('style/upload.'.DIM.'.css'); ?>.<?php echo DIM; ?>.css" type="text/css"/>
-		<link rel="stylesheet" href="style/common.<?php echo filemtime('style/common.'.DIM.'.css'); ?>.<?php echo DIM; ?>.css" type="text/css"/>
 
 
 		<!-- HEADER SCRIPTS INCLUDED ON THIS PAGE - END -->
@@ -372,7 +375,7 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/locations.php');
 	<script src='javascript/index-top.<?php echo filemtime('javascript/index-top.'.DIM.'.js'); ?>.<?php echo DIM; ?>.js'></script>
 	<script src='javascript/index-login.<?php echo filemtime('javascript/index-login.'.DIM.'.js'); ?>.<?php echo DIM; ?>.js'></script>
 	<script src='javascript/file-open-fullscreen.<?php echo filemtime('javascript/file-open-fullscreen.'.DIM.'.js'); ?>.<?php echo DIM; ?>.js'></script>
-	<script src='javascript/file-load-infos.<?php echo filemtime('javascript/file-load-infos.'.DIM.'.js'); ?>.<?php echo DIM; ?>.js'></script>
+	<script src='javascript/file-infos.<?php echo filemtime('javascript/file-infos.'.DIM.'.js'); ?>.<?php echo DIM; ?>.js'></script>
 	<script src='javascript/file-multi-selection-edit.<?php echo filemtime('javascript/file-multi-selection-edit.'.DIM.'.js'); ?>.<?php echo DIM; ?>.js'></script>
 	<script src='javascript/file-upload.<?php echo filemtime('javascript/file-upload.'.DIM.'.js'); ?>.<?php echo DIM; ?>.js'></script>
 	<script src='core/post.<?php echo DIM; ?>.js'></script>

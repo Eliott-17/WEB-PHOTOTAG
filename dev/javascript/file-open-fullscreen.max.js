@@ -1,3 +1,7 @@
+//***********************************************
+//Gère l'affichage des informations des fichiers
+//individuels (bouton ouvrir en grand)
+//***********************************************
 
 var current_id;
 var max_id;

@@ -2,8 +2,6 @@
 --Fullscreen image display
 -------------------------------------------*/
 
-/**rgb(168, 199, 250)**/
-
 aside#fullscreen_picture {
 	color: #333;
 	top: 0px;
@@ -28,22 +26,13 @@ aside#fullscreen_picture.selected
 {
 	background-color: #a8c7fa;
 }
-/*
-aside#fullscreen_picture img {
-	width: 85%;
-	height: 100vh;
-	object-fit: contain;
-	display: inline-flex;
-}
-*/
-aside#fullscreen_picture div#maincontent img,
-aside#fullscreen_picture div#maincontent video {
+
+aside#fullscreen_picture div#maincontent :Where(img, video) {
 	
 	width: 100%;
 	object-fit: contain;
 
 }
-
 
 aside#fullscreen_picture div#maincontent {
 	
@@ -51,7 +40,6 @@ aside#fullscreen_picture div#maincontent {
 	width: 100%;
 	height: 100vh;
 	box-sizing: border-box;
-	/*border: 1px solid red;*/	
 }
 
 aside#fullscreen_picture div#infocontent {
@@ -68,7 +56,6 @@ aside#fullscreen_picture div#infocontent {
 aside#fullscreen_picture div#infocontent.displayinfo {
 	
 	display: block !important;
-	
 }
 
 aside#fullscreen_picture div.ux {
@@ -88,7 +75,6 @@ aside#fullscreen_picture div.menubackground {
 
     position: absolute;
     box-sizing: border-box;
-    /*border: 1px solid green;*/
     top: 20px;
     left: 20px;
     width: 105px;

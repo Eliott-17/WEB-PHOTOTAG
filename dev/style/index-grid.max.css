@@ -18,11 +18,16 @@ main section div.element {
   overflow: hidden;
 }
 
-main section div.element img {
+main section div.element :where(img,video) {
   width: 100%;
   height: 100%;
   display: block;
   object-fit:cover;
+}
+
+main section div.media-container 
+{
+	height: 100%;
 }
 
 main section div.portrait {
@@ -104,7 +109,7 @@ main section div.element span {
 }
 
 main section div.selected { background-color: #a8c7fa; border: 15px solid #a8c7fa; }
-main section div.selected img { border-radius: 5px; }
+main section div.selected :where(img,video) { border-radius: 5px; }
 
 main section div.notselected span.hover { opacity: 0; }
 main section div.notselected span.caseselected { opacity: 0; }
