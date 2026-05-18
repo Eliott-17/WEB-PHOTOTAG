@@ -52,7 +52,7 @@ g_load_files = function load_files(force_reload=false)
 	
 	if(data===null || force_reload==true)
 	{
-		get('actions/filelist.php');
+		get('actions/file-load-list.php');
 	}
 	else 
 	{
@@ -185,7 +185,7 @@ var g_load_media = function load_media(id)
 	if(file_type == 0) $('div#maincontent').html('<img src="hd-'+file_hash+'" loading="lazy">');
 	if(file_type == 1) $('div#maincontent').html('<video src="hd-'+file_hash+'" poster="sd-'+file_hash+'" controls autoplay muted preload="auto" playsinline></video>></video>');	
 
-	g_loadinfoview();	
+	g_file_load_infos();	
 }
 
 function addElement(dir, bdd)

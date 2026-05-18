@@ -114,11 +114,11 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/locations.php');
 					<img src=""/>
 					
 				</div>
-				<form method="post" id="fileinfopost" data-return="blockreturnfilesinfo" action="actions/filesinfo.php" class="post">
+				<form method="post" id="fileinfopost" data-return="blockreturnfilesinfo" action="actions/file-selection-load-tags.php" class="post">
 					<input type="hidden" name="token" class="token" value=""/>
 					<input type="hidden" name="files_hash" class="fileshash" value=""/>
 				</form>
-				<form id="editform" method="post" data-return="blockreturnfilesinfo" action="actions/savemultiple.php" class="post hidden">
+				<form id="editform" method="post" data-return="blockreturnfilesinfo" action="actions/file-selection-save-tags.php" class="post hidden">
 					<input type="hidden" name="token" class="token" value=""/>	
 					<input type="hidden" name="files_hash" class="fileshash" value=""/>
 					<input type="hidden" name="conflict_edit" id="conflictedit" value=""/>
@@ -150,7 +150,7 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/locations.php');
 					<div class="loading"><span class="material-symbols-outlined">cycle</span></div>		
 					<div class="return alert alert-success"></div>
 				</div>
-				<form id="trashform" method="post" data-return="blockreturnfilestrash" action="actions/delete.php" class="post hidden">
+				<form id="trashform" method="post" data-return="blockreturnfilestrash" action="actions/file-delete.php" class="post hidden">
 					<input type="hidden" name="token" class="token" value=""/>	
 					<input type="hidden" name="files_hash" class="fileshash" value=""/>
 					<h3 id="trash-info"><span class="material-symbols-outlined">warning</span>&nbsp;<span>Selected files will be moved to the trash.</span></h3>
@@ -186,7 +186,7 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/locations.php');
 				<h3 id="file_size" class="margin"></span><span></h3>
 				<h2><span class="material-symbols-outlined">calendar_clock</span><span>Date time</span></h2>
 				<h3 id="time_taken_at" class="margin"><span></span></h3>
-				<form method="post" data-return="blockreturndatetime" action="actions/save.php?form=time" class="post">
+				<form method="post" data-return="blockreturndatetime" action="actions/file-save-infos.php?form=time" class="post">
 					<input type="hidden" name="token" class="token" value=""/>
 					<input type="hidden" name="file_hash" class="filehash" value=""/>
 					<h3 class="ux-time">
@@ -244,7 +244,7 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/locations.php');
 					<div class="return alert alert-success"></div>
 				</div>	
 				<h2><span class="material-symbols-outlined">globe_location_pin</span><span>Location</span></h2>
-				<form method="post" data-return="blockreturnloc" action="actions/save.php?form=tag-location" class="post">		
+				<form method="post" data-return="blockreturnloc" action="actions/file-save-infos.php?form=tag-location" class="post">		
 					<input type="hidden" name="token" class="token" value=""/>
 					<input type="hidden" name="file_hash" class="filehash" value=""/>
 					<h3 class="ux-tag-location" id="continent"><span class="material-symbols-outlined">globe_asia</span><span class="unedit"></span><select name="continent" ><?php foreach($contient as $key=>$value) echo '<option value="'.$key.'">'.$value.'</option>'; ?></select></h3>				
@@ -268,7 +268,7 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/locations.php');
 					<div class="return alert alert-success"></div>
 				</div>
 				<h2><span class="material-symbols-outlined">tag</span><span>Tags</span></h2>
-				<form method="post" data-return="blockreturntags" action="actions/save.php?form=tag-general" class="post">
+				<form method="post" data-return="blockreturntags" action="actions/file-save-infos.php?form=tag-general" class="post">
 					<input type="hidden" name="token" class="token" value=""/>
 					<input type="hidden" name="file_hash" class="filehash" value=""/>
 					<h3 class="ux-tag-general" id="activity"><span class="material-symbols-outlined">directions_run</span><span class="unedit"></span><input name="activity" type="text" placeholder="activity"></h3>				
@@ -371,10 +371,10 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/locations.php');
 	<script src='javascript/index-grid.<?php echo filemtime('javascript/index-grid.'.DIM.'.js'); ?>.<?php echo DIM; ?>.js'></script>
 	<script src='javascript/index-top.<?php echo filemtime('javascript/index-top.'.DIM.'.js'); ?>.<?php echo DIM; ?>.js'></script>
 	<script src='javascript/index-login.<?php echo filemtime('javascript/index-login.'.DIM.'.js'); ?>.<?php echo DIM; ?>.js'></script>
-	<script src='javascript/expand-view.<?php echo filemtime('javascript/expand-view.'.DIM.'.js'); ?>.<?php echo DIM; ?>.js'></script>
-	<script src='javascript/expand-info.<?php echo filemtime('javascript/expand-info.'.DIM.'.js'); ?>.<?php echo DIM; ?>.js'></script>
-	<script src='javascript/expand-edit.<?php echo filemtime('javascript/expand-edit.'.DIM.'.js'); ?>.<?php echo DIM; ?>.js'></script>
-	<script src='javascript/upload.<?php echo filemtime('javascript/upload.'.DIM.'.js'); ?>.<?php echo DIM; ?>.js'></script>
+	<script src='javascript/file-open-fullscreen.<?php echo filemtime('javascript/file-open-fullscreen.'.DIM.'.js'); ?>.<?php echo DIM; ?>.js'></script>
+	<script src='javascript/file-load-infos.<?php echo filemtime('javascript/file-load-infos.'.DIM.'.js'); ?>.<?php echo DIM; ?>.js'></script>
+	<script src='javascript/file-multi-selection-edit.<?php echo filemtime('javascript/file-multi-selection-edit.'.DIM.'.js'); ?>.<?php echo DIM; ?>.js'></script>
+	<script src='javascript/file-upload.<?php echo filemtime('javascript/file-upload.'.DIM.'.js'); ?>.<?php echo DIM; ?>.js'></script>
 	<script src='core/post.<?php echo DIM; ?>.js'></script>
 	
 	<?php 

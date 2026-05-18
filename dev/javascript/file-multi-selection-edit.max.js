@@ -168,9 +168,9 @@ var g_hide_conflict = function hide_conflict()
 var g_cancel_conflict = function cancel_conflict()
 {
 	g_data['flag']=structuredClone(g_data_mem);
+	g_hide_conflict();
 	g_refresh_conflict();
 	$(this).hide();
-	g_hide_conflict();
 	clicked=0;
 }
 
@@ -231,6 +231,8 @@ var g_refresh_conflict = function refresh_conflict()
 
 	$('#conflictedit').val(JSON.stringify(g_data['flag']));
 	$('#totalsize').val(formatBytes(g_data['total_size']));
+	
+	show_file_list();
 }
 
 function show_file_list(id=null)
@@ -238,9 +240,11 @@ function show_file_list(id=null)
 	$('aside#fullscreen_edit #filelist').html('');
 	
 	$.each(g_data['filedata'], function(index, value) {
-						
+				
+		//image link
 		$('aside#fullscreen_edit #filelist').append('<div class="fake-link" data-id="media_'+value['id']+'">'+index+'</div>');
-		//if(id!=null) $('aside#fullscreen_edit #filelist').append('<div>'+value[id.replace('_edit','')]+'</div>');
+		//property for conflist solver
+		if(id!=null) $('aside#fullscreen_edit #filelist').append('<div>'+value[id.replace('_edit','')]+'</div>');
 	
 	});
 }

@@ -1,43 +1,48 @@
-function processExif(data, indent = 0) {
-        let html = '';
-        for (const [key, value] of Object.entries(data)) {
-            if (typeof value === 'object' && value !== null) {
-                // Si la valeur est un objet, on récurse
-                html += `<div style="margin-left: ${indent}px;"><strong>${key}:</strong></div>`;
-                html += processExif(value, indent + 20);
-            } else {
-                // Afficher la clé et la valeur
-                html += `<div style="margin-left: ${indent}px;"><strong>${key}:</strong> ${value}</div>`;
-            }
-        }
-        return html;
-}
+//***********************************************
+//Gère l'affichage des informations des fichiers
+//individuels (bouton info)
+//***********************************************
 
-function formatBytes(bytes) {
-    if (bytes < 1000) return bytes + " o";
+$(document).ready(function(){
 
-    const units = ["Ko", "Mo", "Go", "To"];
-    let i = -1;
+	$('aside#fullscreen_picture div.button-info').on('click.infoViewInfo', function() {
+		
+		$('aside#fullscreen_picture div#infocontent').toggleClass('displayinfo');
+		$('aside#fullscreen_picture div.button-rightarrow').toggleClass('displayinfo');
+		
+		g_file_load_infos();
+	});
 
-    do {
-        bytes = bytes / 1000;
-        i++;
-    } while (bytes >= 1000 && i < units.length - 1);
+	$('aside#fullscreen_picture div#infocontent h4.button-exif').on('click.exifInfo', function() {
+		
+		$('aside#fullscreen_picture div#infocontent h3#exif').toggle();
+		if($('aside#fullscreen_picture div#infocontent h3#exif').is(':visible')) {
+			$('aside#fullscreen_picture div#infocontent h4.button-exif div span.material-symbols-outlined').html("collapse_all");  }
+		else {
+			$('aside#fullscreen_picture div#infocontent h4.button-exif div span.material-symbols-outlined').html("expand_all");}
+	});
+	
+	$('aside#fullscreen_picture div#infocontent h4.edit_ux').find('button.edit, button.cancel').on('click.infoViewEdit', function() {
+				
+		$(this).parent().children().toggle();
+		
+		let data=$(this).parent().attr('data-form');
+		
+		$('aside#fullscreen_picture h3.ux-'+data+' input, h3.ux-'+data+' select, h3.ux-'+data+' span').toggle();
+	});	
+});
 
-    return (Math.round(bytes * 10) / 10) + " " + units[i];
-}
-
-var g_loadinfoview = function loadinfoview(lform = "")
+var g_file_load_infos = function loadinfoview(lform = "")
 {	
 	if($('div#infocontent').hasClass("displayinfo"))
 	{	
 		let hash = $('div#maincontent img, div#maincontent video').attr('src').split('-').pop();
 		
-		get('actions/filelist.php?hash='+hash+'&lform='+lform);
+		get('actions/file-load-infos.php?hash='+hash+'&lform='+lform);
 	}
 }
 
-var g_loadinfoview_data = function loadinfoview_data(data)
+var g_file_load_info_CallBack = function file_load_info_CallBack(data)
 {
 	let lform = data.lform;
 	let hash = data.hash;
@@ -152,31 +157,31 @@ var g_loadinfoview_data = function loadinfoview_data(data)
 	}
 }
 
-$(document).ready(function(){
+function processExif(data, indent = 0) {
+        let html = '';
+        for (const [key, value] of Object.entries(data)) {
+            if (typeof value === 'object' && value !== null) {
+                // Si la valeur est un objet, on récurse
+                html += `<div style="margin-left: ${indent}px;"><strong>${key}:</strong></div>`;
+                html += processExif(value, indent + 20);
+            } else {
+                // Afficher la clé et la valeur
+                html += `<div style="margin-left: ${indent}px;"><strong>${key}:</strong> ${value}</div>`;
+            }
+        }
+        return html;
+}
 
-	$('aside#fullscreen_picture div.button-info').on('click.infoViewInfo', function() {
-		
-		$('aside#fullscreen_picture div#infocontent').toggleClass('displayinfo');
-		$('aside#fullscreen_picture div.button-rightarrow').toggleClass('displayinfo');
-		
-		g_loadinfoview();
-	});
+function formatBytes(bytes) {
+    if (bytes < 1000) return bytes + " o";
 
-	$('aside#fullscreen_picture div#infocontent h4.button-exif').on('click.exifInfo', function() {
-		
-		$('aside#fullscreen_picture div#infocontent h3#exif').toggle();
-		if($('aside#fullscreen_picture div#infocontent h3#exif').is(':visible')) {
-			$('aside#fullscreen_picture div#infocontent h4.button-exif div span.material-symbols-outlined').html("collapse_all");  }
-		else {
-			$('aside#fullscreen_picture div#infocontent h4.button-exif div span.material-symbols-outlined').html("expand_all");}
-	});
-	
-	$('aside#fullscreen_picture div#infocontent h4.edit_ux').find('button.edit, button.cancel').on('click.infoViewEdit', function() {
-				
-		$(this).parent().children().toggle();
-		
-		let data=$(this).parent().attr('data-form');
-		
-		$('aside#fullscreen_picture h3.ux-'+data+' input, h3.ux-'+data+' select, h3.ux-'+data+' span').toggle();
-	});	
-});
+    const units = ["Ko", "Mo", "Go", "To"];
+    let i = -1;
+
+    do {
+        bytes = bytes / 1000;
+        i++;
+    } while (bytes >= 1000 && i < units.length - 1);
+
+    return (Math.round(bytes * 10) / 10) + " " + units[i];
+}

@@ -91,5 +91,5 @@
 	$EasyPDO->addConditionalData('file_hash',$_POST['file_hash']);
 	$EasyPDO->update('photos', 'file_hash=:file_hash');
 		
-	$fReturn->addSuccessMessage("Database updated")->addCallBack("g_loadinfoview", $_GET['form'])->fetch();
+	$fReturn->addSuccessMessage("Database updated")->addCallBack("g_file_load_info_CallBack", $_GET['form'])->fetch();
 ?>	

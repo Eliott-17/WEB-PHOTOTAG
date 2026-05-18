@@ -196,7 +196,7 @@ function uploadFiles(files, token) {
                 }
             };
 
-            xhr.open('POST', 'actions/upload.php');
+            xhr.open('POST', 'actions/file-upload.php');
             xhr.send(formData);
         });
     }
