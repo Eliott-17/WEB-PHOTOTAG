@@ -1,6 +1,5 @@
 //***********************************************
-//Gère l'affichage des informations des fichiers
-//individuels (bouton ouvrir en grand)
+//Gère l'affichage en plein écran
 //***********************************************
 
 var current_id;
@@ -16,30 +15,30 @@ $(document).on('keydown', function(e) {
 
 $(document).ready(function(){
 
-	$('aside#fullscreen_picture div.button-return').on('click.gridSelect', function() {
+	$('section#maincontent div.button-return').on('click.gridSelect', function() {
 		g_fullscreen(-1);
-		$('nav div#mainmenu').show();
 	});
 
-	$('aside#fullscreen_picture').on('click.gridLeftAR', 'div.button-leftarrow', function() { Arrow(0); });			
-	$('aside#fullscreen_picture').on('click.gridRightAR', 'div.button-rightarrow', function() { Arrow(1); });
-	$('aside#fullscreen_picture').on('click.gridUnselect', 'div.button-selection', function() { Select(); });
+	$('section#maincontent').on('click.gridLeftAR', 'div.button-leftarrow', function() { Arrow(0); });			
+	$('section#maincontent').on('click.gridRightAR', 'div.button-rightarrow', function() { Arrow(1); });
+	$('section#maincontent').on('click.gridUnselect', 'div.button-selection', function() { Select(); });
 });
 
 g_fullscreen = function fullscreen(id, max)
 {
-	$('aside#fullscreen_picture').toggleClass('fullscreen');
-	$('body').toggleClass('fullscreen');
+	$('main section').toggleClass('hidden');
+
+	if(!$('body').hasClass("no-aside"))
+	{	
+		$('body').toggleClass("no-aside");
+	}
+	
+	if(id==-1) $('nav div#mainmenu').show();
 	
 	current_id=id;
 	max_id=max;
 	arrow_hide(id, max); 
 	fullscreen_is_selected(id);
-	
-	/*if($('aside#fullscreen_picture').hasClass('fullscreen'))
-	{
-		arrow_hide(current_id, max);
-	}*/
 }
 
 function Arrow(sens)
@@ -89,19 +88,19 @@ function arrow_hide(current_id, max_id)
 
 function fullscreen_is_selected(current_id)
 {
-	if($('aside#fullscreen_picture').hasClass('fullscreen'))
+	if(!$('section#maincontent').hasClass('hidden'))
 	{	
 		if($('div#grid_'+current_id).hasClass('selected'))
 		{
-			$('aside#fullscreen_picture').addClass('selected');
-			$('aside#fullscreen_picture div.button-selection').addClass('selected');
-			$('aside#fullscreen_picture div.button-selection').removeClass('notselected');
+			$('section#maincontent').addClass('selected');
+			$('section#maincontent div.button-selection').addClass('selected');
+			$('section#maincontent div.button-selection').removeClass('notselected');
 		}
 		else
 		{
-			$('aside#fullscreen_picture').removeClass('selected');
-			$('aside#fullscreen_picture div.button-selection').addClass('notselected');
-			$('aside#fullscreen_picture div.button-selection').removeClass('selected');
+			$('section#maincontent').removeClass('selected');
+			$('section#maincontent div.button-selection').addClass('notselected');
+			$('section#maincontent div.button-selection').removeClass('selected');
 		}
 	}
 }

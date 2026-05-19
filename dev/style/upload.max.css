@@ -13,10 +13,6 @@
     border-color:#0078d7;
 }
 
-.ux-infobox {
-	z-index: 3 !important;
-}
-
 .ux-infobox div#progressbar {
     height: 18px;
     width: 0%;

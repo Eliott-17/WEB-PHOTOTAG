@@ -8,8 +8,6 @@ let undated=0;
 
 $(document).ready(function(){
 
-	$('nav').on('click', 'div#select-status div.selection', function() { g_unselect_all(); });		
-
 	$(window).on('scroll', function() {
 
 		if (loading) return;
@@ -35,14 +33,15 @@ g_unselect_all = function unselect_all()
 	$('main div.element').each(function () { if ($(this).hasClass('selected')) $(this).toggleClass('selected notselected');	});
 	$('#select-status').fadeOut(300); 
 	
-	//copy fullscreenview.max.js 97-99
-	$('aside#fullscreen_picture').removeClass('selected');
-	$('aside#fullscreen_picture div.button-selection').addClass('notselected');
-	$('aside#fullscreen_picture div.button-selection').removeClass('selected');
-	
-	if($('aside#fullscreen_edit').hasClass('fullscreen'))
-	{	
-		g_fullscreen_edit();
+	//copy from fullscreenview.max.js 97-99
+	$('section#maincontent').removeClass('selected');
+	$('section#maincontent div.button-selection').addClass('notselected');
+	$('section#maincontent div.button-selection').removeClass('selected');
+
+	//copy from file-multi-selection-edit.max.js 15-18
+	if(!$('body').hasClass("no-aside") && $('main section#maincontent').hasClass("hidden"))
+	{
+		$('body').toggleClass("no-aside");
 	}
 }
 
@@ -86,7 +85,7 @@ function load_grid(ldata=null, ladd=false)
 		loaded_files=0;
 		loading_limit=0;
 		undated=0;
-		$("main section").html("");
+		$("main section.grid").html("");
 	}
 	
 	$.each(source, function(i, bdd)
@@ -127,8 +126,8 @@ function load_grid(ldata=null, ladd=false)
 	
 	loading_limit=loaded_files;
 
-	if(undated==0) $("main section.nodate").html('');
-		
+	/*if(undated==0) $("main section.nodate").html('');*/
+			
 	$('main').on('click.gridSelect', 'div.button-select', function(e) {
 		
 		$(this).parent().toggleClass('selected notselected');
@@ -182,8 +181,8 @@ var g_load_media = function load_media(id)
 	let file_type = $('div#grid_'+id+' div.media-container').attr("data-type");
 	let file_hash = $('div#grid_'+id+' div.media-container').attr("data-src");
 		
-	if(file_type == 0) $('div#maincontent').html('<img src="hd-'+file_hash+'" loading="lazy">');
-	if(file_type == 1) $('div#maincontent').html('<video src="hd-'+file_hash+'" poster="sd-'+file_hash+'" controls autoplay muted preload="auto" playsinline></video>></video>');	
+	if(file_type == 0) $('section#maincontent div.media').html('<img src="hd-'+file_hash+'" loading="lazy">');
+	if(file_type == 1) $('section#maincontent div.media').html('<video src="hd-'+file_hash+'" poster="sd-'+file_hash+'" controls autoplay muted preload="auto" playsinline></video>></video>');	
 
 	g_file_load_infos();	
 }

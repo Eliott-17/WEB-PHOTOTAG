@@ -105,7 +105,7 @@
 			$bigarray['total_size']=$total_size;			
 			$bigarray['filedata']=$filedata;
 			
-			$fReturn->addCallBack("g_edit_treat_data", $bigarray)->fetch();
+			$fReturn->addCallBack("g_multiple_files_load_data_CallBack", $bigarray)->fetch();
 			
 		}
 	}

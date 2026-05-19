@@ -2,24 +2,25 @@
 --Fullscreen image
 -------------------------------------------*/
 
-div.infocontent
+#infocontent
 {
+	width: 500px;
 	overflow: scroll;
-	padding: 10px;
+	padding: 18px 0px 0px 18px;
 }
 
-div.infocontent h2
+#infocontent h2
 {
 	margin-top: 10px;
 	margin-bottom: 5px;
 }
-div.infocontent :where(h3,h4)
+#infocontent :where(h3,h4)
 {
 	color: #5e5e5e;
 	margin: 0px;
 }
 
-div.infocontent button
+#infocontent button
 {
 	box-sizing: border-box;
 	border: 1px solid black;
@@ -30,38 +31,36 @@ div.infocontent button
 	height: 30px;
 }
 	
-div.infocontent :where(h2,h3,h4) {
+#infocontent :where(h2,h3,h4) {
 	
+	/*padding-top: 2px;
+	padding-bottom: 2px;*/
+	min-height: 35px;
 	width: fit-content;
 }
 
-div.infocontent h2 span.material-symbols-outlined
+#infocontent h2 span.material-symbols-outlined
 {
 	margin-right: 10px;
 }
 
-div.infocontent h3 span.material-symbols-outlined, 
+#infocontent h3 span.material-symbols-outlined, 
 h3.margin span,
-.infocontent :where(h3,h4) button:not(.cancel)
+#infocontent :where(h3,h4) button
 {
 	margin-left: 35px;
 }
 
-.infocontent :where(h3,h4) button
-{
-	margin-left: 5px;
-}
-
-div.infocontent :where(h2,h3,h4) span
+#infocontent :where(h2,h3,h4) span
 {
 	vertical-align: middle;
 }
 
-div.infocontent :where(input,select)
+#infocontent :where(input,select)
 {
 	padding-left: 5px;
-	margin-top: 10px;
-	margin-left: 35px;
+	/*margin-top: 5px;*/
+	margin-left: 5px;
 	border: 1px solid black;
 	border-radius: 5px;
 	background-color: white;
@@ -70,48 +69,48 @@ div.infocontent :where(input,select)
 	height: 30px;
 }
 
-aside#fullscreen_picture div.infocontent :where(input,select)
+#infocontent :where(input,select)
+{
+	display: inline-block;
+}
+
+#infocontent h4.edit_ux :where(button.cancel,button.save)
 {
 	display: none;
 }
 
-div.infocontent h4.edit_ux :where(button.cancel,button.save)
-{
-	display: none;
-}
-
-div.infocontent span.unedit
+#infocontent span.unedit
 {
 	margin-left: 5px;
 }
 
-div.infocontent h3#exif
+#infocontent h3#exif
 {
 	display: none;
 }
 
-div.infocontent button.cancel
+#infocontent button.cancel
 {
 	/*color: red;*/
 }
 
-div.infocontent button.save
+#infocontent button.save
 {
 	color: green;
 }
 
-div.infocontent button.warning
+#infocontent button.warning
 {
 	color: red;
 }
 
-div.infocontent h4.edit_ux button:hover, h4.button-exif button:hover, aside#fullscreen_edit div.infocontent h4 button:hover
+#infocontent h4.edit_ux button:hover, h4.button-exif button:hover, aside#fullscreen_edit #infocontent h4 button:hover
 {
 	border: 2px solid black;
 	padding: 1px 4px 1px 4px;
 }
 
-div.infocontent span.legend
+#infocontent span.legend
 {
 	font-size: small;
 }

@@ -44,8 +44,14 @@ function formatDateTime(exifDateTime, mode = 'display') {
     const second = exifDateTime.substr(17, 2);
 
     // Mode input (HTML datetime-local)
-    if (mode === 'input') {
+    if (mode === 'input-datetime') {
         return `${year}-${month}-${day}T${hour}:${minute}`;
+    }
+    if (mode === 'input-date') {
+        return `${year}-${month}-${day}`;
+    }
+    if (mode === 'input-time') {
+        return `${hour}:${minute}`;
     }
 	if (mode === 'timezone') {
 		return timezone;
@@ -77,7 +83,7 @@ function formatDateTime(exifDateTime, mode = 'display') {
     // Remplacer ":" par "h"
     formatted = formatted.replace(':', 'h');
 
-    return formatted + ' UTC' + timezone;
+    return formatted + ', UTC' + timezone;
 }
 
 /**

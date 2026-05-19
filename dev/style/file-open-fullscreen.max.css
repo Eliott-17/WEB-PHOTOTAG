@@ -2,39 +2,42 @@
 --Fullscreen image display
 -------------------------------------------*/
 
-aside#fullscreen_picture {
+main section#maincontent {
 	color: #333;
 	top: 0px;
 	left: 0px;
 	width: 100%;
 	height: 100vh;
-	display: none;
+	display: inline-flex;
 	justify-content: center;
 	align-items: center;
 	overflow: hidden;
 	position: sticky;
 	background-color: black;
-	z-index: 1;
 }
-
-aside#fullscreen_picture.fullscreen
+/*
+main section#maincontent.fullscreen
 {
 	display: inline-flex;
 }
-
-aside#fullscreen_picture.selected
+*/
+main section#maincontent.selected
 {
 	background-color: #a8c7fa;
 }
 
-aside#fullscreen_picture div#maincontent :Where(img, video) {
+main section#maincontent div.media {
+	z-index: -1;
+}
+
+main section#maincontent div.media :Where(img, video) {
 	
 	width: 100%;
 	object-fit: contain;
 
 }
 
-aside#fullscreen_picture div#maincontent {
+main section#maincontent div.media {
 	
 	display: flex;
 	width: 100%;
@@ -42,7 +45,7 @@ aside#fullscreen_picture div#maincontent {
 	box-sizing: border-box;
 }
 
-aside#fullscreen_picture div#infocontent {
+main section#maincontent div#infocontent {
 	
 	display: none;
 	width: 500px;
@@ -53,12 +56,12 @@ aside#fullscreen_picture div#infocontent {
 	
 }
 
-aside#fullscreen_picture div#infocontent.displayinfo {
+main section#maincontent div#infocontent.displayinfo {
 	
 	display: block !important;
 }
 
-aside#fullscreen_picture div.ux {
+main section#maincontent div.ux {
 	position: absolute;
     top: 30px;
 	cursor: pointer;
@@ -68,10 +71,9 @@ aside#fullscreen_picture div.ux {
     align-items: center;
     justify-content: center;
 	transition: opacity 0.3s ease;
-	z-index: 10;
 }
 
-aside#fullscreen_picture div.menubackground {
+main section#maincontent div.menubackground {
 
     position: absolute;
     box-sizing: border-box;
@@ -80,17 +82,17 @@ aside#fullscreen_picture div.menubackground {
     width: 105px;
     height: 43px;
     border-radius: 50px;
-
+	z-index: -1;
 }
 
-aside#fullscreen_picture div.button-selection span { position: absolute }
-aside#fullscreen_picture div.button-selection.notselected span.hover { opacity: 0; }
-aside#fullscreen_picture div.button-selection.notselected span.caseselected { opacity: 0; }
-aside#fullscreen_picture div.button-selection.notselected:hover span.nothover { opacity: 0; }
-aside#fullscreen_picture div.button-selection.notselected:hover span.hover { opacity: 1; }
-aside#fullscreen_picture div.button-selection.selected span.nothover { opacity: 0; }
-aside#fullscreen_picture div.button-selection.selected span.hover { opacity: 0; }
-aside#fullscreen_picture div.button-selection.selected span.caseselected {
+main section#maincontent div.button-selection span { position: absolute }
+main section#maincontent div.button-selection.notselected span.hover { opacity: 0; }
+main section#maincontent div.button-selection.notselected span.caseselected { opacity: 0; }
+main section#maincontent div.button-selection.notselected:hover span.nothover { opacity: 0; }
+main section#maincontent div.button-selection.notselected:hover span.hover { opacity: 1; }
+main section#maincontent div.button-selection.selected span.nothover { opacity: 0; }
+main section#maincontent div.button-selection.selected span.hover { opacity: 0; }
+main section#maincontent div.button-selection.selected span.caseselected {
 	opacity: 1;
 	background-color: white;
 	color: #0b57d0;
@@ -98,59 +100,59 @@ aside#fullscreen_picture div.button-selection.selected span.caseselected {
 	border: 0px;
 }
 
-aside#fullscreen_picture div.button-selection
+main section#maincontent div.button-selection
 {
 	left: 30px;
 }
 
-aside#fullscreen_picture div.button-return
+main section#maincontent div.button-return
 {
 	left: 60px;
 }
 
-aside#fullscreen_picture div.button-info
+main section#maincontent div.button-info
 {
 	left: 90px;
 }
 
-aside#fullscreen_picture div.button-leftarrow
+main section#maincontent div.button-leftarrow
 {
 	left: 10px;
 	top: 50%;
 }
 
-aside#fullscreen_picture div.button-rightarrow
+main section#maincontent div.button-rightarrow
 {
 	right: 10px;
 	top: 50%;
 }
 
-aside#fullscreen_picture div.button-rightarrow.displayinfo
+main section#maincontent div.button-rightarrow.displayinfo
 {
 	right: 410px; !important;
 }
 
-aside#fullscreen_picture div.button-info:hover span {
+main section#maincontent div.button-info:hover span {
 	transform: rotate(360deg);
 	transition: transform 0.75s ease;
 }
 
-aside#fullscreen_picture div.button-return:hover span{
+main section#maincontent div.button-return:hover span{
 	
 	font-size: 16px !important;
 	transition: font-size 0.3s ease;
 }
 
-aside#fullscreen_picture div.arrows {
+main section#maincontent div.arrows {
     background-color: white;
     border-radius: 20px;
 	padding: 3px;
 }
 
-aside#fullscreen_picture div.arrows:hover{
+main section#maincontent div.arrows:hover{
     background-color: #333;
 	color: white;
     border-radius: 20px;
 }
 
-aside#fullscreen_picture div.ux span { font-size: 30px !important; }
+main section#maincontent div.ux span { font-size: 30px !important; }

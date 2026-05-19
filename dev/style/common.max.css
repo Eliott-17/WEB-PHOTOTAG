@@ -8,8 +8,12 @@ body.fullscreen {
 	overflow: hidden;
 }
 
-nav {
-	z-index: 0;
+nav div {
+	z-index: 1;
+}
+
+main section#maincontent div {
+	/*z-index: -1;*/
 }
 
 .alert-success 			{	background-color: #4CAF50;	}

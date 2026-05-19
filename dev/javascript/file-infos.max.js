@@ -1,42 +1,41 @@
 //***********************************************
 //Gère l'affichage des informations des fichiers
-//individuels (bouton info)
 //***********************************************
 
 $(document).ready(function(){
 
-	$('aside#fullscreen_picture div.button-info').on('click.infoViewInfo', function() {
+	$('section#maincontent div.button-info').on('click.infoViewInfo', function() {
 		
-		$('aside#fullscreen_picture div#infocontent').toggleClass('displayinfo');
-		$('aside#fullscreen_picture div.button-rightarrow').toggleClass('displayinfo');
-		
+		$('body').toggleClass('no-aside');
+
 		g_file_load_infos();
+		$("#infocontent :where(input,select)").hide();
 	});
 
-	$('aside#fullscreen_picture div#infocontent h4.button-exif').on('click.exifInfo', function() {
+	$('aside#infocontent h4.button-exif').on('click.exifInfo', function() {
 		
-		$('aside#fullscreen_picture div#infocontent h3#exif').toggle();
-		if($('aside#fullscreen_picture div#infocontent h3#exif').is(':visible')) {
-			$('aside#fullscreen_picture div#infocontent h4.button-exif div span.material-symbols-outlined').html("collapse_all");  }
+		$('aside#infocontent h3#exif').toggle();
+		if($('aside#infocontent h3#exif').is(':visible')) {
+			$('aside#infocontent h4.button-exif div span.material-symbols-outlined').html("collapse_all");  }
 		else {
-			$('aside#fullscreen_picture div#infocontent h4.button-exif div span.material-symbols-outlined').html("expand_all");}
+			$('aside#infocontent h4.button-exif div span.material-symbols-outlined').html("expand_all");}
 	});
 	
-	$('aside#fullscreen_picture div#infocontent h4.edit_ux').find('button.edit, button.cancel').on('click.infoViewEdit', function() {
+	$('aside#infocontent h4.edit_ux').find('button.edit, button.cancel').on('click.infoViewEdit', function() {
 				
 		$(this).parent().children().toggle();
 		
 		let data=$(this).parent().attr('data-form');
 		
-		$('aside#fullscreen_picture h3.ux-'+data+' input, h3.ux-'+data+' select, h3.ux-'+data+' span').toggle();
+		$('aside#infocontent h3.ux-'+data+' input, h3.ux-'+data+' select, h3.ux-'+data+' span.unedit').toggle();
 	});	
 });
 
 var g_file_load_infos = function loadinfoview(lform = "")
 {	
-	if($('div#infocontent').hasClass("displayinfo"))
+	if(!$('body').hasClass("no-aside"))
 	{	
-		let hash = $('div#maincontent img, div#maincontent video').attr('src').split('-').pop();
+		let hash = $('section#maincontent div.media img, section#maincontent div.media video').attr('src').split('-').pop();
 		
 		get('actions/file-load-infos.php?hash='+hash+'&lform='+lform);
 	}
@@ -52,10 +51,10 @@ var g_file_load_info_CallBack = function file_load_info_CallBack(data)
 	
 	if(lform !=="")
 	{
-		$('div#infocontent h3.ux-'+lform).find('input, select').hide();
-		$('div#infocontent h4.'+lform).find('button.save, button.cancel').hide();
-		$('div#infocontent h3.ux-'+lform+' span').show();				
-		$('div#infocontent h4.'+lform+' button.edit').show();
+		$('aside#infocontent h3.ux-'+lform).find('input, select').hide();
+		$('aside#infocontent h4.'+lform).find('button.save, button.cancel').hide();
+		$('aside#infocontent h3.ux-'+lform+' span').show();				
+		$('aside#infocontent h4.'+lform+' button.edit').show();
 	}
 
 	if(datas.file_type==1) $('h2 span#file_type').html('video_file');
@@ -66,14 +65,21 @@ var g_file_load_info_CallBack = function file_load_info_CallBack(data)
 	
 	if(datas.time_taken_at=="00000000+0000000000")
 	{
-		$('h3#time_taken_at span').html("Unknown");
-		$('h3.ux-time select').val('+0000');
+		$('h3#date span.unedit').html('Unknown');
+		$('h3#time span.unedit').html('Unknown');
+		$('h3#zone span.unedit').html('Unknown');
 	}
 	else
 	{
-		$('h3#time_taken_at span').html(formatDateTime(datas.time_taken_at,'display'));
-		$('h3.ux-time input').val(formatDateTime(datas.time_taken_at,'input'));
-		$('h3.ux-time select').val(formatDateTime(datas.time_taken_at,'timezone'));
+		$('h3#date input').val(formatDateTime(datas.time_taken_at,'input-date'));
+		$('h3#time input').val(formatDateTime(datas.time_taken_at,'input-time'));
+		$('h3#zone select').val(formatDateTime(datas.time_taken_at,'timezone').replace('UTC',''));
+		
+		let textformat = formatDateTime(datas.time_taken_at).split(',');
+
+		$('h3#date span.unedit').html(textformat[0]+','+textformat[1]+','+textformat[2]);
+		$('h3#time span.unedit').html(textformat[3].replace(' ',''));
+		$('h3#zone span.unedit').html(textformat[4].replace(' ',''));
 	}
 
 	$('h3#exif').html(processExif(datas.exif));
