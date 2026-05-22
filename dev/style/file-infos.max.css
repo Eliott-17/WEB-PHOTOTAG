@@ -79,7 +79,7 @@ h3.margin span,
 	display: none;
 }
 
-#infocontent span.unedit
+#infocontent :where(span.unedit, span.solver)
 {
 	margin-left: 5px;
 }

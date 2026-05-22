@@ -53,10 +53,10 @@ function formatDateTime(exifDateTime, mode = 'display') {
     if (mode === 'input-time') {
         return `${hour}:${minute}`;
     }
-	if (mode === 'timezone') {
+	if (mode === 'input-zone') {
 		return timezone;
 	}
-
+	
     // Mode display (par défaut)
     const date = new Date(Date.UTC(
         parseInt(year),
@@ -67,23 +67,41 @@ function formatDateTime(exifDateTime, mode = 'display') {
         parseInt(second)
     ));
 
-    const options = {
-        weekday: 'short',
-        day: 'numeric',
-        month: 'short',
-        year: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: false,
-        timeZone: 'UTC'
-    };
+	const dateFormatter = new Intl.DateTimeFormat('en-US', {
+	  weekday: 'short',
+	  day: 'numeric',
+	  month: 'short',
+	  year: 'numeric',
+	  timeZone: 'UTC'
+	});
+	
+	const dateText = dateFormatter.format(date);
 
-    let formatted = new Intl.DateTimeFormat('en-US', options).format(date);
+	if (mode === 'output-date') {
+	  return dateText;
+	}
 
-    // Remplacer ":" par "h"
-    formatted = formatted.replace(':', 'h');
+	const timeFormatter = new Intl.DateTimeFormat('en-US', {
+	  hour: '2-digit',
+	  minute: '2-digit',
+	  second: '2-digit',
+	  hour12: false,
+	  timeZone: 'UTC'
+	});
+	
+	const timeText = timeFormatter.format(date);
 
-    return formatted + ', UTC' + timezone;
+	if (mode === 'output-time') {
+	  return timeText;
+	}
+
+	const zoneText = 'UTC' + timezone;
+
+	if (mode === 'output-zone') {
+	  return zoneText;
+	}
+
+	return dateText + ', ' + timeText + ', ' + zoneText;
 }
 
 /**

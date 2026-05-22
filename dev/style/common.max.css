@@ -4,10 +4,6 @@ body {
 	font-family: calibri;
 }
 
-body.fullscreen {
-	overflow: hidden;
-}
-
 nav div {
 	z-index: 1;
 }
@@ -54,6 +50,11 @@ div.return
 	cursor: pointer !important;
 }
 
+.initialyhidden
+{
+	display:none;
+}
+
 button {
     /* Supprime le style par défaut */
     background: none;
@@ -68,7 +69,7 @@ button {
 
 a {
 	text-decoration: none;
-		color: black;
+	color: black;
 }
 
 /* fallback */

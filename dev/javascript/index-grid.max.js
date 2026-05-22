@@ -3,6 +3,7 @@ var last_select=-1;
 var data=null;
 var loaded_files=0;
 var loading_limit=0;
+var flag_selection_has_changed=0;
 let loading = false;
 let undated=0;
 
@@ -62,7 +63,7 @@ g_load_files = function load_files(force_reload=false)
 }
 
 function load_grid(ldata=null, ladd=false)
-{
+{	
 	$('main').off('click.gridSelect');
 	$('main').off('click.gridOpen');
 	
@@ -160,7 +161,8 @@ function load_grid(ldata=null, ladd=false)
 		last_select=current_id;
 		
 		g_display_global_selection();
-
+		flag_selection_has_changed=1; //on set le flag
+		g_multiple_selection_load_data(); //mettre à jour les informations si on est en multiple file selection
 	});
 				
 	$('main').on('click.gridOpen', 'div.button-fullscreen', function() {
@@ -236,11 +238,14 @@ g_display_global_selection = function display_global_selection()
 	
 	let loaded_files=selected_ids.length;
 
-	if(loaded_files==0) $('#select-status').fadeOut(300); 
-	else 
+	if(loaded_files==0 || loaded_files<=1) 
+	{	
+		$('#select-status').fadeOut(300);
+		if(!$('body').hasClass("no-aside")) $('body').addClass("no-aside");		
+	}
+	else
 	{ 
-		$('#elementscnt').html(loaded_files+" element");
-		if(loaded_files>1) $('#elementscnt').append("s");
+		$('#elementscnt').html(loaded_files+" elements");
 		$('#select-status').fadeIn(300); 
 	}
 	

@@ -1,5 +1,7 @@
 <?php
 
+define("POST_LIMIT_RATE", 100); //3 tentatives toutes les deux secondes
+
 require_once($_SERVER['DOCUMENT_ROOT'].'/core/securityheader.php');
 require_once($_SERVER['DOCUMENT_ROOT'].'/core/class.easypdo.php');
 require_once($_SERVER['DOCUMENT_ROOT'].'/core/class.freturn.php');

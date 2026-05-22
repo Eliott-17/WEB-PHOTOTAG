@@ -1,3 +1,16 @@
 /*-------------------------------------------
 --Fullscreen image edit multiple
 -------------------------------------------*/
+
+aside#infocontent h3.conflict span.material-symbols-outlined
+{
+	color: darkorange;
+}
+
+aside#infocontent h3.conflict span.solver
+{
+	color: blue;
+	text-decoration: underline;
+	cursor: pointer;
+	display: inline;
+}

@@ -59,6 +59,8 @@ function Select()
 	$('div#grid_'+current_id).toggleClass('selected notselected');
 	fullscreen_is_selected(current_id);
 	g_display_global_selection();	
+	flag_selection_has_changed=1; //on set le flag
+	g_multiple_selection_load_data(); //mettre à jour les informations si on est en multiple file selection
 }
 
 function arrow_hide(current_id, max_id)

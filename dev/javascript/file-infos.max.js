@@ -9,7 +9,6 @@ $(document).ready(function(){
 		$('body').toggleClass('no-aside');
 
 		g_file_load_infos();
-		$("#infocontent :where(input,select)").hide();
 	});
 
 	$('aside#infocontent h4.button-exif').on('click.exifInfo', function() {
@@ -27,7 +26,10 @@ $(document).ready(function(){
 		
 		let data=$(this).parent().attr('data-form');
 		
-		$('aside#infocontent h3.ux-'+data+' input, h3.ux-'+data+' select, h3.ux-'+data+' span.unedit').toggle();
+		$('aside#infocontent h3.ux-'+data+':not(.conflict) input, h3.ux-'+data+':not(.conflict) select, h3.ux-'+data+':not(.conflict) span.unedit').toggle();
+		
+		g_conflict_solver_display(data,$(this));
+		
 	});	
 });
 
@@ -35,6 +37,8 @@ var g_file_load_infos = function loadinfoview(lform = "")
 {	
 	if(!$('body').hasClass("no-aside"))
 	{	
+		$("#infocontent :where(input,select)").hide();
+
 		let hash = $('section#maincontent div.media img, section#maincontent div.media video').attr('src').split('-').pop();
 		
 		get('actions/file-load-infos.php?hash='+hash+'&lform='+lform);
@@ -57,10 +61,14 @@ var g_file_load_info_CallBack = function file_load_info_CallBack(data)
 		$('aside#infocontent h4.'+lform+' button.edit').show();
 	}
 
-	if(datas.file_type==1) $('h2 span#file_type').html('video_file');
-	else  $('h2 span#file_type').html('photo');
+	if(datas.file_type==1) 	$('h2#file_type span.material-symbols-outlined').html('video_file');
+	else  					$('h2#file_type span.material-symbols-outlined').html('photo');
+	
+	$('h2#file_type span.title').html('File');
 	
 	$('h3#file_original_name span').html(datas.file_original_name);
+	$('h3#file_original_name').show();
+	
 	$('h3#file_size span').html(formatBytes(datas.file_size));	
 	
 	if(datas.time_taken_at=="00000000+0000000000")
@@ -73,13 +81,13 @@ var g_file_load_info_CallBack = function file_load_info_CallBack(data)
 	{
 		$('h3#date input').val(formatDateTime(datas.time_taken_at,'input-date'));
 		$('h3#time input').val(formatDateTime(datas.time_taken_at,'input-time'));
-		$('h3#zone select').val(formatDateTime(datas.time_taken_at,'timezone').replace('UTC',''));
+		$('h3#zone select').val(formatDateTime(datas.time_taken_at,'input-zone').replace('UTC',''));
 		
-		let textformat = formatDateTime(datas.time_taken_at).split(',');
-
-		$('h3#date span.unedit').html(textformat[0]+','+textformat[1]+','+textformat[2]);
-		$('h3#time span.unedit').html(textformat[3].replace(' ',''));
-		$('h3#zone span.unedit').html(textformat[4].replace(' ',''));
+		console.log(formatDateTime(datas.time_taken_at,'output-date'));
+		
+		$('h3#date span.unedit').html(formatDateTime(datas.time_taken_at,'output-date'));
+		$('h3#time span.unedit').html(formatDateTime(datas.time_taken_at,'output-time'));
+		$('h3#zone span.unedit').html(formatDateTime(datas.time_taken_at,'output-zone'));
 	}
 
 	$('h3#exif').html(processExif(datas.exif));
@@ -161,6 +169,12 @@ var g_file_load_info_CallBack = function file_load_info_CallBack(data)
 	{
 		$('span#time_status').html(formatUTCToLocalWithTimezone(datas.time_status));					
 	}
+	
+	//reset from multiple
+
+	$('div#informations').show();
+	$('h3 span.solver').hide();
+	$('aside#infocontent h3').removeClass('conflict');
 }
 
 function processExif(data, indent = 0) {

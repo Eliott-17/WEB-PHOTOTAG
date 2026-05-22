@@ -108,86 +108,6 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/locations.php');
 			<div>
 			
 		</nav>
-		<!--
-		<aside id="fullscreen_edit">
-		
-			<div id="editcontent" class="infocontent">
-				<div id="conflict-quicklook">
-					
-					<img src=""/>
-					
-				</div>
-				<form method="post" id="fileinfopost" data-return="blockreturnfilesinfo" action="actions/file-selection-load-tags.php" class="post">
-					<input type="hidden" name="token" class="token" value=""/>
-					<input type="hidden" name="files_hash" class="fileshash" value=""/>
-				</form>
-				<form id="editform" method="post" data-return="blockreturnfilesinfo" action="actions/file-selection-save-tags.php" class="post hidden">
-					<input type="hidden" name="token" class="token" value=""/>	
-					<input type="hidden" name="files_hash" class="fileshash" value=""/>
-					<input type="hidden" name="conflict_edit" id="conflictedit" value=""/>
-					
-					<h2><span class="material-symbols-outlined">globe_location_pin</span><span>Location</span></h2>
-
-					<h3 id="continent_edit"><span class="material-symbols-outlined">globe_asia</span><select name="continent" placeholder="Continent"><?php foreach($contient as $key=>$value) echo '<option value="'.$key.'">'.$value.'</option>'; ?></select><button><span class="material-symbols-outlined hover-hide">visibility_off</span><span class="material-symbols-outlined hover-show">visibility</span>&nbsp;{ Different values }</button></h3>				
-					<h3 id="country_edit"><span class="material-symbols-outlined">flag</span><select name="country" placeholder="Country"><?php foreach($country as $key=>$value) echo '<option value="'.$key.'">'.$value.'</option>'; ?></select><button><span class="material-symbols-outlined hover-hide">visibility_off</span><span class="material-symbols-outlined hover-show">visibility</span>&nbsp;{ Different values }</button></h3>
-					<h3 id="city_edit"><span class="material-symbols-outlined">location_city</span></span><input name="city" type="text" placeholder="City"><button><span class="material-symbols-outlined hover-hide">visibility_off</span><span class="material-symbols-outlined hover-show">visibility</span>&nbsp;{ Different values }</button></h3>
-					<h3 id="place_edit"><span class="material-symbols-outlined">place</span><input name="place" type="text" placeholder="Place"><button><span class="material-symbols-outlined hover-hide">visibility_off</span><span class="material-symbols-outlined hover-show">visibility</span>&nbsp;{ Different values }</button></h3>
-
-					<h2><span class="material-symbols-outlined">tag</span><span>Tags</span></h2>
-
-					<h3 id="activity_edit"><span class="material-symbols-outlined">directions_run</span><input name="activity" type="text" placeholder="Activity"><button><span class="material-symbols-outlined hover-hide">visibility_off</span><span class="material-symbols-outlined hover-show">visibility</span>&nbsp;{ Different values }</button></h3>				
-					<h3 id="comment_edit"><span class="material-symbols-outlined">comment</span><input name="comment" type="text" placeholder="Comment"><button><span class="material-symbols-outlined hover-hide">visibility_off</span><span class="material-symbols-outlined hover-show">visibility</span>&nbsp;{ Different values }</button></h3>
-					<h3 id="people_edit"><span class="material-symbols-outlined">group</span><input name="people" type="text" placeholder="People"><button><span class="material-symbols-outlined hover-hide">visibility_off</span><span class="material-symbols-outlined hover-show">visibility</span>&nbsp;{ Different values }</button></h3>
-					<h3 id="other_edit"><span class="material-symbols-outlined">info</span><input name="information" type="text" placeholder="Other information"><button><span class="material-symbols-outlined hover-hide">visibility_off</span><span class="material-symbols-outlined hover-show">visibility</span>&nbsp;{ Different values }</button></h3>
-					<h3 id="conflict-info"><span class="material-symbols-outlined">warning</span>&nbsp;<span></span></h3>
-					<h4>
-						<button class="save submit">
-							<span class="material-symbols-outlined">Save</span><span>Save</span>
-						</button>
-						<button class="cancel">
-							<span class="material-symbols-outlined">cancel</span><span>Cancel</span>
-						</button>						
-					</h4>
-				</form>
-				<div id="blockreturnfilesinfo" class="cursor">
-					<div class="loading"><span class="material-symbols-outlined">cycle</span></div>		
-					<div class="return alert alert-success"></div>
-				</div>
-				<form id="trashform" method="post" data-return="blockreturnfilestrash" action="actions/file-delete.php" class="post hidden">
-					<input type="hidden" name="token" class="token" value=""/>	
-					<input type="hidden" name="files_hash" class="fileshash" value=""/>
-					<h3 id="trash-info"><span class="material-symbols-outlined">warning</span>&nbsp;<span>Selected files will be moved to the trash.</span></h3>
-					<h4>
-						<button class="warning submit">
-							<span class="material-symbols-outlined">Delete</span><span>Delete</span>
-						</button>
-						<button class="cancel">
-							<span class="material-symbols-outlined">cancel</span><span>Cancel</span>
-						</button>						
-					</h4>
-				</form>
-				<div id="blockreturnfilestrash" class="cursor">
-					<div class="loading"><span class="material-symbols-outlined">cycle</span></div>		
-					<div class="return alert alert-success"></div>
-				</div>
-			</div>
-			<div class="infocontent">
-	
-				<h2><span class="material-symbols-outlined">check_circle</span><span>Selection</span></h2>				
-				<h3 class="ux-tag-location"><span class="material-symbols-outlined">storage</span>&nbsp;<input id="totalsize" type="text" value="" disabled></h3>
-				<h2><span id="conflict-icon" class="material-symbols-outlined"></span>&nbsp;<span id="conflict-title"></span></h2>
-				<div id="filelist"></div>				
-
-			</div>
-		</aside>
-		-->
-		
-		<!--<aside id="fullscreen_picture">
-			<div id="maincontent"></div>-->
-
-			
-					
-		<!--</aside>-->
 		<?php
 			if(is_session_valid())
 			{
@@ -223,56 +143,16 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/locations.php');
 						<input type="hidden" name="token" class="token" value=""/>
 						<input type="hidden" name="files_hash" class="fileshash" value=""/>
 					</form>
-					<h2><span id="file_type" class="material-symbols-outlined"></span><span>File</span></h2>
+					<h2 id="file_type"><span class="material-symbols-outlined"></span><span class="title"></span></h2>
 					<h3 id="file_original_name" class="margin"></span><span></h3>
 					<h3 id="file_size" class="margin"></span><span></h3>
 					<h2><span class="material-symbols-outlined">calendar_clock</span><span>Date time</span></h2>
 					<form method="post" data-return="blockreturndatetime" action="actions/file-save-infos.php?form=time" class="post">
 						<input type="hidden" name="token" class="token" value=""/>
 						<input type="hidden" name="file_hash" class="filehash" value=""/>
-						<!--<h3 class="ux-time">
-							<input name="datetime" type="datetime-local"/>
-							<select name="timezone">
-								  <option value="-1200">(UTC-12:00) Baker Island</option>
-								  <option value="-1100">(UTC-11:00) Niue</option>
-								  <option value="-1000">(UTC-10:00) Hawaii</option>
-								  <option value="-0900">(UTC-09:00) Alaska</option>
-								  <option value="-0800">(UTC-08:00) Los Angeles</option>
-								  <option value="-0700">(UTC-07:00) Denver</option>
-								  <option value="-0600">(UTC-06:00) Mexico City</option>
-								  <option value="-0500">(UTC-05:00) New York</option>
-								  <option value="-0400">(UTC-04:00) Santiago</option>
-								  <option value="-0300">(UTC-03:00) Buenos Aires</option>
-								  <option value="-0200">(UTC-02:00) South Georgia</option>
-								  <option value="-0100">(UTC-01:00) Azores</option>
-								  <option value="+0000">(UTC+00:00) London</option>
-								  <option value="+0100">(UTC+01:00) Paris</option>
-								  <option value="+0200">(UTC+02:00) Cairo</option>
-								  <option value="+0300">(UTC+03:00) Moscow</option>
-								  <option value="+0330">(UTC+03:30) Tehran</option>
-								  <option value="+0400">(UTC+04:00) Dubai</option>
-								  <option value="+0430">(UTC+04:30) Kabul</option>
-								  <option value="+0500">(UTC+05:00) Karachi</option>
-								  <option value="+0530">(UTC+05:30) India (Delhi)</option>
-								  <option value="+0545">(UTC+05:45) Nepal (Kathmandu)</option>
-								  <option value="+0600">(UTC+06:00) Dhaka</option>
-								  <option value="+0630">(UTC+06:30) Myanmar (Yangon)</option>
-								  <option value="+0700">(UTC+07:00) Bangkok</option>
-								  <option value="+0800">(UTC+08:00) Beijing</option>
-								  <option value="+0900">(UTC+09:00) Tokyo</option>
-								  <option value="+0930">(UTC+09:30) Adelaide</option>
-								  <option value="+1000">(UTC+10:00) Sydney</option>
-								  <option value="+1100">(UTC+11:00) Solomon Islands</option>
-								  <option value="+1200">(UTC+12:00) Auckland</option>
-								  <option value="+1300">(UTC+13:00) Tonga</option>
-								  <option value="+1400">(UTC+14:00) Line Islands</option>
-							</select>	
-							
-						</h3-->
-
-						<h3 class="ux-tag-time" id="date"><span class="material-symbols-outlined">event</span><span class="unedit"></span><input name="date" type="date"/></h3>				
-						<h3 class="ux-tag-time" id="time"><span class="material-symbols-outlined">nest_clock_farsight_analog</span><span class="unedit"></span><input name="time" type="time"/></h3>
-						<h3 class="ux-tag-time" id="zone"><span class="material-symbols-outlined">south_america</span><span class="unedit"></span><select name="timezone">
+						<h3 class="ux-tag-time" id="date"><span class="material-symbols-outlined">event</span><span class="unedit"></span><span class="solver initialyhidden">Override all values</span><input name="date" type="date"/></h3>				
+						<h3 class="ux-tag-time" id="time"><span class="material-symbols-outlined">nest_clock_farsight_analog</span><span class="unedit"></span><span class="solver initialyhidden">Override all values</span><input name="time" type="time"/></h3>
+						<h3 class="ux-tag-time" id="zone"><span class="material-symbols-outlined">south_america</span><span class="unedit"></span><span class="solver initialyhidden">Override all values</span><select name="timezone">
 								  <option value="-1200">(UTC-12:00) Baker Island</option>
 								  <option value="-1100">(UTC-11:00) Niue</option>
 								  <option value="-1000">(UTC-10:00) Hawaii</option>
@@ -328,10 +208,10 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/locations.php');
 					<form method="post" data-return="blockreturnloc" action="actions/file-save-infos.php?form=tag-location" class="post">		
 						<input type="hidden" name="token" class="token" value=""/>
 						<input type="hidden" name="file_hash" class="filehash" value=""/>
-						<h3 class="ux-tag-location" id="continent"><span class="material-symbols-outlined">globe_asia</span><span class="unedit"></span><select name="continent" ><?php foreach($contient as $key=>$value) echo '<option value="'.$key.'">'.$value.'</option>'; ?></select></h3>				
-						<h3 class="ux-tag-location" id="country"><span class="material-symbols-outlined">flag</span><span class="unedit"></span><select name="country"><?php foreach($country as $key=>$value) echo '<option value="'.$key.'">'.$value.'</option>'; ?></select></h3>
-						<h3 class="ux-tag-location" id="city"><span class="material-symbols-outlined">location_city</span><span class="unedit"></span><input name="city" type="text" placeholder="city"></h3>
-						<h3 class="ux-tag-location" id="place"><span class="material-symbols-outlined">place</span><span class="unedit"></span><input name="place" type="text" placeholder="place"></h3>
+						<h3 class="ux-tag-location" id="continent"><span class="material-symbols-outlined">globe_asia</span><span class="unedit"></span><span class="solver initialyhidden">Override all values</span><select name="continent" ><?php foreach($contient as $key=>$value) echo '<option value="'.$key.'">'.$value.'</option>'; ?></select></h3>				
+						<h3 class="ux-tag-location" id="country"><span class="material-symbols-outlined">flag</span><span class="unedit"></span><span class="solver initialyhidden">Override all values</span><select name="country"><?php foreach($country as $key=>$value) echo '<option value="'.$key.'">'.$value.'</option>'; ?></select></h3>
+						<h3 class="ux-tag-location" id="city"><span class="material-symbols-outlined">location_city</span><span class="unedit"></span><span class="solver initialyhidden">Override all values</span><input name="city" type="text" placeholder="city"></h3>
+						<h3 class="ux-tag-location" id="place"><span class="material-symbols-outlined">place</span><span class="unedit"></span><span class="solver initialyhidden">Override all values</span><input name="place" type="text" placeholder="place"></h3>
 						<h4 class="edit_ux tag-location" data-form="tag-location">
 							<button class="save submit">
 								<span class="material-symbols-outlined">Save</span><span>Save</span>
@@ -352,10 +232,10 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/locations.php');
 					<form method="post" data-return="blockreturntags" action="actions/file-save-infos.php?form=tag-general" class="post">
 						<input type="hidden" name="token" class="token" value=""/>
 						<input type="hidden" name="file_hash" class="filehash" value=""/>
-						<h3 class="ux-tag-general" id="activity"><span class="material-symbols-outlined">directions_run</span><span class="unedit"></span><input name="activity" type="text" placeholder="activity"></h3>				
-						<h3 class="ux-tag-general" id="comment"><span class="material-symbols-outlined">comment</span><span class="unedit"></span><input name="comment" type="text" placeholder="comment"></h3>
-						<h3 class="ux-tag-general" id="people"><span class="material-symbols-outlined">group</span><span class="unedit"></span><input name="people" type="text" placeholder="people"></h3>
-						<h3 class="ux-tag-general" id="other"><span class="material-symbols-outlined">info</span><span class="unedit"></span><input name="information" type="text" placeholder="other information"></h3>
+						<h3 class="ux-tag-general" id="activity"><span class="material-symbols-outlined">directions_run</span><span class="unedit"></span><span class="solver initialyhidden">Override all values</span><input name="activity" type="text" placeholder="activity"></h3>				
+						<h3 class="ux-tag-general" id="comment"><span class="material-symbols-outlined">comment</span><span class="unedit"></span><span class="solver initialyhidden">Override all values</span><input name="comment" type="text" placeholder="comment"></h3>
+						<h3 class="ux-tag-general" id="people"><span class="material-symbols-outlined">group</span><span class="unedit"></span><span class="solver initialyhidden">Override all values</span><input name="people" type="text" placeholder="people"></h3>
+						<h3 class="ux-tag-general" id="other"><span class="material-symbols-outlined">info</span><span class="unedit"></span><span class="solver initialyhidden">Override all values</span><input name="information" type="text" placeholder="other information"></h3>
 						<h4 class="edit_ux tag-general" data-form="tag-general">
 							<button class="save submit">
 								<span class="material-symbols-outlined">Save</span><span>Save</span>
@@ -372,15 +252,18 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/locations.php');
 						<div class="loading"><span class="material-symbols-outlined">cycle</span></div>		
 						<div class="return alert alert-success"></div>
 					</div>
-					<h2><span class="material-symbols-outlined cursor">info</span><span>Other informations</span></h2>
-					<h3 class="margin">
-						<span class="legend">Added time</span><br>
-						<span id="time_added_at"></span><br/>
-						<span class="legend">Modified date</span><br>
-						<span id="time_status"></span>							
-					</h3>
-					<h4 class="button-exif"><button><span class="material-symbols-outlined cursor">expand_all</span><span class="cursor">Show EXIF</span></button></h4>
-					<h3 id="exif"></h3>
+					<div id="informations">
+						<h2><span class="material-symbols-outlined cursor">info</span><span>Other informations</span></h2>
+						<h3 class="margin">
+							<span class="legend">Added time</span><br>
+							<span id="time_added_at"></span><br/>
+							<span class="legend">Modified date</span><br>
+							<span id="time_status"></span>							
+						</h3>
+						<h4 class="button-exif"><button><span class="material-symbols-outlined cursor">expand_all</span><span class="cursor">Show EXIF</span></button></h4>
+						<h3 id="exif"></h3>
+					</div>
+					<br/>
 				</aside>
 
 			<?php

@@ -32,6 +32,10 @@
 			
 			$result = $EasyPDO->select('photos', 'id IN', $ids);
 
+			$mem['date']=null;
+			$mem['time']=null;
+			$mem['zone']=null;
+
 			$mem['continent']=null;
 			$mem['country']=null;
 			$mem['city']=null;
@@ -41,7 +45,11 @@
 			$mem['comment']=null;
 			$mem['people']=null;
 			$mem['other']=null;
-			
+
+			$flag['date']=0;
+			$flag['time']=0;
+			$flag['zone']=0;
+
 			$flag['continent']=0;
 			$flag['country']=0;
 			$flag['city']=0;
@@ -58,6 +66,14 @@
 			{
 				//pour l'init
 				
+				$date = substr($value['time_taken_at'], 0, 4).substr($value['time_taken_at'], 4, 2).substr($value['time_taken_at'], 6, 2).'+0000000000';
+				$zone = '00000000'.substr($value['time_taken_at'], 8, 5).'000000'; // ±HHMM (ex: +0700)
+				$time = '00000000+0000'.substr($value['time_taken_at'], 13, 2).substr($value['time_taken_at'], 15, 2).substr($value['time_taken_at'], 17, 2);
+	
+				if($mem['date']==null) 			$mem['date']=$date;
+				if($mem['time']==null) 			$mem['time']=$time;
+				if($mem['zone']==null) 			$mem['zone']=$zone;
+				
 				if($mem['continent']==null) 	$mem['continent']=$value['tag_continent'];
 				if($mem['country']===null) 		$mem['country']=$value['tag_country'];
 				if($mem['city']===null) 		$mem['city']=$value['tag_city'];
@@ -69,6 +85,10 @@
 				if($mem['other']===null) 		$mem['other']=$value['tag_other'];
 				
 				//pour le storage
+
+				$filedata[$value['file_original_name']]['date']=$date;
+				$filedata[$value['file_original_name']]['time']=$time;
+				$filedata[$value['file_original_name']]['zone']=$zone;
 				
 				$filedata[$value['file_original_name']]['continent']=$contient[$value['tag_continent']];
 				$filedata[$value['file_original_name']]['country']=$country[$value['tag_country']];
@@ -84,6 +104,10 @@
 				//$filedata[$value['file_original_name']]['file_hash']=$value['file_hash'];		
 				
 				//pour le flag
+
+				if($mem['date']!=$date) $flag['date']++;
+				if($mem['time']!=$time) $flag['time']++;
+				if($mem['zone']!=$zone) $flag['zone']++;
 
 				if($mem['continent']!=$value['tag_continent']) $flag['continent']++;
 				if($mem['country']!=$value['tag_country']) $flag['country']++;
@@ -105,7 +129,7 @@
 			$bigarray['total_size']=$total_size;			
 			$bigarray['filedata']=$filedata;
 			
-			$fReturn->addCallBack("g_multiple_files_load_data_CallBack", $bigarray)->fetch();
+			$fReturn->addCallBack("g_multiple_selection_load_data_CallBack", $bigarray)->fetch();
 			
 		}
 	}

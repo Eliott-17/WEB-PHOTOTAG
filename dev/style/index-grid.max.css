@@ -13,7 +13,7 @@ body {
 		"nav nav"
 		"main aside"
 		"footer footer";
-	overflow-x: hidden;
+	overflow: hidden;
 }
 
 /* mode sans aside */
@@ -31,10 +31,14 @@ nav {
 
 main {
 	grid-area: main;
+	height: 100vh;
+	overflow: auto;
 }
 
 aside {
 	grid-area: aside;
+	height: 100vh;
+	overflow: auto;
 }
 
 footer {
