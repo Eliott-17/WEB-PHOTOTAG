@@ -12,12 +12,14 @@
 #infocontent h2
 {
 	margin-top: 10px;
-	margin-bottom: 5px;
+	margin-bottom: 10px;
 }
 #infocontent :where(h3,h4)
 {
 	color: #5e5e5e;
 	margin: 0px;
+	display: flex;
+    align-items: center;
 }
 
 #infocontent button
@@ -110,7 +112,7 @@ h3.margin span,
 	padding: 1px 4px 1px 4px;
 }
 
-#infocontent span.legend
+#infocontent h3.legend
 {
 	font-size: small;
 }

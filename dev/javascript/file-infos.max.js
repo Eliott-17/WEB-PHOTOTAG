@@ -184,10 +184,10 @@ var g_file_load_info_CallBack = function file_load_info_CallBack(data)
 		
 	}
 	
-	$('span#time_added_at').html(formatUTCToLocalWithTimezone(datas.time_added_at));
+	$('h3#time_added_at').html(formatUTCToLocalWithTimezone(datas.time_added_at));
 	
-	if (datas.time_modified_at == null) 	$('span#time_modified_at').html("never");
-	else 									$('span#time_modified_at').html(formatUTCToLocalWithTimezone(datas.time_modified_at));					
+	if (datas.time_modified_at == null) 	$('h3#time_modified_at').html("never");
+	else 									$('h3#time_modified_at').html(formatUTCToLocalWithTimezone(datas.time_modified_at));					
 	
 	
 	//reset from multiple

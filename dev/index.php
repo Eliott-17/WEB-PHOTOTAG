@@ -257,12 +257,10 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/locations.php');
 					</div>
 					<div id="informations">
 						<h2><span class="material-symbols-outlined cursor">info</span><span>Other informations</span></h2>
-						<h3 class="margin">
-							<span class="legend">Added time</span><br>
-							<span id="time_added_at"></span><br/>
-							<span class="legend">Modified date</span><br>
-							<span id="time_modified_at"></span>							
-						</h3>
+						<h3 class="legend">Added time</h3>
+						<h3 id="time_added_at">-</h3>
+						<h3 class="legend">Modified date</h3>
+						<h3 id="time_modified_at">-</h3>							
 						<h4 class="button-exif"><button><span class="material-symbols-outlined cursor">expand_all</span><span class="cursor">Show EXIF</span></button></h4>
 						<h3 id="exif"></h3>
 					</div>
