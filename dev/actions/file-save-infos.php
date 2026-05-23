@@ -15,7 +15,7 @@
 
 	$validation->addVerification('token',		'sha256',				'Token'							);	
 	$validation->addVerification('filesid',		'jsonArrayString',		'Files id'						);	
-	$validation->addVerification('conflictedit','string',				'Conflict array',		119,119);	
+	$validation->addVerification('conflictedit','jsonArrayString',		'Conflict array',		        );	
 
 	switch($_GET['form'])
 	{
