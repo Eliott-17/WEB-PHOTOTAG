@@ -32,7 +32,7 @@ $(document).ready(function(){
 });
 
 function formatDateTime(exifDateTime, mode = 'display') {
-    if (!exifDateTime || exifDateTime.length < 19) return '';
+    if (!exifDateTime || exifDateTime.length < 19) return 'bad len';
 
     // Extraction
     const year = exifDateTime.substr(0, 4);
@@ -51,7 +51,7 @@ function formatDateTime(exifDateTime, mode = 'display') {
         return `${year}-${month}-${day}`;
     }
     if (mode === 'input-time') {
-        return `${hour}:${minute}`;
+        return `${hour}:${minute}:${second}`;
     }
 	if (mode === 'input-zone') {
 		return timezone;

@@ -65,14 +65,10 @@
 			foreach($result['datas'] as $key => $value)
 			{
 				//pour l'init
-				
-				$date = substr($value['time_taken_at'], 0, 4).substr($value['time_taken_at'], 4, 2).substr($value['time_taken_at'], 6, 2).'+0000000000';
-				$zone = '00000000'.substr($value['time_taken_at'], 8, 5).'000000'; // ±HHMM (ex: +0700)
-				$time = '00000000+0000'.substr($value['time_taken_at'], 13, 2).substr($value['time_taken_at'], 15, 2).substr($value['time_taken_at'], 17, 2);
-	
-				if($mem['date']==null) 			$mem['date']=$date;
-				if($mem['time']==null) 			$mem['time']=$time;
-				if($mem['zone']==null) 			$mem['zone']=$zone;
+
+				if($mem['date']==null) 			$mem['date']=$value['time_taken_at_date'];
+				if($mem['time']==null) 			$mem['time']=$value['time_taken_at_time'];
+				if($mem['zone']==null) 			$mem['zone']=$value['time_taken_at_zone'];
 				
 				if($mem['continent']==null) 	$mem['continent']=$value['tag_continent'];
 				if($mem['country']===null) 		$mem['country']=$value['tag_country'];
@@ -86,9 +82,9 @@
 				
 				//pour le storage
 
-				$filedata[$value['file_original_name']]['date']=$date;
-				$filedata[$value['file_original_name']]['time']=$time;
-				$filedata[$value['file_original_name']]['zone']=$zone;
+				$filedata[$value['file_original_name']]['date']=$value['time_taken_at_date'];
+				$filedata[$value['file_original_name']]['time']=$value['time_taken_at_time'];
+				$filedata[$value['file_original_name']]['zone']=$value['time_taken_at_zone'];
 				
 				$filedata[$value['file_original_name']]['continent']=$contient[$value['tag_continent']];
 				$filedata[$value['file_original_name']]['country']=$country[$value['tag_country']];
@@ -105,9 +101,9 @@
 				
 				//pour le flag
 
-				if($mem['date']!=$date) $flag['date']++;
-				if($mem['time']!=$time) $flag['time']++;
-				if($mem['zone']!=$zone) $flag['zone']++;
+				if($mem['date']!=$value['time_taken_at_date']) $flag['date']++;
+				if($mem['time']!=$value['time_taken_at_time']) $flag['time']++;
+				if($mem['zone']!=$value['time_taken_at_zone']) $flag['zone']++;
 
 				if($mem['continent']!=$value['tag_continent']) $flag['continent']++;
 				if($mem['country']!=$value['tag_country']) $flag['country']++;

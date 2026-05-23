@@ -38,7 +38,7 @@ g_fullscreen = function fullscreen(id, max)
 	current_id=id;
 	max_id=max;
 	arrow_hide(id, max); 
-	fullscreen_is_selected(id);
+	g_ux_init(id);
 }
 
 function Arrow(sens)
@@ -46,21 +46,25 @@ function Arrow(sens)
 	if(sens==0) current_id--;
 	if(sens==1) current_id++;
 	
-	if(sens==0 || sens==1)
+	if((sens==0 || sens==1) && !is_multi_selection_displayed())
 	{	
 		g_load_media(current_id);
 		arrow_hide(current_id, max_id);
 		fullscreen_is_selected(current_id);	
+		//g_ux_init_edit();
 	}
 }
 
 function Select()
 {
-	$('div#grid_'+current_id).toggleClass('selected notselected');
-	fullscreen_is_selected(current_id);
-	g_display_global_selection();	
-	flag_selection_has_changed=1; //on set le flag
-	g_multiple_selection_load_data(); //mettre à jour les informations si on est en multiple file selection
+	if(!is_multi_selection_displayed())
+	{
+		$('div#grid_'+current_id).toggleClass('selected notselected');
+		fullscreen_is_selected(current_id);
+		g_display_global_selection();	
+		flag_selection_has_changed=1; //on set le flag
+		g_multiple_selection_load_data(); //mettre à jour les informations si on est en multiple file selection
+	}
 }
 
 function arrow_hide(current_id, max_id)

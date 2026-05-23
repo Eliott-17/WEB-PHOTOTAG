@@ -72,6 +72,8 @@ function load_grid(ldata=null, ladd=false)
 	let source=null;
 	let html_mem_date="";
 	
+	console.log(data);
+	
 	let total_file_library=data.library.length;
 	let total_file_untagged=data.untagged.length;	
 	
@@ -93,7 +95,7 @@ function load_grid(ldata=null, ladd=false)
 	{
 		if(i>=loaded_files)
 		{	
-			if(bdd.time_taken_at=="00000000+0000000000")
+			if(bdd.time_taken_at_date=="00000000" &&  bdd.time_taken_at_zone=="+0000" && bdd.time_taken_at_time=="000000")
 			{
 				//si on à pas de date
 				if(undated==0) $("main section.nodate").append('<div class="fullrow"><h2>Undated</h2></div>');
@@ -102,7 +104,7 @@ function load_grid(ldata=null, ladd=false)
 			}
 			else
 			{										
-				let l_date_test = bdd.time_taken_at.substring(0,8);
+				let l_date_test = bdd.time_taken_at_date;
 
 				let l_date_display = l_date_test.substring(6,8) + "/" + l_date_test.substring(4,6) + "/" + l_date_test.substring(0,4);	
 				

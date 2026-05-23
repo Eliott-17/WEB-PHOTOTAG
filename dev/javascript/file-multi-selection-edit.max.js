@@ -14,12 +14,15 @@ $(document).ready(function(){
 	$('aside#infocontent h3 span.solver').on('click.solver', function() {
 		
 		let data=$(this).parent().attr('id');
-		
-		//console.log(data);
-		
+
+		g_data['flag'][data]=0; //update
+		$('input.conflictedit').val(JSON.stringify(g_data['flag']));
+
 		$('aside#infocontent h3#'+data+'.conflict input, h3#'+data+'.conflict select, h3#'+data+'.conflict span.solver').toggle();
-	});
 	
+		console.log(g_data['flag']);
+	});
+		
 });
 
 var g_conflict_solver_display = function conflict_solver_display(data,obj)
@@ -33,15 +36,25 @@ var g_conflict_solver_display = function conflict_solver_display(data,obj)
 		$('h3.ux-'+data+'.conflict input, h3.ux-'+data+'.conflict select').hide();
 		$('h3.ux-'+data+'.conflict span.solver').hide();
 		$('h3.ux-'+data+'.conflict span.unedit').show();
-    }	
+		
+		$('h3.ux-' + data).each(function() {
+
+			g_data['flag'][$(this).attr('id')]=g_data_mem['flag'][$(this).attr('id')];
+			$('input.conflictedit').val(JSON.stringify(g_data['flag']));
+			
+		});
+		
+		console.log(g_data['flag']);
+    };
 }
 
 var g_multiple_selection_manage_display = function g_multiple_selection_manage_display()
 {
+	$('nav div#mainmenu').show();
+	
 	if(is_multi_selection_displayed())
 	{
 		//si on est déjà en multi-sélection, on ferme le aside
-
 		$('body').addClass("no-aside");
 	}
 	else
@@ -62,9 +75,9 @@ var g_multiple_selection_manage_display = function g_multiple_selection_manage_d
 	}
 }
 
-var g_multiple_selection_load_data = function multiple_selection_load_data()
+var g_multiple_selection_load_data = function multiple_selection_load_data(force_update=0)
 {
-	if(is_multi_selection_displayed() && flag_selection_has_changed==1) //uniquement si le menu multi-selection est ouvert et qu'on à changé la sélection
+	if(is_multi_selection_displayed() && (flag_selection_has_changed==1 || force_update==1)) //uniquement si le menu multi-selection est ouvert et qu'on à changé la sélection
 	{	
 		flag_selection_has_changed=0; //raz du flag
 	
@@ -82,21 +95,22 @@ var g_multiple_selection_load_data = function multiple_selection_load_data()
 		
 		hash_array = hash_array.map(Number);
 		
-		$('.fileshash').val(JSON.stringify(hash_array));
+		console.log("Selection",hash_array);
 		
-		$("#infocontent :where(input,select)").hide();
-		g_get_new_token($('#fileinfopost'));
+		$('input.filesid').val(JSON.stringify(hash_array));
+		
+		g_ux_init();
+		CORE_get($('#fileinfopost'));
 	}
 }
 
 var g_multiple_selection_load_data_CallBack = function multiple_selection_load_data_CallBack(data)
 {	
-	console.log("Data",data);
-	
-	g_data = structuredClone(data);
-	g_data_mem = structuredClone(data['flag']);
-	
+	g_data = structuredClone(data);	
+	g_data_mem = structuredClone(data);	
 	g_multiple_selection_display_data();
+	
+		console.log(g_data);
 }
 
 var g_multiple_selection_display_data = function multiple_selection_display_data()
@@ -116,8 +130,6 @@ var g_multiple_selection_display_data = function multiple_selection_display_data
 			
 			$('aside#infocontent h3#'+key).addClass('conflict');
 			$('aside#infocontent h3#'+key+' span.unedit').html("{ Different values }");
-			
-			console.log("Set "+key+" to Different values");
 		}	
 		else
 		{
@@ -130,26 +142,24 @@ var g_multiple_selection_display_data = function multiple_selection_display_data
 			}
 			else if(key=="date")
 			{	
-				$('aside#infocontent h3#'+key+' input').val(formatDateTime(g_data['mem'][key],'input-date'));
-				$('aside#infocontent h3#'+key+' span.unedit').html(formatDateTime(g_data['mem'][key],'output-date'));
+				$('aside#infocontent h3#'+key+' input').val(formatDateTime(g_data['mem'][key]+'+0000000000','input-date'));
+				$('aside#infocontent h3#'+key+' span.unedit').html(formatDateTime(g_data['mem'][key]+'+0000000000','output-date'));
 			}
 			else if(key=="time")
 			{
-				$('aside#infocontent h3#'+key+' input').val(formatDateTime(g_data['mem'][key],'input-time'));
-				$('aside#infocontent h3#'+key+' span.unedit').html(formatDateTime(g_data['mem'][key],'output-time'));
+				$('aside#infocontent h3#'+key+' input').val(formatDateTime('00000000+0000'+g_data['mem'][key],'input-time'));
+				$('aside#infocontent h3#'+key+' span.unedit').html(formatDateTime('00000000+0000'+g_data['mem'][key],'output-time'));
 			}			
 			else if(key=="zone")
 			{
-				$('aside#infocontent h3#'+key+' input').val(formatDateTime(g_data['mem'][key],'input-date'));
-				$('aside#infocontent h3#'+key+' span.unedit').html(formatDateTime(g_data['mem'][key],'output-zone'));
+				$('aside#infocontent h3#'+key+' input').val(formatDateTime('00000000'+g_data['mem'][key]+'000000','input-date'));
+				$('aside#infocontent h3#'+key+' span.unedit').html(formatDateTime('00000000'+g_data['mem'][key]+'000000','output-zone'));
 			}
 			else
 			{
 				$('aside#infocontent h3#'+key+' input').val(g_data['mem'][key]);
 				$('aside#infocontent h3#'+key+' span.unedit').html(g_data['mem'][key]);
 			}
-			
-			console.log("Set'aside#infocontent h3#"+key+" span.unedit' to "+g_data['mem'][key]);
 		}
 		
 	});
@@ -158,7 +168,7 @@ var g_multiple_selection_display_data = function multiple_selection_display_data
 	$('h2#file_type span.title').html('Multiple files selection');
 	$('div#informations').hide();
 	
-	$('#conflictedit').val(JSON.stringify(g_data['flag']));
+	$('input.conflictedit').val(JSON.stringify(g_data['flag']));
 	$('h3#file_size span').html(formatBytes(g_data['total_size']));
 	$('h3#file_original_name').hide();
 	

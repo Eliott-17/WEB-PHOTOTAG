@@ -219,9 +219,11 @@ else
 		  file_size INTEGER DEFAULT 0,
 		  file_type INTERGER DEFAULT 0,
 		  
+		  time_taken_at_date TEXT,
+		  time_taken_at_time TEXT,
+		  time_taken_at_zone TEXT,
+		  time_modified_at TEXT,
 		  time_added_at TEXT,
-		  time_taken_at TEXT,
-		  time_status TEXT,
 		  
 		  tag_status INTEGER DEFAULT 0,
 		  tag_continent TEXT,

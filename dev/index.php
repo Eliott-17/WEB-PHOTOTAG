@@ -141,7 +141,7 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/locations.php');
 				<aside id="infocontent" class="uxbackground">
 					<form method="post" id="fileinfopost" action="actions/file-selection-load-tags.php" class="post">
 						<input type="hidden" name="token" class="token" value=""/>
-						<input type="hidden" name="files_hash" class="fileshash" value=""/>
+						<input type="hidden" name="files_hash" class="filesid" value=""/>
 					</form>
 					<h2 id="file_type"><span class="material-symbols-outlined"></span><span class="title"></span></h2>
 					<h3 id="file_original_name" class="margin"></span><span></h3>
@@ -149,10 +149,11 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/locations.php');
 					<h2><span class="material-symbols-outlined">calendar_clock</span><span>Date time</span></h2>
 					<form method="post" data-return="blockreturndatetime" action="actions/file-save-infos.php?form=time" class="post">
 						<input type="hidden" name="token" class="token" value=""/>
-						<input type="hidden" name="file_hash" class="filehash" value=""/>
+						<input type="hidden" name="filesid" class="filesid" value=""/>
+						<input type="hidden" name="conflictedit" class="conflictedit" value=""/>
 						<h3 class="ux-tag-time" id="date"><span class="material-symbols-outlined">event</span><span class="unedit"></span><span class="solver initialyhidden">Override all values</span><input name="date" type="date"/></h3>				
-						<h3 class="ux-tag-time" id="time"><span class="material-symbols-outlined">nest_clock_farsight_analog</span><span class="unedit"></span><span class="solver initialyhidden">Override all values</span><input name="time" type="time"/></h3>
-						<h3 class="ux-tag-time" id="zone"><span class="material-symbols-outlined">south_america</span><span class="unedit"></span><span class="solver initialyhidden">Override all values</span><select name="timezone">
+						<h3 class="ux-tag-time" id="time"><span class="material-symbols-outlined">nest_clock_farsight_analog</span><span class="unedit"></span><span class="solver initialyhidden">Override all values</span><input name="time" type="time" step="1"/></h3>
+						<h3 class="ux-tag-time" id="zone"><span class="material-symbols-outlined">south_america</span><span class="unedit"></span><span class="solver initialyhidden">Override all values</span><select name="zone">
 								  <option value="-1200">(UTC-12:00) Baker Island</option>
 								  <option value="-1100">(UTC-11:00) Niue</option>
 								  <option value="-1000">(UTC-10:00) Hawaii</option>
@@ -207,7 +208,8 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/locations.php');
 					<h2><span class="material-symbols-outlined">globe_location_pin</span><span>Location</span></h2>
 					<form method="post" data-return="blockreturnloc" action="actions/file-save-infos.php?form=tag-location" class="post">		
 						<input type="hidden" name="token" class="token" value=""/>
-						<input type="hidden" name="file_hash" class="filehash" value=""/>
+						<input type="hidden" name="filesid" class="filesid" value=""/>
+						<input type="hidden" name="conflictedit" class="conflictedit" value=""/>
 						<h3 class="ux-tag-location" id="continent"><span class="material-symbols-outlined">globe_asia</span><span class="unedit"></span><span class="solver initialyhidden">Override all values</span><select name="continent" ><?php foreach($contient as $key=>$value) echo '<option value="'.$key.'">'.$value.'</option>'; ?></select></h3>				
 						<h3 class="ux-tag-location" id="country"><span class="material-symbols-outlined">flag</span><span class="unedit"></span><span class="solver initialyhidden">Override all values</span><select name="country"><?php foreach($country as $key=>$value) echo '<option value="'.$key.'">'.$value.'</option>'; ?></select></h3>
 						<h3 class="ux-tag-location" id="city"><span class="material-symbols-outlined">location_city</span><span class="unedit"></span><span class="solver initialyhidden">Override all values</span><input name="city" type="text" placeholder="city"></h3>
@@ -231,7 +233,8 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/locations.php');
 					<h2><span class="material-symbols-outlined">tag</span><span>Tags</span></h2>
 					<form method="post" data-return="blockreturntags" action="actions/file-save-infos.php?form=tag-general" class="post">
 						<input type="hidden" name="token" class="token" value=""/>
-						<input type="hidden" name="file_hash" class="filehash" value=""/>
+						<input type="hidden" name="filesid" class="filesid" value=""/>
+						<input type="hidden" name="conflictedit" class="conflictedit" value=""/>
 						<h3 class="ux-tag-general" id="activity"><span class="material-symbols-outlined">directions_run</span><span class="unedit"></span><span class="solver initialyhidden">Override all values</span><input name="activity" type="text" placeholder="activity"></h3>				
 						<h3 class="ux-tag-general" id="comment"><span class="material-symbols-outlined">comment</span><span class="unedit"></span><span class="solver initialyhidden">Override all values</span><input name="comment" type="text" placeholder="comment"></h3>
 						<h3 class="ux-tag-general" id="people"><span class="material-symbols-outlined">group</span><span class="unedit"></span><span class="solver initialyhidden">Override all values</span><input name="people" type="text" placeholder="people"></h3>
@@ -258,7 +261,7 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/locations.php');
 							<span class="legend">Added time</span><br>
 							<span id="time_added_at"></span><br/>
 							<span class="legend">Modified date</span><br>
-							<span id="time_status"></span>							
+							<span id="time_modified_at"></span>							
 						</h3>
 						<h4 class="button-exif"><button><span class="material-symbols-outlined cursor">expand_all</span><span class="cursor">Show EXIF</span></button></h4>
 						<h3 id="exif"></h3>

@@ -48,13 +48,11 @@
 
 		$bigarray['info']=$array_file['datas'];
 		$bigarray['lform']=$_GET['lform'];
-		$bigarray['hash']=$_GET['hash'];
 	}
 	else
 	{
 		$bigarray['info']=[];
 		$bigarray['lform']="";
-		$bigarray['hash']="";
 	}	
 	
 	$fReturn->addCallBack("g_file_load_info_CallBack", $bigarray)->fetch();	

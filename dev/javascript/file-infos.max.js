@@ -33,6 +33,20 @@ $(document).ready(function(){
 	});	
 });
 
+var g_ux_init = function g_ux_init()
+{
+	//multiple edit ux display reset
+	$('div#informations').show();
+	$('h3 span.solver').hide();
+	$('aside#infocontent h3').removeClass('conflict');
+	//edit-cancel ux display reset
+	$('aside#infocontent h3 input, h3 select').hide();
+	$('aside#infocontent h4.edit_ux button.save').hide();
+	$('aside#infocontent h4.edit_ux button.cancel').hide();
+	$('aside#infocontent h4.edit_ux button.edit').show();
+	$('aside#infocontent h3 span.unedit').show();	
+}
+
 var g_file_load_infos = function loadinfoview(lform = "")
 {	
 	if(!$('body').hasClass("no-aside"))
@@ -47,12 +61,16 @@ var g_file_load_infos = function loadinfoview(lform = "")
 
 var g_file_load_info_CallBack = function file_load_info_CallBack(data)
 {
-	let lform = data.lform;
-	let hash = data.hash;
-	let datas = data.info[0];
-
-	$('input.filehash').val(hash);
+	console.log("g_file_load_info_CallBack");
+	console.log(data);
 	
+	let lform = data.lform;
+	let datas = data.info[0];
+	
+	flag_selection_has_changed=1; //pour recharger les informations si on load une photo individuellement
+	$('input.filesid').val("["+data.info[0].id+"]");
+	$('input.conflictedit').val('{"date":0,"time":0,"zone":0,"continent":0,"country":0,"city":0,"place":0,"activity":0,"comment":0,"people":0,"other":0}');
+
 	if(lform !=="")
 	{
 		$('aside#infocontent h3.ux-'+lform).find('input, select').hide();
@@ -71,23 +89,27 @@ var g_file_load_info_CallBack = function file_load_info_CallBack(data)
 	
 	$('h3#file_size span').html(formatBytes(datas.file_size));	
 	
-	if(datas.time_taken_at=="00000000+0000000000")
+	let time_taken_at = datas.time_taken_at_date+datas.time_taken_at_zone+datas.time_taken_at_time;
+	
+	console.log("Taken at:");
+	console.log(time_taken_at);
+	console.log(formatDateTime(time_taken_at));
+	
+	if(time_taken_at=="00000000+0000000000")
 	{
 		$('h3#date span.unedit').html('Unknown');
 		$('h3#time span.unedit').html('Unknown');
 		$('h3#zone span.unedit').html('Unknown');
 	}
 	else
-	{
-		$('h3#date input').val(formatDateTime(datas.time_taken_at,'input-date'));
-		$('h3#time input').val(formatDateTime(datas.time_taken_at,'input-time'));
-		$('h3#zone select').val(formatDateTime(datas.time_taken_at,'input-zone').replace('UTC',''));
+	{		
+		$('h3#date input').val(formatDateTime(time_taken_at,'input-date'));
+		$('h3#time input').val(formatDateTime(time_taken_at,'input-time'));
+		$('h3#zone select').val(formatDateTime(time_taken_at,'input-zone').replace('UTC',''));
 		
-		console.log(formatDateTime(datas.time_taken_at,'output-date'));
-		
-		$('h3#date span.unedit').html(formatDateTime(datas.time_taken_at,'output-date'));
-		$('h3#time span.unedit').html(formatDateTime(datas.time_taken_at,'output-time'));
-		$('h3#zone span.unedit').html(formatDateTime(datas.time_taken_at,'output-zone'));
+		$('h3#date span.unedit').html(formatDateTime(time_taken_at,'output-date'));
+		$('h3#time span.unedit').html(formatDateTime(time_taken_at,'output-time'));
+		$('h3#zone span.unedit').html(formatDateTime(time_taken_at,'output-zone'));
 	}
 
 	$('h3#exif').html(processExif(datas.exif));
@@ -164,17 +186,13 @@ var g_file_load_info_CallBack = function file_load_info_CallBack(data)
 	
 	$('span#time_added_at').html(formatUTCToLocalWithTimezone(datas.time_added_at));
 	
-	if (datas.time_status == null) 		$('h3#other span.unedit').html("");
-	else 							
-	{
-		$('span#time_status').html(formatUTCToLocalWithTimezone(datas.time_status));					
-	}
+	if (datas.time_modified_at == null) 	$('span#time_modified_at').html("never");
+	else 									$('span#time_modified_at').html(formatUTCToLocalWithTimezone(datas.time_modified_at));					
+	
 	
 	//reset from multiple
 
-	$('div#informations').show();
-	$('h3 span.solver').hide();
-	$('aside#infocontent h3').removeClass('conflict');
+	g_ux_init();
 }
 
 function processExif(data, indent = 0) {

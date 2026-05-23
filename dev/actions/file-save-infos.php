@@ -11,61 +11,36 @@
 	$fReturn = new fReturn();
 	$validation = new Validation();
 
-	$validation->addVerification('token',		'sha256',	'Token');	
-	$validation->addVerification('file_hash',	'sha256',	'Hash');
-	
+	//VALIDATION FORMULAIRE
+
+	$validation->addVerification('token',		'sha256',				'Token'							);	
+	$validation->addVerification('filesid',		'jsonArrayString',		'Files id'						);	
+	$validation->addVerification('conflictedit','string',				'Conflict array',		119,119);	
+
 	switch($_GET['form'])
 	{
 		case "time":
 
-			$validation->addVerification('datetime',	'string',				'Date',					16,16);	
-			$validation->addVerification('timezone',	'string',				'Timezone',				5,5);	
-
-			$datetimeInput = $_POST['datetime'] ?? '';
-			$timezoneInput = $_POST['timezone'] ?? '+0000';
-
-			// Crée un objet DateTime à partir du datetime-local
-			$date = DateTime::createFromFormat('Y-m-d\TH:i:s', $datetimeInput);
-			if (!$date) {
-				$date = DateTime::createFromFormat('Y-m-d\TH:i', $datetimeInput); // Au cas où les secondes sont absentes
-			}
-
-			// Applique le fuseau horaire personnalisé
-			$timezone = new DateTimeZone($timezoneInput);
-			$date->setTimezone($timezone);
-
-			// Formate la date : YYYYMMDD + ZZZZZ (sans ":") + HHMMSS
-			$offset = str_replace(':', '', $date->format('P')); // Ex: "+0700"
-			$strdate = $date->format('Ymd') . $offset . $date->format('His');
-
-			$EasyPDO->addFields('time_taken_at',$strdate);
+			$validation->addVerification('date',		'string',				'Date',			0,10);	
+			$validation->addVerification('time',		'string',				'Time',			0,8);	
+			$validation->addVerification('zone',		'string',				'Zone',			0,5);
 
 		break;
 		case "tag-location":
-		
-			$validation->addVerification('continent',	'string',				'Continent',			2,2);	
-			$validation->addVerification('country',		'string',				'Country',				3,3);	
-			$validation->addVerification('city',		'string',				'City',					0,200);	
-			$validation->addVerification('place',		'string',				'Place',				0,200);	
 
-			$EasyPDO->addFields('tag_continent',$_POST['continent']);
-			$EasyPDO->addFields('tag_country',$_POST['country']);
-			$EasyPDO->addFields('tag_city',$_POST['city']);
-			$EasyPDO->addFields('tag_place',$_POST['place']);
+			$validation->addVerification('continent',	'string',				'Continent',	0,2);	
+			$validation->addVerification('country',		'string',				'Country',		0,3);	
+			$validation->addVerification('city',		'string',				'City',			0,200);	
+			$validation->addVerification('place',		'string',				'Place',		0,200);	
 
 		break;
 		case "tag-general":
+	
+			$validation->addVerification('activity',	'string',				'Activity',		0,200);	
+			$validation->addVerification('comment',		'string',				'Comment',		0,200);	
+			$validation->addVerification('people',		'string',				'People',		0,200);	
+			$validation->addVerification('information',	'string',				'Information',	0,200);	
 
-			$validation->addVerification('activity',	'string',				'Activity',				0,200);	
-			$validation->addVerification('comment',		'string',				'Comment',				0,200);	
-			$validation->addVerification('people',		'string',				'People',				0,200);	
-			$validation->addVerification('information',	'string',				'Information',			0,200);	
-			
-			$EasyPDO->addFields('tag_activity',$_POST['activity']);
-			$EasyPDO->addFields('tag_comment',$_POST['comment']);
-			$EasyPDO->addFields('tag_people',$_POST['people']);
-			$EasyPDO->addFields('tag_other',$_POST['information']);
-		
 		break;
 		default:
 		
@@ -73,23 +48,62 @@
 			
 		break;
 	}
-
-	$validation->Validate();	
+		
+	$validation->Validate();
 
 	if(!$validation->isValidated())
 	{
-		$fReturn->addFailMessage($validation->Message())->fetch();	
+		$fReturn->addInfoMessage($validation->Message())->fetch();	
 	}
 	
+	//
+	
+	$conflict = json_decode($_POST['conflictedit']);
+	
+	//$fReturn->addConsole($_POST['conflictedit'])->fetch();
+
+	switch($_GET['form'])
+	{
+		case "time":
+
+			if($conflict->date==0) $EasyPDO->addFields('time_taken_at_date',str_replace('-','',$_POST['date']));
+			if($conflict->zone==0) $EasyPDO->addFields('time_taken_at_zone',$_POST['zone']);
+			if($conflict->time==0) $EasyPDO->addFields('time_taken_at_time',str_replace(':','',$_POST['time']));
+
+		break;
+		case "tag-location":
+
+			if($conflict->continent==0)		$EasyPDO->addFields('tag_continent',$_POST['continent']);
+			if($conflict->country==0)		$EasyPDO->addFields('tag_country',$_POST['country']);
+			if($conflict->city==0)			$EasyPDO->addFields('tag_city',$_POST['city']);
+			if($conflict->place==0)			$EasyPDO->addFields('tag_place',$_POST['place']);	
+
+		break;
+		case "tag-general":
+	
+			if($conflict->activity==0)		$EasyPDO->addFields('tag_activity',$_POST['activity']);
+			if($conflict->comment==0)		$EasyPDO->addFields('tag_comment',$_POST['comment']);
+			if($conflict->people==0)		$EasyPDO->addFields('tag_people',$_POST['people']);
+			if($conflict->other==0)			$EasyPDO->addFields('tag_other',$_POST['information']);
+		
+		break;
+		default:
+		
+			$fReturn->addFailMessage("Bad form")->fetch();
+			
+		break;
+	}	
+
 	$date = new DateTime();
     $date->setTimezone(new DateTimeZone('UTC'));
     $strdate_updated = $date->format('Y-m-d H:i:s');		
 
-	$EasyPDO->addFields('time_status',$strdate_updated); //last updated info	
+	$EasyPDO->addFields('time_modified_at',$strdate_updated); //last updated info	
 	$EasyPDO->addFields('tag_status',1); //now file is tagged
 	
-	$EasyPDO->addConditionalData('file_hash',$_POST['file_hash']);
-	$EasyPDO->update('photos', 'file_hash=:file_hash');
-		
-	$fReturn->addSuccessMessage("Database updated")->addCallBack("g_file_load_infos", $_GET['form'])->fetch();
+	$affectedrow = $EasyPDO->update('photos', 'id IN', json_decode($_POST['filesid'], true));
+	
+	//$fReturn->addConsole($affectedrow)->fetch();
+
+	$fReturn->addCallback("g_multiple_selection_load_data",1)->addSuccessMessage("Database updated")->fetch();
 ?>	

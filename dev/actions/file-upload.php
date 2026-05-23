@@ -57,7 +57,9 @@ if (!empty($_FILES['file']) && !empty($_FILES['preview'])) {
 
     // Récupère la date de prise de vue
 	//				  YYYYMMDD+ZZZZHHMMSS
-    $strdate_taken = "00000000+0000000000";
+	$strdate_taken_at_date = "00000000";
+	$strdate_taken_at_zone = "+0000";
+	$strdate_taken_at_time = "000000";
 	
     if ($file_type == 0) {
         $exif = @exif_read_data($targetHD);
@@ -73,8 +75,10 @@ if (!empty($_FILES['file']) && !empty($_FILES['preview'])) {
                     }
                 }
             }
-            $strdate_taken = $date->format('Ymd').$fuseau.$date->format('His');
-        }
+			$strdate_taken_at_date = $date->format('Ymd');
+			$strdate_taken_at_zone = $fuseau;
+			$strdate_taken_at_time = $date->format('His');
+		}
     }
 	
 	if ($file_type == 1) {
@@ -101,7 +105,9 @@ if (!empty($_FILES['file']) && !empty($_FILES['preview'])) {
 			$offset = $info['offset'];
 
 			// YYYYMMDD + OFFSET + HHMMSS
-			$strdate_taken = substr($datetime, 0, 8) . $offset . substr($datetime, 8, 6);
+			$strdate_taken_at_date = substr($datetime, 0, 8);
+			$strdate_taken_at_zone = $offset;
+			$strdate_taken_at_time = substr($datetime, 8, 6);
 		}
 	}
 	
@@ -118,7 +124,9 @@ if (!empty($_FILES['file']) && !empty($_FILES['preview'])) {
     $EasyPDO->addFields('file_hash', $hash);
     $EasyPDO->addFields('file_size', $size);
     $EasyPDO->addFields('file_type', $file_type);
-    $EasyPDO->addFields('time_taken_at', $strdate_taken);
+    $EasyPDO->addFields('time_taken_at_date', $strdate_taken_at_date);
+    $EasyPDO->addFields('time_taken_at_zone', $strdate_taken_at_zone);
+	$EasyPDO->addFields('time_taken_at_time', $strdate_taken_at_time);
     $EasyPDO->addFields('time_added_at', $strdate_added);	
     $return=$EasyPDO->insert('photos');
 
