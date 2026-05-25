@@ -13,7 +13,7 @@ $(document).ready(function(){
 
 	$('aside#infocontent h4.button-exif').on('click.exifInfo', function() {
 		
-		$('aside#infocontent h3#exif').toggle();
+		$('aside#infocontent h3#exif').toggleClass('hidden');
 		if($('aside#infocontent h3#exif').is(':visible')) {
 			$('aside#infocontent h4.button-exif div span.material-symbols-outlined').html("collapse_all");  }
 		else {
@@ -22,11 +22,11 @@ $(document).ready(function(){
 	
 	$('aside#infocontent h4.edit_ux').find('button.edit, button.cancel').on('click.infoViewEdit', function() {
 				
-		$(this).parent().children().toggle();
+		$(this).parent().children().toggleClass('hidden');
 		
 		let data=$(this).parent().attr('data-form');
 		
-		$('aside#infocontent h3.ux-'+data+':not(.conflict) input, h3.ux-'+data+':not(.conflict) select, h3.ux-'+data+':not(.conflict) span.unedit').toggle();
+		$('aside#infocontent h3.ux-'+data+':not(.conflict) input, h3.ux-'+data+':not(.conflict) select, h3.ux-'+data+':not(.conflict) span.unedit').toggleClass('hidden');
 		
 		g_conflict_solver_display(data,$(this));
 		
@@ -36,22 +36,22 @@ $(document).ready(function(){
 var g_ux_init = function g_ux_init()
 {
 	//multiple edit ux display reset
-	$('div#informations').show();
-	$('h3 span.solver').hide();
+	$('div#informations').removeClass('hidden');
+	$('h3 span.solver').addClass('hidden');
 	$('aside#infocontent h3').removeClass('conflict');
 	//edit-cancel ux display reset
-	$('aside#infocontent h3 input, h3 select').hide();
-	$('aside#infocontent h4.edit_ux button.save').hide();
-	$('aside#infocontent h4.edit_ux button.cancel').hide();
-	$('aside#infocontent h4.edit_ux button.edit').show();
-	$('aside#infocontent h3 span.unedit').show();	
+	$('aside#infocontent h3 input, h3 select').addClass('hidden');
+	$('aside#infocontent h4.edit_ux button.save').addClass('hidden');
+	$('aside#infocontent h4.edit_ux button.cancel').addClass('hidden');
+	$('aside#infocontent h4.edit_ux button.edit').removeClass('hidden');
+	$('aside#infocontent h3 span.unedit').removeClass('hidden');	
 }
 
 var g_file_load_infos = function loadinfoview(lform = "")
 {	
 	if(!$('body').hasClass("no-aside"))
 	{	
-		$("#infocontent :where(input,select)").hide();
+		$("#infocontent :where(input,select)").addClass('hidden');
 
 		let hash = $('section#maincontent div.media img, section#maincontent div.media video').attr('src').split('-').pop();
 		
@@ -60,10 +60,7 @@ var g_file_load_infos = function loadinfoview(lform = "")
 }
 
 var g_file_load_info_CallBack = function file_load_info_CallBack(data)
-{
-	console.log("g_file_load_info_CallBack");
-	console.log(data);
-	
+{	
 	let lform = data.lform;
 	let datas = data.info[0];
 	
@@ -73,10 +70,10 @@ var g_file_load_info_CallBack = function file_load_info_CallBack(data)
 
 	if(lform !=="")
 	{
-		$('aside#infocontent h3.ux-'+lform).find('input, select').hide();
-		$('aside#infocontent h4.'+lform).find('button.save, button.cancel').hide();
-		$('aside#infocontent h3.ux-'+lform+' span').show();				
-		$('aside#infocontent h4.'+lform+' button.edit').show();
+		$('aside#infocontent h3.ux-'+lform).find('input, select').addClass('hidden');
+		$('aside#infocontent h4.'+lform).find('button.save, button.cancel').addClass('hidden');
+		$('aside#infocontent h3.ux-'+lform+' span').removeClass('hidden');				
+		$('aside#infocontent h4.'+lform+' button.edit').removeClass('hidden');
 	}
 
 	if(datas.file_type==1) 	$('h2#file_type span.material-symbols-outlined').html('video_file');
@@ -85,15 +82,11 @@ var g_file_load_info_CallBack = function file_load_info_CallBack(data)
 	$('h2#file_type span.title').html('File');
 	
 	$('h3#file_original_name span').html(datas.file_original_name);
-	$('h3#file_original_name').show();
+	$('h3#file_original_name').removeClass('hidden');
 	
 	$('h3#file_size span').html(formatBytes(datas.file_size));	
 	
 	let time_taken_at = datas.time_taken_at_date+datas.time_taken_at_zone+datas.time_taken_at_time;
-	
-	console.log("Taken at:");
-	console.log(time_taken_at);
-	console.log(formatDateTime(time_taken_at));
 	
 	if(time_taken_at=="00000000+0000000000")
 	{

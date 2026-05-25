@@ -33,7 +33,7 @@ g_fullscreen = function fullscreen(id, max)
 		$('body').toggleClass("no-aside");
 	}
 	
-	if(id==-1) $('nav div#mainmenu').show();
+	if(id==-1) $('nav div#mainmenu').removeClass('hidden');
 	
 	current_id=id;
 	max_id=max;
@@ -61,7 +61,7 @@ function Select()
 	{
 		$('div#grid_'+current_id).toggleClass('selected notselected');
 		fullscreen_is_selected(current_id);
-		g_display_global_selection();	
+		g_display_menu_global_selection();	
 		flag_selection_has_changed=1; //on set le flag
 		g_multiple_selection_load_data(); //mettre à jour les informations si on est en multiple file selection
 	}
@@ -71,42 +71,39 @@ function arrow_hide(current_id, max_id)
 {
 	if(current_id==0)
 	{
-		$('div.button-leftarrow').hide();
+		$('div.button-leftarrow').addClass('hidden');
 		lockleft=1;
 	}	
 	else
 	{
-		$('div.button-leftarrow').show();
+		$('div.button-leftarrow').removeClass('hidden');
 		lockleft=0;
 	}
 
 	if(current_id==max_id)
 	{
-		$('div.button-rightarrow').hide();
+		$('div.button-rightarrow').addClass('hidden');
 		lockright=1;
 	}
 	else
 	{
-		$('div.button-rightarrow').show();
+		$('div.button-rightarrow').removeClass('hidden');
 		lockright=0;
 	}
 }
 
 function fullscreen_is_selected(current_id)
 {
-	if(!$('section#maincontent').hasClass('hidden'))
-	{	
-		if($('div#grid_'+current_id).hasClass('selected'))
-		{
-			$('section#maincontent').addClass('selected');
-			$('section#maincontent div.button-selection').addClass('selected');
-			$('section#maincontent div.button-selection').removeClass('notselected');
-		}
-		else
-		{
-			$('section#maincontent').removeClass('selected');
-			$('section#maincontent div.button-selection').addClass('notselected');
-			$('section#maincontent div.button-selection').removeClass('selected');
-		}
+	if($('div#grid_'+current_id).hasClass('selected'))
+	{
+		$('section#maincontent').addClass('selected');
+		$('section#maincontent div.button-selection').addClass('selected');
+		$('section#maincontent div.button-selection').removeClass('notselected');
+	}
+	else
+	{
+		$('section#maincontent').removeClass('selected');
+		$('section#maincontent div.button-selection').addClass('notselected');
+		$('section#maincontent div.button-selection').removeClass('selected');
 	}
 }

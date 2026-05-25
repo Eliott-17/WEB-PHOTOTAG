@@ -11,7 +11,7 @@ $(document).ready(function(){
 
 	$(window).on('scroll', function() {
 
-		if (loading) return;
+		if (loading || data==null) return;
 
 		let scrollTop = $(window).scrollTop();
 		let windowHeight = $(window).height();
@@ -22,9 +22,9 @@ $(document).ready(function(){
 		// déclenche quand il reste 25%
 		if (remaining < docHeight * 0.25) {
 			loading=true;
+			console.log("reload from scroll");
 			load_grid(null, true);
 		}
-
 	});
 
 });
@@ -66,14 +66,12 @@ function load_grid(ldata=null, ladd=false)
 {	
 	$('main').off('click.gridSelect');
 	$('main').off('click.gridOpen');
-	
+
 	if(ldata!=null) data=ldata;
 	
 	let source=null;
 	let html_mem_date="";
-	
-	console.log(data);
-	
+		
 	let total_file_library=data.library.length;
 	let total_file_untagged=data.untagged.length;	
 	
@@ -137,6 +135,8 @@ function load_grid(ldata=null, ladd=false)
 		
 		let current_id = parseInt($(this).parent().attr('id').replace('grid_',''));
 		
+		fullscreen_is_selected(current_id);
+
 		if(e.shiftKey)
 		{	
 			if(last_select>=0)
@@ -162,7 +162,7 @@ function load_grid(ldata=null, ladd=false)
 
 		last_select=current_id;
 		
-		g_display_global_selection();
+		g_display_menu_global_selection();
 		flag_selection_has_changed=1; //on set le flag
 		g_multiple_selection_load_data(); //mettre à jour les informations si on est en multiple file selection
 	});
@@ -173,7 +173,7 @@ function load_grid(ldata=null, ladd=false)
 		
 		g_load_media(media_id);
 		g_fullscreen(media_id,(loaded_files-1));
-		$('nav div#mainmenu').hide();
+		$('nav div#mainmenu').addClass('hidden');
 		
 	});	
 
@@ -232,7 +232,7 @@ function addElement(dir, bdd)
 	return html;	
 }
 
-g_display_global_selection = function display_global_selection()
+g_display_menu_global_selection = function display_menu_global_selection()
 {
 	let selected_ids = $('.element.selected').map(function() {
 		return this.id;
@@ -240,10 +240,10 @@ g_display_global_selection = function display_global_selection()
 	
 	let loaded_files=selected_ids.length;
 
-	if(loaded_files==0 || loaded_files<=1) 
+	if(loaded_files<=1) 
 	{	
-		$('#select-status').fadeOut(300);
-		if(!$('body').hasClass("no-aside")) $('body').addClass("no-aside");		
+		if(!$('body').hasClass("no-aside") && $('section#maincontent').hasClass('hidden')) $('body').addClass("no-aside");
+		$('#select-status').fadeOut(300);		
 	}
 	else
 	{ 

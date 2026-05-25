@@ -18,7 +18,7 @@ $(document).ready(function(){
 		g_data['flag'][data]=0; //update
 		$('input.conflictedit').val(JSON.stringify(g_data['flag']));
 
-		$('aside#infocontent h3#'+data+'.conflict input, h3#'+data+'.conflict select, h3#'+data+'.conflict span.solver').toggle();
+		$('aside#infocontent h3#'+data+'.conflict input, h3#'+data+'.conflict select, h3#'+data+'.conflict span.solver').toggleClass('hidden');
 	
 		console.log(g_data['flag']);
 	});
@@ -28,14 +28,14 @@ $(document).ready(function(){
 var g_conflict_solver_display = function conflict_solver_display(data,obj)
 {
 	if (obj.hasClass('edit')) {
-		$('h3.ux-'+data+'.conflict span.solver').show();
-		$('h3.ux-'+data+'.conflict span.unedit').hide();
+		$('h3.ux-'+data+'.conflict span.solver').removeClass('hidden');
+		$('h3.ux-'+data+'.conflict span.unedit').addClass('hidden');
     }
 
     if (obj.hasClass('cancel')) {
-		$('h3.ux-'+data+'.conflict input, h3.ux-'+data+'.conflict select').hide();
-		$('h3.ux-'+data+'.conflict span.solver').hide();
-		$('h3.ux-'+data+'.conflict span.unedit').show();
+		$('h3.ux-'+data+'.conflict input, h3.ux-'+data+'.conflict select').addClass('hidden');
+		$('h3.ux-'+data+'.conflict span.solver').addClass('hidden');
+		$('h3.ux-'+data+'.conflict span.unedit').removeClass('hidden');
 		
 		$('h3.ux-' + data).each(function() {
 
@@ -50,7 +50,7 @@ var g_conflict_solver_display = function conflict_solver_display(data,obj)
 
 var g_multiple_selection_manage_display = function g_multiple_selection_manage_display()
 {
-	$('nav div#mainmenu').show();
+	$('nav div#mainmenu').removeClass('hidden');
 	
 	if(is_multi_selection_displayed())
 	{
@@ -109,8 +109,6 @@ var g_multiple_selection_load_data_CallBack = function multiple_selection_load_d
 	g_data = structuredClone(data);	
 	g_data_mem = structuredClone(data);	
 	g_multiple_selection_display_data();
-	
-		console.log(g_data);
 }
 
 var g_multiple_selection_display_data = function multiple_selection_display_data()
@@ -166,13 +164,13 @@ var g_multiple_selection_display_data = function multiple_selection_display_data
 
 	$('h2#file_type span.material-symbols-outlined').html('files');
 	$('h2#file_type span.title').html('Multiple files selection');
-	$('div#informations').hide();
+	$('div#informations').addClass('hidden');
 	
 	$('input.conflictedit').val(JSON.stringify(g_data['flag']));
 	$('h3#file_size span').html(formatBytes(g_data['total_size']));
-	$('h3#file_original_name').hide();
+	$('h3#file_original_name').addClass('hidden');
 	
-	$('h3 span.solver').hide();
+	$('h3 span.solver').addClass('hidden');
 	
 	//show_file_list();
 }

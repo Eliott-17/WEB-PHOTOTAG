@@ -9,11 +9,11 @@ $(document).ready(function(){
 
 var g_login_password_verif = function login_password_verif()
 {
-	$('nav #login .password-confirmation').show();
+	$('nav #login .password-confirmation').removeClass('hidden');
 }
 
 var g_login_a2f_verif = function login_a2f_verif()
 {
-	$('nav #login .code').show();
+	$('nav #login .code').removeClass('hidden');
 
 }

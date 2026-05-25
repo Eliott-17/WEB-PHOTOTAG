@@ -1,6 +1,6 @@
 <?php
 
-define("SESSION_MAX_LIFE_ID", 60); //1 minute
+define("SESSION_MAX_LIFE_ID", 600); //10 minute
 define("SESSION_MAX_LIFE_INACTIVE", 60*60*24*15); //15 jours
 
 if(stristr($_SERVER['DOCUMENT_ROOT'], 'dev')) //environement dev par aborescente répertoire

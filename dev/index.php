@@ -15,20 +15,18 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/locations.php');
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 
 		<!-- HEADER SCRIPTS INCLUDED ON THIS PAGE - START -->
-		<!--<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"/>-->
 
+		<link rel="stylesheet" href="core/post.<?php echo DIM; ?>.css" type="text/css"/>
 		<link rel="stylesheet" href="style/common.<?php echo filemtime('style/common.'.DIM.'.css'); ?>.<?php echo DIM; ?>.css" type="text/css"/>
 
 		<link rel="stylesheet" href="style/file-infos.<?php echo filemtime('style/file-infos.'.DIM.'.css'); ?>.<?php echo DIM; ?>.css" type="text/css"/>
 		<link rel="stylesheet" href="style/file-multi-selection-edit.<?php echo filemtime('style/file-multi-selection-edit.'.DIM.'.css'); ?>.<?php echo DIM; ?>.css" type="text/css"/>
 		<link rel="stylesheet" href="style/file-open-fullscreen.<?php echo filemtime('style/file-open-fullscreen.'.DIM.'.css'); ?>.<?php echo DIM; ?>.css" type="text/css"/>
-		
-		
+			
 		<link rel="stylesheet" href="style/index-grid.<?php echo filemtime('style/index-grid.'.DIM.'.css'); ?>.<?php echo DIM; ?>.css" type="text/css"/>
 		<link rel="stylesheet" href="style/index-login.<?php echo filemtime('style/index-login.'.DIM.'.css'); ?>.<?php echo DIM; ?>.css" type="text/css"/>
 		<link rel="stylesheet" href="style/index-top.<?php echo filemtime('style/index-top.'.DIM.'.css'); ?>.<?php echo DIM; ?>.css" type="text/css"/>
 		<link rel="stylesheet" href="style/upload.<?php echo filemtime('style/upload.'.DIM.'.css'); ?>.<?php echo DIM; ?>.css" type="text/css"/>
-
 
 		<!-- HEADER SCRIPTS INCLUDED ON THIS PAGE - END -->
 
@@ -151,9 +149,9 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/locations.php');
 						<input type="hidden" name="token" class="token" value=""/>
 						<input type="hidden" name="filesid" class="filesid" value=""/>
 						<input type="hidden" name="conflictedit" class="conflictedit" value=""/>
-						<h3 class="ux-tag-time" id="date"><span class="material-symbols-outlined">event</span><span class="unedit"></span><span class="solver initialyhidden">Override all values</span><input name="date" type="date"/></h3>				
-						<h3 class="ux-tag-time" id="time"><span class="material-symbols-outlined">nest_clock_farsight_analog</span><span class="unedit"></span><span class="solver initialyhidden">Override all values</span><input name="time" type="time" step="1"/></h3>
-						<h3 class="ux-tag-time" id="zone"><span class="material-symbols-outlined">south_america</span><span class="unedit"></span><span class="solver initialyhidden">Override all values</span><select name="zone">
+						<h3 class="ux-tag-time" id="date"><span class="material-symbols-outlined">event</span><span class="unedit"></span><span class="solver hidden">Override all values</span><input name="date" type="date"/></h3>				
+						<h3 class="ux-tag-time" id="time"><span class="material-symbols-outlined">nest_clock_farsight_analog</span><span class="unedit"></span><span class="solver hidden">Override all values</span><input name="time" type="time" step="1"/></h3>
+						<h3 class="ux-tag-time" id="zone"><span class="material-symbols-outlined">south_america</span><span class="unedit"></span><span class="solver hidden">Override all values</span><select name="zone">
 								  <option value="-1200">(UTC-12:00) Baker Island</option>
 								  <option value="-1100">(UTC-11:00) Niue</option>
 								  <option value="-1000">(UTC-10:00) Hawaii</option>
@@ -210,10 +208,10 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/locations.php');
 						<input type="hidden" name="token" class="token" value=""/>
 						<input type="hidden" name="filesid" class="filesid" value=""/>
 						<input type="hidden" name="conflictedit" class="conflictedit" value=""/>
-						<h3 class="ux-tag-location" id="continent"><span class="material-symbols-outlined">globe_asia</span><span class="unedit"></span><span class="solver initialyhidden">Override all values</span><select name="continent" ><?php foreach($contient as $key=>$value) echo '<option value="'.$key.'">'.$value.'</option>'; ?></select></h3>				
-						<h3 class="ux-tag-location" id="country"><span class="material-symbols-outlined">flag</span><span class="unedit"></span><span class="solver initialyhidden">Override all values</span><select name="country"><?php foreach($country as $key=>$value) echo '<option value="'.$key.'">'.$value.'</option>'; ?></select></h3>
-						<h3 class="ux-tag-location" id="city"><span class="material-symbols-outlined">location_city</span><span class="unedit"></span><span class="solver initialyhidden">Override all values</span><input name="city" type="text" placeholder="city"></h3>
-						<h3 class="ux-tag-location" id="place"><span class="material-symbols-outlined">place</span><span class="unedit"></span><span class="solver initialyhidden">Override all values</span><input name="place" type="text" placeholder="place"></h3>
+						<h3 class="ux-tag-location" id="continent"><span class="material-symbols-outlined">globe_asia</span><span class="unedit"></span><span class="solver hidden">Override all values</span><select name="continent" ><?php foreach($contient as $key=>$value) echo '<option value="'.$key.'">'.$value.'</option>'; ?></select></h3>				
+						<h3 class="ux-tag-location" id="country"><span class="material-symbols-outlined">flag</span><span class="unedit"></span><span class="solver hidden">Override all values</span><select name="country"><?php foreach($country as $key=>$value) echo '<option value="'.$key.'">'.$value.'</option>'; ?></select></h3>
+						<h3 class="ux-tag-location" id="city"><span class="material-symbols-outlined">location_city</span><span class="unedit"></span><span class="solver hidden">Override all values</span><input name="city" type="text" placeholder="city"></h3>
+						<h3 class="ux-tag-location" id="place"><span class="material-symbols-outlined">place</span><span class="unedit"></span><span class="solver hidden">Override all values</span><input name="place" type="text" placeholder="place"></h3>
 						<h4 class="edit_ux tag-location" data-form="tag-location">
 							<button class="save submit">
 								<span class="material-symbols-outlined">Save</span><span>Save</span>
@@ -235,10 +233,10 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/locations.php');
 						<input type="hidden" name="token" class="token" value=""/>
 						<input type="hidden" name="filesid" class="filesid" value=""/>
 						<input type="hidden" name="conflictedit" class="conflictedit" value=""/>
-						<h3 class="ux-tag-general" id="activity"><span class="material-symbols-outlined">directions_run</span><span class="unedit"></span><span class="solver initialyhidden">Override all values</span><input name="activity" type="text" placeholder="activity"></h3>				
-						<h3 class="ux-tag-general" id="comment"><span class="material-symbols-outlined">comment</span><span class="unedit"></span><span class="solver initialyhidden">Override all values</span><input name="comment" type="text" placeholder="comment"></h3>
-						<h3 class="ux-tag-general" id="people"><span class="material-symbols-outlined">group</span><span class="unedit"></span><span class="solver initialyhidden">Override all values</span><input name="people" type="text" placeholder="people"></h3>
-						<h3 class="ux-tag-general" id="other"><span class="material-symbols-outlined">info</span><span class="unedit"></span><span class="solver initialyhidden">Override all values</span><input name="information" type="text" placeholder="other information"></h3>
+						<h3 class="ux-tag-general" id="activity"><span class="material-symbols-outlined">directions_run</span><span class="unedit"></span><span class="solver hidden">Override all values</span><input name="activity" type="text" placeholder="activity"></h3>				
+						<h3 class="ux-tag-general" id="comment"><span class="material-symbols-outlined">comment</span><span class="unedit"></span><span class="solver hidden">Override all values</span><input name="comment" type="text" placeholder="comment"></h3>
+						<h3 class="ux-tag-general" id="people"><span class="material-symbols-outlined">group</span><span class="unedit"></span><span class="solver hidden">Override all values</span><input name="people" type="text" placeholder="people"></h3>
+						<h3 class="ux-tag-general" id="other"><span class="material-symbols-outlined">info</span><span class="unedit"></span><span class="solver hidden">Override all values</span><input name="information" type="text" placeholder="other information"></h3>
 						<h4 class="edit_ux tag-general" data-form="tag-general">
 							<button class="save submit">
 								<span class="material-symbols-outlined">Save</span><span>Save</span>
@@ -262,7 +260,7 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/locations.php');
 						<h3 class="legend">Modified date</h3>
 						<h3 id="time_modified_at">-</h3>							
 						<h4 class="button-exif"><button><span class="material-symbols-outlined cursor">expand_all</span><span class="cursor">Show EXIF</span></button></h4>
-						<h3 id="exif"></h3>
+						<h3 id="exif" class="hidden"></h3>
 					</div>
 					<br/>
 				</aside>

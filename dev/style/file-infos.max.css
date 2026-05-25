@@ -2,19 +2,13 @@
 --Fullscreen image
 -------------------------------------------*/
 
-#infocontent
-{
-	width: 500px;
-	overflow: scroll;
-	padding: 18px 0px 0px 18px;
-}
-
 #infocontent h2
 {
 	margin-top: 10px;
 	margin-bottom: 10px;
 }
-#infocontent :where(h3,h4)
+
+#infocontent :where(h3, h4):not(#exif)
 {
 	color: #5e5e5e;
 	margin: 0px;
@@ -76,19 +70,9 @@ h3.margin span,
 	display: inline-block;
 }
 
-#infocontent h4.edit_ux :where(button.cancel,button.save)
-{
-	display: none;
-}
-
 #infocontent :where(span.unedit, span.solver)
 {
 	margin-left: 5px;
-}
-
-#infocontent h3#exif
-{
-	display: none;
 }
 
 #infocontent button.cancel

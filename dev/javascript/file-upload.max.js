@@ -213,7 +213,7 @@ function uploadFiles(files, token) {
                 </div>`
             );
             $('div#errorgeneral span.cursor').on('click.errorgeneral', function() {
-                $('div#upload-status').hide();
+                $('div#upload-status').addClass('hidden');
 				$('#upload-status div.text').remove("");
             });
         }
