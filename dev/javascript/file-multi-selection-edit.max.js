@@ -100,7 +100,7 @@ var g_multiple_selection_load_data = function multiple_selection_load_data(force
 		$('input.filesid').val(JSON.stringify(hash_array));
 		
 		g_ux_init();
-		CORE_get($('#fileinfopost'));
+		CORE_post($('#fileinfopost'));
 	}
 }
 

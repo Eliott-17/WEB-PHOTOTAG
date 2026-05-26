@@ -55,7 +55,7 @@ var g_file_load_infos = function loadinfoview(lform = "")
 
 		let hash = $('section#maincontent div.media img, section#maincontent div.media video').attr('src').split('-').pop();
 		
-		get('actions/file-load-infos.php?hash='+hash+'&lform='+lform);
+		CORE_get('actions/file-load-infos.php?hash='+hash+'&lform='+lform);
 	}
 }
 

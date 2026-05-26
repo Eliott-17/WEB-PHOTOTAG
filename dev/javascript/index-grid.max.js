@@ -52,7 +52,7 @@ g_load_files = function load_files(force_reload=false)
 	
 	if(data===null || force_reload==true)
 	{
-		get('actions/file-load-list.php');
+		CORE_get('actions/file-load-list.php');
 	}
 	else 
 	{
