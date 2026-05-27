@@ -13,8 +13,8 @@
 
 	//VALIDATION FORMULAIRE
 
-	$validation->addVerification('token',		'string',					'Token',					64,64);	
-	$validation->addVerification('files_hash',	'string',					'Hash',						3,2000);	
+	$validation->addVerification('token',		'sha256',				'Token'							);	
+	$validation->addVerification('filesid',		'jsonArrayString',		'Files id'						);	
 
 	$validation->Validate();
 
@@ -23,7 +23,7 @@
 		$fReturn->addInfoMessage($validation->Message())->fetch();	
 	}
 	
-	$ids = json_decode($_POST['files_hash'], true); // true pour obtenir un tableau associatif
+	$ids = json_decode($_POST['filesid'], true); // true pour obtenir un tableau associatif
 	
 	//récupération du nom original + hash
 	

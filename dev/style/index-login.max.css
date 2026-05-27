@@ -36,7 +36,7 @@ nav #login input
 	box-sizing: border-box;
 }
 
-nav #login div
+nav #login h4 div
 {
 	margin-bottom: 10px;
 	margin-top: 10px;

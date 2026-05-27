@@ -42,7 +42,7 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/locations.php');
 			if(is_session_valid())
 			{
 				?>
-					<div id="mainmenu" class="uxbackground">				
+					<div id="mainmenu" class="ux-background">				
 						<div><button class="mylib selected"><span class="material-symbols-outlined">photo</span>&nbsp;<span>My library</span></button></div>
 						<div><button class="untag"><span class="material-symbols-outlined">new_label</span>&nbsp;<span>Untagged</span><span id="untaggedcount"></span></button></div>
 						<div class="search"><button class="search"><span class="material-symbols-outlined">search</span>&nbsp;<span>fast search</span></button><input type="text"/></div>
@@ -53,7 +53,7 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/locations.php');
 			else
 			{
 				?>
-					<div id="mainmenu" class="uxbackground">				
+					<div id="mainmenu" class="ux-background">				
 						<div class="title">Phototag</div>
 						<div></div>
 						<div></div>
@@ -63,8 +63,8 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/locations.php');
 			}
 			?>
 
-			<div id="upload-status" class="ux-infobox uxbackground">Upload in progress</br><div id="progressbar">45%</div></div>
-			<div id="select-status" class="ux-infobox uxbackground">Selection of <span id="elementscnt"></span></br>			
+			<div id="upload-status" class="ux-infobox ux-background ux-hidden-opacity ux-hidden-zindex">Upload in progress</br><div id="progressbar">45%</div></div>
+			<div id="select-status" class="ux-infobox ux-background ux-hidden-opacity ux-hidden-zindex">Selection of <span class="elementscnt"></span></br>			
 				<div>
 					<div class="selection">
 						<span class="material-symbols-outlined cursor unselect">radio_button_unchecked</span>
@@ -74,8 +74,13 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/locations.php');
 					&nbsp;<span id="delete" class="material-symbols-outlined cursor">delete</span>
 				</div>
 			</div>		
-
-			<div id="login" class="uxbackground">
+			<div id="select-trash" class="ux-infobox ux-background ux-hidden-opacity ux-hidden-zindex">Move <span class="elementscnt"></span> elements to trash ?</br>			
+				<div>
+					&nbsp;<span id="delete_confirm" class="material-symbols-outlined cursor">check_small</span>
+					&nbsp;<span id="delete_cancel" class="material-symbols-outlined cursor">close_small</span>
+				</div>
+			</div>	
+			<div id="login" class="ux-background">
 			
 				<form method="post" data-return="blockreturnlogin" action="actions/login.php" class="post">
 					<input type="hidden" name="token" class="token" value=""/>
@@ -98,7 +103,7 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/locations.php');
 							<span class="material-symbols-outlined">password</span>&nbsp;&nbsp;<span>Forgot Password</span>
 						</button>	
 					</h4>	
-					<div id="blockreturnlogin" class="cursor">
+					<div id="blockreturnlogin" class="blockreturn">
 						<div class="loading"><span class="material-symbols-outlined">cycle</span></div>		
 						<div class="return alert alert-success"></div>
 					</div>						
@@ -130,13 +135,13 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/locations.php');
 						<div class="ux button-rightarrow arrows">
 							<span class="material-symbols-outlined">play_arrow</span>
 						</div>
-						<div class="menubackground uxbackground"></div>
+						<div class="menubackground ux-background"></div>
 					</section>
 					<section class="grid date"></section>
 					<section class="grid nodate"></section>
 				</main>
 	
-				<aside id="infocontent" class="uxbackground">
+				<aside id="infocontent" class="ux-background">
 					<form method="post" id="fileinfopost" action="actions/file-selection-load-tags.php" class="post">
 						<input type="hidden" name="token" class="token" value=""/>
 						<input type="hidden" name="files_hash" class="filesid" value=""/>
@@ -199,7 +204,7 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/locations.php');
 							</button>
 						</h4>
 					</form>
-					<div id="blockreturndatetime" class="cursor">
+					<div id="blockreturndatetime" class="blockreturn">
 						<div class="loading"><span class="material-symbols-outlined">cycle</span></div>		
 						<div class="return alert alert-success"></div>
 					</div>	
@@ -224,7 +229,7 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/locations.php');
 							</button>
 						</h4>
 					</form>
-					<div id="blockreturnloc" class="cursor">
+					<div id="blockreturnloc" class="blockreturn">
 						<div class="loading"><span class="material-symbols-outlined">cycle</span></div>		
 						<div class="return alert alert-success"></div>
 					</div>
@@ -249,7 +254,7 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/locations.php');
 							</button>
 						</h4>
 					</form>
-					<div id="blockreturntags" class="cursor">
+					<div id="blockreturntags" class="blockreturn">
 						<div class="loading"><span class="material-symbols-outlined">cycle</span></div>		
 						<div class="return alert alert-success"></div>
 					</div>

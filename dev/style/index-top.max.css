@@ -102,10 +102,21 @@ nav div#mainmenu div button.selected, nav div#mainmenu div input:focus
     font-family: 'Segoe UI', sans-serif;
     font-weight: 500;
     backdrop-filter: blur(6px);
-	display: none;
+	transition: opacity 0.5s ease;
+	opacity: 1;
 }
 
-.uxbackground
+.ux-hidden-opacity
+{
+	opacity: 0 !important;
+}
+
+.ux-hidden-zindex
+{
+	z-index: 0 !important;
+}
+
+.ux-background
 {
 	background-color: #fafafa;
 	box-shadow: 0 4px 12px rgba(0,0,0,0.1);

@@ -186,8 +186,14 @@ main section.grid div.selected.transition-on, main section#maincontent.transitio
 
 main section.grid div.selected.success, main section#maincontent.success
 {
-	background-color: #39c463;
-	border-color: #39c463
+	background-color: #a8e6b8; /*#39c463;*/
+	border-color: a8e6b8; /*#39c463*/
+}	
+
+main section.grid div.selected.delete, main section#maincontent.delete
+{
+	background-color: #e04848;
+	border-color: #e04848
 }	
 
 main section.grid div.selected :where(img,video) { border-radius: 5px; }
@@ -206,8 +212,9 @@ main section.grid div.selected span.caseselected {
 	border: 0px;
 }
 
-div#select-status div span { padding: 15px;  }
-div#select-status div { text-align: center;  }
+div#select-status div span,div#select-trash div span { padding: 15px;  }
+div#select-status div,div#select-trash div { text-align: center;  }
+
 div#select-status div span#tag:hover, div#select-status div span#tag.fullscreen { color: #0b57d0 }
 div#select-status div span#delete:hover { color: #f44336 }
 
@@ -217,3 +224,7 @@ div#select-status div div.selection span.unselect { position: absolute; left: 75
 div#select-status div div.selection span.select { opacity: 1; }
 div#select-status div div.selection:hover span.select { opacity: 0; }
 /*#select-status div div.selection:hover span.unselect { opacity: 1; }*/
+
+div#select-trash div span#delete_cancel:hover { color: red }
+div#select-trash div span#delete_confirm:hover { color: green }
+

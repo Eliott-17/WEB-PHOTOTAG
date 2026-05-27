@@ -32,8 +32,7 @@ $(document).ready(function(){
 g_unselect_all = function unselect_all()
 {
 	$('main div.element').each(function () { if ($(this).hasClass('selected')) $(this).toggleClass('selected notselected');	});
-	$('#select-status').fadeOut(300); 
-	
+	g_ux_menu_display($('#select-status'),false);
 	//copy from fullscreenview.max.js 97-99
 	$('section#maincontent').removeClass('selected');
 	$('section#maincontent div.button-selection').addClass('notselected');
@@ -132,6 +131,8 @@ function load_grid(ldata=null, ladd=false)
 	$('main').on('click.gridSelect', 'div.button-select', function(e) {
 		
 		$(this).parent().toggleClass('selected notselected');
+		
+		if(g_is_ux_menu_visible($('div#select-trash'))) $('main section.grid div.selected').addClass('delete');
 		
 		let current_id = parseInt($(this).parent().attr('id').replace('grid_',''));
 		
@@ -243,13 +244,33 @@ g_display_menu_global_selection = function display_menu_global_selection()
 	if(loaded_files<=1) 
 	{	
 		if(!$('body').hasClass("no-aside") && $('section#maincontent').hasClass('hidden')) $('body').addClass("no-aside");
-		$('#select-status').fadeOut(300);		
+		g_ux_menu_display($('#select-status'), false); //.addClass("ux-hidden");		
 	}
 	else
 	{ 
-		$('#elementscnt').html(loaded_files+" elements");
-		$('#select-status').fadeIn(300); 
+		$('.elementscnt').html(loaded_files+" elements");
+		g_ux_menu_display($('#select-status'), true);//.removeClass("ux-hidden"); 
 	}
 	
 	//console.log(selected_ids);
+}
+
+var g_ux_menu_display = function ux_menu_display(object, visibility)
+{
+	if(visibility)
+	{
+		object.removeClass("ux-hidden-zindex");	
+		object.removeClass("ux-hidden-opacity");	
+	}
+	else
+	{
+		object.addClass("ux-hidden-opacity");
+		
+		setTimeout(function() { object.addClass("ux-hidden-zindex"); }, 500);
+	}		
+}
+
+var g_is_ux_menu_visible = function is_ux_menu_visible(object)
+{
+	return !object.hasClass("ux-hidden-zindex");
 }

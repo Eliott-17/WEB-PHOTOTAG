@@ -10,7 +10,10 @@ $(document).ready(function(){
 
 	$('nav').on('click', 'div#select-status div.selection', function() { g_unselect_all(); });		
 	$('nav').on('click', 'div#select-status span#tag', function() {	g_multiple_selection_manage_display() });
-	
+	$('nav').on('click', 'div#select-status span#delete', function() {	g_ux_menu_display($('div#select-status'),false); g_ux_menu_display($('div#select-trash'),true); $('main section.grid div.selected').addClass('delete'); });
+	$('nav').on('click', 'div#select-trash span#delete_cancel', function() {	g_ux_menu_display($('div#select-trash'),false); g_ux_menu_display($('div#select-status'),true); $('main section.grid div.selected').removeClass('delete'); });
+	$('nav').on('click', 'div#select-trash span#delete_confirm', function() {	console.log("todo"); });
+
 	$('aside#infocontent h3 span.solver').on('click.solver', function() {
 		
 		let data=$(this).parent().attr('id');
