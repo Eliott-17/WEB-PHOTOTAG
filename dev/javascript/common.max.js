@@ -135,13 +135,14 @@ function formatUTCToLocalWithTimezone(utcDateTime) {
         year: 'numeric',
         hour: '2-digit',
         minute: '2-digit',
+		second: '2-digit',
         hour12: false,
     };
 
     // Convertir en heure locale et formater
     const localDate = new Date(utcDate); // Conversion automatique en heure locale
     let formattedDate = new Intl.DateTimeFormat('en-US', options).format(localDate);
-    formattedDate = formattedDate.replace(':', 'h'); // Remplacer ":" par "h"
+    //formattedDate = formattedDate.replace(':', 'h'); // Remplacer ":" par "h"
 
     // 5. Retourner le résultat final
     return `${formattedDate} UTC${timezoneOffset}`;

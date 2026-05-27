@@ -171,7 +171,25 @@ main section.grid div.element span {
   position: absolute;
 }
 
-main section.grid div.selected { background-color: #a8c7fa; border: 15px solid #a8c7fa; }
+main section.grid div.selected 
+{ 
+	background-color: #a8c7fa; 
+	border: 15px solid #a8c7fa;
+}
+
+main section.grid div.selected.transition-on, main section#maincontent.transition-on
+{
+	transition: 
+		background-color 0.5s ease,
+		border-color 0.5s ease;	
+}
+
+main section.grid div.selected.success, main section#maincontent.success
+{
+	background-color: #39c463;
+	border-color: #39c463
+}	
+
 main section.grid div.selected :where(img,video) { border-radius: 5px; }
 
 main section.grid div.notselected span.hover { opacity: 0; }

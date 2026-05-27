@@ -175,6 +175,25 @@ var g_multiple_selection_display_data = function multiple_selection_display_data
 	//show_file_list();
 }
 
+var g_success_save_multiple_selection = function succes_save_muliple_selection()
+{
+	$('main section.grid div.selected').addClass("transition-on");
+	$('main section.grid div.selected').addClass("success");
+	
+	setTimeout(function() { 
+		
+		$('main section.grid div.selected').removeClass("success"); 
+		
+		setTimeout(function() { 
+		
+			$('main section.grid div.selected').removeClass("transition-on"); 
+		
+		}, 500);
+		
+		
+	}, 500);
+}
+
 //cet fonction permet de savoir si on est en l'édition multi-selection
 
 function is_multi_selection_displayed()

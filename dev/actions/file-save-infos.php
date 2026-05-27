@@ -101,9 +101,22 @@
 	$EasyPDO->addFields('time_modified_at',$strdate_updated); //last updated info	
 	$EasyPDO->addFields('tag_status',1); //now file is tagged
 	
-	$affectedrow = $EasyPDO->update('photos', 'id IN', json_decode($_POST['filesid'], true));
+	$dataarray = json_decode($_POST['filesid'], true);
+	$count = count($dataarray);
 	
-	//$fReturn->addConsole($affectedrow)->fetch();
+	$affectedrow = $EasyPDO->update('photos', 'id IN', $dataarray);
 
-	$fReturn->addCallback("g_multiple_selection_load_data",1)->addSuccessMessage("Database updated")->fetch();
+	$fReturn->addConsole("Request update:".$count);	
+	$fReturn->addConsole("Total Updat data:".$affectedrow['count']);
+	
+	if($count==1)
+	{
+		$fReturn->addCallback("g_file_load_infos")->addCallback("g_success_save_single_selection");
+	}
+	else
+	{
+		$fReturn->addCallback("g_multiple_selection_load_data",1)->addCallback("g_success_save_multiple_selection");
+	}
+	
+	$fReturn->fetch();
 ?>	

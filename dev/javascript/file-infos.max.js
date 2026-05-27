@@ -49,7 +49,7 @@ var g_ux_init = function g_ux_init()
 
 var g_file_load_infos = function loadinfoview(lform = "")
 {	
-	if(!$('body').hasClass("no-aside"))
+	if(is_full_screen_displayed())
 	{	
 		$("#infocontent :where(input,select)").addClass('hidden');
 
@@ -188,6 +188,25 @@ var g_file_load_info_CallBack = function file_load_info_CallBack(data)
 	g_ux_init();
 }
 
+var g_success_save_single_selection = function succes_save_single_selection()
+{
+	$('main section#maincontent').addClass("transition-on");
+	$('main section#maincontent').addClass("success");
+	
+	setTimeout(function() { 
+		
+		$('main section#maincontent').removeClass("success"); 
+		
+		setTimeout(function() { 
+		
+			$('main section#maincontent').removeClass("transition-on"); 
+		
+		}, 500);
+		
+		
+	}, 500);
+}
+
 function processExif(data, indent = 0) {
         let html = '';
         for (const [key, value] of Object.entries(data)) {
@@ -215,4 +234,9 @@ function formatBytes(bytes) {
     } while (bytes >= 1000 && i < units.length - 1);
 
     return (Math.round(bytes * 10) / 10) + " " + units[i];
+}
+
+function is_full_screen_displayed()
+{
+	return !$('body').hasClass("no-aside") && !$('main section#maincontent').hasClass("hidden");
 }
