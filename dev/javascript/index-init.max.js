@@ -4,7 +4,7 @@ $(document).ready(function()
 	
 	//ux refresh init
 	
-	if(!$('body').hasClass('no-aside')) $('body').toggleClass('no-aside');
+	$('body').addClass('no-aside');
 	$('main section').removeClass('hidden');
 	$('nav').removeClass('hidden');
 	$('main section#maincontent').addClass('hidden');

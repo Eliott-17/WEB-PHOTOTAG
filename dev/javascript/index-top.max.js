@@ -25,6 +25,12 @@ $(document).ready(function(){
 	});	
 });
 
+/**********************************************************************
+-Affiche les fichiers de la catégorie "untag"
+-Est appelée à l'appuis sur le bouton du menu principal
+-Est appelée à la fin d'un upload pour aficher les nouveaux fichiers
+**********************************************************************/
+
 var g_load_untag = function load_untag(force_reload=false)
 {
 	$('div#mainmenu div button.mylib').removeClass("selected");
