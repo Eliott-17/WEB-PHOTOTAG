@@ -35,16 +35,15 @@ $(document).ready(function(){
 		
 		$('aside#infocontent h3.ux-'+data+':not(.conflict) input, h3.ux-'+data+':not(.conflict) select, h3.ux-'+data+':not(.conflict) span.unedit').toggleClass('hidden');
 		
-		g_conflict_solver_display(data,$(this));
-		
+		FILEMULTISELECTION_reset_ux($(this),data);
 	});	
 });
 
-var FILEINFO_load = function load()
+var FILEINFO_load = function load(force_reload=false)
 {	
 	let hash = $('section#fullscreen div.media img, section#fullscreen div.media video').attr('src').split('-').pop();
 		
-	if(vFILEINFO_load_mem!=hash) 
+	if(vFILEINFO_load_mem!=hash || force_reload) 
 	{
 		CORE_get('actions/file-load-infos.php?hash='+hash+'&lform=');
 		vFILEINFO_load_mem=hash;
@@ -57,11 +56,6 @@ var FILEINFO_load = function load()
 	}
 }
 
-var FILEINFO_CallBack_load = function CallBack_load()
-{
-	FILEINFO_load();
-}
-
 var FILEINFO_CallBack_data = function CallBack(data)
 {
 	console.log('FILEINFO_CallBack');
@@ -71,7 +65,6 @@ var FILEINFO_CallBack_data = function CallBack(data)
 	let lform = data.lform;
 	let datas = data.info[0];
 	
-	flag_selection_has_changed=1; //pour recharger les informations si on load une photo individuellement
 	$('input.filesid').val("["+data.info[0].id+"]");
 	$('input.conflictedit').val('{"date":0,"time":0,"zone":0,"continent":0,"country":0,"city":0,"place":0,"activity":0,"comment":0,"people":0,"other":0}');
 

@@ -13,7 +13,14 @@ $(document).ready(function(){
 	$('nav').on('click', 'div#select-trash span#delete_cancel', function() 	{	g_ux_menu_display($('div#select-trash'),false); g_ux_menu_display($('div#select-status'),true); $('main section.grid div.selected').removeClass('delete'); });
 	$('nav').on('click', 'div#select-trash span#delete_confirm', function() {	console.log("todo"); });
 
-	$('nav').on('click', 'div#select-status div.selection', function() 		{	g_unselect_all(); });		
+	$('nav').on('click', 'div#select-status div.selection', function() 		{
+
+		$('main div.element').each(function () { if ($(this).hasClass('selected')) $(this).toggleClass('selected notselected');	});
+		g_ux_menu_display($('#select-status'),false);
+		DISPLAY_set_view("grid");
+		
+	});	
+	
 	$('nav').on('click', 'div#select-status span#tag', function() {
 
 		if(DISPLAY_is_visible_file_info())
@@ -41,30 +48,7 @@ $(document).ready(function(){
 		
 });
 
-var g_conflict_solver_display = function conflict_solver_display(data,obj)
-{
-	if (obj.hasClass('edit')) {
-		$('h3.ux-'+data+'.conflict span.solver').removeClass('hidden');
-		$('h3.ux-'+data+'.conflict span.unedit').addClass('hidden');
-    }
-
-    if (obj.hasClass('cancel')) {
-		$('h3.ux-'+data+'.conflict input, h3.ux-'+data+'.conflict select').addClass('hidden');
-		$('h3.ux-'+data+'.conflict span.solver').addClass('hidden');
-		$('h3.ux-'+data+'.conflict span.unedit').removeClass('hidden');
-		
-		$('h3.ux-' + data).each(function() {
-
-			g_data['flag'][$(this).attr('id')]=g_data_mem['flag'][$(this).attr('id')];
-			$('input.conflictedit').val(JSON.stringify(g_data['flag']));
-			
-		});
-    };
-}
-
-
-//
-var FILEMULTISELECTION_load = function load()
+var FILEMULTISELECTION_load = function load(force_reload=false)
 {
 	var hash_array=[];
 
@@ -84,8 +68,8 @@ var FILEMULTISELECTION_load = function load()
 	{
 		console.log('FILEMULTISELECTION_load => NO data update, require two files selected');
 	}
-	if(vFILEINFOMULTISELECTION_mem!=hash_array) 
-	{
+	else if(JSON.stringify(vFILEINFOMULTISELECTION_mem)!==JSON.stringify(hash_array) || force_reload) 
+	{		
 		$('input.filesid').val(JSON.stringify(hash_array));
 		
 		CORE_post($('#fileinfopost'));
@@ -166,7 +150,7 @@ var FILEMULTISELECTION_CallBack_load = function CallBack_load(ldata)
 	console.log('FILEMULTISELECTION_CallBack_load',g_data);
 }
 
-var g_success_save_multiple_selection = function succes_save_muliple_selection()
+var FILEMULTISELECTION_CallBack_success = function CallBack_success()
 {
 	$('main section.grid div.selected').addClass("transition-on");
 	$('main section.grid div.selected').addClass("success");
@@ -183,4 +167,27 @@ var g_success_save_multiple_selection = function succes_save_muliple_selection()
 		
 		
 	}, 500);
+}
+
+var FILEMULTISELECTION_reset_ux = function reset_ux(obj, data)
+{
+	if (obj.hasClass('edit')) 
+	{
+		$('h3.ux-'+data+'.conflict span.solver').removeClass('hidden');
+		$('h3.ux-'+data+'.conflict span.unedit').addClass('hidden');
+	}
+
+	if (obj.hasClass('cancel')) 
+	{
+		$('h3.ux-'+data+'.conflict input, h3.ux-'+data+'.conflict select').addClass('hidden');
+		$('h3.ux-'+data+'.conflict span.solver').addClass('hidden');
+		$('h3.ux-'+data+'.conflict span.unedit').removeClass('hidden');
+		
+		$('h3.ux-' + data).each(function() {
+
+			g_data['flag'][$(this).attr('id')]=g_data_mem['flag'][$(this).attr('id')];
+			$('input.conflictedit').val(JSON.stringify(g_data['flag']));
+			
+		});
+	};
 }

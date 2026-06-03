@@ -3,7 +3,6 @@ var last_select=-1;
 var data=null;
 var loaded_files=0;
 var loading_limit=0;
-var flag_selection_has_changed=0;
 let loading = false;
 let undated=0;
 
@@ -28,22 +27,6 @@ $(document).ready(function(){
 	});
 
 });
-
-g_unselect_all = function unselect_all()
-{
-	$('main div.element').each(function () { if ($(this).hasClass('selected')) $(this).toggleClass('selected notselected');	});
-	g_ux_menu_display($('#select-status'),false);
-	//copy from fullscreenview.max.js 97-99
-	$('section#fullscreen').removeClass('selected');
-	$('section#fullscreen div.button-selection').addClass('notselected');
-	$('section#fullscreen div.button-selection').removeClass('selected');
-
-	//copy from file-multi-selection-edit.max.js 15-18
-	if(!$('body').hasClass("no-aside") && $('main section#fullscreen').hasClass("hidden"))
-	{
-		$('body').toggleClass("no-aside");
-	}
-}
 
 g_load_files = function load_files(force_reload=false)
 {	
@@ -225,16 +208,14 @@ g_display_menu_global_selection = function display_menu_global_selection()
 
 	if(loaded_files<=1) 
 	{	
-		if(!$('body').hasClass("no-aside") && $('section#fullscreen').hasClass('hidden')) $('body').addClass("no-aside");
-		g_ux_menu_display($('#select-status'), false); //.addClass("ux-hidden");		
+		if(!DISPLAY_is_visible_full_screen()) DISPLAY_set_view("grid");
+		g_ux_menu_display($('#select-status'), false);		
 	}
 	else
 	{ 
 		$('.elementscnt').html(loaded_files+" elements");
-		g_ux_menu_display($('#select-status'), true);//.removeClass("ux-hidden"); 
+		g_ux_menu_display($('#select-status'), true);
 	}
-	
-	//console.log(selected_ids);
 }
 
 var g_ux_menu_display = function ux_menu_display(object, visibility)

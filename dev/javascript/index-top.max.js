@@ -11,8 +11,8 @@ $(document).ready(function(){
 		{
 			$('div#mainmenu div button.untag').removeClass("selected");
 			$('div#mainmenu div button.mylib').addClass("selected");
+			g_ux_menu_display($('#select-status'),false);
 			g_load_files();
-			g_unselect_all();
 		}
 	});	
 	
@@ -20,6 +20,9 @@ $(document).ready(function(){
 		
 		if(!$(this).hasClass('selected'))
 		{
+			$('div#mainmenu div button.untag').addClass("selected");
+			$('div#mainmenu div button.mylib').removeClass("selected");
+			g_ux_menu_display($('#select-status'),false);
 			g_load_untag();
 		}
 	});	
@@ -36,5 +39,4 @@ var g_load_untag = function load_untag(force_reload=false)
 	$('div#mainmenu div button.mylib').removeClass("selected");
 	$('div#mainmenu div button.untag').addClass("selected");
 	g_load_files(force_reload);
-	g_unselect_all();
 }

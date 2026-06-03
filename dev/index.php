@@ -314,7 +314,7 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/locations.php');
 	<!-- OTHER SCRIPTS INCLUDED ON THIS PAGE - START --> 
 	<script src='javascript/common.<?php echo filemtime('javascript/common.'.DIM.'.js'); ?>.<?php echo DIM; ?>.js'></script>
 	<script src='javascript/display.<?php echo filemtime('javascript/display.'.DIM.'.js'); ?>.<?php echo DIM; ?>.js'></script>
-	<script src='javascript/index-grid.<?php echo filemtime('javascript/index-grid.'.DIM.'.js'); ?>.<?php echo DIM; ?>.js'></script>
+	<script src='javascript/grid.<?php echo filemtime('javascript/grid.'.DIM.'.js'); ?>.<?php echo DIM; ?>.js'></script>
 	<script src='javascript/index-top.<?php echo filemtime('javascript/index-top.'.DIM.'.js'); ?>.<?php echo DIM; ?>.js'></script>
 	<script src='javascript/index-login.<?php echo filemtime('javascript/index-login.'.DIM.'.js'); ?>.<?php echo DIM; ?>.js'></script>
 	<script src='javascript/file-open-fullscreen.<?php echo filemtime('javascript/file-open-fullscreen.'.DIM.'.js'); ?>.<?php echo DIM; ?>.js'></script>

@@ -107,15 +107,17 @@
 	$affectedrow = $EasyPDO->update('photos', 'id IN', $dataarray);
 
 	$fReturn->addConsole("Request update:".$count);	
-	$fReturn->addConsole("Total Updat data:".$affectedrow['count']);
+	$fReturn->addConsole("Total Update data:".$affectedrow['count']);
 	
 	if($count==1)
 	{
-		$fReturn->addCallback("FILEINFO_CallBack_load")->addCallback("FILEINFO_CallBack_success");
+		$fReturn->addCallback("FILEINFO_load",true);
+		$fReturn->addCallback("FILEINFO_CallBack_success");
 	}
 	else
-	{
-		$fReturn->addCallback("g_multiple_selection_load_data",1)->addCallback("g_success_save_multiple_selection");
+	{	
+		$fReturn->addCallback("FILEMULTISELECTION_load",true);
+		$fReturn->addCallback("FILEMULTISELECTION_CallBack_success");
 	}
 	
 	$fReturn->fetch();

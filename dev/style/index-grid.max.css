@@ -187,7 +187,7 @@ main section.grid div.selected.transition-on, main section#fullscreen.transition
 main section.grid div.selected.success, main section#fullscreen.success
 {
 	background-color: #a8e6b8; /*#39c463;*/
-	border-color: a8e6b8; /*#39c463*/
+	border-color: #a8e6b8; /*#39c463*/
 }	
 
 main section.grid div.selected.delete, main section#fullscreen.delete
