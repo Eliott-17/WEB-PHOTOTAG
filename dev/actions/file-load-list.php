@@ -75,6 +75,7 @@
 	$bigarray['untagged']=$array_untaged['datas'];
 	$bigarray['dir']=$_SESSION["USER"];
 
+	$fReturn->addConsole("[PHP EXECUTED] file-load-list.php");
 	$fReturn->addCallBack("load_grid", $bigarray)->fetch();
 
 ?>

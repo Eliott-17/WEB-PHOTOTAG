@@ -111,7 +111,7 @@
 	
 	if($count==1)
 	{
-		$fReturn->addCallback("g_file_load_infos")->addCallback("g_success_save_single_selection");
+		$fReturn->addCallback("FILEINFO_CallBack_load")->addCallback("FILEINFO_CallBack_success");
 	}
 	else
 	{

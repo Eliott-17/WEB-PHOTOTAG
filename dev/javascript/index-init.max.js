@@ -7,7 +7,7 @@ $(document).ready(function()
 	$('body').addClass('no-aside');
 	$('main section').removeClass('hidden');
 	$('nav').removeClass('hidden');
-	$('main section#maincontent').addClass('hidden');
+	$('main section#fullscreen').addClass('hidden');
 	
 	g_load_files();
 });

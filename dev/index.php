@@ -116,7 +116,7 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/locations.php');
 			{
 				?>
 				<main>
-					<section id="maincontent" class="hidden">
+					<section id="fullscreen" class="hidden">
 						<div class="media"></div>
 						<div class="ux button-selection notselected">
 							<span class="material-symbols-outlined nothover">radio_button_unchecked</span>
@@ -313,11 +313,12 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/locations.php');
 	
 	<!-- OTHER SCRIPTS INCLUDED ON THIS PAGE - START --> 
 	<script src='javascript/common.<?php echo filemtime('javascript/common.'.DIM.'.js'); ?>.<?php echo DIM; ?>.js'></script>
+	<script src='javascript/display.<?php echo filemtime('javascript/display.'.DIM.'.js'); ?>.<?php echo DIM; ?>.js'></script>
 	<script src='javascript/index-grid.<?php echo filemtime('javascript/index-grid.'.DIM.'.js'); ?>.<?php echo DIM; ?>.js'></script>
 	<script src='javascript/index-top.<?php echo filemtime('javascript/index-top.'.DIM.'.js'); ?>.<?php echo DIM; ?>.js'></script>
 	<script src='javascript/index-login.<?php echo filemtime('javascript/index-login.'.DIM.'.js'); ?>.<?php echo DIM; ?>.js'></script>
 	<script src='javascript/file-open-fullscreen.<?php echo filemtime('javascript/file-open-fullscreen.'.DIM.'.js'); ?>.<?php echo DIM; ?>.js'></script>
-	<script src='javascript/file-infos.<?php echo filemtime('javascript/file-infos.'.DIM.'.js'); ?>.<?php echo DIM; ?>.js'></script>
+	<script src='javascript/file-info.<?php echo filemtime('javascript/file-info.'.DIM.'.js'); ?>.<?php echo DIM; ?>.js'></script>
 	<script src='javascript/file-multi-selection-edit.<?php echo filemtime('javascript/file-multi-selection-edit.'.DIM.'.js'); ?>.<?php echo DIM; ?>.js'></script>
 	<script src='javascript/file-upload.<?php echo filemtime('javascript/file-upload.'.DIM.'.js'); ?>.<?php echo DIM; ?>.js'></script>
 	<script src='core/post.<?php echo DIM; ?>.js'></script>

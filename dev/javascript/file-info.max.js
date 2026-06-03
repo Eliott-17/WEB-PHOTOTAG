@@ -2,13 +2,20 @@
 //Gère l'affichage des informations des fichiers
 //***********************************************
 
+var vFILEINFO_load_mem=null;
+
 $(document).ready(function(){
 
-	$('section#maincontent div.button-info').on('click.infoViewInfo', function() {
-		
-		$('body').toggleClass('no-aside');
+	$('section#fullscreen div.button-info').on('click.infoViewInfo', function() {
 
-		g_file_load_infos();
+		if(DISPLAY_is_visible_file_info())
+		{
+			DISPLAY_set_view("fullscreen");
+		}
+		else
+		{
+			DISPLAY_set_view("fullscreen-fileinfo");
+		}
 	});
 
 	$('aside#infocontent h4.button-exif').on('click.exifInfo', function() {
@@ -33,34 +40,34 @@ $(document).ready(function(){
 	});	
 });
 
-var g_ux_init = function g_ux_init()
-{
-	//multiple edit ux display reset
-	$('div#informations').removeClass('hidden');
-	$('h3 span.solver').addClass('hidden');
-	$('aside#infocontent h3').removeClass('conflict');
-	//edit-cancel ux display reset
-	$('aside#infocontent h3 input, h3 select').addClass('hidden');
-	$('aside#infocontent h4.edit_ux button.save').addClass('hidden');
-	$('aside#infocontent h4.edit_ux button.cancel').addClass('hidden');
-	$('aside#infocontent h4.edit_ux button.edit').removeClass('hidden');
-	$('aside#infocontent h3 span.unedit').removeClass('hidden');	
-}
-
-var g_file_load_infos = function loadinfoview(lform = "")
+var FILEINFO_load = function load()
 {	
-	if(is_full_screen_displayed())
-	{	
-		$("#infocontent :where(input,select)").addClass('hidden');
-
-		let hash = $('section#maincontent div.media img, section#maincontent div.media video').attr('src').split('-').pop();
+	let hash = $('section#fullscreen div.media img, section#fullscreen div.media video').attr('src').split('-').pop();
 		
-		CORE_get('actions/file-load-infos.php?hash='+hash+'&lform='+lform);
+	if(vFILEINFO_load_mem!=hash) 
+	{
+		CORE_get('actions/file-load-infos.php?hash='+hash+'&lform=');
+		vFILEINFO_load_mem=hash;
+		vFILEINFOMULTISELECTION_mem=null; //forcer le rechargement des data en sélection multiple
+		console.log('FILEINFO_load => data update request');
+	}
+	else
+	{
+		console.log('FILEINFO_load => NO data update');
 	}
 }
 
-var g_file_load_info_CallBack = function file_load_info_CallBack(data)
-{	
+var FILEINFO_CallBack_load = function CallBack_load()
+{
+	FILEINFO_load();
+}
+
+var FILEINFO_CallBack_data = function CallBack(data)
+{
+	console.log('FILEINFO_CallBack');
+	
+	DISPLAY_fileinfo_init();
+	
 	let lform = data.lform;
 	let datas = data.info[0];
 	
@@ -181,25 +188,20 @@ var g_file_load_info_CallBack = function file_load_info_CallBack(data)
 	
 	if (datas.time_modified_at == null) 	$('h3#time_modified_at').html("never");
 	else 									$('h3#time_modified_at').html(formatUTCToLocalWithTimezone(datas.time_modified_at));					
-	
-	
-	//reset from multiple
-
-	g_ux_init();
 }
 
-var g_success_save_single_selection = function succes_save_single_selection()
+var FILEINFO_CallBack_success = function success()
 {
-	$('main section#maincontent').addClass("transition-on");
-	$('main section#maincontent').addClass("success");
+	$('main section#fullscreen').addClass("transition-on");
+	$('main section#fullscreen').addClass("success");
 	
 	setTimeout(function() { 
 		
-		$('main section#maincontent').removeClass("success"); 
+		$('main section#fullscreen').removeClass("success"); 
 		
 		setTimeout(function() { 
 		
-			$('main section#maincontent').removeClass("transition-on"); 
+			$('main section#fullscreen').removeClass("transition-on"); 
 		
 		}, 500);
 		
@@ -234,9 +236,4 @@ function formatBytes(bytes) {
     } while (bytes >= 1000 && i < units.length - 1);
 
     return (Math.round(bytes * 10) / 10) + " " + units[i];
-}
-
-function is_full_screen_displayed()
-{
-	return !$('body').hasClass("no-aside") && !$('main section#maincontent').hasClass("hidden");
 }

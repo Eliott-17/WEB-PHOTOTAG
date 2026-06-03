@@ -55,5 +55,6 @@
 		$bigarray['lform']="";
 	}	
 	
-	$fReturn->addCallBack("g_file_load_info_CallBack", $bigarray)->fetch();	
+	$fReturn->addConsole("[PHP EXECUTED] file-load-infos.php");
+	$fReturn->addCallBack("FILEINFO_CallBack_data", $bigarray)->fetch();	
 ?>

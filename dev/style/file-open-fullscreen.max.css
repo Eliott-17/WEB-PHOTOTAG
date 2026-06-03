@@ -2,7 +2,7 @@
 --Fullscreen image display
 -------------------------------------------*/
 
-main section#maincontent {
+main section#fullscreen {
 	color: #333;
 	top: 0px;
 	left: 0px;
@@ -16,28 +16,28 @@ main section#maincontent {
 	background-color: black;
 }
 /*
-main section#maincontent.fullscreen
+main section#fullscreen.fullscreen
 {
 	display: inline-flex;
 }
 */
-main section#maincontent.selected
+main section#fullscreen.selected
 {
 	background-color: #a8c7fa;
 }
 
-main section#maincontent div.media {
+main section#fullscreen div.media {
 	z-index: -1;
 }
 
-main section#maincontent div.media :Where(img, video) {
+main section#fullscreen div.media :Where(img, video) {
 	
 	width: 100%;
 	object-fit: contain;
 
 }
 
-main section#maincontent div.media {
+main section#fullscreen div.media {
 	
 	display: flex;
 	width: 100%;
@@ -45,7 +45,7 @@ main section#maincontent div.media {
 	box-sizing: border-box;
 }
 
-main section#maincontent div#infocontent {
+main section#fullscreen div#infocontent {
 	
 	display: none;
 	width: 500px;
@@ -56,12 +56,12 @@ main section#maincontent div#infocontent {
 	
 }
 
-main section#maincontent div#infocontent.displayinfo {
+main section#fullscreen div#infocontent.displayinfo {
 	
 	display: block !important;
 }
 
-main section#maincontent div.ux {
+main section#fullscreen div.ux {
 	position: absolute;
     top: 30px;
 	cursor: pointer;
@@ -73,7 +73,7 @@ main section#maincontent div.ux {
 	transition: opacity 0.3s ease;
 }
 
-main section#maincontent div.menubackground {
+main section#fullscreen div.menubackground {
 
     position: absolute;
     box-sizing: border-box;
@@ -85,14 +85,14 @@ main section#maincontent div.menubackground {
 	z-index: -1;
 }
 
-main section#maincontent div.button-selection span { position: absolute }
-main section#maincontent div.button-selection.notselected span.hover { opacity: 0; }
-main section#maincontent div.button-selection.notselected span.caseselected { opacity: 0; }
-main section#maincontent div.button-selection.notselected:hover span.nothover { opacity: 0; }
-main section#maincontent div.button-selection.notselected:hover span.hover { opacity: 1; }
-main section#maincontent div.button-selection.selected span.nothover { opacity: 0; }
-main section#maincontent div.button-selection.selected span.hover { opacity: 0; }
-main section#maincontent div.button-selection.selected span.caseselected {
+main section#fullscreen div.button-selection span { position: absolute }
+main section#fullscreen div.button-selection.notselected span.hover { opacity: 0; }
+main section#fullscreen div.button-selection.notselected span.caseselected { opacity: 0; }
+main section#fullscreen div.button-selection.notselected:hover span.nothover { opacity: 0; }
+main section#fullscreen div.button-selection.notselected:hover span.hover { opacity: 1; }
+main section#fullscreen div.button-selection.selected span.nothover { opacity: 0; }
+main section#fullscreen div.button-selection.selected span.hover { opacity: 0; }
+main section#fullscreen div.button-selection.selected span.caseselected {
 	opacity: 1;
 	background-color: white;
 	color: #0b57d0;
@@ -100,59 +100,59 @@ main section#maincontent div.button-selection.selected span.caseselected {
 	border: 0px;
 }
 
-main section#maincontent div.button-selection
+main section#fullscreen div.button-selection
 {
 	left: 30px;
 }
 
-main section#maincontent div.button-return
+main section#fullscreen div.button-return
 {
 	left: 60px;
 }
 
-main section#maincontent div.button-info
+main section#fullscreen div.button-info
 {
 	left: 90px;
 }
 
-main section#maincontent div.button-leftarrow
+main section#fullscreen div.button-leftarrow
 {
 	left: 10px;
 	top: 50%;
 }
 
-main section#maincontent div.button-rightarrow
+main section#fullscreen div.button-rightarrow
 {
 	right: 10px;
 	top: 50%;
 }
 
-main section#maincontent div.button-rightarrow.displayinfo
+main section#fullscreen div.button-rightarrow.displayinfo
 {
 	right: 410px; !important;
 }
 
-main section#maincontent div.button-info:hover span {
+main section#fullscreen div.button-info:hover span {
 	transform: rotate(360deg);
 	transition: transform 0.75s ease;
 }
 
-main section#maincontent div.button-return:hover span{
+main section#fullscreen div.button-return:hover span{
 	
 	font-size: 16px !important;
 	transition: font-size 0.3s ease;
 }
 
-main section#maincontent div.arrows {
+main section#fullscreen div.arrows {
     background-color: white;
     border-radius: 20px;
 	padding: 3px;
 }
 
-main section#maincontent div.arrows:hover{
+main section#fullscreen div.arrows:hover{
     background-color: #333;
 	color: white;
     border-radius: 20px;
 }
 
-main section#maincontent div.ux span { font-size: 30px !important; }
+main section#fullscreen div.ux span { font-size: 30px !important; }

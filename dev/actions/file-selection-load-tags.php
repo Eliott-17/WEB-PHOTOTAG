@@ -124,8 +124,9 @@
 			$bigarray['mem']=$mem;
 			$bigarray['total_size']=$total_size;			
 			$bigarray['filedata']=$filedata;
-			
-			$fReturn->addCallBack("g_multiple_selection_load_data_CallBack", $bigarray)->fetch();
+
+			$fReturn->addConsole("[PHP EXECUTED] file-selection-load-tags.php");			
+			$fReturn->addCallBack("FILEMULTISELECTION_CallBack_load", $bigarray)->fetch();
 			
 		}
 	}

@@ -34,12 +34,12 @@ g_unselect_all = function unselect_all()
 	$('main div.element').each(function () { if ($(this).hasClass('selected')) $(this).toggleClass('selected notselected');	});
 	g_ux_menu_display($('#select-status'),false);
 	//copy from fullscreenview.max.js 97-99
-	$('section#maincontent').removeClass('selected');
-	$('section#maincontent div.button-selection').addClass('notselected');
-	$('section#maincontent div.button-selection').removeClass('selected');
+	$('section#fullscreen').removeClass('selected');
+	$('section#fullscreen div.button-selection').addClass('notselected');
+	$('section#fullscreen div.button-selection').removeClass('selected');
 
 	//copy from file-multi-selection-edit.max.js 15-18
-	if(!$('body').hasClass("no-aside") && $('main section#maincontent').hasClass("hidden"))
+	if(!$('body').hasClass("no-aside") && $('main section#fullscreen').hasClass("hidden"))
 	{
 		$('body').toggleClass("no-aside");
 	}
@@ -130,13 +130,16 @@ function load_grid(ldata=null, ladd=false)
 			
 	$('main').on('click.gridSelect', 'div.button-select', function(e) {
 		
-		$(this).parent().toggleClass('selected notselected');
-		
-		if(g_is_ux_menu_visible($('div#select-trash'))) $('main section.grid div.selected').addClass('delete');
-		
 		let current_id = parseInt($(this).parent().attr('id').replace('grid_',''));
 		
-		fullscreen_is_selected(current_id);
+		DISPLAY_selection(current_id);
+		
+		if(g_is_ux_menu_visible($('div#select-trash'))) $('main section.grid div.selected').addClass('delete');
+
+		if(DISPLAY_is_visible_file_info())
+		{
+			FILEMULTISELECTION_load(); //mettre à jour les infos si on affiche le aside
+		}
 
 		if(e.shiftKey)
 		{	
@@ -163,33 +166,12 @@ function load_grid(ldata=null, ladd=false)
 
 		last_select=current_id;
 		
-		g_display_menu_global_selection();
-		flag_selection_has_changed=1; //on set le flag
-		g_multiple_selection_load_data(); //mettre à jour les informations si on est en multiple file selection
+		g_display_menu_global_selection();//TODO
 	});
+	
+	FILEOPENFULLSCREEN_set_button_fullscreen();
 				
-	$('main').on('click.gridOpen', 'div.button-fullscreen', function() {
-		
-		let media_id = parseInt($(this).parent().attr('id').replace("grid_",""));
-		
-		g_load_media(media_id);
-		g_fullscreen(media_id,(loaded_files-1));
-		$('nav div#mainmenu').addClass('hidden');
-		
-	});	
-
 	loading=false;	
-}
-
-var g_load_media = function load_media(id)
-{	
-	let file_type = $('div#grid_'+id+' div.media-container').attr("data-type");
-	let file_hash = $('div#grid_'+id+' div.media-container').attr("data-src");
-		
-	if(file_type == 0) $('section#maincontent div.media').html('<img src="hd-'+file_hash+'" loading="lazy">');
-	if(file_type == 1) $('section#maincontent div.media').html('<video src="hd-'+file_hash+'" poster="sd-'+file_hash+'" controls autoplay muted preload="auto" playsinline></video>></video>');	
-
-	g_file_load_infos();	
 }
 
 function addElement(dir, bdd)
@@ -243,7 +225,7 @@ g_display_menu_global_selection = function display_menu_global_selection()
 
 	if(loaded_files<=1) 
 	{	
-		if(!$('body').hasClass("no-aside") && $('section#maincontent').hasClass('hidden')) $('body').addClass("no-aside");
+		if(!$('body').hasClass("no-aside") && $('section#fullscreen').hasClass('hidden')) $('body').addClass("no-aside");
 		g_ux_menu_display($('#select-status'), false); //.addClass("ux-hidden");		
 	}
 	else

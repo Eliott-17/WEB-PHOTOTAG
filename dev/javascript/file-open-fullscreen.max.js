@@ -2,7 +2,7 @@
 //Gère l'affichage en plein écran
 //***********************************************
 
-var current_id;
+var vFILEOPEN_currentid;
 var max_id;
 var lockleft=0;
 var lockright=0;
@@ -15,61 +15,47 @@ $(document).on('keydown', function(e) {
 
 $(document).ready(function(){
 
-	$('section#maincontent div.button-return').on('click.gridSelect', function() {
-		g_fullscreen(-1);
+	$('section#fullscreen div.button-return').on('click.gridSelect', function() {
+		DISPLAY_set_view("grid");
 	});
 
-	$('section#maincontent').on('click.gridLeftAR', 'div.button-leftarrow', function() { Arrow(0); });			
-	$('section#maincontent').on('click.gridRightAR', 'div.button-rightarrow', function() { Arrow(1); });
-	$('section#maincontent').on('click.gridUnselect', 'div.button-selection', function() { Select(); });
+	$('section#fullscreen').on('click.gridLeftAR', 'div.button-leftarrow', function() { Arrow(0); });			
+	$('section#fullscreen').on('click.gridRightAR', 'div.button-rightarrow', function() { Arrow(1); });
+	$('section#fullscreen').on('click.gridUnselect', 'div.button-selection', function() { Select(); });
 });
-
-g_fullscreen = function fullscreen(id, max)
-{
-	$('main section').toggleClass('hidden');
-
-	if(!$('body').hasClass("no-aside"))
-	{	
-		$('body').toggleClass("no-aside");
-	}
-	
-	if(id==-1) $('nav div#mainmenu').removeClass('hidden');
-	
-	current_id=id;
-	max_id=max;
-	arrow_hide(id, max); 
-	g_ux_init(id);
-}
 
 function Arrow(sens)
 {
-	if(sens==0) current_id--;
-	if(sens==1) current_id++;
+	if(!DISPLAY_is_visible_full_screen()) return;
 	
-	if((sens==0 || sens==1) && !is_multi_selection_displayed())
+	if(sens==0) vFILEOPEN_currentid--;
+	if(sens==1) vFILEOPEN_currentid++;
+	
+	if(sens==0 || sens==1)
 	{	
-		g_load_media(current_id);
-		arrow_hide(current_id, max_id);
-		fullscreen_is_selected(current_id);	
-		//g_ux_init_edit();
+		LoadMedia(vFILEOPEN_currentid);
+		ArrowDisplay(vFILEOPEN_currentid, max_id);
+		DISPLAY_selection(vFILEOPEN_currentid,true);
+
+		if(DISPLAY_is_visible_file_info()) FILEINFO_load();			
 	}
 }
 
 function Select()
 {
-	if(!is_multi_selection_displayed())
-	{
-		$('div#grid_'+current_id).toggleClass('selected notselected');
-		fullscreen_is_selected(current_id);
-		g_display_menu_global_selection();	
-		flag_selection_has_changed=1; //on set le flag
-		g_multiple_selection_load_data(); //mettre à jour les informations si on est en multiple file selection
-	}
+	if(!DISPLAY_is_visible_full_screen()) return;
+
+	DISPLAY_selection(vFILEOPEN_currentid);		
+	g_display_menu_global_selection();			//Affiche le menu flotant - TODO
+
+	if(!DISPLAY_is_visible_file_info() || DISPLAY_is_visible_full_screen()) return;
+					
+	FILEMULTISELECTION_load(); //mettre à jour la sélection si on affiche le multifile sans full screen
 }
 
-function arrow_hide(current_id, max_id)
+function ArrowDisplay(vFILEOPEN_currentid, max_id)
 {
-	if(current_id==0)
+	if(vFILEOPEN_currentid==0)
 	{
 		$('div.button-leftarrow').addClass('hidden');
 		lockleft=1;
@@ -80,7 +66,7 @@ function arrow_hide(current_id, max_id)
 		lockleft=0;
 	}
 
-	if(current_id==max_id)
+	if(vFILEOPEN_currentid==max_id)
 	{
 		$('div.button-rightarrow').addClass('hidden');
 		lockright=1;
@@ -92,18 +78,31 @@ function arrow_hide(current_id, max_id)
 	}
 }
 
-function fullscreen_is_selected(current_id)
+function LoadMedia(id)
+{	
+	let file_type = $('div#grid_'+id+' div.media-container').attr("data-type");
+	let file_hash = $('div#grid_'+id+' div.media-container').attr("data-src");
+		
+	if(file_type == 0) $('section#fullscreen div.media').html('<img src="hd-'+file_hash+'" loading="lazy">');
+	if(file_type == 1) $('section#fullscreen div.media').html('<video src="hd-'+file_hash+'" poster="sd-'+file_hash+'" controls autoplay muted preload="auto" playsinline></video>></video>');	
+}
+
+//******************
+//Fonction globales
+//******************
+
+var FILEOPENFULLSCREEN_set_button_fullscreen = function set_button_fullscreen()
 {
-	if($('div#grid_'+current_id).hasClass('selected'))
-	{
-		$('section#maincontent').addClass('selected');
-		$('section#maincontent div.button-selection').addClass('selected');
-		$('section#maincontent div.button-selection').removeClass('notselected');
-	}
-	else
-	{
-		$('section#maincontent').removeClass('selected');
-		$('section#maincontent div.button-selection').addClass('notselected');
-		$('section#maincontent div.button-selection').removeClass('selected');
-	}
+	$('main').on('click.gridOpen', 'div.button-fullscreen', function() {
+		
+		let media_id = parseInt($(this).parent().attr('id').replace("grid_",""));
+		let max = (loaded_files-1);
+
+		vFILEOPEN_currentid=media_id;
+		max_id=max;
+		ArrowDisplay(media_id, max); 
+		LoadMedia(media_id);
+		DISPLAY_selection(vFILEOPEN_currentid,true);
+		DISPLAY_set_view("fullscreen");	
+	});	
 }
