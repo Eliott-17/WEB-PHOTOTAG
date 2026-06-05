@@ -46,7 +46,6 @@ function Select()
 	if(!DISPLAY_is_visible_full_screen()) return;
 
 	DISPLAY_selection(vFILEOPEN_currentid);		
-	g_display_menu_global_selection();			//Affiche le menu flotant - TODO
 
 	if(!DISPLAY_is_visible_file_info() || DISPLAY_is_visible_full_screen()) return;
 					
@@ -85,24 +84,4 @@ function LoadMedia(id)
 		
 	if(file_type == 0) $('section#fullscreen div.media').html('<img src="hd-'+file_hash+'" loading="lazy">');
 	if(file_type == 1) $('section#fullscreen div.media').html('<video src="hd-'+file_hash+'" poster="sd-'+file_hash+'" controls autoplay muted preload="auto" playsinline></video>></video>');	
-}
-
-//******************
-//Fonction globales
-//******************
-
-var FILEOPENFULLSCREEN_set_button_fullscreen = function set_button_fullscreen()
-{
-	$('main').on('click.gridOpen', 'div.button-fullscreen', function() {
-		
-		let media_id = parseInt($(this).parent().attr('id').replace("grid_",""));
-		let max = (loaded_files-1);
-
-		vFILEOPEN_currentid=media_id;
-		max_id=max;
-		ArrowDisplay(media_id, max); 
-		LoadMedia(media_id);
-		DISPLAY_selection(vFILEOPEN_currentid,true);
-		DISPLAY_set_view("fullscreen");	
-	});	
 }

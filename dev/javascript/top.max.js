@@ -11,8 +11,8 @@ $(document).ready(function(){
 		{
 			$('div#mainmenu div button.untag').removeClass("selected");
 			$('div#mainmenu div button.mylib').addClass("selected");
-			g_ux_menu_display($('#select-status'),false);
-			g_load_files();
+			DISPLAY_menu($('#select-status'),false);
+			GRID_load(false,true);
 		}
 	});	
 	
@@ -20,10 +20,7 @@ $(document).ready(function(){
 		
 		if(!$(this).hasClass('selected'))
 		{
-			$('div#mainmenu div button.untag').addClass("selected");
-			$('div#mainmenu div button.mylib').removeClass("selected");
-			g_ux_menu_display($('#select-status'),false);
-			g_load_untag();
+			TOP_open_untagg();
 		}
 	});	
 });
@@ -34,9 +31,10 @@ $(document).ready(function(){
 -Est appelée à la fin d'un upload pour aficher les nouveaux fichiers
 **********************************************************************/
 
-var g_load_untag = function load_untag(force_reload=false)
+var TOP_open_untagg = function open_untagg(force_reload=false)
 {
-	$('div#mainmenu div button.mylib').removeClass("selected");
 	$('div#mainmenu div button.untag').addClass("selected");
-	g_load_files(force_reload);
+	$('div#mainmenu div button.mylib').removeClass("selected");
+	DISPLAY_menu($('#select-status'),false);
+	GRID_load(force_reload,true);
 }

@@ -76,6 +76,6 @@
 	$bigarray['dir']=$_SESSION["USER"];
 
 	$fReturn->addConsole("[PHP EXECUTED] file-load-list.php");
-	$fReturn->addCallBack("load_grid", $bigarray)->fetch();
+	$fReturn->addCallBack("GRID_load_Callback", $bigarray)->fetch();
 
 ?>

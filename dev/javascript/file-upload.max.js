@@ -16,7 +16,7 @@ $(document).ready(function() {
         let files = Array.from(e.originalEvent.dataTransfer.files);
         if (files.length > 0) {
 			
-			g_ux_menu_display($('div#upload-status'),true);
+			DISPLAY_menu($('div#upload-status'),true);
 				
 			$.get("../core/securitytoken.php")
 			.then(token => {
@@ -204,7 +204,7 @@ function uploadFiles(files, token) {
     // À la fin de tous les uploads
     chain.then(() => {
         if (errorCount === 0) {
-			g_ux_menu_display($('div#upload-status'),false);
+			DISPLAY_menu($('div#upload-status'),false);
         } else {
             $('#upload-status').append(
                 `<div id="errorgeneral" class="text">
@@ -213,10 +213,10 @@ function uploadFiles(files, token) {
                 </div>`
             );
             $('div#errorgeneral span.cursor').on('click.errorgeneral', function() {
-                g_ux_menu_display($('div#upload-status'),false);
+                DISPLAY_menu($('div#upload-status'),false);
 				$('#upload-status div.text').remove("");
             });
         }
-        g_load_untag(true); // Recharge la liste des fichiers
+        TOP_open_untagg(true); // Recharge la liste des fichiers
     });
 }

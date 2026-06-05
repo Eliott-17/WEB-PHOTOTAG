@@ -315,8 +315,8 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/locations.php');
 	<script src='javascript/common.<?php echo filemtime('javascript/common.'.DIM.'.js'); ?>.<?php echo DIM; ?>.js'></script>
 	<script src='javascript/display.<?php echo filemtime('javascript/display.'.DIM.'.js'); ?>.<?php echo DIM; ?>.js'></script>
 	<script src='javascript/grid.<?php echo filemtime('javascript/grid.'.DIM.'.js'); ?>.<?php echo DIM; ?>.js'></script>
-	<script src='javascript/index-top.<?php echo filemtime('javascript/index-top.'.DIM.'.js'); ?>.<?php echo DIM; ?>.js'></script>
-	<script src='javascript/index-login.<?php echo filemtime('javascript/index-login.'.DIM.'.js'); ?>.<?php echo DIM; ?>.js'></script>
+	<script src='javascript/top.<?php echo filemtime('javascript/top.'.DIM.'.js'); ?>.<?php echo DIM; ?>.js'></script>
+	<script src='javascript/login.<?php echo filemtime('javascript/login.'.DIM.'.js'); ?>.<?php echo DIM; ?>.js'></script>
 	<script src='javascript/file-open-fullscreen.<?php echo filemtime('javascript/file-open-fullscreen.'.DIM.'.js'); ?>.<?php echo DIM; ?>.js'></script>
 	<script src='javascript/file-info.<?php echo filemtime('javascript/file-info.'.DIM.'.js'); ?>.<?php echo DIM; ?>.js'></script>
 	<script src='javascript/file-multi-selection-edit.<?php echo filemtime('javascript/file-multi-selection-edit.'.DIM.'.js'); ?>.<?php echo DIM; ?>.js'></script>
@@ -327,7 +327,7 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/locations.php');
 	
 	if(is_session_valid()) 
 	{
-		?><script src='javascript/index-init.<?php echo filemtime('javascript/index-init.'.DIM.'.js'); ?>.<?php echo DIM; ?>.js'></script><?php
+		?><script src='javascript/init.<?php echo filemtime('javascript/init.'.DIM.'.js'); ?>.<?php echo DIM; ?>.js'></script><?php
 	}
 	?>
 	

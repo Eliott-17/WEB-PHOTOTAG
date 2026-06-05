@@ -9,14 +9,14 @@ var g_data=null;
 
 $(document).ready(function(){
 
-	$('nav').on('click', 'div#select-status span#delete', function() 		{	g_ux_menu_display($('div#select-status'),false); g_ux_menu_display($('div#select-trash'),true); $('main section.grid div.selected').addClass('delete'); });
-	$('nav').on('click', 'div#select-trash span#delete_cancel', function() 	{	g_ux_menu_display($('div#select-trash'),false); g_ux_menu_display($('div#select-status'),true); $('main section.grid div.selected').removeClass('delete'); });
+	$('nav').on('click', 'div#select-status span#delete', function() 		{	DISPLAY_menu($('div#select-status'),false); DISPLAY_menu($('div#select-trash'),true); $('main section.grid div.selected').addClass('delete'); });
+	$('nav').on('click', 'div#select-trash span#delete_cancel', function() 	{	DISPLAY_menu($('div#select-trash'),false); DISPLAY_menu($('div#select-status'),true); $('main section.grid div.selected').removeClass('delete'); });
 	$('nav').on('click', 'div#select-trash span#delete_confirm', function() {	console.log("todo"); });
 
 	$('nav').on('click', 'div#select-status div.selection', function() 		{
 
 		$('main div.element').each(function () { if ($(this).hasClass('selected')) $(this).toggleClass('selected notselected');	});
-		g_ux_menu_display($('#select-status'),false);
+		DISPLAY_menu($('#select-status'),false);
 		DISPLAY_set_view("grid");
 		
 	});	

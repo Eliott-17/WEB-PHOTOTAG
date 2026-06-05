@@ -94,7 +94,6 @@ var IS_VISIBLE_menu = function is_visible_menu(object)
 	return !object.hasClass("ux-hidden-zindex");
 }
 
-
 var DISPLAY_menu = function display_menu(object=undefined, visibility=undefined)
 {
 	if(visibility==true && object!=undefined)

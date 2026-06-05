@@ -1,10 +1,16 @@
-var uniqueid;
-var last_select=-1;
-var data=null;
-var loaded_files=0;
-var loading_limit=0;
-let loading = false;
-let undated=0;
+//****************************************************************
+//Variables globales *********************************************
+//****************************************************************	
+
+var uniqueid;			//numéro unique pour les éléments de la grille
+var last_select=-1;		//mémorise le dernier uniqueid sélectioné
+
+var loaded_files=0;		//Chargement progressif: mémorise le nombre de fichier chargés
+var loading_limit=0;	//Chagrement progressif: mémorise le nombre de fichier à pré-chargés
+var loading = false;	//Chargement progressif: FLAG qui limite l'action scroll quand on est en train de charger la grille
+
+var mem_data=null;		//Stoque les données chargées pour les réutilisées et éviter un appel  à la base de données
+var undated=0;
 
 $(document).ready(function(){
 
@@ -22,54 +28,71 @@ $(document).ready(function(){
 		if (remaining < docHeight * 0.25) {
 			loading=true;
 			console.log("reload from scroll");
-			load_grid(null, true);
+			GRID_load();
 		}
 	});
 
 });
 
-g_load_files = function load_files(force_reload=false)
+var GRID_load = function load(force_reload=false, init_display=false)
 {	
 	uniqueid=0;
 	
-	if(data===null || force_reload==true)
+	if(init_display || force_reload)
+	{
+		loaded_files=0;
+		loading_limit=0;
+		undated=0;	
+		$("main section.grid").html("");		
+	}
+	
+	if(mem_data==null || force_reload)
 	{
 		CORE_get('actions/file-load-list.php');
 	}
 	else 
 	{
-		console.log("reload from memory");
-		load_grid();
+		GRID_load_Callback();
 	}
+	
+	console.log("GRID_loaded");
 
 }
 
-function load_grid(ldata=null, ladd=false)
+var GRID_load_Callback = function load_from_memory(new_data=null)
 {	
-	$('main').off('click.gridSelect');
-	$('main').off('click.gridOpen');
-
-	if(ldata!=null) data=ldata;
+	if(new_data!=null) 
+	{
+		mem_data=new_data;
+	}
+	else
+	{
+		console.log("reload from memory");
+	}
 	
-	let source=null;
-	let html_mem_date="";
+	if(mem_data==null)
+	{
+		console.log("No data loaded");
+		return;
+	}
 		
-	let total_file_library=data.library.length;
-	let total_file_untagged=data.untagged.length;	
+	let source=null;
+
+	if($('div#mainmenu button.mylib').hasClass('selected')) source=mem_data.library;
+	if($('div#mainmenu button.untag').hasClass('selected')) source=mem_data.untagged;
+	
+	if(source==null)
+	{
+		console.log("No source selected");
+		return;		
+	}
+	
+	let total_file_library=mem_data.library.length;
+	let total_file_untagged=mem_data.untagged.length;	
 	
 	$('#untaggedcount').html("&nbsp;("+total_file_untagged+")");
-	
-	if($('div#mainmenu button.mylib').hasClass('selected')) source=data.library;
-	if($('div#mainmenu button.untag').hasClass('selected')) source=data.untagged;
-
-	
-	if(ladd==false) //chargement progressif
-	{
-		loaded_files=0;
-		loading_limit=0;
-		undated=0;
-		$("main section.grid").html("");
-	}
+		
+	let html_mem_date=null;
 	
 	$.each(source, function(i, bdd)
 	{
@@ -79,7 +102,7 @@ function load_grid(ldata=null, ladd=false)
 			{
 				//si on à pas de date
 				if(undated==0) $("main section.nodate").append('<div class="fullrow"><h2>Undated</h2></div>');
-				$("main section.nodate").append(addElement(data.dir, bdd));
+				$("main section.nodate").append(addElement(mem_data.dir, bdd));
 				undated++;
 			}
 			else
@@ -88,12 +111,12 @@ function load_grid(ldata=null, ladd=false)
 
 				let l_date_display = l_date_test.substring(6,8) + "/" + l_date_test.substring(4,6) + "/" + l_date_test.substring(0,4);	
 				
-				if(html_mem_date=="" || html_mem_date!=l_date_test)
+				if(html_mem_date==null || html_mem_date!=l_date_test)
 				{
 					$("main section.date").append('<div class="fullrow"><h2>'+l_date_display+'</h2></div>'); //on démarre une nouvelle grille
 				}
 
-				$("main section.date").append(addElement(data.dir, bdd));
+				$("main section.date").append(addElement(mem_data.dir, bdd));
 				
 				html_mem_date=l_date_test;
 			}
@@ -109,20 +132,33 @@ function load_grid(ldata=null, ladd=false)
 	
 	loading_limit=loaded_files;
 
-	/*if(undated==0) $("main section.nodate").html('');*/
-			
+	//****************************************************************
+	//Déchagrement des précents boutons ******************************
+	//****************************************************************	
+
+	$('main').off('click.gridSelect');
+	$('main').off('click.gridOpen');
+
+	//****************************************************************
+	//Ajout du bouton de sélection d'une photo sur la grille *********
+	//****************************************************************	
+
 	$('main').on('click.gridSelect', 'div.button-select', function(e) {
 		
 		let current_id = parseInt($(this).parent().attr('id').replace('grid_',''));
 		
 		DISPLAY_selection(current_id);
 		
-		if(g_is_ux_menu_visible($('div#select-trash'))) $('main section.grid div.selected').addClass('delete');
+		if(IS_VISIBLE_menu($('div#select-trash'))) $('main section.grid div.selected').addClass('delete');
 
-		if(DISPLAY_is_visible_file_info())
+		if(DISPLAY_is_visible_file_info()) //Si on à affiché les information des fichiers lors d'une sélection multiple
 		{
-			FILEMULTISELECTION_load(); //mettre à jour les infos si on affiche le aside
+			FILEMULTISELECTION_load(); //On rafraichi les informations affichés au changement de sélection
 		}
+		
+		//****************************************************************
+		//Logique de sélection en lot avec la touche SHIFT ***************
+		//****************************************************************		
 
 		if(e.shiftKey)
 		{	
@@ -132,7 +168,6 @@ function load_grid(ldata=null, ladd=false)
 				{
 					for(i=(last_select+1);i<current_id;i++) 
 					{
-						//console.log("switch #grid_"+i);
 						$('#grid_'+i).toggleClass('selected notselected');
 					}
 				}
@@ -140,21 +175,60 @@ function load_grid(ldata=null, ladd=false)
 				{				
 					for(i=(current_id+1);i<last_select;i++) 
 					{
-						//console.log("switch #grid_"+i);
 						$('#grid_'+i).toggleClass('selected notselected');
 					}
 				}	
 			}
 		}
+		
+		//****************************************************************
+		//Affiche le menu si on sélectionne deux photos ou plus **********
+		//****************************************************************
+		
+		let selected_ids = $('.element.selected').map(function() {
+			return this.id;
+		}).get();
+		
+		let loaded_files=selected_ids.length;
 
+		if(loaded_files<=1) 
+		{	
+			DISPLAY_menu($('#select-status'), false);		
+		}
+		else
+		{ 
+			$('.elementscnt').html(loaded_files+" elements");
+			DISPLAY_menu($('#select-status'), true);
+		}
+
+		//****************************************************************
+		//Mémorise la dernière photo sélectionée *************************
+		//****************************************************************
+		
 		last_select=current_id;
 		
-		g_display_menu_global_selection();//TODO
 	});
+
+	//*******************************************************************
+	//Ajout du bouton plein écran d'une photo sur la grille *************
+	//*******************************************************************	
 	
-	FILEOPENFULLSCREEN_set_button_fullscreen();
+	$('main').on('click.gridOpen', 'div.button-fullscreen', function() {
+		
+		let media_id = parseInt($(this).parent().attr('id').replace("grid_",""));
+		let max = (loaded_files-1);
+
+		vFILEOPEN_currentid=media_id;
+		max_id=max;
+		ArrowDisplay(media_id, max); 
+		LoadMedia(media_id);
+		DISPLAY_selection(vFILEOPEN_currentid,true);
+		DISPLAY_set_view("fullscreen");	
+	});	
 				
 	loading=false;	
+	
+	console.log("GRID_load_Callback");
 }
 
 function addElement(dir, bdd)
@@ -196,44 +270,4 @@ function addElement(dir, bdd)
 	uniqueid++;
 	
 	return html;	
-}
-
-g_display_menu_global_selection = function display_menu_global_selection()
-{
-	let selected_ids = $('.element.selected').map(function() {
-		return this.id;
-	}).get();
-	
-	let loaded_files=selected_ids.length;
-
-	if(loaded_files<=1) 
-	{	
-		if(!DISPLAY_is_visible_full_screen()) DISPLAY_set_view("grid");
-		g_ux_menu_display($('#select-status'), false);		
-	}
-	else
-	{ 
-		$('.elementscnt').html(loaded_files+" elements");
-		g_ux_menu_display($('#select-status'), true);
-	}
-}
-
-var g_ux_menu_display = function ux_menu_display(object, visibility)
-{
-	if(visibility)
-	{
-		object.removeClass("ux-hidden-zindex");	
-		object.removeClass("ux-hidden-opacity");	
-	}
-	else
-	{
-		object.addClass("ux-hidden-opacity");
-		
-		setTimeout(function() { object.addClass("ux-hidden-zindex"); }, 500);
-	}		
-}
-
-var g_is_ux_menu_visible = function is_ux_menu_visible(object)
-{
-	return !object.hasClass("ux-hidden-zindex");
 }
