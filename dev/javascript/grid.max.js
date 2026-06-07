@@ -146,16 +146,7 @@ var GRID_load_Callback = function load_from_memory(new_data=null)
 	$('main').on('click.gridSelect', 'div.button-select', function(e) {
 		
 		let current_id = parseInt($(this).parent().attr('id').replace('grid_',''));
-		
-		DISPLAY_selection(current_id);
-		
-		if(IS_VISIBLE_menu($('div#select-trash'))) $('main section.grid div.selected').addClass('delete');
-
-		if(DISPLAY_is_visible_file_info()) //Si on à affiché les information des fichiers lors d'une sélection multiple
-		{
-			FILEMULTISELECTION_load(); //On rafraichi les informations affichés au changement de sélection
-		}
-		
+				
 		//****************************************************************
 		//Logique de sélection en lot avec la touche SHIFT ***************
 		//****************************************************************		
@@ -180,30 +171,19 @@ var GRID_load_Callback = function load_from_memory(new_data=null)
 				}	
 			}
 		}
-		
-		//****************************************************************
-		//Affiche le menu si on sélectionne deux photos ou plus **********
-		//****************************************************************
-		
-		let selected_ids = $('.element.selected').map(function() {
-			return this.id;
-		}).get();
-		
-		let loaded_files=selected_ids.length;
-
-		if(loaded_files<=1) 
-		{	
-			DISPLAY_menu($('#select-status'), false);		
-		}
-		else
-		{ 
-			$('.elementscnt').html(loaded_files+" elements");
-			DISPLAY_menu($('#select-status'), true);
-		}
 
 		//****************************************************************
-		//Mémorise la dernière photo sélectionée *************************
+		//Action à effectué après la sélection effective *****************
 		//****************************************************************
+
+		DISPLAY_selection(current_id);
+		
+		if(IS_VISIBLE_menu($('div#select-trash'))) $('main section.grid div.selected').addClass('delete');
+
+		if(DISPLAY_is_visible_file_info()) //Si on à affiché les information des fichiers lors d'une sélection multiple
+		{
+			FILEMULTISELECTION_load(); //On rafraichi les informations affichés au changement de sélection
+		}
 		
 		last_select=current_id;
 		

@@ -12,6 +12,7 @@ $(document).ready(function(){
 			$('div#mainmenu div button.untag').removeClass("selected");
 			$('div#mainmenu div button.mylib').addClass("selected");
 			DISPLAY_menu($('#select-status'),false);
+			DISPLAY_set_view('grid');
 			GRID_load(false,true);
 		}
 	});	
@@ -36,5 +37,6 @@ var TOP_open_untagg = function open_untagg(force_reload=false)
 	$('div#mainmenu div button.untag').addClass("selected");
 	$('div#mainmenu div button.mylib').removeClass("selected");
 	DISPLAY_menu($('#select-status'),false);
+	DISPLAY_set_view('grid');
 	GRID_load(force_reload,true);
 }

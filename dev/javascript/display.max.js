@@ -4,6 +4,10 @@ $(document).ready(function()
 	DISPLAY_view_mem=0;
 });
 
+//****************************************************************
+//Gère la vue générale *******************************************
+//****************************************************************	
+
 var DISPLAY_set_view = function view_refresh(newview)
 {		
 	switch(newview)
@@ -42,6 +46,10 @@ var DISPLAY_set_view = function view_refresh(newview)
 	console.log("DISPLAY_set_view",newview,"loaded");
 }
 
+//****************************************************************
+//Gère la visibilité de l'édition des paramètres des fichier *****
+//****************************************************************	
+
 var DISPLAY_is_visible_file_info = function is_visible_file_info()
 {
 	return !$('body').hasClass('no-aside');
@@ -55,6 +63,10 @@ var DISPLAY_file_info = function display_aside(visibility = undefined)
 	if(visibility==false) 		{ lelement.addClass('no-aside'); return; }	
 	console.log("DISPLAY_file_info bad parameter");
 }
+
+//****************************************************************
+//Gère l'affichage en plein écran ********************************
+//****************************************************************	
 
 var DISPLAY_is_visible_full_screen = function is_visible_full_screen()
 {
@@ -94,6 +106,10 @@ var IS_VISIBLE_menu = function is_visible_menu(object)
 	return !object.hasClass("ux-hidden-zindex");
 }
 
+//****************************************************************
+//Gère l'affichage du menu fixe interactif en bas à gauche *******
+//****************************************************************	
+
 var DISPLAY_menu = function display_menu(object=undefined, visibility=undefined)
 {
 	if(visibility==true && object!=undefined)
@@ -113,6 +129,10 @@ var DISPLAY_menu = function display_menu(object=undefined, visibility=undefined)
 
 	console.log("DISPLAY_menu bad parameter");	
 }
+
+//****************************************************************
+//Initialise les champ d'édition mono ou multifichier ************
+//****************************************************************	
 
 var DISPLAY_fileinfo_init = function fileinfo_init(multiselectionreset=true)
 {
@@ -136,15 +156,19 @@ var DISPLAY_fileinfo_init = function fileinfo_init(multiselectionreset=true)
 	$('aside#infocontent h3 span.unedit').removeClass('hidden');	
 }
 
+//****************************************************************
+//Gère l'affichage lors de la sélection des photos ***************
+//****************************************************************	
 
 var DISPLAY_selection = function selection(vFILEOPEN_currentid,refreshfullscreen=false)
 {
+	console.log("DISPLAY_selection switch selection of element",vFILEOPEN_currentid);
+	
 	//Manage grid selection
 
 	if(refreshfullscreen==false) 
 	{
 		$('div#grid_'+vFILEOPEN_currentid).toggleClass('selected notselected');
-		console.log("DISPLAY_selection switch selection of element",vFILEOPEN_currentid);
 	}
 	
 	//Manage fullscreen selection
@@ -160,5 +184,25 @@ var DISPLAY_selection = function selection(vFILEOPEN_currentid,refreshfullscreen
 		$('section#fullscreen').removeClass('selected');
 		$('section#fullscreen div.button-selection').addClass('notselected');
 		$('section#fullscreen div.button-selection').removeClass('selected');
+	}
+	
+	//****************************************************************
+	//Affiche le menu si on sélectionne deux photos ou plus **********
+	//****************************************************************
+	
+	let selected_ids = $('.element.selected').map(function() {
+		return this.id;
+	}).get();
+	
+	let loaded_files=selected_ids.length;
+
+	if(loaded_files<=1) 
+	{	
+		DISPLAY_menu($('#select-status'), false);		
+	}
+	else
+	{ 
+		$('.elementscnt').html(loaded_files+" elements");
+		DISPLAY_menu($('#select-status'), true);
 	}
 }

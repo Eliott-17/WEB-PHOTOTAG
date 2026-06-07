@@ -35,7 +35,7 @@ $(document).ready(function(){
 		
 		$('aside#infocontent h3.ux-'+data+':not(.conflict) input, h3.ux-'+data+':not(.conflict) select, h3.ux-'+data+':not(.conflict) span.unedit').toggleClass('hidden');
 		
-		FILEMULTISELECTION_reset_ux($(this),data);
+		if(!DISPLAY_is_visible_full_screen())	FILEMULTISELECTION_reset_ux($(this),data);
 	});	
 });
 

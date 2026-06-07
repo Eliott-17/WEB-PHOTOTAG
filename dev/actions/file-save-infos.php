@@ -99,8 +99,18 @@
     $strdate_updated = $date->format('Y-m-d H:i:s');		
 
 	$EasyPDO->addFields('time_modified_at',$strdate_updated); //last updated info	
-	$EasyPDO->addFields('tag_status',1); //now file is tagged
 	
+	//update tag status
+	
+	if(!empty($_POST['date']) AND !empty($_POST['zone']) AND !empty($_POST['time']) AND !empty($_POST['country') AND $_POST['county'] != "UNK")
+	{
+		$EasyPDO->addFields('tag_status',1);	
+	}
+	else
+	{
+		$EasyPDO->addFields('tag_status',0); 
+	}
+
 	$dataarray = json_decode($_POST['filesid'], true);
 	$count = count($dataarray);
 	
