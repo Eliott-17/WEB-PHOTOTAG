@@ -202,8 +202,8 @@ var GRID_load_Callback = function load_from_memory(new_data=null)
 		max_id=max;
 		ArrowDisplay(media_id, max); 
 		LoadMedia(media_id);
+		DISPLAY_set_view("fullscreen");	//order before DISPLAY_selection is important
 		DISPLAY_selection(vFILEOPEN_currentid,true);
-		DISPLAY_set_view("fullscreen");	
 	});	
 				
 	loading=false;	

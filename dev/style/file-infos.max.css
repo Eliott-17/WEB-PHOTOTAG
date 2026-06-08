@@ -90,7 +90,12 @@ h3.margin span,
 	color: red;
 }
 
-#infocontent h4.edit_ux button:hover, h4.button-exif button:hover, aside#fullscreen_edit #infocontent h4 button:hover
+/*#infocontent h4.edit_ux button:hover, 
+h4.button-exif button:hover, 
+h4.button-trash button:hover, 
+h4.button-exif button:hover, 
+aside#fullscreen_edit #infocontent h4 button:hover*/
+#infocontent button:hover
 {
 	border: 2px solid black;
 	padding: 1px 4px 1px 4px;

@@ -268,6 +268,10 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/locations.php');
 						<h4 class="button-exif"><button><span class="material-symbols-outlined cursor">expand_all</span><span class="cursor">Show EXIF</span></button></h4>
 						<h3 id="exif" class="hidden"></h3>
 					</div>
+					<div id="actions">
+						<h2><span class="material-symbols-outlined cursor">action_key</span><span>Other actions</span></h2>				
+						<h4 class="button-trash"><button><span class="material-symbols-outlined cursor">delete</span><span class="cursor">Move to trash</span></button></h4>
+					</div>
 					<br/>
 				</aside>
 

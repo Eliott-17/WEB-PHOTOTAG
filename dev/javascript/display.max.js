@@ -16,6 +16,7 @@ var DISPLAY_set_view = function view_refresh(newview)
 		
 			DISPLAY_full_screen(false);
 			DISPLAY_file_info(false);
+			DISPLAY_selection();
 		
 		break;
 		case "grid-fileinfo":
@@ -75,18 +76,20 @@ var DISPLAY_is_visible_full_screen = function is_visible_full_screen()
 
 var DISPLAY_full_screen = function display_full_screen(visibility = undefined)
 {
-	let lelement=$('nav');
+	let lelement=$('div#mainmenu');
 	
 	if(visibility==undefined)  	
 	{ 
 		$('main section').toggleClass('hidden'); 
 		lelement.toggleClass('hidden');
+		console.log("DISPLAY_full_screen: toggeled)");		
 		return; 
 	}
 	if(visibility==true) 		
 	{ 
 		$('main section.grid').addClass('hidden');
 		$('main section#fullscreen').removeClass('hidden');
+		console.log("DISPLAY_full_screen: openned (show)");		
 		lelement.addClass('hidden');
 		return; 
 	}
@@ -94,7 +97,8 @@ var DISPLAY_full_screen = function display_full_screen(visibility = undefined)
 	{ 
 		$('main section.grid').removeClass('hidden');
 		$('main section#fullscreen').addClass('hidden');
-		lelement.removeClass('hidden');		
+		lelement.removeClass('hidden');	
+		console.log("DISPLAY_full_screen: closed (hide)");		
 		return; 
 		
 	}	
@@ -142,11 +146,13 @@ var DISPLAY_fileinfo_init = function fileinfo_init(multiselectionreset=true)
 	if(multiselectionreset)
 	{
 		$('div#informations').removeClass('hidden');
+		$('div#actions').removeClass('hidden');
 		$('aside#infocontent h3').removeClass('conflict');
 	}
 	else
 	{
 		$('div#informations').addClass('hidden');
+		$('div#actions').addClass('hidden');
 	}
 	//edit-cancel ux display reset
 	$('aside#infocontent h3 input, h3 select').addClass('hidden');
@@ -160,30 +166,33 @@ var DISPLAY_fileinfo_init = function fileinfo_init(multiselectionreset=true)
 //Gère l'affichage lors de la sélection des photos ***************
 //****************************************************************	
 
-var DISPLAY_selection = function selection(vFILEOPEN_currentid,refreshfullscreen=false)
+var DISPLAY_selection = function selection(vFILEOPEN_currentid=null,refreshfullscreen=false)
 {
 	console.log("DISPLAY_selection switch selection of element",vFILEOPEN_currentid);
 	
-	//Manage grid selection
+	if(vFILEOPEN_currentid!=null) {
+	
+		//Manage grid selection
 
-	if(refreshfullscreen==false) 
-	{
-		$('div#grid_'+vFILEOPEN_currentid).toggleClass('selected notselected');
-	}
-	
-	//Manage fullscreen selection
-	
-	if($('div#grid_'+vFILEOPEN_currentid).hasClass('selected'))
-	{
-		$('section#fullscreen').addClass('selected');
-		$('section#fullscreen div.button-selection').addClass('selected');
-		$('section#fullscreen div.button-selection').removeClass('notselected');
-	}
-	else
-	{
-		$('section#fullscreen').removeClass('selected');
-		$('section#fullscreen div.button-selection').addClass('notselected');
-		$('section#fullscreen div.button-selection').removeClass('selected');
+		if(refreshfullscreen==false) 
+		{
+			$('div#grid_'+vFILEOPEN_currentid).toggleClass('selected notselected');
+		}
+		
+		//Manage fullscreen selection
+		
+		if($('div#grid_'+vFILEOPEN_currentid).hasClass('selected'))
+		{
+			$('section#fullscreen').addClass('selected');
+			$('section#fullscreen div.button-selection').addClass('selected');
+			$('section#fullscreen div.button-selection').removeClass('notselected');
+		}
+		else
+		{
+			$('section#fullscreen').removeClass('selected');
+			$('section#fullscreen div.button-selection').addClass('notselected');
+			$('section#fullscreen div.button-selection').removeClass('selected');
+		}
 	}
 	
 	//****************************************************************
@@ -196,7 +205,7 @@ var DISPLAY_selection = function selection(vFILEOPEN_currentid,refreshfullscreen
 	
 	let loaded_files=selected_ids.length;
 
-	if(loaded_files<=1) 
+	if(loaded_files<=1 || DISPLAY_is_visible_full_screen()) 
 	{	
 		DISPLAY_menu($('#select-status'), false);		
 	}
