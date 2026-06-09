@@ -26,6 +26,12 @@ $(document).ready(function(){
 		else {
 			$('aside#infocontent h4.button-exif div span.material-symbols-outlined').html("expand_all");}
 	});
+
+	$('aside#infocontent h4.button-trash').on('click.trashInfo', function() {
+		
+		DISPLAY_menu($('#select-trash'), true);
+		
+	});
 	
 	$('aside#infocontent h4.edit_ux').find('button.edit, button.cancel').on('click.infoViewEdit', function() {
 				
@@ -36,6 +42,8 @@ $(document).ready(function(){
 		$('aside#infocontent h3.ux-'+data+':not(.conflict) input, h3.ux-'+data+':not(.conflict) select, h3.ux-'+data+':not(.conflict) span.unedit').toggleClass('hidden');
 		
 		if(!DISPLAY_is_visible_full_screen())	FILEMULTISELECTION_reset_ux($(this),data);
+		
+		DISPLAY_menu($('#select-trash'), false);
 	});	
 });
 

@@ -9,11 +9,52 @@ var g_data=null;
 
 $(document).ready(function(){
 
-	$('nav').on('click', 'div#select-status span#delete', function() 		{	DISPLAY_menu($('div#select-status'),false); DISPLAY_menu($('div#select-trash'),true); $('main section.grid div.selected').addClass('delete'); });
-	$('nav').on('click', 'div#select-trash span#delete_cancel', function() 	{	DISPLAY_menu($('div#select-trash'),false); DISPLAY_menu($('div#select-status'),true); $('main section.grid div.selected').removeClass('delete'); });
-	$('nav').on('click', 'div#select-trash span#delete_confirm', function() {	console.log("todo"); });
+	$('nav').on('click', 'div#select-status span#delete', function() 		{	
+	
+		DISPLAY_menu($('div#select-status'),false); 
+		DISPLAY_trash(true);
+	});
+	
+	$('nav').on('click', 'div#select-trash span#delete_cancel', function() 	{
+	
+		DISPLAY_trash(false);
+		DISPLAY_selection();
+	});
+	
+	$('nav').on('click', 'div#select-trash span#delete_confirm', function() {
+		
+		var hash_array=[];
 
-	$('nav').on('click', 'div#select-status div.selection', function() 		{
+		$('main section.grid div.element').each(function () 
+		{ 
+			if($(this).hasClass('delete')) 
+			{ 
+				let id=parseInt($(this).find("div.media-container").attr('data-id'));
+
+				hash_array.push(id);
+			}
+		});
+		
+		hash_array = hash_array.map(Number);
+		
+		if(hash_array.length==0)
+		{
+			hash_array.push(parseInt($('section#fullscreen div.media').attr('data-id')));
+		}
+
+		if(hash_array.length==0)
+		{
+			console.log("Error trash selection");
+			return;
+		}
+		
+		$('input.filesid').val(JSON.stringify(hash_array));
+		
+		CORE_post($('#filetrash'));
+		
+	});
+
+	$('nav').on('click', 'div#select-status div.selection', function() {
 
 		$('main div.element').each(function () { if ($(this).hasClass('selected')) $(this).toggleClass('selected notselected');	});
 		DISPLAY_menu($('#select-status'),false);
@@ -190,4 +231,10 @@ var FILEMULTISELECTION_reset_ux = function reset_ux(obj, data)
 			
 		});
 	};
+}
+
+var FILEMULTISELECTION_CallBack_trash = function CallBack_trash()
+{
+	DISPLAY_set_view('grid');
+	GRID_load(true,true);
 }

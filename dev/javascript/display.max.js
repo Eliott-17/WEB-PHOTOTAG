@@ -9,7 +9,9 @@ $(document).ready(function()
 //****************************************************************	
 
 var DISPLAY_set_view = function view_refresh(newview)
-{		
+{	
+	DISPLAY_trash(false); //close trash menu on an display change
+	
 	switch(newview)
 	{
 		case "grid":
@@ -31,7 +33,7 @@ var DISPLAY_set_view = function view_refresh(newview)
 		
 			DISPLAY_full_screen(true);
 			DISPLAY_file_info(false);
-		
+			
 		break;
 		case "fullscreen-fileinfo":
 
@@ -43,7 +45,7 @@ var DISPLAY_set_view = function view_refresh(newview)
 		break;
 	
 	}
-
+	
 	console.log("DISPLAY_set_view",newview,"loaded");
 }
 
@@ -207,11 +209,26 @@ var DISPLAY_selection = function selection(vFILEOPEN_currentid=null,refreshfulls
 
 	if(loaded_files<=1 || DISPLAY_is_visible_full_screen()) 
 	{	
+		$('.elementscnt').html("1 element");
 		DISPLAY_menu($('#select-status'), false);		
 	}
 	else
 	{ 
 		$('.elementscnt').html(loaded_files+" elements");
 		DISPLAY_menu($('#select-status'), true);
+	}
+}
+
+var DISPLAY_trash = function trash(display)
+{
+	if(display==true)
+	{
+		DISPLAY_menu($('div#select-trash'),true); 
+		$('main section.grid div.selected').addClass('delete'); 
+	}
+	else
+	{		
+		DISPLAY_menu($('div#select-trash'),false); 
+		$('main section.grid div.selected').removeClass('delete');
 	}
 }

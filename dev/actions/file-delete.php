@@ -14,7 +14,7 @@
 	//VALIDATION FORMULAIRE
 
 	$validation->addVerification('token',		'sha256',				'Token'							);	
-	$validation->addVerification('filesid',		'jsonArrayString',		'Files id'						);	
+	$validation->addVerification('files_hash',		'jsonArrayString',		'Files id'						);	
 
 	$validation->Validate();
 
@@ -23,7 +23,7 @@
 		$fReturn->addInfoMessage($validation->Message())->fetch();	
 	}
 	
-	$ids = json_decode($_POST['filesid'], true); // true pour obtenir un tableau associatif
+	$ids = json_decode($_POST['files_hash'], true); // true pour obtenir un tableau associatif
 	
 	//récupération du nom original + hash
 	
@@ -54,7 +54,7 @@
 	$EasyPDO->addFields('file_status',2);		
 	$EasyPDO->update('photos', 'id IN', $ids);	
 		
-	$fReturn->addCallback('g_fullscreen_edit')->addCallback('g_unselect_all')->addCallback('g_load_files',true);
+	$fReturn->addCallback('FILEMULTISELECTION_CallBack_trash');
 	$fReturn->fetch();
 	
 ?>	

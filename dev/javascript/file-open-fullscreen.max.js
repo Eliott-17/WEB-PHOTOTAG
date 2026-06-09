@@ -81,6 +81,8 @@ function LoadMedia(id)
 {	
 	let file_type = $('div#grid_'+id+' div.media-container').attr("data-type");
 	let file_hash = $('div#grid_'+id+' div.media-container').attr("data-src");
+	
+	$('section#fullscreen div.media').attr('data-id',$('div#grid_'+id+' div.media-container').attr("data-id"));
 		
 	if(file_type == 0) $('section#fullscreen div.media').html('<img src="hd-'+file_hash+'" loading="lazy">');
 	if(file_type == 1) $('section#fullscreen div.media').html('<video src="hd-'+file_hash+'" poster="sd-'+file_hash+'" controls autoplay muted preload="auto" playsinline></video>></video>');	

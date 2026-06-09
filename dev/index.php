@@ -275,6 +275,10 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/locations.php');
 					<br/>
 				</aside>
 
+				<form method="post" id="filetrash" action="actions/file-delete.php" class="post">
+					<input type="hidden" name="token" class="token" value=""/>
+					<input type="hidden" name="files_hash" class="filesid" value=""/>
+				</form>
 			<?php
 			}
 			else

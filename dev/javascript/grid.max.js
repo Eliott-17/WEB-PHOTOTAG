@@ -208,6 +208,8 @@ var GRID_load_Callback = function load_from_memory(new_data=null)
 				
 	loading=false;	
 	
+	DISPLAY_selection();
+	
 	console.log("GRID_load_Callback");
 }
 
