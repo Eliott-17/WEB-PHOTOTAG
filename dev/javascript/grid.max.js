@@ -83,7 +83,7 @@ var GRID_load_Callback = function load_from_memory(new_data=null)
 	
 	if(source==null)
 	{
-		console.log("No source selected");
+		console.error("No source selected");
 		return;		
 	}
 	
@@ -122,8 +122,6 @@ var GRID_load_Callback = function load_from_memory(new_data=null)
 			}
 						
 			loaded_files++;
-			
-			//console.log("loaded: "+i);
 		}
 		
 		if(i>(50+loading_limit)) return false;

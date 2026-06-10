@@ -37,17 +37,21 @@ $(document).ready(function(){
 		
 		hash_array = hash_array.map(Number);
 		
+		//si la tableu est vide, on recherche une sélection en plain écran
+		
 		if(hash_array.length==0)
 		{
 			hash_array.push(parseInt($('section#fullscreen div.media').attr('data-id')));
 		}
+		
+		//si la tableau est toujours vide, la sélection n'existe plus
 
 		if(hash_array.length==0)
 		{
-			console.log("Error trash selection");
+			console.error("Error trash selection"); //ce message n'est jamais censé arrivé
 			return;
 		}
-		
+				
 		$('input.filesid').val(JSON.stringify(hash_array));
 		
 		CORE_post($('#filetrash'));

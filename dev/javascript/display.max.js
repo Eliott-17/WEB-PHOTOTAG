@@ -219,6 +219,10 @@ var DISPLAY_selection = function selection(vFILEOPEN_currentid=null,refreshfulls
 	}
 }
 
+//****************************************************************
+//Gère l'affichage de confirmation/annulation corbeille **********
+//****************************************************************
+
 var DISPLAY_trash = function trash(display)
 {
 	if(display==true)

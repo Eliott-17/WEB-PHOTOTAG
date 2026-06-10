@@ -171,12 +171,12 @@ function uploadFiles(files, token) {
 							}
 							catch(err)
 							{
-								console.log("Can't treat "+err);
+								console.error("Can't treat "+err);
 							} 
 						}
 						catch(err)
 						{
-							console.log("Can't parse");
+							console.error("Can't parse");
 							parseApacheErrorLog(xhr.responseText);
 						}
 						
