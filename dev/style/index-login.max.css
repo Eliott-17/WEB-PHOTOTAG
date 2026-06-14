@@ -4,9 +4,7 @@ nav #login
 	width: 100%;
 	justify-content: center; /* horizontal */
 	box-sizing: border-box;
-	color: black;
-	display: none;
-	
+	color: black;	
 }
 
 nav #login.active
@@ -52,12 +50,6 @@ nav #login input:focus
 {
 	border: 0;
 	outline: none;	
-}
-
-nav #login .code,
-nav #login .password-confirmation
-{
-	display: none;
 }
 
 nav #login button

@@ -3,6 +3,7 @@
 //***********************************************
 
 var vFILEINFO_load_mem=null;
+var tooltip_timer=null;
 
 $(document).ready(function(){
 
@@ -45,6 +46,39 @@ $(document).ready(function(){
 		
 		DISPLAY_menu($('#select-trash'), false);
 	});	
+	
+	//commun à aside: plein écran ou multisélection
+	
+	$('#infocontent h3').find('span.material-symbols-outlined, span.unedit, input, select').on( "mouseenter", function()
+	{
+		clearTimeout(tooltip_timer);
+		
+		let tooltip = $(this).parent().attr('data-tooltip');
+		let label = $(this).parent().attr('data-label');
+		
+		if(tooltip !== undefined && label !== undefined)
+		{
+			$('#'+tooltip).html(label);	
+		}		
+		
+	}).on( "mouseleave", function(){
+		
+		let lelement = $(this);
+		
+		tooltip_timer = setTimeout( function() {
+		
+			let tooltip = lelement.parent().attr('data-tooltip');
+			//let label = lelement.parent().attr('data-label');
+			
+			if(tooltip !== undefined)// && label !== undefined)
+			{
+				$('#'+tooltip).html(''); //$('#'+tooltip).attr('data-label'));	
+			}	
+			
+		}, 250);
+			
+	}); 
+
 });
 
 var FILEINFO_load = function load(force_reload=false)

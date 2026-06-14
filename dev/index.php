@@ -80,7 +80,7 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/locations.php');
 					&nbsp;<span id="delete_cancel" class="material-symbols-outlined cursor">close_small</span>
 				</div>
 			</div>	
-			<div id="login" class="ux-background">
+			<div id="login" class="ux-background hidden">
 			
 				<form method="post" data-return="blockreturnlogin" action="actions/login.php" class="post">
 					<input type="hidden" name="token" class="token" value=""/>
@@ -89,10 +89,10 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/locations.php');
 						<input type="text" name="email"/>
 						<div>Password</div>
 						<input type="password" name="password"/>	
-						<div class="password-confirmation">Password confirmation</div>
-						<input class="password-confirmation" type="password" name="password_verif"/>					
-						<div class="code">Code</div>
-						<input class="code" type="text" name="code"/>
+						<div class="password-confirmation hidden">Password confirmation</div>
+						<input class="password-confirmation hidden" type="password" name="password_verif"/>					
+						<div class="code hidden">Code</div>
+						<input class="code hidden" type="text" name="code"/>
 					</h4>
 					<br/>
 					<h4>
@@ -208,16 +208,17 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/locations.php');
 						<div class="loading"><span class="material-symbols-outlined">cycle</span></div>		
 						<div class="return alert alert-success"></div>
 					</div>	
-					<h2><span class="material-symbols-outlined">globe_location_pin</span><span>Location</span></h2>
+					<h2><span class="material-symbols-outlined">globe</span><span>Location&nbsp;</span><span id="tooltip-location" class="tooltip-title"></span></h2>
 					<form method="post" data-return="blockreturnloc" action="actions/file-save-infos.php?form=tag-location" class="post">		
 						<input type="hidden" name="token" class="token" value=""/>
 						<input type="hidden" name="filesid" class="filesid" value=""/>
 						<input type="hidden" name="conflictedit" class="conflictedit" value=""/>
 						<input type="hidden" name="continent" value=""/>
+						<h3 class="ux-tag-location" data-tooltip="tooltip-location" data-label="GPS coordinates" id="continent"><span class="material-symbols-outlined">my_location</span>&nbsp;GPS Coordinates</h3>		
 						<!--<h3 class="ux-tag-location" id="continent"><span class="material-symbols-outlined">globe_asia</span><span class="unedit"></span><span class="solver hidden">Override all values</span><select name="continent" ><?php foreach($contient as $key=>$value) echo '<option value="'.$key.'">'.$value.'</option>'; ?></select></h3>-->		
-						<h3 class="ux-tag-location" id="country"><span class="material-symbols-outlined">flag</span><span class="unedit"></span><span class="solver hidden">Override all values</span><select name="country"><?php foreach($country as $key=>$value) echo '<option value="'.$key.'">'.$value.'</option>'; ?></select></h3>
-						<h3 class="ux-tag-location" id="city"><span class="material-symbols-outlined">location_city</span><span class="unedit"></span><span class="solver hidden">Override all values</span><input name="city" type="text" placeholder="city"></h3>
-						<h3 class="ux-tag-location" id="place"><span class="material-symbols-outlined">place</span><span class="unedit"></span><span class="solver hidden">Override all values</span><input name="place" type="text" placeholder="place"></h3>
+						<h3 class="ux-tag-location" data-tooltip="tooltip-location" data-label="Country" id="country"><span class="material-symbols-outlined">flag</span><span class="unedit"></span><span class="solver hidden">Override all values</span><select name="country"><?php foreach($country as $key=>$value) echo '<option value="'.$key.'">'.$value.'</option>'; ?></select></h3>
+						<h3 class="ux-tag-location" data-tooltip="tooltip-location" data-label="City" id="city"><span class="material-symbols-outlined">location_city</span><span class="unedit"></span><span class="solver hidden">Override all values</span><input name="city" type="text"></h3>
+						<h3 class="ux-tag-location" data-tooltip="tooltip-location" data-label="Place" id="place"><span class="material-symbols-outlined">place</span><span class="unedit"></span><span class="solver hidden">Override all values</span><input name="place" type="text"></h3>
 						<h4 class="edit_ux tag-location" data-form="tag-location">
 							<button class="save submit">
 								<span class="material-symbols-outlined">Save</span><span>Save</span>
@@ -234,15 +235,15 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/locations.php');
 						<div class="loading"><span class="material-symbols-outlined">cycle</span></div>		
 						<div class="return alert alert-success"></div>
 					</div>
-					<h2><span class="material-symbols-outlined">tag</span><span>Tags</span></h2>
+					<h2><span class="material-symbols-outlined">tag</span><span>Tags&nbsp;</span><span id="tooltip-tags" class="tooltip-title"></span></h2>
 					<form method="post" data-return="blockreturntags" action="actions/file-save-infos.php?form=tag-general" class="post">
 						<input type="hidden" name="token" class="token" value=""/>
 						<input type="hidden" name="filesid" class="filesid" value=""/>
 						<input type="hidden" name="conflictedit" class="conflictedit" value=""/>
-						<h3 class="ux-tag-general" id="activity"><span class="material-symbols-outlined">directions_run</span><span class="unedit"></span><span class="solver hidden">Override all values</span><input name="activity" type="text" placeholder="activity"></h3>				
-						<h3 class="ux-tag-general" id="comment"><span class="material-symbols-outlined">comment</span><span class="unedit"></span><span class="solver hidden">Override all values</span><input name="comment" type="text" placeholder="comment"></h3>
-						<h3 class="ux-tag-general" id="people"><span class="material-symbols-outlined">group</span><span class="unedit"></span><span class="solver hidden">Override all values</span><input name="people" type="text" placeholder="people"></h3>
-						<h3 class="ux-tag-general" id="other"><span class="material-symbols-outlined">info</span><span class="unedit"></span><span class="solver hidden">Override all values</span><input name="information" type="text" placeholder="other information"></h3>
+						<h3 class="ux-tag-general" data-tooltip="tooltip-tags" data-label="Activity" id="activity"><span class="material-symbols-outlined">directions_run</span><span class="unedit"></span><span class="solver hidden">Override all values</span><input name="activity" type="text"></h3>				
+						<h3 class="ux-tag-general" data-tooltip="tooltip-tags" data-label="Comment" id="comment"><span class="material-symbols-outlined">comment</span><span class="unedit"></span><span class="solver hidden">Override all values</span><input name="comment" type="text"></h3>
+						<h3 class="ux-tag-general" data-tooltip="tooltip-tags" data-label="People" id="people"><span class="material-symbols-outlined">group</span><span class="unedit"></span><span class="solver hidden">Override all values</span><input name="people" type="text"></h3>
+						<h3 class="ux-tag-general" data-tooltip="tooltip-tags" data-label="Other informations" id="other"><span class="material-symbols-outlined">info</span><span class="unedit"></span><span class="solver hidden">Override all values</span><input name="information" type="text"></h3>
 						<h4 class="edit_ux tag-general" data-form="tag-general">
 							<button class="save submit">
 								<span class="material-symbols-outlined">Save</span><span>Save</span>

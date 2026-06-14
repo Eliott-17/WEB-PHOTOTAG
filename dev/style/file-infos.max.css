@@ -8,6 +8,24 @@
 	margin-bottom: 10px;
 }
 
+#infocontent h2 span
+{
+	vertical-align: text-bottom;
+}
+
+#infocontent h3:is(.ux-tag-general, .ux-tag-location) span:is(.material-symbols-outlined, .unedit)
+{
+	cursor: pointer;
+}
+
+#infocontent h2 span.tooltip-title
+{
+	bold: normal;
+	color: #5e5e5e;
+	font-style: italic;
+	font-size: 0.7em;
+}
+
 #infocontent :where(h3, h4):not(#exif)
 {
 	color: #5e5e5e;
@@ -33,6 +51,7 @@
 	padding-bottom: 2px;*/
 	min-height: 35px;
 	width: fit-content;
+	font-weight: normal;
 }
 
 #infocontent h2 span.material-symbols-outlined
@@ -55,14 +74,20 @@ h3.margin span,
 #infocontent :where(input,select)
 {
 	padding-left: 5px;
-	/*margin-top: 5px;*/
 	margin-left: 5px;
-	border: 1px solid black;
 	border-radius: 5px;
+	border: 1px solid transparent;
 	background-color: white;
 	width: 300px;
 	box-sizing: border-box;
 	height: 30px;
+	outline: none;
+}
+
+#infocontent :where(input,select):focus
+{
+	/*background-color: rgba(145,200,250,0.7);*/
+	border: 1px solid rgba(145,200,250,0.7);
 }
 
 #infocontent :where(input,select)

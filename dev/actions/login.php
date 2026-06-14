@@ -66,7 +66,7 @@ else
 	{
 		if(empty($_POST['password_verif']))
 		{
-			$fReturn->addInfoMessage("Confirm you password to create an account.")->addCallBack("g_login_password_verif")->fetch();	 //Callback fait apparaitre le deuxième champ password en javascript	
+			$fReturn->addInfoMessage("Confirm you password to create an account.")->addCallBack("LOGIN_password_verif_CallBack")->fetch();	 
 		}
 		
 		if($_POST['password_verif']!=$_POST['password'])
@@ -109,19 +109,17 @@ else
 		$usedA2F = false;
 		
 		$time = date('Y-m-d H:i:s', time());
-
+		
+		//si le champ code n'est pas vide dans la base de données
+		//on attends alors que l'utilisateur le saisisse
+		
 		if(!empty($result['datas'][0]['a2f_code']))
 		{
-			if(ENV=="DEV")
-			{
-				$fReturn->addConsole($result['datas'][0]['a2f_code']);
-			}
-
 			if(empty($_POST['code'])) 
 			{
 				$fReturn->addInfoMessage("Please enter the security code received by email")->addCallBack("g_login_a2f_verif")->fetch();
 			}
-
+			
 			if($result['datas'][0]['a2f_exp'] < $time OR $_SESSION['try_a2f'] >= 2) 
 			{
 				$expiredA2F = true;
@@ -158,7 +156,8 @@ else
 			$_SESSION['try_a2f']=0;
 			
 			$a2f_code =  random_int(100000, 999999);
-			$EasyPDOAuth->addFields('a2f_exp', date('Y-m-d H:i:s', time() + 300));
+			$EasyPDOAuth->addFields('a2f_exp', date('Y-m-d H:i:s', time() + 300)); //code expire dans 5 minutes
+			$EasyPDOAuth->addFields('a2f_next', date('Y-m-d H:i:s', time() + 2592000));	// nouvelle demande dans 30 jours
 			$EasyPDOAuth->addFields('a2f_code',$a2f_code);
 			$EasyPDOAuth->addConditionalData('email', $_POST['email']);
 			$EasyPDOAuth->update('users', 'email = :email');	
@@ -178,12 +177,11 @@ else
 				$fReturn->addInfoMessage("Please enter the security code received by email");
 			}
 			
-			$fReturn->addCallBack("g_login_a2f_verif")->fetch(); //CallBack faire apparaitre le chanmp CODE en javascript			
+			$fReturn->addCallBack("LOGIN_a2f_verif_CallBack")->fetch(); //CallBack faire apparaitre le chanmp CODE en javascript			
 		}
 		
 		if($usedA2F)
 		{			
-			$EasyPDOAuth->addFields('a2f_next', date('Y-m-d H:i:s', time() + 2592000));	// 30 days
 			$EasyPDOAuth->addFields('a2f_code',"");
 			$EasyPDOAuth->addConditionalData('email', $_POST['email']);
 			$EasyPDOAuth->update('users', 'email = :email');				

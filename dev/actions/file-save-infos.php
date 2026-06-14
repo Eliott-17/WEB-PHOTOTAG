@@ -102,7 +102,7 @@
 	
 	//update tag status
 	
-	if(!empty($_POST['date']) AND !empty($_POST['zone']) AND !empty($_POST['time']) AND !empty($_POST['country') AND $_POST['county'] != "UNK")
+	if(!empty($_POST['date']) AND !empty($_POST['zone']) AND !empty($_POST['time']) AND !empty($_POST['country']) AND $_POST['county'] != "UNK")
 	{
 		$EasyPDO->addFields('tag_status',1);	
 	}
