@@ -147,13 +147,13 @@ var DISPLAY_fileinfo_init = function fileinfo_init(multiselectionreset=true)
 
 	if(multiselectionreset)
 	{
-		$('div#informations').removeClass('hidden');
+		$('div.informations').removeClass('hidden');
 		$('div#actions').removeClass('hidden');
 		$('aside#infocontent h3').removeClass('conflict');
 	}
 	else
 	{
-		$('div#informations').addClass('hidden');
+		$('div.informations').addClass('hidden');
 		$('div#actions').addClass('hidden');
 	}
 	//edit-cancel ux display reset
@@ -210,7 +210,9 @@ var DISPLAY_selection = function selection(vFILEOPEN_currentid=null,refreshfulls
 	if(loaded_files<=1 || DISPLAY_is_visible_full_screen()) 
 	{	
 		$('.elementscnt').html("1 element");
-		DISPLAY_menu($('#select-status'), false);		
+		DISPLAY_menu($('#select-status'), false);	
+		
+		if(!DISPLAY_is_visible_full_screen()) DISPLAY_file_info(false);
 	}
 	else
 	{ 

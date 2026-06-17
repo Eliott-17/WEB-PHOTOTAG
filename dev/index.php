@@ -149,6 +149,11 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/locations.php');
 					<h2 id="file_type"><span class="material-symbols-outlined"></span><span class="title"></span></h2>
 					<h3 id="file_original_name" class="margin"></span><span></h3>
 					<h3 id="file_size" class="margin"></span><span></h3>
+					<div class="informations">
+						<h2 id="file_exif_idf0_make_model"><span class="material-symbols-outlined">camera</span><span class="title"></span></h2>
+						<h3 id="file_exif_idf0_sensordata0" class="margin"><span></span></h3>
+						<h3 id="file_exif_idf0_sensordata1" class="margin"><span></span></h3>
+					</div>
 					<h2><span class="material-symbols-outlined">calendar_clock</span><span>Date time</span></h2>
 					<form method="post" data-return="blockreturndatetime" action="actions/file-save-infos.php?form=time" class="post">
 						<input type="hidden" name="token" class="token" value=""/>
@@ -260,7 +265,7 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/locations.php');
 						<div class="loading"><span class="material-symbols-outlined">cycle</span></div>		
 						<div class="return alert alert-success"></div>
 					</div>
-					<div id="informations">
+					<div class="informations">
 						<h2><span class="material-symbols-outlined cursor">info</span><span>Other informations</span></h2>
 						<h3 class="legend">Added time</h3>
 						<h3 id="time_added_at">-</h3>

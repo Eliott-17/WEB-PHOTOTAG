@@ -48,7 +48,7 @@ main section#fullscreen div.media {
 main section#fullscreen div#infocontent {
 	
 	display: none;
-	width: 500px;
+	width: 350px;
 	height: 100vh;
 	box-sizing: border-box;
 	background-color: #fafafa;

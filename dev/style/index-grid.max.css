@@ -7,7 +7,7 @@ body {
 	margin: 0;
 	height: 100vh;
 	display: grid;
-	grid-template-columns: 1fr 500px;
+	grid-template-columns: 1fr 350px;
 	grid-template-rows: auto 1fr auto;
 	grid-template-areas:
 		"nav nav"
@@ -50,7 +50,7 @@ aside {
 	overflow: auto;
 	min-height: 0;
 	box-sizing: border-box;
-	padding: 20px;
+	padding: 10px;
 }
 
 footer {

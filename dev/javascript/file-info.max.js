@@ -148,6 +148,40 @@ var FILEINFO_CallBack_data = function CallBack(data)
 	}
 
 	$('h3#exif').html(processExif(datas.exif));
+	
+	if(datas.exif['IFD0'] !== undefined)
+	{
+		$('h2#file_exif_idf0_make_model').removeClass('hidden');
+		$('h2#file_exif_idf0_make_model span.title').html(datas.exif['IFD0']['Make']+' '+datas.exif['IFD0']['Model']);
+		
+		if(datas.exif['EXIF'] !== undefined)
+		{
+			
+			let resolution = datas.exif.EXIF.ExifImageLength+' x '+datas.exif.EXIF.ExifImageWidth;
+			let [num, den] = datas.exif.EXIF.FNumber.split('/');
+			let FNumber = ('<i>f</i>/'+Number(num) / Number(den)).replace('.',',');
+			let ExposureTime = formatExifDivideInfo(datas.exif.EXIF.ExposureTime)+ ' s';
+			let FocalLength = (formatExifDivideInfo(datas.exif.EXIF.FocalLength)+ ' mm').replace('.',',');
+			let ISO = 'ISO '+datas.exif.EXIF.ISOSpeedRatings;
+			
+			$('h3#file_exif_idf0_sensordata0').removeClass('hidden');
+			$('h3#file_exif_idf0_sensordata1').removeClass('hidden');
+			$('h3#file_exif_idf0_sensordata0 span').html(resolution);
+			$('h3#file_exif_idf0_sensordata1 span').html(FNumber+'&nbsp;&nbsp;'+ExposureTime+'&nbsp;&nbsp;'+FocalLength+'&nbsp;&nbsp;'+ISO);	
+		}
+		else
+		{
+			$('h3#file_exif_idf0_sensordata0').addClass('hidden');
+			$('h3#file_exif_idf0_sensordata1').addClass('hidden');
+		}
+
+	}
+	else
+	{
+		$('h2#file_exif_idf0_make_model').addClass('hidden');
+	}
+
+	console.log(datas.exif)
 		
 	// Continent
 	if (datas.tag_continent == null) 	
@@ -257,6 +291,18 @@ function processExif(data, indent = 0) {
             }
         }
         return html;
+}
+
+function formatExifDivideInfo(raw) {
+    let value = raw.includes('/')
+        ? raw.split('/').reduce((a, b) => Number(a) / Number(b))
+        : Number(raw);
+
+    if (value >= 1) {
+        return value;
+    }
+
+    return '1/' + Math.round(1 / value);
 }
 
 function formatBytes(bytes) {
