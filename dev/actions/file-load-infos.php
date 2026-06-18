@@ -37,11 +37,11 @@
 			
 			if ($file['file_type']==0)
 			{		
-				$file['exif'] = getExifData($full_dir . $file['file_original_name']);
+				$file['exif_photo'] = getExifData($full_dir . $file['file_original_name']);
 			}
 			if ($file['file_type']==1)
 			{		
-				$file['exif'] = $getID3->analyze($full_dir . $file['file_original_name']);
+				$file['exif_video'] = $getID3->analyze($full_dir . $file['file_original_name']);
 			}
 		}
 		unset($file); // Important : rompre la référence après la boucle

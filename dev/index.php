@@ -219,7 +219,7 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/locations.php');
 						<input type="hidden" name="filesid" class="filesid" value=""/>
 						<input type="hidden" name="conflictedit" class="conflictedit" value=""/>
 						<input type="hidden" name="continent" value=""/>
-						<h3 class="ux-tag-location" data-tooltip="tooltip-location" data-label="GPS coordinates" id="continent"><span class="material-symbols-outlined">my_location</span>&nbsp;GPS Coordinates</h3>		
+						<h3 class="ux-tag-location" data-tooltip="tooltip-location" data-label="GPS coordinates"><span class="material-symbols-outlined">my_location</span><span id="GPS" class="textlabel"></span></h3>		
 						<!--<h3 class="ux-tag-location" id="continent"><span class="material-symbols-outlined">globe_asia</span><span class="unedit"></span><span class="solver hidden">Override all values</span><select name="continent" ><?php foreach($contient as $key=>$value) echo '<option value="'.$key.'">'.$value.'</option>'; ?></select></h3>-->		
 						<h3 class="ux-tag-location" data-tooltip="tooltip-location" data-label="Country" id="country"><span class="material-symbols-outlined">flag</span><span class="unedit"></span><span class="solver hidden">Override all values</span><select name="country"><?php foreach($country as $key=>$value) echo '<option value="'.$key.'">'.$value.'</option>'; ?></select></h3>
 						<h3 class="ux-tag-location" data-tooltip="tooltip-location" data-label="City" id="city"><span class="material-symbols-outlined">location_city</span><span class="unedit"></span><span class="solver hidden">Override all values</span><input name="city" type="text"></h3>
@@ -271,7 +271,7 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/locations.php');
 						<h3 id="time_added_at">-</h3>
 						<h3 class="legend">Modified date</h3>
 						<h3 id="time_modified_at">-</h3>							
-						<h4 class="button-exif"><button><span class="material-symbols-outlined cursor">expand_all</span><span class="cursor">Show EXIF</span></button></h4>
+						<h4 class="button-exif"><button><span class="material-symbols-outlined cursor">expand_all</span><span class="cursor">Show raw file data</span></button></h4>
 						<h3 id="exif" class="hidden"></h3>
 					</div>
 					<div id="actions">

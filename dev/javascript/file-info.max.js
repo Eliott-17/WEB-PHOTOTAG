@@ -49,7 +49,7 @@ $(document).ready(function(){
 	
 	//commun à aside: plein écran ou multisélection
 	
-	$('#infocontent h3').find('span.material-symbols-outlined, span.unedit, input, select').on( "mouseenter", function()
+	$('#infocontent h3').find('span.material-symbols-outlined, span.unedit, span.textlabel, input, select').on( "mouseenter", function()
 	{
 		clearTimeout(tooltip_timer);
 		
@@ -147,41 +147,126 @@ var FILEINFO_CallBack_data = function CallBack(data)
 		$('h3#zone span.unedit').html(formatDateTime(time_taken_at,'output-zone'));
 	}
 
-	$('h3#exif').html(processExif(datas.exif));
+
+	$('h3#file_exif_idf0_sensordata0').addClass('hidden');
+	$('h3#file_exif_idf0_sensordata1').addClass('hidden');
+	$('h2#file_exif_idf0_make_model').addClass('hidden');
+	$("span#GPS").html('&nbsp;Unknown');
 	
-	if(datas.exif['IFD0'] !== undefined)
+	if(datas.exif_photo !== undefined)
 	{
-		$('h2#file_exif_idf0_make_model').removeClass('hidden');
-		$('h2#file_exif_idf0_make_model span.title').html(datas.exif['IFD0']['Make']+' '+datas.exif['IFD0']['Model']);
+		$('h3#exif').html(processExif(datas.exif_photo));
 		
-		if(datas.exif['EXIF'] !== undefined)
+		$('h2#file_exif_idf0_make_model span.title').html("Unkown device");
+		
+		if(datas.exif_photo['IFD0']['Make'] !== undefined && datas.exif_photo['IFD0']['Model'] !== undefined)
+		{
+			$('h2#file_exif_idf0_make_model span.title').html(datas.exif_photo['IFD0']['Make']+' '+datas.exif_photo['IFD0']['Model']);
+			$('h2#file_exif_idf0_make_model').removeClass('hidden');			
+		}
+		
+		if(datas.exif_photo['EXIF'] !== undefined)
 		{
 			
-			let resolution = datas.exif.EXIF.ExifImageLength+' x '+datas.exif.EXIF.ExifImageWidth;
-			let [num, den] = datas.exif.EXIF.FNumber.split('/');
+			let resolution = datas.exif_photo.EXIF.ExifImageLength+' x '+datas.exif_photo.EXIF.ExifImageWidth;
+			let [num, den] = datas.exif_photo.EXIF.FNumber.split('/');
 			let FNumber = ('<i>f</i>/'+Number(num) / Number(den)).replace('.',',');
-			let ExposureTime = formatExifDivideInfo(datas.exif.EXIF.ExposureTime)+ ' s';
-			let FocalLength = (formatExifDivideInfo(datas.exif.EXIF.FocalLength)+ ' mm').replace('.',',');
-			let ISO = 'ISO '+datas.exif.EXIF.ISOSpeedRatings;
+			let ExposureTime = formatExifDivideInfo(datas.exif_photo.EXIF.ExposureTime)+ ' s';
+			let FocalLength = (formatExifDivideInfo(datas.exif_photo.EXIF.FocalLength)+ ' mm').replace('.',',');
+			let ISO = 'ISO '+datas.exif_photo.EXIF.ISOSpeedRatings;
 			
-			$('h3#file_exif_idf0_sensordata0').removeClass('hidden');
-			$('h3#file_exif_idf0_sensordata1').removeClass('hidden');
 			$('h3#file_exif_idf0_sensordata0 span').html(resolution);
 			$('h3#file_exif_idf0_sensordata1 span').html(FNumber+'&nbsp;&nbsp;'+ExposureTime+'&nbsp;&nbsp;'+FocalLength+'&nbsp;&nbsp;'+ISO);	
+
+			$('h3#file_exif_idf0_sensordata0').removeClass('hidden');
+			$('h3#file_exif_idf0_sensordata1').removeClass('hidden');
+			$('h2#file_exif_idf0_make_model').removeClass('hidden');
 		}
-		else
-		{
-			$('h3#file_exif_idf0_sensordata0').addClass('hidden');
-			$('h3#file_exif_idf0_sensordata1').addClass('hidden');
+		
+		//GPS
+				
+		if(datas.exif_photo.GPS.GPSLatitude !== undefined && 
+		datas.exif_photo.GPS.GPSLatitudeRef !== undefined && 
+		datas.exif_photo.GPS.GPSLongitude !== undefined && 
+		datas.exif_photo.GPS.GPSLongitudeRef !== undefined) {
+			
+			const lat = exifGpsToDecimal(
+				datas.exif_photo.GPS.GPSLatitude,
+				datas.exif_photo.GPS.GPSLatitudeRef
+			);
+
+			const lon = exifGpsToDecimal(
+				datas.exif_photo.GPS.GPSLongitude,
+				datas.exif_photo.GPS.GPSLongitudeRef
+			);
+
+			const url = `https://www.google.com/maps?q=${lat},${lon}`;
+			
+			$("span#GPS").html('&nbsp;<a target="_blank" href="'+url+'">'+lat+' ; '+lon+'</a>');
+		
+			if(datas.exif_photo.GPS.GPSAltitude !== undefined && datas.exif_photo.GPS.GPSAltitudeRef !== undefined) {
+
+				$("span#GPS").append(' | '+getAltitude(datas.exif_photo.GPS.GPSAltitude, datas.exif_photo.GPS.GPSAltitudeRef)+' m');
+			
+			}	
 		}
 
+		
 	}
-	else
+	
+	if(datas.exif_video !== undefined)
 	{
-		$('h2#file_exif_idf0_make_model').addClass('hidden');
-	}
+		$('h3#exif').html(processExif(datas.exif_video));
+		
+		const manufacturer = findFirstTag(datas, ['manufacturer','make']);
+		const model = findFirstTag(datas, ['model']);
 
-	console.log(datas.exif)
+		$('h2#file_exif_idf0_make_model span.title').html("Unkown device");
+		
+		if(manufacturer != null) 
+		{
+			$('h2#file_exif_idf0_make_model span.title').html(manufacturer);
+			$('h2#file_exif_idf0_make_model').removeClass('hidden');
+		}
+		
+		if(model != null) 
+		{
+			if(manufacturer != null) $('h2#file_exif_idf0_make_model span.title').append(' '+model);
+			else $('h2#file_exif_idf0_make_model span.title').html(model);
+			$('h2#file_exif_idf0_make_model').removeClass('hidden');
+		}
+		
+		const resolution_x = findFirstTag(datas, ['resolution_x']);
+		const resolution_y = findFirstTag(datas, ['resolution_y']);
+				
+		if(resolution_x != null && resolution_y != null)
+		{
+			$('h3#file_exif_idf0_sensordata0 span').html(resolution_x+' x '+resolution_y);
+			$('h3#file_exif_idf0_sensordata0').removeClass('hidden');
+			$('h2#file_exif_idf0_make_model').removeClass('hidden');
+		}
+
+		const codec = findFirstTag(datas, ['codec'], 'video');
+				
+		if(codec != null)
+		{
+			$('h3#file_exif_idf0_sensordata1 span').html(codec);
+			$('h3#file_exif_idf0_sensordata1').removeClass('hidden');
+			$('h2#file_exif_idf0_make_model').removeClass('hidden');
+		}
+		
+		//GPS
+		
+		const gps_latitude = findFirstTag(datas, ['gps_latitude']);
+		const gps_longitude = findFirstTag(datas, ['gps_longitude']);
+				
+		if(gps_latitude != null && gps_longitude != null)
+		{
+			const url = `https://www.google.com/maps?q=${gps_latitude},${gps_longitude}`;
+			
+			$("span#GPS").html('&nbsp;<a target="_blank" href="'+url+'">'+gps_latitude+' ; '+gps_longitude+'</a>');
+		}			
+	}
 		
 	// Continent
 	if (datas.tag_continent == null) 	
@@ -256,7 +341,7 @@ var FILEINFO_CallBack_data = function CallBack(data)
 	$('h3#time_added_at').html(formatUTCToLocalWithTimezone(datas.time_added_at));
 	
 	if (datas.time_modified_at == null) 	$('h3#time_modified_at').html("never");
-	else 									$('h3#time_modified_at').html(formatUTCToLocalWithTimezone(datas.time_modified_at));					
+	else 									$('h3#time_modified_at').html(formatUTCToLocalWithTimezone(datas.time_modified_at));				
 }
 
 var FILEINFO_CallBack_success = function success()
@@ -283,11 +368,11 @@ function processExif(data, indent = 0) {
         for (const [key, value] of Object.entries(data)) {
             if (typeof value === 'object' && value !== null) {
                 // Si la valeur est un objet, on récurse
-                html += `<div style="margin-left: ${indent}px;"><strong>${key}:</strong></div>`;
+                html += `<div class="exifmargin${indent}"><strong>${key}:</strong></div>`;
                 html += processExif(value, indent + 20);
             } else {
                 // Afficher la clé et la valeur
-                html += `<div style="margin-left: ${indent}px;"><strong>${key}:</strong> ${value}</div>`;
+                html += `<div class="exifmargin${indent}"><strong>${key}:</strong> ${value}</div>`;
             }
         }
         return html;
@@ -305,6 +390,40 @@ function formatExifDivideInfo(raw) {
     return '1/' + Math.round(1 / value);
 }
 
+function findFirstTag(obj, names, parent = null, currentParent = null) {
+    if (!obj || typeof obj !== 'object') {
+        return null;
+    }
+
+    for (const [key, value] of Object.entries(obj)) {
+
+        if (
+            names.includes(key.toLowerCase()) &&
+            (
+                parent === null ||
+                currentParent?.toLowerCase() === parent.toLowerCase()
+            )
+        ) {
+            return Array.isArray(value) ? value[0] : value;
+        }
+
+        if (typeof value === 'object') {
+            const result = findFirstTag(
+                value,
+                names,
+                parent,
+                key
+            );
+
+            if (result !== null && result !== undefined && result !== '') {
+                return result;
+            }
+        }
+    }
+
+    return null;
+}
+
 function formatBytes(bytes) {
     if (bytes < 1000) return bytes + " o";
 
@@ -317,4 +436,35 @@ function formatBytes(bytes) {
     } while (bytes >= 1000 && i < units.length - 1);
 
     return (Math.round(bytes * 10) / 10) + " " + units[i];
+}
+
+function exifFractionToNumber(value) {
+    if (typeof value === 'number') {
+        return value;
+    }
+
+    const [num, den] = value.split('/');
+    return Number(num) / Number(den);
+}
+
+function exifGpsToDecimal(values, ref) {
+
+    const deg = exifFractionToNumber(values[0]);
+    const min = exifFractionToNumber(values[1]);
+    const sec = exifFractionToNumber(values[2]);
+
+    let decimal = deg + min / 60 + sec / 3600;
+
+    if (ref === 'S' || ref === 'W') {
+        decimal *= -1;
+    }
+
+    return Math.round(decimal * 100000) / 100000;;
+}
+
+function getAltitude(altitude, altitudeRef = 0) {
+
+    let value = exifFractionToNumber(altitude);
+
+    return altitudeRef == 1 ? -value : value;
 }

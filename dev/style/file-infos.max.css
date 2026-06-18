@@ -140,3 +140,16 @@ aside#fullscreen_edit #infocontent h4 button:hover*/
 {
 	font-size: small;
 }
+
+#infocontent div.exifmargin20
+{
+	margin-left: 20px;
+}
+#infocontent div.exifmargin40
+{
+	margin-left: 40px;
+}
+#infocontent div.exifmargin60
+{
+	margin-left: 60px;
+}
