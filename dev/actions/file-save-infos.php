@@ -21,9 +21,9 @@
 	{
 		case "time":
 
-			$validation->addVerification('date',		'string',				'Date',			0,10);	
-			$validation->addVerification('time',		'string',				'Time',			0,8);	
-			$validation->addVerification('zone',		'string',				'Zone',			0,5);
+			$validation->addVerification('date',		'string',				'Date',			10,10);	
+			$validation->addVerification('time',		'string',				'Time',			8,8);	
+			$validation->addVerification('zone',		'string',				'Zone',			5,5);
 
 		break;
 		case "tag-location":
@@ -40,7 +40,6 @@
 			$validation->addVerification('comment',		'string',				'Comment',		0,200);	
 			$validation->addVerification('people',		'string',				'People',		0,200);	
 			$validation->addVerification('information',	'string',				'Information',	0,200);	
-
 		break;
 		default:
 		
@@ -73,6 +72,11 @@
 		break;
 		case "tag-location":
 
+			if(empty($_POST['continent'])) 	$_POST['continent']=null;
+			if(empty($_POST['country'])) 	$_POST['country']=null;
+			if(empty($_POST['city'])) 		$_POST['city']=null;
+			if(empty($_POST['place'])) 		$_POST['place']=null;
+
 			if($conflict->continent==0)		$EasyPDO->addFields('tag_continent',$_POST['continent']);
 			if($conflict->country==0)		$EasyPDO->addFields('tag_country',$_POST['country']);
 			if($conflict->city==0)			$EasyPDO->addFields('tag_city',$_POST['city']);
@@ -80,7 +84,12 @@
 
 		break;
 		case "tag-general":
-	
+		
+			if(empty($_POST['activity']))	 	$_POST['activity']=null;
+			if(empty($_POST['comment'])) 		$_POST['comment']=null;
+			if(empty($_POST['people'])) 		$_POST['people']=null;
+			if(empty($_POST['information'])) 	$_POST['information']=null;
+			
 			if($conflict->activity==0)		$EasyPDO->addFields('tag_activity',$_POST['activity']);
 			if($conflict->comment==0)		$EasyPDO->addFields('tag_comment',$_POST['comment']);
 			if($conflict->people==0)		$EasyPDO->addFields('tag_people',$_POST['people']);
@@ -100,17 +109,6 @@
 
 	$EasyPDO->addFields('time_modified_at',$strdate_updated); //last updated info	
 	
-	//update tag status
-	
-	if(!empty($_POST['date']) AND !empty($_POST['zone']) AND !empty($_POST['time']) AND !empty($_POST['country']) AND $_POST['county'] != "UNK")
-	{
-		$EasyPDO->addFields('tag_status',1);	
-	}
-	else
-	{
-		$EasyPDO->addFields('tag_status',0); 
-	}
-
 	$dataarray = json_decode($_POST['filesid'], true);
 	$count = count($dataarray);
 	

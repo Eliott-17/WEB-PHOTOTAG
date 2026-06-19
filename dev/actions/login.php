@@ -53,8 +53,10 @@ else
 	 
 	//VERIF SI LE USER EXISTE
 	
+	$email = strtolower($_POST['email']);
+	
 	$EasyPDOAuth->addFields('*');
-	$EasyPDOAuth->addConditionalData('email',$_POST['email']);
+	$EasyPDOAuth->addConditionalData('email',$email);
 	$result=$EasyPDOAuth->select('users', 'email=:email');
 	
 	if(!$result['status'])
@@ -62,7 +64,9 @@ else
 		$fReturn->addFailMessage("Fatal error")->fetch();	
 	}
 	
-	if($result['count']==0) //account dont exist
+	$fReturn->addConsole($result['count']);
+	
+	if($result['count']==0) //account don't exist
 	{
 		if(empty($_POST['password_verif']))
 		{
@@ -77,7 +81,7 @@ else
 		$user_hash = bin2hex(random_bytes(32));
 		$a2f_code =  random_int(100000, 999999);
 
-		$EasyPDOAuth->addFields('email', strtolower($_POST['email']));
+		$EasyPDOAuth->addFields('email', $email);
 		$EasyPDOAuth->addFields('password', password_hash($_POST['password'], PASSWORD_DEFAULT));
 		$EasyPDOAuth->addFields('hash', $user_hash);
 		
@@ -91,6 +95,7 @@ else
 	
 		if(ENV=="DEV")
 		{
+			//$fReturn->addConsole(print_r($return, true));
 			$fReturn->addConsole($a2f_code);
 		}
 		
@@ -159,7 +164,7 @@ else
 			$EasyPDOAuth->addFields('a2f_exp', date('Y-m-d H:i:s', time() + 300)); //code expire dans 5 minutes
 			$EasyPDOAuth->addFields('a2f_next', date('Y-m-d H:i:s', time() + 2592000));	// nouvelle demande dans 30 jours
 			$EasyPDOAuth->addFields('a2f_code',$a2f_code);
-			$EasyPDOAuth->addConditionalData('email', $_POST['email']);
+			$EasyPDOAuth->addConditionalData('email', $email);
 			$EasyPDOAuth->update('users', 'email = :email');	
 				
 			if(ENV=="DEV")
@@ -183,7 +188,7 @@ else
 		if($usedA2F)
 		{			
 			$EasyPDOAuth->addFields('a2f_code',"");
-			$EasyPDOAuth->addConditionalData('email', $_POST['email']);
+			$EasyPDOAuth->addConditionalData('email', $email);
 			$EasyPDOAuth->update('users', 'email = :email');				
 		}
 				

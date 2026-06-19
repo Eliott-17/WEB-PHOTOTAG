@@ -58,7 +58,7 @@ if (!empty($_FILES['file']) && !empty($_FILES['preview'])) {
     // Récupère la date de prise de vue
 	//				  YYYYMMDD+ZZZZHHMMSS
 	$strdate_taken_at_date = "00000000";
-	$strdate_taken_at_zone = "+0000";
+	$strdate_taken_at_zone = "00000";
 	$strdate_taken_at_time = "000000";
 	
     if ($file_type == 0) {

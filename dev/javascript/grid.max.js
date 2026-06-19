@@ -2,33 +2,38 @@
 //Variables globales *********************************************
 //****************************************************************	
 
-var uniqueid;			//numéro unique pour les éléments de la grille
+var uniqueid=0;			//numéro unique pour les éléments de la grille
 var last_select=-1;		//mémorise le dernier uniqueid sélectioné
 
 var loaded_files=0;		//Chargement progressif: mémorise le nombre de fichier chargés
 var loading_limit=0;	//Chagrement progressif: mémorise le nombre de fichier à pré-chargés
-var loading = false;	//Chargement progressif: FLAG qui limite l'action scroll quand on est en train de charger la grille
 
 var mem_data=null;		//Stoque les données chargées pour les réutilisées et éviter un appel  à la base de données
 var undated=0;
 
+var vGRID_scrollmem;
+var VGRID_scroll_lock = false;	//Chargement progressif: FLAG qui limite l'action scroll quand on est en train de charger la grille
+
 $(document).ready(function(){
 
-	$(window).on('scroll', function() {
+	$('main').on('scroll', function() {
 
-		if (loading || data==null) return;
+		if (VGRID_scroll_lock || mem_data==null) return;
 
-		let scrollTop = $(window).scrollTop();
-		let windowHeight = $(window).height();
-		let docHeight = $(document).height();
-
+		let scrollTop = $('main').scrollTop();
+		let windowHeight = $('main').height();
+		let docHeight = $('section.date').height()+$('section.nodate').height();
+		
 		let remaining = docHeight - (scrollTop + windowHeight);
 
 		// déclenche quand il reste 25%
 		if (remaining < docHeight * 0.25) {
-			loading=true;
-			console.log("reload from scroll");
-			GRID_load();
+			if(remaining>=0)
+			{
+				VGRID_scroll_lock=true;
+				console.log("reload from scroll",remaining);
+				GRID_load();
+			}
 		}
 	});
 
@@ -36,13 +41,12 @@ $(document).ready(function(){
 
 var GRID_load = function load(force_reload=false, init_display=false)
 {	
-	uniqueid=0;
-	
 	if(init_display || force_reload)
 	{
 		loaded_files=0;
 		loading_limit=0;
-		undated=0;	
+		undated=0;
+		uniqueid=0;		
 		$("main section.grid").html("");		
 	}
 	
@@ -64,6 +68,7 @@ var GRID_load_Callback = function load_from_memory(new_data=null)
 	if(new_data!=null) 
 	{
 		mem_data=new_data;
+		console.log("reload from new data");
 	}
 	else
 	{
@@ -98,7 +103,7 @@ var GRID_load_Callback = function load_from_memory(new_data=null)
 	{
 		if(i>=loaded_files)
 		{	
-			if(bdd.time_taken_at_date=="00000000" &&  bdd.time_taken_at_zone=="+0000" && bdd.time_taken_at_time=="000000")
+			if(bdd.time_taken_at_date=="00000000" &&  bdd.time_taken_at_zone=="00000" && bdd.time_taken_at_time=="000000")
 			{
 				//si on à pas de date
 				if(undated==0) $("main section.nodate").append('<div class="fullrow"><h2>Undated</h2></div>');
@@ -129,6 +134,8 @@ var GRID_load_Callback = function load_from_memory(new_data=null)
 	});
 	
 	loading_limit=loaded_files;
+	
+	console.log(loaded_files,loading_limit);
 
 	//****************************************************************
 	//Déchagrement des précents boutons ******************************
@@ -195,16 +202,17 @@ var GRID_load_Callback = function load_from_memory(new_data=null)
 		
 		let media_id = parseInt($(this).parent().attr('id').replace("grid_",""));
 		let max = (loaded_files-1);
-
+		
+		vGRID_scrollmem = $('main').scrollTop();
 		vFILEOPEN_currentid=media_id;
 		max_id=max;
 		ArrowDisplay(media_id, max); 
-		LoadMedia(media_id);
+		FILEOPENFULLSCREEN_Loadmedia(media_id);
 		DISPLAY_set_view("fullscreen");	//order before DISPLAY_selection is important
 		DISPLAY_selection(vFILEOPEN_currentid,true);
 	});	
 				
-	loading=false;	
+	VGRID_scroll_lock=false;	
 	
 	DISPLAY_selection();
 	
@@ -214,10 +222,8 @@ var GRID_load_Callback = function load_from_memory(new_data=null)
 function addElement(dir, bdd)
 {
 	let file_orientationtxt="landscape";
-	let imglink=bdd.file_hash;
 	
 	if(bdd.file_orientation==1) file_orientationtxt="portrait";
-	if(bdd.file_original_name) imglink=bdd.file_original_name;
 		
 	let html ="";
 	let ux = "photo";
@@ -227,7 +233,7 @@ function addElement(dir, bdd)
 	
 	if(bdd.file_type == 0) 
 	{
-		html+= '		<img src="sd-'+bdd.file_hash+'" loading="lazy">';
+		html+= '		<img src="sd-'+bdd.file_hash+'" VGRID_scroll_lock="lazy">';
 	}
 	if(bdd.file_type == 1)
 	{

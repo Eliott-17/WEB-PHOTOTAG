@@ -3,6 +3,7 @@
 //***********************************************
 
 var vFILEINFO_load_mem=null;
+var vFILEINFO_FLAG_SAVED=false;
 var tooltip_timer=null;
 
 $(document).ready(function(){
@@ -91,6 +92,7 @@ var FILEINFO_load = function load(force_reload=false)
 		vFILEINFO_load_mem=hash;
 		vFILEINFOMULTISELECTION_mem=null; //forcer le rechargement des data en sélection multiple
 		console.log('FILEINFO_load => data update request');
+		console.log('actions/file-load-infos.php?hash='+hash+'&lform=');
 	}
 	else
 	{
@@ -126,11 +128,11 @@ var FILEINFO_CallBack_data = function CallBack(data)
 	$('h3#file_original_name span').html(datas.file_original_name);
 	$('h3#file_original_name').removeClass('hidden');
 	
-	$('h3#file_size span').html(formatBytes(datas.file_size));	
+	$('h3#file_size span').html(formatBytes(datas.file_size));
 	
 	let time_taken_at = datas.time_taken_at_date+datas.time_taken_at_zone+datas.time_taken_at_time;
 	
-	if(time_taken_at=="00000000+0000000000")
+	if(time_taken_at=="0000000000000000000")
 	{
 		$('h3#date span.unedit').html('Unknown');
 		$('h3#time span.unedit').html('Unknown');
@@ -153,19 +155,19 @@ var FILEINFO_CallBack_data = function CallBack(data)
 	$('h2#file_exif_idf0_make_model').addClass('hidden');
 	$("span#GPS").html('&nbsp;Unknown');
 	
-	if(datas.exif_photo !== undefined)
+	if(datas?.exif_photo !== undefined)
 	{
 		$('h3#exif').html(processExif(datas.exif_photo));
 		
 		$('h2#file_exif_idf0_make_model span.title').html("Unkown device");
 		
-		if(datas.exif_photo['IFD0']['Make'] !== undefined && datas.exif_photo['IFD0']['Model'] !== undefined)
+		if(datas.exif_photo?.IFD0?.Make !== undefined && datas.exif_photo?.IFD0?.Model !== undefined)
 		{
 			$('h2#file_exif_idf0_make_model span.title').html(datas.exif_photo['IFD0']['Make']+' '+datas.exif_photo['IFD0']['Model']);
 			$('h2#file_exif_idf0_make_model').removeClass('hidden');			
 		}
 		
-		if(datas.exif_photo['EXIF'] !== undefined)
+		if(datas?.exif_photo?.EXIF !== undefined)
 		{
 			
 			let resolution = datas.exif_photo.EXIF.ExifImageLength+' x '+datas.exif_photo.EXIF.ExifImageWidth;
@@ -185,11 +187,13 @@ var FILEINFO_CallBack_data = function CallBack(data)
 		
 		//GPS
 				
-		if(datas.exif_photo.GPS.GPSLatitude !== undefined && 
-		datas.exif_photo.GPS.GPSLatitudeRef !== undefined && 
-		datas.exif_photo.GPS.GPSLongitude !== undefined && 
-		datas.exif_photo.GPS.GPSLongitudeRef !== undefined) {
-			
+		const gps = datas?.exif_photo?.GPS;
+
+		if (gps?.GPSLatitude !== undefined &&
+			gps?.GPSLatitudeRef !== undefined &&
+			gps?.GPSLongitude !== undefined &&
+			gps?.GPSLongitudeRef !== undefined){
+				
 			const lat = exifGpsToDecimal(
 				datas.exif_photo.GPS.GPSLatitude,
 				datas.exif_photo.GPS.GPSLatitudeRef
@@ -204,7 +208,7 @@ var FILEINFO_CallBack_data = function CallBack(data)
 			
 			$("span#GPS").html('&nbsp;<a target="_blank" href="'+url+'">'+lat+' ; '+lon+'</a>');
 		
-			if(datas.exif_photo.GPS.GPSAltitude !== undefined && datas.exif_photo.GPS.GPSAltitudeRef !== undefined) {
+			if(gps?.GPSAltitude !== undefined && gps?.GPSAltitudeRef !== undefined) {
 
 				$("span#GPS").append(' | '+getAltitude(datas.exif_photo.GPS.GPSAltitude, datas.exif_photo.GPS.GPSAltitudeRef)+' m');
 			
@@ -214,7 +218,7 @@ var FILEINFO_CallBack_data = function CallBack(data)
 		
 	}
 	
-	if(datas.exif_video !== undefined)
+	if(datas?.exif_video !== undefined)
 	{
 		$('h3#exif').html(processExif(datas.exif_video));
 		
@@ -271,8 +275,8 @@ var FILEINFO_CallBack_data = function CallBack(data)
 	// Continent
 	if (datas.tag_continent == null) 	
 	{
-		$('h3#continent select').val("UN");
-		$('h3#continent span.unedit').html("");
+		$('h3#continent select').val('UN');
+		$('h3#continent span.unedit').html('');
 	}
 	else 
 	{	
@@ -283,8 +287,8 @@ var FILEINFO_CallBack_data = function CallBack(data)
 	// Pays
 	if (datas.tag_country == null) 	
 	{
-		$('h3#country select').val("UNK");
-		$('h3#country span.unedit').html("");
+		$('h3#country select').val('UNK');
+		$('h3#country span.unedit').html('');
 	}
 	else 
 	{
@@ -293,7 +297,11 @@ var FILEINFO_CallBack_data = function CallBack(data)
 	}
 
 	// Ville
-	if (datas.tag_city == null) 		$('h3#city span.unedit').html("");
+	if (datas.tag_city == null) 		
+	{
+		$('h3#city span.unedit').html('');
+		$('h3#city input').val('');
+	}
 	else 
 	{
 		$('h3#city span.unedit').html(datas.tag_city);
@@ -301,7 +309,11 @@ var FILEINFO_CallBack_data = function CallBack(data)
 	}
 
 	// Lieu
-	if (datas.tag_place == null) 		$('h3#place span.unedit').html("");
+	if (datas.tag_place == null) 		
+	{
+		$('h3#place span.unedit').html('');
+		$('h3#place input').val('');
+	}
 	else 
 	{
 		$('h3#place span.unedit').html(datas.tag_place);
@@ -309,33 +321,48 @@ var FILEINFO_CallBack_data = function CallBack(data)
 	}
 
 	// Activité
-	if (datas.tag_activity == null)		$('h3#activity span.unedit').html("");
+	if (datas.tag_activity == null)		
+	{
+		$('h3#activity span.unedit').html('');
+		$('h3#activity input').val('');
+	}
 	else 							
 	{
 		$('h3#activity span.unedit').html(datas.tag_activity);
 		$('h3#activity input').val(datas.tag_activity);
 	}
 	// Commentaire
-	if (datas.tag_comment == null) 		$('h3#comment span.unedit').html("");
+	if (datas.tag_comment == null) 		
+	{
+		$('h3#comment span.unedit').html('');
+		$('h3#comment input').val('');
+	}
 	else 							
 	{
 		$('h3#comment span.unedit').html(datas.tag_comment);
 		$('h3#comment input').val(datas.tag_comment);
 	}
 	// Personnes
-	if (datas.tag_people == null) 		$('h3#people span.unedit').html("");
+	if (datas.tag_people == null) 		
+	{
+		$('h3#people span.unedit').html('');
+		$('h3#people input').val('');		
+	}
 	else  							
 	{
 		$('h3#people span.unedit').html(datas.tag_people);
 		$('h3#people input').val(datas.tag_people);
 	}
 	// Autres
-	if (datas.tag_other == null) 		$('h3#other span.unedit').html("");
+	if (datas.tag_other == null)
+	{
+		$('h3#other span.unedit').html('');
+		$('h3#other input').val('');
+	}
 	else 							
 	{
 		$('h3#other span.unedit').html(datas.tag_other);
-		$('h3#other input').val(datas.tag_other);
-		
+		$('h3#other input').val(datas.tag_other);		
 	}
 	
 	$('h3#time_added_at').html(formatUTCToLocalWithTimezone(datas.time_added_at));
@@ -361,6 +388,8 @@ var FILEINFO_CallBack_success = function success()
 		
 		
 	}, 500);
+	
+	vFILEINFO_FLAG_SAVED=true;
 }
 
 function processExif(data, indent = 0) {

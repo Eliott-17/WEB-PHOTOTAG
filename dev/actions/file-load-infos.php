@@ -12,6 +12,9 @@
 
 	$EasyPDO = new EasyPDO($_SESSION['DB']);
 
+	$bigarray['info']=[];
+	$bigarray['lform']="";
+
 	if(isset($_GET['hash']))
 	{
 		$validation = new Validation();
@@ -28,33 +31,31 @@
 		$EasyPDO->addFields('*');
 		$EasyPDO->addConditionalData('hash',$_GET['hash']);
 		$array_file=$EasyPDO->select('photos', 'file_hash=:hash');
-		
-		// Parcourir chaque ligne du résultat
-		foreach ($array_file['datas'] as &$file) {
-			// Ajouter la clé 'exif' à chaque ligne
-			
-			$file['exif']=[];
-			
-			if ($file['file_type']==0)
-			{		
-				$file['exif_photo'] = getExifData($full_dir . $file['file_original_name']);
+				
+		if($array_file['status']==1)
+		{			
+			// Parcourir chaque ligne du résultat
+			foreach ($array_file['datas'] as &$file) {
+				// Ajouter la clé 'exif' à chaque ligne
+				
+				$file['exif']=[];
+				
+				if ($file['file_type']==0)
+				{		
+					$file['exif_photo'] = getExifData($full_dir . $file['file_original_name']);
+				}
+				if ($file['file_type']==1)
+				{		
+					$file['exif_video'] = $getID3->analyze($full_dir . $file['file_original_name']);
+				}
 			}
-			if ($file['file_type']==1)
-			{		
-				$file['exif_video'] = $getID3->analyze($full_dir . $file['file_original_name']);
-			}
-		}
-		unset($file); // Important : rompre la référence après la boucle
+			unset($file); // Important : rompre la référence après la boucle
 
-		$bigarray['info']=$array_file['datas'];
-		$bigarray['lform']=$_GET['lform'];
+			$bigarray['info']=$array_file['datas'];
+			$bigarray['lform']=$_GET['lform'];
+		}
 	}
-	else
-	{
-		$bigarray['info']=[];
-		$bigarray['lform']="";
-	}	
-	
+
 	$fReturn->addConsole("[PHP EXECUTED] file-load-infos.php");
 	$fReturn->addCallBack("FILEINFO_CallBack_data", $bigarray)->fetch();	
 ?>

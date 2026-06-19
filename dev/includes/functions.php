@@ -59,6 +59,27 @@
 		}
 	}
 
+	function cleanExif($data) {
+
+		if (!is_array($data)) {
+			return is_string($data)
+				? mb_convert_encoding($data, 'UTF-8', 'UTF-8')
+				: $data;
+		}
+
+		foreach ($data as $k => $v) {
+
+			if (in_array(strtolower($k), ['makernote', 'thumbnail'])) {
+				unset($data[$k]);
+				continue;
+			}
+
+			$data[$k] = cleanExif($v);
+		}
+
+		return $data;
+	}
+
 	function getExifData($imagePath)
 	{	
 		// Vérifier si le fichier existe
@@ -67,6 +88,7 @@
 		}
 
 		// Lire les données EXIF
+		
 		$exifData = exif_read_data($imagePath, 0, true);
 
 		// Vérifier si des données EXIF existent
@@ -74,7 +96,7 @@
 			return("No data found");
 		}
 		
-		return $exifData;
+		return cleanExif($exifData);
 	}
 	
 	//GET VIDEO TIME & timezone

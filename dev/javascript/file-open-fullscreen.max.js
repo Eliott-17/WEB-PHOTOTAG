@@ -17,6 +17,16 @@ $(document).ready(function(){
 
 	$('section#fullscreen div.button-return').on('click.gridSelect', function() {
 		DISPLAY_set_view("grid");
+		
+		if(vFILEINFO_FLAG_SAVED==true)
+		{
+			GRID_load(true);
+			vFILEINFO_FLAG_SAVED=false;
+		}
+		else
+		{
+			$('main').scrollTop(vGRID_scrollmem);
+		}
 	});
 
 	$('section#fullscreen').on('click.gridLeftAR', 'div.button-leftarrow', function() { Arrow(0); });			
@@ -33,7 +43,7 @@ function Arrow(sens)
 	
 	if(sens==0 || sens==1)
 	{	
-		LoadMedia(vFILEOPEN_currentid);
+		FILEOPENFULLSCREEN_Loadmedia(vFILEOPEN_currentid);
 		ArrowDisplay(vFILEOPEN_currentid, max_id);
 		DISPLAY_selection(vFILEOPEN_currentid,true);
 
@@ -77,13 +87,16 @@ function ArrowDisplay(vFILEOPEN_currentid, max_id)
 	}
 }
 
-function LoadMedia(id)
+var FILEOPENFULLSCREEN_Loadmedia = function LoadMedia(id)
 {	
 	let file_type = $('div#grid_'+id+' div.media-container').attr("data-type");
 	let file_hash = $('div#grid_'+id+' div.media-container').attr("data-src");
+	let media_id =  $('div#grid_'+id+' div.media-container').attr("data-id");
 	
-	$('section#fullscreen div.media').attr('data-id',$('div#grid_'+id+' div.media-container').attr("data-id"));
+	$('section#fullscreen div.media').attr('data-id',media_id);
 		
 	if(file_type == 0) $('section#fullscreen div.media').html('<img src="hd-'+file_hash+'" loading="lazy">');
-	if(file_type == 1) $('section#fullscreen div.media').html('<video src="hd-'+file_hash+'" poster="sd-'+file_hash+'" controls autoplay muted preload="auto" playsinline></video>></video>');	
+	if(file_type == 1) $('section#fullscreen div.media').html('<video src="hd-'+file_hash+'" poster="sd-'+file_hash+'" controls autoplay muted preload="auto" playsinline></video>');	
+
+	console.log(media_id, file_hash);
 }

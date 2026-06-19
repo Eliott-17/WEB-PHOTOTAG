@@ -15,31 +15,39 @@
 	$array_lib=[];
 	$array_untaged=[];
 
-	$EasyPDO->addFields('file_status');
+	//$EasyPDO->addFields('file_status');
 	$EasyPDO->addFields('file_hash');
 	$EasyPDO->addFields('time_taken_at_date');
 	$EasyPDO->addFields('time_taken_at_zone');
 	$EasyPDO->addFields('time_taken_at_time');
 	$EasyPDO->addFields('file_orientation');
+	//$EasyPDO->addFields('tag_country');
+	//$EasyPDO->addFields('tag_city');
+	//$EasyPDO->addFields('tag_place');
+	//$EasyPDO->addFields('tag_activity');
 	$EasyPDO->addFields('file_type');
 	$EasyPDO->addFields('id');
-	
-	//$array_lib=$EasyPDO->select('photos', 'file_status = 0 AND tag_status = 1 AND time_taken_at != "00000000+0000000000" ORDER BY time_taken_at DESC');
-	//
 	
 	$array_lib=$EasyPDO->select(
 	'photos',
-    'file_status = 0
-     AND tag_status = 1
-     AND (
-        time_taken_at_date != "00000000"
-        OR time_taken_at_zone != "+0000"
-        OR time_taken_at_time != "000000"
-     )
-     ORDER BY time_taken_at_date DESC,
-              time_taken_at_time DESC,
-              time_taken_at_zone DESC'
-	);
+	'file_status = 0
+		AND (
+			time_taken_at_date != "00000000"
+			AND time_taken_at_time != "000000"
+			AND time_taken_at_zone != "00000"
+			AND tag_country IS NOT null
+			AND tag_country != "UNK"
+			AND (
+				tag_city IS NOT null
+				OR tag_place IS NOT null
+				OR tag_activity IS NOT null
+			)
+		)
+		ORDER BY time_taken_at_date DESC,
+				 time_taken_at_zone DESC,
+				 time_taken_at_time DESC,
+				 id ASC
+	');
 	
 	$EasyPDO->addFields('file_status');
 	$EasyPDO->addFields('file_hash');
@@ -47,23 +55,24 @@
 	$EasyPDO->addFields('time_taken_at_zone');
 	$EasyPDO->addFields('time_taken_at_time');
 	$EasyPDO->addFields('file_orientation');
+	/*$EasyPDO->addFields('tag_country');
+	$EasyPDO->addFields('tag_city');
+	$EasyPDO->addFields('tag_place');
+	$EasyPDO->addFields('tag_activity');*/
 	$EasyPDO->addFields('file_type');
 	$EasyPDO->addFields('id');
-
-	//$array_untaged=$EasyPDO->select('photos', 'file_status = 0 AND (tag_status = 0 OR time_taken_at = "00000000+0000000000") ORDER BY time_taken_at DESC, id ASC');
 	
-	//CONCAT(time_taken_at_date, time_taken_at_zone, time_taken_at_time)
 
 	$array_untaged=$EasyPDO->select(
 	'photos',
 	'file_status = 0
 		AND (
-			tag_status = 0
-			OR (
-				time_taken_at_date = "00000000"
-				AND time_taken_at_zone = "+0000"
-				AND time_taken_at_time = "000000"
-			)
+			time_taken_at_date = "00000000"
+			OR time_taken_at_time = "000000"
+			OR time_taken_at_zone = "00000"
+			OR tag_country IS null
+			OR tag_country = "UNK"
+			OR (tag_city IS null AND tag_place IS null AND tag_activity IS null)
 		)
 		ORDER BY time_taken_at_date DESC,
 				 time_taken_at_zone DESC,

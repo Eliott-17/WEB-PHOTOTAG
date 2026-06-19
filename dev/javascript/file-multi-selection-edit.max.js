@@ -3,6 +3,7 @@
 //en lot (bouton tag)
 //***********************************************
 
+var vFILEINFOMULTISELECTION_FLAG_SAVED=false;
 var vFILEINFOMULTISELECTION_mem=null;
 var g_data_mem=null;
 var g_data=null;
@@ -62,6 +63,16 @@ $(document).ready(function(){
 
 		$('main div.element').each(function () { if ($(this).hasClass('selected')) $(this).toggleClass('selected notselected');	});
 		DISPLAY_menu($('#select-status'),false);
+		
+		if(vFILEINFOMULTISELECTION_FLAG_SAVED==true)
+		{
+			GRID_load(true);
+			vFILEINFOMULTISELECTION_FLAG_SAVED=false;
+		}
+		
+		$('span#tag').html('new_label');
+		$('span#tag').removeClass('green');
+			
 		DISPLAY_set_view("grid");
 		
 	});	
@@ -70,6 +81,15 @@ $(document).ready(function(){
 
 		if(DISPLAY_is_visible_file_info())
 		{
+			if(vFILEINFOMULTISELECTION_FLAG_SAVED==true)
+			{
+				GRID_load(true);
+				vFILEINFOMULTISELECTION_FLAG_SAVED=false;
+			}
+
+			$('span#tag').html('new_label');
+			$('span#tag').removeClass('green');
+			
 			DISPLAY_set_view("grid");
 		}
 		else
@@ -192,7 +212,7 @@ var FILEMULTISELECTION_CallBack_load = function CallBack_load(ldata)
 	$('h3#file_original_name').addClass('hidden');
 	$('input.conflictedit').val(JSON.stringify(g_data['flag']));
 	
-	console.log('FILEMULTISELECTION_CallBack_load',g_data);
+	console.log('FILEMULTISELECTION_CallBack_load');
 }
 
 var FILEMULTISELECTION_CallBack_success = function CallBack_success()
@@ -212,6 +232,10 @@ var FILEMULTISELECTION_CallBack_success = function CallBack_success()
 		
 		
 	}, 500);
+	
+	$('span#tag').html('refresh');
+	$('span#tag').addClass('green');	
+	vFILEINFOMULTISELECTION_FLAG_SAVED=true;
 }
 
 var FILEMULTISELECTION_reset_ux = function reset_ux(obj, data)

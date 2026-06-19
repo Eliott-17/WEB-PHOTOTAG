@@ -216,6 +216,7 @@ div#select-status div span,div#select-trash div span { padding: 15px;  }
 div#select-status div,div#select-trash div { text-align: center;  }
 
 div#select-status div span#tag:hover, div#select-status div span#tag.fullscreen { color: #0b57d0 }
+div#select-status div span#tag.green { color: green; }
 div#select-status div span#delete:hover { color: #f44336 }
 
 div#select-status div div.selection { display: inline-block; }
