@@ -144,6 +144,7 @@ var GRID_load_Callback = function load_from_memory(new_data=null)
 	//****************************************************************	
 
 	let html = '';
+	let htmlfull = '';
 
 	$.each(mem_data.tags, function(index, tagvalue) {
 
@@ -151,13 +152,15 @@ var GRID_load_Callback = function load_from_memory(new_data=null)
 
 		$.each(tagvalue, function(optionvalue, count) {
 			html += '<option value="'+optionvalue+'">';
+			htmlfull += '<option value="'+optionvalue+'">';
 		});
 
 		html += '</datalist>';
 	});
 
 	$('aside div#datalist').html(html);
-
+	$('aside datalist#fastsearch').html(htmlfull);
+	
 	//****************************************************************
 	//Déchagrement des précents boutons ******************************
 	//****************************************************************	
@@ -248,7 +251,8 @@ var GRID_add_tags = function add_tags(tags)
 		{
 			console.log("GRID_add_tags",tagvalue,"added to list");
 			
-			$('#'+index).append('<option value="'+tagvalue+'">')
+			$('#'+index).append('<option value="'+tagvalue+'">');
+			$('aside datalist#fastsearch').append('<option value="'+tagvalue+'">');
 			
 			mem_data.tags[index][tagvalue]=1;
 		}

@@ -45,7 +45,7 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/locations.php');
 					<div id="mainmenu" class="ux-background">				
 						<div><button class="mylib selected"><span class="material-symbols-outlined">photo</span>&nbsp;<span>My library</span></button></div>
 						<div><button class="untag"><span class="material-symbols-outlined">new_label</span>&nbsp;<span>Untagged</span><span id="untaggedcount"></span></button></div>
-						<div class="search"><button class="search"><span class="material-symbols-outlined">search</span>&nbsp;<span>fast search</span></button><input type="text"/></div>
+						<div class="search"><button class="search"><span class="material-symbols-outlined">search</span>&nbsp;<span>fast search</span></button><input type="text" list="fastsearch" autocomplete="off"/></div>
 						<div class="last"><a href="actions/logout.php"><button><span class="material-symbols-outlined">logout</span>&nbsp;<span>Logout</span></button></button></a></div>
 					</div>
 				<?php
@@ -278,12 +278,8 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/locations.php');
 						<h2><span class="material-symbols-outlined cursor">action_key</span><span>Other actions</span></h2>				
 						<h4 class="button-trash"><button><span class="material-symbols-outlined cursor">delete</span><span class="cursor">Move to trash</span></button></h4>
 					</div>
-					<div id="datalist">
-						<datalist id="sample">
-							<option value="1">
-							<option value="2">
-						</datalist>
-					</div>
+					<div id="datalist"></div>
+					<datalist id="fastsearch"></datalist>
 					<br/>
 				</aside>
 
