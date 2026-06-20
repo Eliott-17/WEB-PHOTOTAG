@@ -75,8 +75,9 @@
 			if(empty($_POST['continent'])) 	$_POST['continent']=null;
 			if(empty($_POST['country'])) 	$_POST['country']=null;
 			if(empty($_POST['city'])) 		$_POST['city']=null;
+			else							$tag['tag_city']=$_POST['city'];
 			if(empty($_POST['place'])) 		$_POST['place']=null;
-
+			else							$tag['tag_place']=$_POST['place'];
 			if($conflict->continent==0)		$EasyPDO->addFields('tag_continent',$_POST['continent']);
 			if($conflict->country==0)		$EasyPDO->addFields('tag_country',$_POST['country']);
 			if($conflict->city==0)			$EasyPDO->addFields('tag_city',$_POST['city']);
@@ -86,8 +87,10 @@
 		case "tag-general":
 		
 			if(empty($_POST['activity']))	 	$_POST['activity']=null;
+			else								$tag['tag_activity']=$_POST['activity'];
 			if(empty($_POST['comment'])) 		$_POST['comment']=null;
 			if(empty($_POST['people'])) 		$_POST['people']=null;
+			else								$tag['tag_people']=$_POST['people'];
 			if(empty($_POST['information'])) 	$_POST['information']=null;
 			
 			if($conflict->activity==0)		$EasyPDO->addFields('tag_activity',$_POST['activity']);
@@ -121,11 +124,13 @@
 	{
 		$fReturn->addCallback("FILEINFO_load",true);
 		$fReturn->addCallback("FILEINFO_CallBack_success");
+		if(isset($tag))  $fReturn->addCallback("GRID_add_tags",$tag);
 	}
 	else
 	{	
 		$fReturn->addCallback("FILEMULTISELECTION_load",true);
 		$fReturn->addCallback("FILEMULTISELECTION_CallBack_success");
+		if(isset($tag))  $fReturn->addCallback("GRID_add_tags",$tag);
 	}
 	
 	$fReturn->fetch();

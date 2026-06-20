@@ -96,6 +96,10 @@ var GRID_load_Callback = function load_from_memory(new_data=null)
 	let total_file_untagged=mem_data.untagged.length;	
 	
 	$('#untaggedcount').html("&nbsp;("+total_file_untagged+")");
+
+	//****************************************************************
+	//Loop Génération de la grille de photos *************************
+	//****************************************************************	
 		
 	let html_mem_date=null;
 	
@@ -134,8 +138,25 @@ var GRID_load_Callback = function load_from_memory(new_data=null)
 	});
 	
 	loading_limit=loaded_files;
-	
-	console.log(loaded_files,loading_limit);
+
+	//****************************************************************
+	//Loop Génération des datalist ***********************************
+	//****************************************************************	
+
+	let html = '';
+
+	$.each(mem_data.tags, function(index, tagvalue) {
+
+		html += '<datalist id="'+index+'">';
+
+		$.each(tagvalue, function(optionvalue, count) {
+			html += '<option value="'+optionvalue+'">';
+		});
+
+		html += '</datalist>';
+	});
+
+	$('aside div#datalist').html(html);
 
 	//****************************************************************
 	//Déchagrement des précents boutons ******************************
@@ -217,6 +238,25 @@ var GRID_load_Callback = function load_from_memory(new_data=null)
 	DISPLAY_selection();
 	
 	console.log("GRID_load_Callback");
+}
+
+var GRID_add_tags = function add_tags(tags)
+{
+	$.each(tags, function(index, tagvalue) {
+		
+		if(mem_data.tags[index][tagvalue] === undefined)
+		{
+			console.log("GRID_add_tags",tagvalue,"added to list");
+			
+			$('#'+index).append('<option value="'+tagvalue+'">')
+			
+			mem_data.tags[index][tagvalue]=1;
+		}
+		else
+		{
+			console.log("GRID_add_tags",tagvalue,"aready exist");
+		}
+	});
 }
 
 function addElement(dir, bdd)

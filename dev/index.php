@@ -90,9 +90,9 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/locations.php');
 						<div>Password</div>
 						<input type="password" name="password"/>	
 						<div class="password-confirmation hidden">Password confirmation</div>
-						<input class="password-confirmation hidden" type="password" name="password_verif"/>					
+						<input class="password-confirmation hidden" type="password" name="password_verif" autocomplete="off">					
 						<div class="code hidden">Code</div>
-						<input class="code hidden" type="text" name="code"/>
+						<input class="code hidden" type="text" name="code" autocomplete="off">
 					</h4>
 					<br/>
 					<h4>
@@ -222,8 +222,8 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/locations.php');
 						<h3 class="ux-tag-location" data-tooltip="tooltip-location" data-label="GPS coordinates"><span class="material-symbols-outlined">my_location</span><span id="GPS" class="textlabel"></span></h3>		
 						<!--<h3 class="ux-tag-location" id="continent"><span class="material-symbols-outlined">globe_asia</span><span class="unedit"></span><span class="solver hidden">Override all values</span><select name="continent" ><?php foreach($contient as $key=>$value) echo '<option value="'.$key.'">'.$value.'</option>'; ?></select></h3>-->		
 						<h3 class="ux-tag-location" data-tooltip="tooltip-location" data-label="Country" id="country"><span class="material-symbols-outlined">flag</span><span class="unedit"></span><span class="solver hidden">Override all values</span><select name="country"><?php foreach($country as $key=>$value) echo '<option value="'.$key.'">'.$value.'</option>'; ?></select></h3>
-						<h3 class="ux-tag-location" data-tooltip="tooltip-location" data-label="City" id="city"><span class="material-symbols-outlined">location_city</span><span class="unedit"></span><span class="solver hidden">Override all values</span><input name="city" type="text"></h3>
-						<h3 class="ux-tag-location" data-tooltip="tooltip-location" data-label="Place" id="place"><span class="material-symbols-outlined">place</span><span class="unedit"></span><span class="solver hidden">Override all values</span><input name="place" type="text"></h3>
+						<h3 class="ux-tag-location" data-tooltip="tooltip-location" data-label="City" id="city"><span class="material-symbols-outlined">location_city</span><span class="unedit"></span><span class="solver hidden">Override all values</span><input name="city" type="text" list="tag_city" autocomplete="off"></h3>
+						<h3 class="ux-tag-location" data-tooltip="tooltip-location" data-label="Place" id="place"><span class="material-symbols-outlined">place</span><span class="unedit"></span><span class="solver hidden">Override all values</span><input name="place" type="text" list="tag_place" autocomplete="off"></h3>
 						<h4 class="edit_ux tag-location" data-form="tag-location">
 							<button class="save submit">
 								<span class="material-symbols-outlined">Save</span><span>Save</span>
@@ -245,10 +245,10 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/locations.php');
 						<input type="hidden" name="token" class="token" value=""/>
 						<input type="hidden" name="filesid" class="filesid" value=""/>
 						<input type="hidden" name="conflictedit" class="conflictedit" value=""/>
-						<h3 class="ux-tag-general" data-tooltip="tooltip-tags" data-label="Activity" id="activity"><span class="material-symbols-outlined">directions_run</span><span class="unedit"></span><span class="solver hidden">Override all values</span><input name="activity" type="text"></h3>				
-						<h3 class="ux-tag-general" data-tooltip="tooltip-tags" data-label="Comment" id="comment"><span class="material-symbols-outlined">comment</span><span class="unedit"></span><span class="solver hidden">Override all values</span><input name="comment" type="text"></h3>
-						<h3 class="ux-tag-general" data-tooltip="tooltip-tags" data-label="People" id="people"><span class="material-symbols-outlined">group</span><span class="unedit"></span><span class="solver hidden">Override all values</span><input name="people" type="text"></h3>
-						<h3 class="ux-tag-general" data-tooltip="tooltip-tags" data-label="Other informations" id="other"><span class="material-symbols-outlined">info</span><span class="unedit"></span><span class="solver hidden">Override all values</span><input name="information" type="text"></h3>
+						<h3 class="ux-tag-general" data-tooltip="tooltip-tags" data-label="Activity" id="activity"><span class="material-symbols-outlined">directions_run</span><span class="unedit"></span><span class="solver hidden">Override all values</span><input name="activity" type="text" list="tag_activity" autocomplete="off"></h3>				
+						<h3 class="ux-tag-general" data-tooltip="tooltip-tags" data-label="Comment" id="comment"><span class="material-symbols-outlined">comment</span><span class="unedit"></span><span class="solver hidden">Override all values</span><input name="comment" type="text" autocomplete="off"></h3>
+						<h3 class="ux-tag-general" data-tooltip="tooltip-tags" data-label="People" id="people"><span class="material-symbols-outlined">group</span><span class="unedit"></span><span class="solver hidden">Override all values</span><input name="people" type="text" list="tag_people" autocomplete="off"></h3>
+						<h3 class="ux-tag-general" data-tooltip="tooltip-tags" data-label="Other informations" id="other"><span class="material-symbols-outlined">info</span><span class="unedit"></span><span class="solver hidden">Override all values</span><input name="information" type="text" autocomplete="off"></h3>
 						<h4 class="edit_ux tag-general" data-form="tag-general">
 							<button class="save submit">
 								<span class="material-symbols-outlined">Save</span><span>Save</span>
@@ -277,6 +277,12 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/locations.php');
 					<div id="actions">
 						<h2><span class="material-symbols-outlined cursor">action_key</span><span>Other actions</span></h2>				
 						<h4 class="button-trash"><button><span class="material-symbols-outlined cursor">delete</span><span class="cursor">Move to trash</span></button></h4>
+					</div>
+					<div id="datalist">
+						<datalist id="sample">
+							<option value="1">
+							<option value="2">
+						</datalist>
 					</div>
 					<br/>
 				</aside>

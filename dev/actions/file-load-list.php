@@ -12,8 +12,9 @@
 
 	$EasyPDO = new EasyPDO($_SESSION['DB']);
 
-	$array_lib=[];
-	$array_untaged=[];
+	//***************************************
+	//QUERY TAGGUED FILES *******************
+	//***************************************
 
 	//$EasyPDO->addFields('file_status');
 	$EasyPDO->addFields('file_hash');
@@ -21,10 +22,12 @@
 	$EasyPDO->addFields('time_taken_at_zone');
 	$EasyPDO->addFields('time_taken_at_time');
 	$EasyPDO->addFields('file_orientation');
-	//$EasyPDO->addFields('tag_country');
-	//$EasyPDO->addFields('tag_city');
-	//$EasyPDO->addFields('tag_place');
-	//$EasyPDO->addFields('tag_activity');
+
+	$EasyPDO->addFields('tag_city');
+	$EasyPDO->addFields('tag_place');
+	$EasyPDO->addFields('tag_activity');
+	$EasyPDO->addFields('tag_people');
+
 	$EasyPDO->addFields('file_type');
 	$EasyPDO->addFields('id');
 	
@@ -49,20 +52,65 @@
 				 id ASC
 	');
 	
+	if($array_lib['status']==1)
+	{		
+		//fill datalist
+
+		$array_tags = [
+			'tag_city' => [],
+			'tag_place' => [],
+			'tag_activity' => [],
+			'tag_people' => []
+		];
+
+		foreach ($array_lib['datas'] as $index => $row) {
+			
+			foreach ($array_tags as $key => $_) {
+
+				$val = $row[$key] ?? null;
+
+				if ($val !== null) {
+
+					if (!isset($array_tags[$key][$val])) {
+						$array_tags[$key][$val] = 0;
+					}
+
+					$array_tags[$key][$val]++;
+				}
+
+				unset($array_lib['datas'][$index][$key]);
+			}
+		}
+
+		foreach ($array_tags as $key => &$tags) 
+		{
+			arsort($tags); // tri décroissant par valeur
+		}
+		unset($tags);
+
+		$bigarray['tags']=$array_tags;
+		$bigarray['library']=$array_lib['datas'];	
+	}
+	else
+	{
+		$fReturn->addConsole("[PHP] SQL error while loading library");
+		$bigarray['tags']=[];
+		$bigarray['library']=[];
+	}
+	
+	//***************************************
+	//QUERY UNTAGGUED FILES *****************
+	//***************************************
+	
 	$EasyPDO->addFields('file_status');
 	$EasyPDO->addFields('file_hash');
 	$EasyPDO->addFields('time_taken_at_date');
 	$EasyPDO->addFields('time_taken_at_zone');
 	$EasyPDO->addFields('time_taken_at_time');
 	$EasyPDO->addFields('file_orientation');
-	/*$EasyPDO->addFields('tag_country');
-	$EasyPDO->addFields('tag_city');
-	$EasyPDO->addFields('tag_place');
-	$EasyPDO->addFields('tag_activity');*/
 	$EasyPDO->addFields('file_type');
 	$EasyPDO->addFields('id');
 	
-
 	$array_untaged=$EasyPDO->select(
 	'photos',
 	'file_status = 0
@@ -80,8 +128,16 @@
 				 id ASC
 	');
 			
-	$bigarray['library']=$array_lib['datas'];
-	$bigarray['untagged']=$array_untaged['datas'];
+	if($array_untaged['status']==1) 
+	{
+		$bigarray['untagged']=$array_untaged['datas'];
+	}
+	else
+	{
+		$fReturn->addConsole("[PHP] SQL error while loading untagged");
+		$bigarray['untagged']=[];		
+	}
+	
 	$bigarray['dir']=$_SESSION["USER"];
 
 	$fReturn->addConsole("[PHP EXECUTED] file-load-list.php");

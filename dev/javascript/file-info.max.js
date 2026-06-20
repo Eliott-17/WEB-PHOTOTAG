@@ -371,7 +371,7 @@ var FILEINFO_CallBack_data = function CallBack(data)
 	else 									$('h3#time_modified_at').html(formatUTCToLocalWithTimezone(datas.time_modified_at));				
 }
 
-var FILEINFO_CallBack_success = function success()
+var FILEINFO_CallBack_success = function CallBack_success()
 {
 	$('main section#fullscreen').addClass("transition-on");
 	$('main section#fullscreen').addClass("success");
