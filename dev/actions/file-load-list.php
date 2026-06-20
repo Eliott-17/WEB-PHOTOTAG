@@ -5,11 +5,8 @@
 	require_once($_SERVER['DOCUMENT_ROOT'].'/core/class.freturn.php');
 	require_once($_SERVER['DOCUMENT_ROOT'].'/core/class.validation.php');
 	require_once($_SERVER['DOCUMENT_ROOT'].'/includes/functions.php');
-	require_once($_SERVER['DOCUMENT_ROOT'].'/includes/getid3/getid3.php');
 
 	$fReturn = new fReturn();
-	$getID3 = new getID3;
-
 	$EasyPDO = new EasyPDO($_SESSION['DB']);
 
 	//***************************************
@@ -23,10 +20,13 @@
 	$EasyPDO->addFields('time_taken_at_time');
 	$EasyPDO->addFields('file_orientation');
 
+	$EasyPDO->addFields('tag_country');
 	$EasyPDO->addFields('tag_city');
 	$EasyPDO->addFields('tag_place');
 	$EasyPDO->addFields('tag_activity');
+	$EasyPDO->addFields('tag_comment');
 	$EasyPDO->addFields('tag_people');
+	$EasyPDO->addFields('tag_other');
 
 	$EasyPDO->addFields('file_type');
 	$EasyPDO->addFields('id');
@@ -57,10 +57,13 @@
 		//fill datalist
 
 		$array_tags = [
+			'tag_country' => [],
 			'tag_city' => [],
 			'tag_place' => [],
 			'tag_activity' => [],
-			'tag_people' => []
+			'tag_comment' => [],
+			'tag_people' => [],
+			'tag_other' => []
 		];
 
 		foreach ($array_lib['datas'] as $index => $row) {
@@ -94,6 +97,7 @@
 	else
 	{
 		$fReturn->addConsole("[PHP] SQL error while loading library");
+		if(ENV=="DEV") $fReturn->addConsole(print_r($array_lib,true));
 		$bigarray['tags']=[];
 		$bigarray['library']=[];
 	}
@@ -135,12 +139,13 @@
 	else
 	{
 		$fReturn->addConsole("[PHP] SQL error while loading untagged");
+		if(ENV=="DEV") $fReturn->addConsole(print_r($array_untaged,true));
 		$bigarray['untagged']=[];		
 	}
 	
 	$bigarray['dir']=$_SESSION["USER"];
 
 	$fReturn->addConsole("[PHP EXECUTED] file-load-list.php");
-	$fReturn->addCallBack("GRID_load_Callback", $bigarray)->fetch();
+	$fReturn->addCallBack("GRID_load_CallBack", $bigarray)->fetch();
 
 ?>

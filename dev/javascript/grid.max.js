@@ -56,14 +56,24 @@ var GRID_load = function load(force_reload=false, init_display=false)
 	}
 	else 
 	{
-		GRID_load_Callback();
+		GRID_load_CallBack();
 	}
 	
 	console.log("GRID_loaded");
 
 }
 
-var GRID_load_Callback = function load_from_memory(new_data=null)
+var GRID_search_CallBack = function search_CallBack(search_data) 
+{
+	mem_data.search=search_data;
+	loaded_files=0;
+
+	DISPLAY_menu($('#select-status'),false);
+	DISPLAY_set_view('grid');
+	GRID_load(false,true);
+}
+
+var GRID_load_CallBack = function load_CallBack(new_data=null)
 {	
 	if(new_data!=null) 
 	{
@@ -83,8 +93,22 @@ var GRID_load_Callback = function load_from_memory(new_data=null)
 		
 	let source=null;
 
-	if($('div#mainmenu button.mylib').hasClass('selected')) source=mem_data.library;
-	if($('div#mainmenu button.untag').hasClass('selected')) source=mem_data.untagged;
+	if($('div#mainmenu button.mylib').hasClass('selected')) 
+	{
+		console.log("Source library");
+		source=mem_data.library;
+	}
+	else if($('div#mainmenu button.untag').hasClass('selected')) 
+	{
+		console.log("Source untagged");
+		source=mem_data.untagged;
+	}
+	else if(mem_data.search.length!=0)
+	{
+		console.log("Source search");
+		source=mem_data.search;
+	}
+	else {};
 	
 	if(source==null)
 	{
@@ -106,7 +130,7 @@ var GRID_load_Callback = function load_from_memory(new_data=null)
 	$.each(source, function(i, bdd)
 	{
 		if(i>=loaded_files)
-		{	
+		{
 			if(bdd.time_taken_at_date=="00000000" &&  bdd.time_taken_at_zone=="00000" && bdd.time_taken_at_time=="000000")
 			{
 				//si on à pas de date
@@ -126,6 +150,8 @@ var GRID_load_Callback = function load_from_memory(new_data=null)
 				}
 
 				$("main section.date").append(addElement(mem_data.dir, bdd));
+				
+				console.log('added');
 				
 				html_mem_date=l_date_test;
 			}
@@ -152,7 +178,7 @@ var GRID_load_Callback = function load_from_memory(new_data=null)
 
 		$.each(tagvalue, function(optionvalue, count) {
 			html += '<option value="'+optionvalue+'">';
-			htmlfull += '<option value="'+optionvalue+'">';
+			htmlfull += '<option data-tag="'+index+'" value="'+optionvalue+'">';
 		});
 
 		html += '</datalist>';
@@ -240,7 +266,7 @@ var GRID_load_Callback = function load_from_memory(new_data=null)
 	
 	DISPLAY_selection();
 	
-	console.log("GRID_load_Callback");
+	console.log("GRID_load_CallBack");
 }
 
 var GRID_add_tags = function add_tags(tags)
@@ -252,7 +278,7 @@ var GRID_add_tags = function add_tags(tags)
 			console.log("GRID_add_tags",tagvalue,"added to list");
 			
 			$('#'+index).append('<option value="'+tagvalue+'">');
-			$('aside datalist#fastsearch').append('<option value="'+tagvalue+'">');
+			$('aside datalist#fastsearch').append('<option data-tag="'+index+'" value="'+tagvalue+'">');
 			
 			mem_data.tags[index][tagvalue]=1;
 		}

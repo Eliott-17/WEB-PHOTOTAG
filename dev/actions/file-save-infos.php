@@ -39,7 +39,7 @@
 			$validation->addVerification('activity',	'string',				'Activity',		0,200);	
 			$validation->addVerification('comment',		'string',				'Comment',		0,200);	
 			$validation->addVerification('people',		'string',				'People',		0,200);	
-			$validation->addVerification('information',	'string',				'Information',	0,200);	
+			$validation->addVerification('other',		'string',				'Information',	0,200);	
 		break;
 		default:
 		
@@ -73,11 +73,10 @@
 		case "tag-location":
 
 			if(empty($_POST['continent'])) 	$_POST['continent']=null;
-			if(empty($_POST['country'])) 	$_POST['country']=null;
-			if(empty($_POST['city'])) 		$_POST['city']=null;
-			else							$tag['tag_city']=$_POST['city'];
-			if(empty($_POST['place'])) 		$_POST['place']=null;
-			else							$tag['tag_place']=$_POST['place'];
+			if(empty($_POST['country'])) 	$_POST['country']=null;		/*else	$tag['tag_country']=$_POST['country'];*/
+			if(empty($_POST['city'])) 		$_POST['city']=null;		else	$tag['tag_city']=$_POST['city'];
+			if(empty($_POST['place'])) 		$_POST['place']=null;		else	$tag['tag_place']=$_POST['place'];
+			
 			if($conflict->continent==0)		$EasyPDO->addFields('tag_continent',$_POST['continent']);
 			if($conflict->country==0)		$EasyPDO->addFields('tag_country',$_POST['country']);
 			if($conflict->city==0)			$EasyPDO->addFields('tag_city',$_POST['city']);
@@ -86,17 +85,15 @@
 		break;
 		case "tag-general":
 		
-			if(empty($_POST['activity']))	 	$_POST['activity']=null;
-			else								$tag['tag_activity']=$_POST['activity'];
-			if(empty($_POST['comment'])) 		$_POST['comment']=null;
-			if(empty($_POST['people'])) 		$_POST['people']=null;
-			else								$tag['tag_people']=$_POST['people'];
-			if(empty($_POST['information'])) 	$_POST['information']=null;
+			if(empty($_POST['activity']))	$_POST['activity']=null; 	else	$tag['tag_activity']=$_POST['activity'];		
+			if(empty($_POST['comment'])) 	$_POST['comment']=null;		else	$tag['tag_comment']=$_POST['comment'];		
+			if(empty($_POST['people'])) 	$_POST['people']=null;		else	$tag['tag_people']=$_POST['people'];
+			if(empty($_POST['other'])) 		$_POST['other']=null;		else	$tag['tag_other']=$_POST['other'];
 			
 			if($conflict->activity==0)		$EasyPDO->addFields('tag_activity',$_POST['activity']);
 			if($conflict->comment==0)		$EasyPDO->addFields('tag_comment',$_POST['comment']);
 			if($conflict->people==0)		$EasyPDO->addFields('tag_people',$_POST['people']);
-			if($conflict->other==0)			$EasyPDO->addFields('tag_other',$_POST['information']);
+			if($conflict->other==0)			$EasyPDO->addFields('tag_other',$_POST['other']);
 		
 		break;
 		default:

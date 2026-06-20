@@ -1,9 +1,49 @@
+var vNAV_mem_selected=null;
+
 $(document).ready(function(){
 
 	$('div#mainmenu div.search input').on('blur', function() {
-		
+	
 		$(this).val("");
+		
+		/*if(vNAV_mem_selected!=null)
+		{
+			$(vNAV_mem_selected).addClass("selected");
+			DISPLAY_menu($('#select-status'),false);
+			DISPLAY_set_view('grid');
+			GRID_load(false,true);
+		}*/
+		
 	});		
+
+	$(document).on('keydown', function(e) {
+		
+		if(e.which === 13) 
+		{			
+			if ($('div#mainmenu div.search input').is(':focus')) 
+			{					
+				if($('div#mainmenu div button.untag').hasClass("selected")) vNAV_mem_selected='div#mainmenu div button.untag';
+				if($('div#mainmenu div button.mylib').hasClass("selected")) vNAV_mem_selected='div#mainmenu div button.mylib';
+				
+				$('div#mainmenu div button.untag').removeClass("selected");
+				$('div#mainmenu div button.mylib').removeClass("selected");
+				
+				const val = $('div#mainmenu div.search input').val();
+				
+				const option = $('#fastsearch option').filter(function () {
+					return this.value === val;
+				});
+				
+				if (option.length === 0) {
+					//invalid selection (no tag)
+				} else {
+					const tag = option.attr('data-tag');
+					
+					CORE_get('actions/file-search-list.php?tag='+tag+'&value='+val);
+				}
+			}
+		}
+	});
 
 	$('div#mainmenu div button.mylib').on('click', function() {
 		

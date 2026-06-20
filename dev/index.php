@@ -139,6 +139,7 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/locations.php');
 					</section>
 					<section class="grid date"></section>
 					<section class="grid nodate"></section>
+					<section class="grid search"></section>
 				</main>
 	
 				<aside id="infocontent" class="ux-background">
@@ -246,9 +247,9 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/locations.php');
 						<input type="hidden" name="filesid" class="filesid" value=""/>
 						<input type="hidden" name="conflictedit" class="conflictedit" value=""/>
 						<h3 class="ux-tag-general" data-tooltip="tooltip-tags" data-label="Activity" id="activity"><span class="material-symbols-outlined">directions_run</span><span class="unedit"></span><span class="solver hidden">Override all values</span><input name="activity" type="text" list="tag_activity" autocomplete="off"></h3>				
-						<h3 class="ux-tag-general" data-tooltip="tooltip-tags" data-label="Comment" id="comment"><span class="material-symbols-outlined">comment</span><span class="unedit"></span><span class="solver hidden">Override all values</span><input name="comment" type="text" autocomplete="off"></h3>
+						<h3 class="ux-tag-general" data-tooltip="tooltip-tags" data-label="Comment" id="comment"><span class="material-symbols-outlined">comment</span><span class="unedit"></span><span class="solver hidden">Override all values</span><input name="comment" type="text" list="tag_comment" autocomplete="off"></h3>
 						<h3 class="ux-tag-general" data-tooltip="tooltip-tags" data-label="People" id="people"><span class="material-symbols-outlined">group</span><span class="unedit"></span><span class="solver hidden">Override all values</span><input name="people" type="text" list="tag_people" autocomplete="off"></h3>
-						<h3 class="ux-tag-general" data-tooltip="tooltip-tags" data-label="Other informations" id="other"><span class="material-symbols-outlined">info</span><span class="unedit"></span><span class="solver hidden">Override all values</span><input name="information" type="text" autocomplete="off"></h3>
+						<h3 class="ux-tag-general" data-tooltip="tooltip-tags" data-label="Other informations" id="other"><span class="material-symbols-outlined">info</span><span class="unedit"></span><span class="solver hidden">Override all values</span><input name="other" type="text" list="tag_information" autocomplete="off"></h3>
 						<h4 class="edit_ux tag-general" data-form="tag-general">
 							<button class="save submit">
 								<span class="material-symbols-outlined">Save</span><span>Save</span>
