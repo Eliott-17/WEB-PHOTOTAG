@@ -42,11 +42,10 @@
 			$EasyPDO->addConditionalData('value',$_GET['value']);
 			$result=$EasyPDO->select('photos', $_GET['tag']. '=:value AND file_status = 0 ORDER BY time_taken_at_date DESC,time_taken_at_zone DESC, time_taken_at_time DESC, id ASC');		
 
-		break;
-		
+		break;		
+		default: 
 			$fReturn->addConsole("[PHP] Tag ".$_GET['tag']." invalid");
-			
-		default: break;
+		break;
 	}
 
 	

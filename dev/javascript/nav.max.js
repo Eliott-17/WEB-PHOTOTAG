@@ -27,6 +27,7 @@ $(document).ready(function(){
 				
 				$('div#mainmenu div button.untag').removeClass("selected");
 				$('div#mainmenu div button.mylib').removeClass("selected");
+				$("main section.grid").html("");
 				
 				const val = $('div#mainmenu div.search input').val();
 				

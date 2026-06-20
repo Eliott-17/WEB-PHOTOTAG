@@ -66,8 +66,6 @@ var GRID_load = function load(force_reload=false, init_display=false)
 var GRID_search_CallBack = function search_CallBack(search_data) 
 {
 	mem_data.search=search_data;
-	loaded_files=0;
-
 	DISPLAY_menu($('#select-status'),false);
 	DISPLAY_set_view('grid');
 	GRID_load(false,true);
@@ -150,9 +148,7 @@ var GRID_load_CallBack = function load_CallBack(new_data=null)
 				}
 
 				$("main section.date").append(addElement(mem_data.dir, bdd));
-				
-				console.log('added');
-				
+								
 				html_mem_date=l_date_test;
 			}
 						
