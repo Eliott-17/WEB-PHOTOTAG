@@ -78,9 +78,12 @@ var GRID_search_CallBack = function search_CallBack(search_data)
 
 var GRID_load_CallBack = function load_CallBack(new_data=null)
 {	
+	let updated_data=false;
+
 	if(new_data!=null) 
 	{
 		mem_data=new_data;
+		updated_data=true;
 		console.log("reload from new data");
 	}
 	else
@@ -110,6 +113,7 @@ var GRID_load_CallBack = function load_CallBack(new_data=null)
 	{
 		console.log("Source search");
 		source=mem_data.search;
+		updated_data=true;
 	}
 	else {};
 	
@@ -167,26 +171,54 @@ var GRID_load_CallBack = function load_CallBack(new_data=null)
 	loading_limit=loaded_files;
 
 	//****************************************************************
-	//Loop Génération des datalist ***********************************
-	//****************************************************************	
+	//Loop Génération des datalist & advanced filters ****************
+	//****************************************************************		
+	if(1) 
+	{
+		let html = '';
+		let htmlfull = '';
+		let htmlfilter = '<div class="fullrow"><h2 class="title">Select tag</h2></div>';
+		let filtercount;
+		let filtermem;
 
-	let html = '';
-	let htmlfull = '';
+		$.each(mem_data.tags, function(index, tagvalue) {
 
-	$.each(mem_data.tags, function(index, tagvalue) {
+			html += '<datalist id="'+index+'">';
 
-		html += '<datalist id="'+index+'">';
+			$.each(tagvalue, function(optionvalue, ovdata) {
+				html += '<option value="'+optionvalue+'">';
+				htmlfull += '<option data-tag="'+index+'" value="'+optionvalue+'">';
+				
+				//filters
+				let img="includes/401.webp";
+				let visibility="";
+			
+				if(ovdata[1].length>3) img='sd-'+ovdata[1];
+				if(filtercount>10 && index!='tag_country') visibility="hidden";
+				
+				if(index!='tag_country' && filtermem=='tag_country')
+				{
+					filtercount=1;
+					htmlfilter += '<div class="fullrow"><h2>Most visited cities</h2></div>';
+				}
+				
+				htmlfilter += '<div class="element '+visibility+'"><img src="'+img+'"><div>'+optionvalue+'</div></div>';
 
-		$.each(tagvalue, function(optionvalue, count) {
-			html += '<option value="'+optionvalue+'">';
-			htmlfull += '<option data-tag="'+index+'" value="'+optionvalue+'">';
+				filtermem=index;
+				filtercount++;
+	
+			});
+
+			html += '</datalist>';
 		});
 
-		html += '</datalist>';
-	});
+		$('aside div#datalist').html(html);
+		$('aside datalist#fastsearch').html(htmlfull);
+		
+		htmlfilter += '<div class="fullrow"><h2>Most recent photos</h2></div>';
+		$('main section#filters').html(htmlfilter);
 
-	$('aside div#datalist').html(html);
-	$('aside datalist#fastsearch').html(htmlfull);
+	}
 	
 	//****************************************************************
 	//Déchagrement des précents boutons ******************************

@@ -1,0 +1,58 @@
+main section#filters {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+	gap: 20px;
+	width: 100%;
+	grid-auto-rows: auto;
+	place-items: center;
+	padding: 20px;
+	box-sizing: border-box;
+}
+
+main section#filters div.element {
+	box-sizing: border-box;
+	text-align: center;
+	position: relative;
+	overflow: hidden;
+}
+
+main section#filters div.element :where(div) {
+	margin-top: 5px;
+}
+
+main section#filters div.element :where(img,video) {
+	width: 150px;
+	height: 150px;
+	display: block;
+	object-fit:cover;
+	border-radius: 250px;
+}
+
+main section#filters div.fullrow h2 
+{
+	width: 100%;
+	margin: 10px; 
+	padding-top: 10px;	
+	font-weight: normal; 
+	color: #494949;
+	font-size: 1.5em;
+	text-align: center;
+	padding-top: 10px;	
+	border-top: 1px solid #494949;
+	border-top: 1px solid #494949;
+}
+
+main section#filters div h2.title
+{
+	border-top: 0px;
+	margin: 0px;
+	padding: 0px;
+}
+
+main section#filters div.fullrow {
+    grid-column: 1 / -1;
+    height: auto;
+    min-height: unset;
+    align-self: start;
+	width: 100%;
+}

@@ -22,7 +22,9 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/locations.php');
 		<link rel="stylesheet" href="style/file-infos.<?php echo filemtime('style/file-infos.'.DIM.'.css'); ?>.<?php echo DIM; ?>.css" type="text/css"/>
 		<link rel="stylesheet" href="style/file-multi-selection-edit.<?php echo filemtime('style/file-multi-selection-edit.'.DIM.'.css'); ?>.<?php echo DIM; ?>.css" type="text/css"/>
 		<link rel="stylesheet" href="style/file-open-fullscreen.<?php echo filemtime('style/file-open-fullscreen.'.DIM.'.css'); ?>.<?php echo DIM; ?>.css" type="text/css"/>
-			
+		<link rel="stylesheet" href="style/filters.<?php echo filemtime('style/filters.'.DIM.'.css'); ?>.<?php echo DIM; ?>.css" type="text/css"/>
+	
+	
 		<link rel="stylesheet" href="style/index-grid.<?php echo filemtime('style/index-grid.'.DIM.'.css'); ?>.<?php echo DIM; ?>.css" type="text/css"/>
 		<link rel="stylesheet" href="style/index-login.<?php echo filemtime('style/index-login.'.DIM.'.css'); ?>.<?php echo DIM; ?>.css" type="text/css"/>
 		<link rel="stylesheet" href="style/index-top.<?php echo filemtime('style/index-top.'.DIM.'.css'); ?>.<?php echo DIM; ?>.css" type="text/css"/>
@@ -137,15 +139,7 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/locations.php');
 						</div>
 						<div class="menubackground ux-background"></div>
 					</section>
-					<section class="search">
-						<div class="fullrow"></div>
-						<div class=""><img src="includes/401.webp"><div>hello world</div></div>
-						<div class=""><img src="includes/401.webp"><div>hello world</div></div>
-						<div class=""><img src="includes/401.webp"><div>hello world</div></div>
-						<div class=""><img src="includes/401.webp"><div>hello world</div></div>
-						<div class=""><img src="includes/401.webp"><div>hello world</div></div>
-						<div class=""><img src="includes/401.webp"><div>hello world</div></div>
-					</section>
+					<section id="filters"></section>
 					<section class="grid date"></section>
 					<section class="grid nodate"></section>
 				</main>
