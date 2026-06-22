@@ -39,15 +39,16 @@ $(document).ready(function(){
 
 });
 
-var GRID_load = function load(force_reload=false, init_display=false)
+var GRID_load = function load(force_reload=false, init_display=false, init_html="")
 {	
 	if(init_display || force_reload)
 	{
 		loaded_files=0;
 		loading_limit=0;
 		undated=0;
-		uniqueid=0;		
-		$("main section.grid").html("");		
+		uniqueid=0;	
+		$("main section.grid").html('');
+		$("main section.grid.date").html(init_html);		
 	}
 	
 	if(mem_data==null || force_reload)
@@ -68,7 +69,11 @@ var GRID_search_CallBack = function search_CallBack(search_data)
 	mem_data.search=search_data;
 	DISPLAY_menu($('#select-status'),false);
 	DISPLAY_set_view('grid');
-	GRID_load(false,true);
+	
+	let s="";
+	if(search_data.length>1) s="s";
+	
+	GRID_load(false,true,'<div class="fullrow"><h2>'+search_data.length+' element'+s+' found</h2></div>');
 }
 
 var GRID_load_CallBack = function load_CallBack(new_data=null)
@@ -144,7 +149,7 @@ var GRID_load_CallBack = function load_CallBack(new_data=null)
 				
 				if(html_mem_date==null || html_mem_date!=l_date_test)
 				{
-					$("main section.date").append('<div class="fullrow"><h2>'+l_date_display+'</h2></div>'); //on démarre une nouvelle grille
+					$("main section.date").append('<div class="fullrow"><h2>'+formatDateLocale(l_date_display)+'</h2></div>'); //on démarre une nouvelle grille
 				}
 
 				$("main section.date").append(addElement(mem_data.dir, bdd));
@@ -322,4 +327,18 @@ function addElement(dir, bdd)
 	uniqueid++;
 	
 	return html;	
+}
+
+function formatDateLocale(dateStr) {
+  const [day, month, year] = dateStr.split("/").map(Number);
+
+  const date = new Date(year, month - 1, day);
+
+  const locale = navigator.language || "en-US";
+
+  return date.toLocaleDateString(locale, {
+    day: "2-digit",
+    month: "long",
+    year: "numeric"
+  });
 }

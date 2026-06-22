@@ -165,7 +165,10 @@ var FILEMULTISELECTION_CallBack_load = function CallBack_load(ldata)
 			}
 			else 
 			{
-				$('aside#infocontent h3#'+key+' input').val("");
+				if(key=="time") $('aside#infocontent h3#'+key+' input').val("00:00:00");
+				else if(key=="date") $('aside#infocontent h3#'+key+' input').val("1900-01-01");
+				else if(key=="zone") $('aside#infocontent h3#'+key+' input').val("+0000");
+				else $('aside#infocontent h3#'+key+' input').val("");
 			}
 			
 			$('aside#infocontent h3#'+key).addClass('conflict');

@@ -23,7 +23,8 @@
 
 	function extractTimezoneFromString($text) {
 		// Regex pour capturer un seul fuseau horaire valide (avec signe ou préfixe UTC/GMT)
-		$pattern = '/(?:[Uu]TC|[Gg]MT)?([+-]\d{1,2}):?(\d{2})|(?:[Uu]TC|[Gg]MT)([+-]\d{1,2})/';
+		//$pattern = '/(?:[Uu]TC|[Gg]MT)?([+-]\d{1,2}):?(\d{2})|(?:[Uu]TC|[Gg]MT)([+-]\d{1,2})/';
+		$pattern = '/(?:[Uu]TC|[Gg]MT)?([+-](?:\d{2}|\d{1,2}(?=:))):?(\d{2})|(?:[Uu]TC|[Gg]MT)([+-]\d{1,2})/'; //correction 22/06
 
 		if (preg_match($pattern, $text, $matches)) {
 			// Cas 1: Format +07:00, -03:30, +0700

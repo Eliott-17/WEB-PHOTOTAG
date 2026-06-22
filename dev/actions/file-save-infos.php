@@ -50,17 +50,10 @@
 		
 	$validation->Validate();
 
-	if(!$validation->isValidated())
-	{
-		$fReturn->addInfoMessage($validation->Message())->fetch();	
-	}
-	
-	//
+	if(!$validation->isValidated()) $fReturn->addInfoMessage($validation->Message())->fetch();	
 	
 	$conflict = json_decode($_POST['conflictedit']);
 	
-	//$fReturn->addConsole($_POST['conflictedit'])->fetch();
-
 	switch($_GET['form'])
 	{
 		case "time":
@@ -68,7 +61,7 @@
 			if($conflict->date==0) $EasyPDO->addFields('time_taken_at_date',str_replace('-','',$_POST['date']));
 			if($conflict->zone==0) $EasyPDO->addFields('time_taken_at_zone',$_POST['zone']);
 			if($conflict->time==0) $EasyPDO->addFields('time_taken_at_time',str_replace(':','',$_POST['time']));
-
+			
 		break;
 		case "tag-location":
 

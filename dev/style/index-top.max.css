@@ -64,6 +64,11 @@ nav div#mainmenu div button span
 	vertical-align: middle;
 }
 
+nav div#mainmenu div button span.lowcolor
+{
+	 color: #00000030;
+}
+
 nav div#mainmenu div.search
 {
 	position: relative;

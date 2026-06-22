@@ -5,6 +5,7 @@
 	require_once($_SERVER['DOCUMENT_ROOT'].'/core/class.freturn.php');
 	require_once($_SERVER['DOCUMENT_ROOT'].'/core/class.validation.php');
 	require_once($_SERVER['DOCUMENT_ROOT'].'/includes/functions.php');
+	require_once($_SERVER['DOCUMENT_ROOT'].'/includes/locations.php');
 
 	$fReturn = new fReturn();
 	$EasyPDO = new EasyPDO($_SESSION['DB']);
@@ -31,7 +32,19 @@
 		
 	switch($_GET['tag'])
 	{
-		case 'tag_coutry':
+		case 'tag_country':
+		
+			$key = array_search($_GET['value'], $country);
+
+			if ($key === false) {
+				$fReturn->addConsole("[PHP] Counrty value ".$_GET['value']." invalid");
+				break;
+			}
+			else
+			{
+				$_GET['value']=$key;
+			}
+				
 		case 'tag_city':
 		case 'tag_place':
 		case 'tag_activity':
@@ -51,7 +64,7 @@
 	
 	if($result['status']==1) 
 	{
-		//ok
+		$fReturn->addCallBack("GRID_search_CallBack", $result['datas']);
 	}
 	else
 	{
@@ -59,7 +72,6 @@
 	}
 	
 	$fReturn->addConsole("[PHP EXECUTED] file-search-list.php");
-	$fReturn->addCallBack("GRID_search_CallBack", $result['datas']);
 	$fReturn->fetch();
 
 ?>

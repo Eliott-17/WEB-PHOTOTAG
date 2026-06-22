@@ -137,9 +137,17 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/locations.php');
 						</div>
 						<div class="menubackground ux-background"></div>
 					</section>
+					<section class="search">
+						<div class="fullrow"></div>
+						<div class=""><img src="includes/401.webp"><div>hello world</div></div>
+						<div class=""><img src="includes/401.webp"><div>hello world</div></div>
+						<div class=""><img src="includes/401.webp"><div>hello world</div></div>
+						<div class=""><img src="includes/401.webp"><div>hello world</div></div>
+						<div class=""><img src="includes/401.webp"><div>hello world</div></div>
+						<div class=""><img src="includes/401.webp"><div>hello world</div></div>
+					</section>
 					<section class="grid date"></section>
 					<section class="grid nodate"></section>
-					<section class="grid search"></section>
 				</main>
 	
 				<aside id="infocontent" class="ux-background">

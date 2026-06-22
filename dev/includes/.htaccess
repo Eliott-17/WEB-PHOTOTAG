@@ -1,2 +1,7 @@
-Deny from all
 Options -Indexes
+
+<FilesMatch "^(401\.webp)$">
+    Require all granted
+</FilesMatch>
+
+Require all denied

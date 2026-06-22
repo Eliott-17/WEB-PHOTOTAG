@@ -16,6 +16,14 @@ $(document).ready(function(){
 		
 	});		
 
+	$('div#mainmenu div.search input')
+	  .on('focus', function () {
+		$('div#mainmenu div.search button span').addClass('lowcolor');
+	  })
+	  .on('blur', function () {
+		$('div#mainmenu div.search button span').removeClass('lowcolor');
+	  });
+
 	$(document).on('keydown', function(e) {
 		
 		if(e.which === 13) 
@@ -35,10 +43,21 @@ $(document).ready(function(){
 					return this.value === val;
 				});
 				
-				if (option.length === 0) {
-					//invalid selection (no tag)
-				} else {
+				if(val === "")
+				{
+					$(vNAV_mem_selected).addClass("selected");	
+					
+					GRID_load(false,true);
+				}
+				else if (option.length === 0) 
+				{
+					$("main section.grid.date").html('<div class="fullrow"><h2>Nothing found.</h2></div>');
+				} 
+				else 
+				{
 					const tag = option.attr('data-tag');
+					
+					console.log("Load filter",tag,val);
 					
 					CORE_get('actions/file-search-list.php?tag='+tag+'&value='+val);
 				}

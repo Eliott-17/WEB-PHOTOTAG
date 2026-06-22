@@ -5,6 +5,7 @@
 	require_once($_SERVER['DOCUMENT_ROOT'].'/core/class.freturn.php');
 	require_once($_SERVER['DOCUMENT_ROOT'].'/core/class.validation.php');
 	require_once($_SERVER['DOCUMENT_ROOT'].'/includes/functions.php');
+	require_once($_SERVER['DOCUMENT_ROOT'].'/includes/locations.php');
 
 	$fReturn = new fReturn();
 	$EasyPDO = new EasyPDO($_SESSION['DB']);
@@ -75,10 +76,25 @@
 				if ($val !== null) {
 
 					if (!isset($array_tags[$key][$val])) {
-						$array_tags[$key][$val] = 0;
+						
+						if($key=='tag_country') 
+						{
+							$array_tags[$key][$country[$val]] = 0;
+						}
+						else 					
+						{
+							$array_tags[$key][$val] = 0;
+						}
 					}
 
-					$array_tags[$key][$val]++;
+					if($key=='tag_country') 
+					{
+						$array_tags[$key][$country[$val]]++;
+					}
+					else 					
+					{
+						$array_tags[$key][$val]++;
+					}
 				}
 
 				unset($array_lib['datas'][$index][$key]);
@@ -131,7 +147,7 @@
 				 time_taken_at_time DESC,
 				 id ASC
 	');
-			
+	
 	if($array_untaged['status']==1) 
 	{
 		$bigarray['untagged']=$array_untaged['datas'];

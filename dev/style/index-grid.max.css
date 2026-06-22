@@ -117,7 +117,13 @@ main section.grid div.landscape {
     }
 }
 
-main section.grid div.fullrow h2 { margin: 10px; font-weight: normal; }
+main section.grid div.fullrow h2 
+{
+	margin: 10px; 
+	font-weight: normal; 
+	color: #494949;
+	font-size: 1.2em;
+}
 
 main section.grid div.fullrow {
     grid-column: 1 / -1;
@@ -128,7 +134,7 @@ main section.grid div.fullrow {
 
 main section.grid div.element
 {
-	 height: 270px;
+	 height: 220px;
 }
 
 main section.grid div.element div.button-select {
