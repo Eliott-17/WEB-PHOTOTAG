@@ -9,10 +9,17 @@ var loaded_files=0;		//Chargement progressif: mémorise le nombre de fichier cha
 var loading_limit=0;	//Chagrement progressif: mémorise le nombre de fichier à pré-chargés
 
 var mem_data=null;		//Stoque les données chargées pour les réutilisées et éviter un appel  à la base de données
+var html_mem_date;		//Pour afficher les dates correctemenr avec réinitialisation
 var undated=0;
+var scrolltop_after;
 
 var vGRID_scrollmem;
 var VGRID_scroll_lock = false;	//Chargement progressif: FLAG qui limite l'action scroll quand on est en train de charger la grille
+
+var expand_block=[];
+var expand_max=[];
+
+
 
 $(document).ready(function(){
 
@@ -41,14 +48,18 @@ $(document).ready(function(){
 
 var GRID_load = function load(force_reload=false, init_display=false, init_html="")
 {	
-	if(init_display || force_reload)
+	scrolltop_after=false;
+
+	if(init_display || force_reload || init_html!="")
 	{
 		loaded_files=0;
 		loading_limit=0;
 		undated=0;
 		uniqueid=0;	
+		html_mem_date=null;
 		$("main section.grid").html('');
-		$("main section.grid.date").html(init_html);		
+		$("main section.grid.date").html(init_html);
+		scrolltop_after=true;
 	}
 	
 	if(mem_data==null || force_reload)
@@ -66,14 +77,15 @@ var GRID_load = function load(force_reload=false, init_display=false, init_html=
 
 var GRID_search_CallBack = function search_CallBack(search_data) 
 {
-	mem_data.search=search_data;
+	NAV_search_save_active();
+	mem_data.search=search_data.datas;
 	DISPLAY_menu($('#select-status'),false);
 	DISPLAY_set_view('grid');
 	
 	let s="";
-	if(search_data.length>1) s="s";
+	if(search_data.datas.length>1) s="s";
 	
-	GRID_load(false,true,'<div class="fullrow"><h2>'+search_data.length+' element'+s+' found</h2></div>');
+	GRID_load(false,true,'<div class="fullrow"><h2>'+search_data.datas.length+' element'+s+' found for keyword '+search_data.keywords+'</h2></div>');
 }
 
 var GRID_load_CallBack = function load_CallBack(new_data=null)
@@ -127,13 +139,11 @@ var GRID_load_CallBack = function load_CallBack(new_data=null)
 	let total_file_untagged=mem_data.untagged.length;	
 	
 	$('#untaggedcount').html("&nbsp;("+total_file_untagged+")");
-
+	$('#taggedcount').html("&nbsp;("+total_file_library+")");
 	//****************************************************************
 	//Loop Génération de la grille de photos *************************
 	//****************************************************************	
-		
-	let html_mem_date=null;
-	
+			
 	$.each(source, function(i, bdd)
 	{
 		if(i>=loaded_files)
@@ -159,6 +169,8 @@ var GRID_load_CallBack = function load_CallBack(new_data=null)
 				$("main section.date").append(addElement(mem_data.dir, bdd));
 								
 				html_mem_date=l_date_test;
+				
+				console.log(html_mem_date);
 			}
 						
 			loaded_files++;
@@ -177,35 +189,77 @@ var GRID_load_CallBack = function load_CallBack(new_data=null)
 	{
 		let html = '';
 		let htmlfull = '';
-		let htmlfilter = '<div class="fullrow"><h2 class="title">Select tag</h2></div>';
-		let filtercount;
-		let filtermem;
+		let htmlfilter = '';
+		let filtercount=1;
+		let filtermem='';
+		let img;
+		
+		let max_elements = 10;//Math.floor($('main').width()/170);
+
+		const array_config_tag_show = {
+			tag_country: ["By countries",1],
+			tag_city: ["Visited cities",1],
+			tag_place: ["By places",1],
+			tag_activity: ["My activities",1],
+			tag_comment: 0,
+			tag_people: 0,
+			tag_other: 0
+		};
+		
+		expand_max=[];
 
 		$.each(mem_data.tags, function(index, tagvalue) {
 
 			html += '<datalist id="'+index+'">';
 
 			$.each(tagvalue, function(optionvalue, ovdata) {
+				
 				html += '<option value="'+optionvalue+'">';
 				htmlfull += '<option data-tag="'+index+'" value="'+optionvalue+'">';
 				
 				//filters
-				let img="includes/401.webp";
-				let visibility="";
-			
-				if(ovdata[1].length>3) img='sd-'+ovdata[1];
-				if(filtercount>10 && index!='tag_country') visibility="hidden";
 				
-				if(index!='tag_country' && filtermem=='tag_country')
+				if(array_config_tag_show[index][1]==1)
 				{
-					filtercount=1;
-					htmlfilter += '<div class="fullrow"><h2>Most visited cities</h2></div>';
-				}
+					if(filtermem!=index)
+					{
+						filtercount=1;
+					}
+					
+					img="includes/401.webp";
+					let visibility="";
+					let name="";
 				
-				htmlfilter += '<div class="element '+visibility+'"><img src="'+img+'"><div>'+optionvalue+'</div></div>';
+					if(ovdata[1].length>3) img='sd-'+ovdata[1];
+					
+					if(filtercount>=max_elements) 
+					{
+						let id=Math.floor(filtercount/max_elements);
+						let name=index+"_filter";
+						visibility="hidden "+name+id;
+									
+						if(filtercount%max_elements==0) 
+						{
+							htmlfilter += '<div class="element cursor expandmenu" id="'+name+'"><img src="'+img+'"><span class="material-symbols-outlined">expand_circle_down</span><div>Explore more</div></div>';
+							expand_block[name]=1;
+							expand_max[name]=id;
+						}
+					}
+					
+					if(filtermem!=index)
+					{
+						let add_class="";
+						if(index=='tag_country') add_class="notopborder";
+						
+						htmlfilter += '<div class="fullrow"><h2 class="'+add_class+'">'+array_config_tag_show[index][0]+'</h2></div>';
+					}
+					
+					htmlfilter += '<div class="element cursor '+visibility+'" data-tag="'+index+'" data-val="'+optionvalue+'"><img src="'+img+'"><div>'+optionvalue+'</div></div>';
 
-				filtermem=index;
-				filtercount++;
+					filtermem=index;
+					filtercount++;
+
+				}
 	
 			});
 
@@ -215,8 +269,40 @@ var GRID_load_CallBack = function load_CallBack(new_data=null)
 		$('aside div#datalist').html(html);
 		$('aside datalist#fastsearch').html(htmlfull);
 		
-		htmlfilter += '<div class="fullrow"><h2>Most recent photos</h2></div>';
-		$('main section#filters').html(htmlfilter);
+		//htmlfilter += '<div class="fullrow"><h2>Most recent photos</h2></div>';
+		$('main section#explore').html(htmlfilter);
+		
+		//****************************************************************
+		//Bouton expanse *************************************************
+		//****************************************************************	
+		
+		$('main').off('click.expandFilters');
+		$('main').off('click.enterFilter');
+
+		$('main').on('click.expandFilters', 'section#explore div.expandmenu', function(e) {
+			
+			let name = $(this).attr('id');
+			
+			console.log('main section div.'+name+expand_block[name]);
+			
+			$('main section div.'+name+expand_block[name]).removeClass('hidden');
+			
+			if(expand_block[name]>=expand_max[name])
+			{
+				$(this).addClass('hidden');
+			}			
+		});
+
+
+		$('main').on('click.enterFilter', 'section#explore div.element', function(e) {
+			
+			if(!$(this).hasClass('expandmenu'))
+			{			
+				CORE_get('actions/file-search-list.php?tag='+$(this).attr('data-tag')+'&value='+$(this).attr('data-val'));	
+			}
+		});	
+	
+		if(scrolltop_after) $('main').scrollTop(0);
 
 	}
 	

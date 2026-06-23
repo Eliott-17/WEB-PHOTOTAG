@@ -45,9 +45,10 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/locations.php');
 			{
 				?>
 					<div id="mainmenu" class="ux-background">				
-						<div><button class="mylib selected"><span class="material-symbols-outlined">photo</span>&nbsp;<span>My library</span></button></div>
+						<div><button class="mylib selected"><span class="material-symbols-outlined">photo</span>&nbsp;<span>My timeline</span><span id="taggedcount"></span></button></div>
+						<div><button class="explore"><span class="material-symbols-outlined">explore</span>&nbsp;<span>Explore</span></button></div>
 						<div><button class="untag"><span class="material-symbols-outlined">new_label</span>&nbsp;<span>Untagged</span><span id="untaggedcount"></span></button></div>
-						<div class="search"><button class="search"><span class="material-symbols-outlined">search</span>&nbsp;<span>fast search</span></button><input type="text" list="fastsearch" autocomplete="off"/></div>
+						<div class="search"><button class="search"><span class="material-symbols-outlined">search</span>&nbsp;<span>quick search</span></button><input type="text" list="fastsearch" autocomplete="off"/></div>
 						<div class="last"><a href="actions/logout.php"><button><span class="material-symbols-outlined">logout</span>&nbsp;<span>Logout</span></button></button></a></div>
 					</div>
 				<?php
@@ -139,7 +140,7 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/locations.php');
 						</div>
 						<div class="menubackground ux-background"></div>
 					</section>
-					<section id="filters"></section>
+					<section id="explore" class="hidden"></section>
 					<section class="grid date"></section>
 					<section class="grid nodate"></section>
 				</main>

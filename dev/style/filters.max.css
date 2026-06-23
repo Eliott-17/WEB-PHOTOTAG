@@ -1,4 +1,4 @@
-main section#filters {
+main section#explore {
 	display: grid;
 	grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
 	gap: 20px;
@@ -9,18 +9,33 @@ main section#filters {
 	box-sizing: border-box;
 }
 
-main section#filters div.element {
+main section#explore div.element {
 	box-sizing: border-box;
 	text-align: center;
 	position: relative;
 	overflow: hidden;
 }
 
-main section#filters div.element :where(div) {
+main section#explore div.expandmenu img
+{
+	opacity: 0.3;
+}
+
+main section#explore div.expandmenu span
+{
+	margin: 10px;
+    top: 0px;
+    font-size: 130px;
+    position: absolute;
+    left: 0px;
+    color: #494949;
+}
+
+main section#explore div.element :where(div) {
 	margin-top: 5px;
 }
 
-main section#filters div.element :where(img,video) {
+main section#explore div.element :where(img,video) {
 	width: 150px;
 	height: 150px;
 	display: block;
@@ -28,7 +43,7 @@ main section#filters div.element :where(img,video) {
 	border-radius: 250px;
 }
 
-main section#filters div.fullrow h2 
+main section#explore div.fullrow h2 
 {
 	width: 100%;
 	margin: 10px; 
@@ -39,17 +54,32 @@ main section#filters div.fullrow h2
 	text-align: center;
 	padding-top: 10px;	
 	border-top: 1px solid #494949;
-	border-top: 1px solid #494949;
 }
 
-main section#filters div h2.title
+main section#explore div.fullrow h2.notopborder
+{
+	border-top: 0px;
+}
+/*
+main section#explore div.fullrow h2 button.underline
+{
+	text-decoration: underline;
+}
+
+main section#explore div.fullrow h2 button:hover
+{
+	text-decoration: underline rgba(145,200,250,0.7);
+}
+*/
+
+main section#explore div h2.title
 {
 	border-top: 0px;
 	margin: 0px;
 	padding: 0px;
 }
 
-main section#filters div.fullrow {
+main section#explore div.fullrow {
     grid-column: 1 / -1;
     height: auto;
     min-height: unset;

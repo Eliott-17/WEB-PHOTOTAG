@@ -37,8 +37,13 @@ $(document).ready(function(){
 	
 	$('aside#infocontent h4.edit_ux').find('button.edit, button.cancel').on('click.infoViewEdit', function() {
 				
-		$(this).parent().children().toggleClass('hidden');
+		//$(this).parent().children().toggleClass('hidden');
+		$('aside#infocontent h4.edit_ux button.edit').toggleClass('hidden');
+		$(this).parent().children().not('button.edit').toggleClass('hidden');
+
 		
+		//$('aside#infocontent h4.edit_ux button.edit').toggleClass('hidden');
+	
 		let data=$(this).parent().attr('data-form');
 		
 		$('aside#infocontent h3.ux-'+data+':not(.conflict) input, h3.ux-'+data+':not(.conflict) select, h3.ux-'+data+':not(.conflict) span.unedit').toggleClass('hidden');
@@ -137,6 +142,10 @@ var FILEINFO_CallBack_data = function CallBack(data)
 		$('h3#date span.unedit').html('Unknown');
 		$('h3#time span.unedit').html('Unknown');
 		$('h3#zone span.unedit').html('Unknown');
+
+		$('h3#date input').val("1900-01-01");
+		$('h3#time input').val("00:00:00");
+		$('h3#zone select').val("+0000");
 	}
 	else
 	{		
@@ -159,7 +168,7 @@ var FILEINFO_CallBack_data = function CallBack(data)
 	{
 		$('h3#exif').html(processExif(datas.exif_photo));
 		
-		$('h2#file_exif_idf0_make_model span.title').html("Unkown device");
+		$('h2#file_exif_idf0_make_model span.title').html("Unknown device");
 		
 		if(datas.exif_photo?.IFD0?.Make !== undefined && datas.exif_photo?.IFD0?.Model !== undefined)
 		{
@@ -225,7 +234,7 @@ var FILEINFO_CallBack_data = function CallBack(data)
 		const manufacturer = findFirstTag(datas, ['manufacturer','make']);
 		const model = findFirstTag(datas, ['model']);
 
-		$('h2#file_exif_idf0_make_model span.title').html("Unkown device");
+		$('h2#file_exif_idf0_make_model span.title').html("Unknown device");
 		
 		if(manufacturer != null) 
 		{

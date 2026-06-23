@@ -64,7 +64,9 @@
 	
 	if($result['status']==1) 
 	{
-		$fReturn->addCallBack("GRID_search_CallBack", $result['datas']);
+		$return['keywords']=$_GET['value'];
+		$return['datas']=$result['datas'];
+		$fReturn->addCallBack("GRID_search_CallBack", $return);
 	}
 	else
 	{

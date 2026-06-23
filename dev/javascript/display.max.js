@@ -14,11 +14,19 @@ var DISPLAY_set_view = function view_refresh(newview)
 	
 	switch(newview)
 	{
+		case "explore":
+		
+			DISPLAY_full_screen(false);
+			DISPLAY_file_info(false);
+			DISPLAY_explore(true);		
+		
+		break;
 		case "grid":
 		
 			DISPLAY_full_screen(false);
 			DISPLAY_file_info(false);
 			DISPLAY_selection();
+			DISPLAY_explore(false);	
 		
 		break;
 		case "grid-fileinfo":
@@ -134,6 +142,18 @@ var DISPLAY_menu = function display_menu(object=undefined, visibility=undefined)
 	}	
 
 	console.log("DISPLAY_menu bad parameter");	
+}
+
+//blabla
+
+var DISPLAY_explore = function explore(val)
+{
+	if(val==true) 
+	{
+		$('main section#explore').removeClass('hidden');
+		$('main section.grid').html('');
+	}
+	if(val==false) $('main section#explore').addClass('hidden');	
 }
 
 //****************************************************************

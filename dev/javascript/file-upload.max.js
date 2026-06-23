@@ -217,6 +217,6 @@ function uploadFiles(files, token) {
 				$('#upload-status div.text').remove("");
             });
         }
-        TOP_open_untagg(true); // Recharge la liste des fichiers
+        NAV_open_untagg(true); // Recharge la liste des fichiers
     });
 }
