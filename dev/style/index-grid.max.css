@@ -18,7 +18,8 @@ body {
 }
 
 /* mode sans aside */
-body.no-aside {
+body.no-aside-files.no-aside-filters
+{
   grid-template-columns: 1fr;
   grid-template-areas:
     "nav"
@@ -57,15 +58,12 @@ footer {
 	grid-area: footer;
 }
 
-body.no-aside aside, main section.hidden {
+body.no-aside-files aside#infocontent, 
+body.no-aside-filters aside#advancedfilters 
+{
 	display: none !important;
 }
 
-body:not(.no-aside) nav#mainmenu
-{
-	display:none;
-}
-	
 main section.grid {
 	display: grid;
 	grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));

@@ -1,6 +1,6 @@
 $(document).ready(function(){
 	
-	$('div#mainmenu div button.login').on('click', function() {
+	$('div#loginmenu div button.login').on('click', function() {
 		
 		$('nav #login').toggleClass('active');
 		

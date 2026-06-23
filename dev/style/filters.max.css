@@ -5,7 +5,9 @@ main section#explore {
 	width: 100%;
 	grid-auto-rows: auto;
 	place-items: center;
-	padding: 20px;
+	padding-left: 20px;
+	padding-right: 20px;
+	padding-bottom: 50px;
 	box-sizing: border-box;
 }
 
@@ -14,6 +16,24 @@ main section#explore div.element {
 	text-align: center;
 	position: relative;
 	overflow: hidden;
+}
+
+main section#explore div.element:hover  {
+	font-weight: bolder;
+}
+
+main section#explore div.date:hover
+{
+	border: 10px solid rgba(145,200,250,1);
+}
+main section#explore div.element:hover img 
+{
+	border: 1px solid rgba(145,200,250,1);
+}
+main section#explore div img
+{
+	box-sizing: border-box;
+	margin-bottom: 5px;
 }
 
 main section#explore div.expandmenu img
@@ -31,8 +51,17 @@ main section#explore div.expandmenu span
     color: #494949;
 }
 
-main section#explore div.element :where(div) {
-	margin-top: 5px;
+main section#explore div.date
+{	
+    border: 10px solid #494949;
+    width: 130px;
+    border-radius: 150px;
+    height: 130px;
+    box-sizing: border-box;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+	font-size: 1.5em;
 }
 
 main section#explore div.element :where(img,video) {
@@ -60,17 +89,6 @@ main section#explore div.fullrow h2.notopborder
 {
 	border-top: 0px;
 }
-/*
-main section#explore div.fullrow h2 button.underline
-{
-	text-decoration: underline;
-}
-
-main section#explore div.fullrow h2 button:hover
-{
-	text-decoration: underline rgba(145,200,250,0.7);
-}
-*/
 
 main section#explore div h2.title
 {

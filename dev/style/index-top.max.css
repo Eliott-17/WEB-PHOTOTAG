@@ -11,7 +11,7 @@ main.welcome img
 	width: 33.3%;
 }
 
-nav div#mainmenu
+nav div.mainmenu
 {
 	width: 100%;
 	display: inline-flex;
@@ -23,7 +23,7 @@ nav div#mainmenu
 }
 
 @media (max-width: 768px) {
-	nav div#mainmenu
+	nav div.mainmenu
 	{
 		gap: 5px;
 		padding-left: 5px;
@@ -31,7 +31,7 @@ nav div#mainmenu
 	}
 }
 
-nav div#mainmenu div
+nav div.mainmenu div
 {
 	text-align: center;
 	width: 25%;
@@ -39,17 +39,17 @@ nav div#mainmenu div
 	padding-bottom: 20px;
 }
 
-nav div#mainmenu div input
+nav div.mainmenu div input
 {
 	padding: 12px; !important;
 }
 
-nav div#mainmenu div.last
+nav div.mainmenu div.last
 {
 	text-align: right !important;
 }
 
-nav div#mainmenu div :where(button,input)
+nav div.mainmenu div :where(button,input)
 {
 	width: 100%;
 	box-sizing: border-box;
@@ -59,22 +59,22 @@ nav div#mainmenu div :where(button,input)
 	border-radius: 30px;
 }
 
-nav div#mainmenu div button span
+nav div.mainmenu div span
 {
 	vertical-align: middle;
 }
 
-nav div#mainmenu div button span.lowcolor
+nav div.mainmenu div button span.lowcolor
 {
 	 color: #00000030;
 }
 
-nav div#mainmenu div.search
+nav div.mainmenu div.search
 {
 	position: relative;
 }
 
-nav div#mainmenu div.search input
+nav div.mainmenu div.search input
 {
 	position: absolute;
     background-color: transparent;
@@ -84,14 +84,14 @@ nav div#mainmenu div.search input
 	outline: none;
 }	
 
-nav div#mainmenu div button:not(.search):hover, nav div#mainmenu div.search:hover button
+nav div.mainmenu div button:not(.search):hover, nav div.mainmenu div.search:hover button
 {
 	background-color: #e9e9e9;	
 	/*border: 2px solid black;
 	padding: 9px;*/
 }
 
-nav div#mainmenu div button.selected, nav div#mainmenu div input:focus
+nav div.mainmenu div button.selected, nav div.mainmenu div input:focus
 {
 	background-color: rgba(145,200,250,0.7);
 }

@@ -66,8 +66,12 @@ $(document).ready(function(){
 		
 		if(vFILEINFOMULTISELECTION_FLAG_SAVED==true)
 		{
-			GRID_load(true);
-			vFILEINFOMULTISELECTION_FLAG_SAVED=false;
+			if(vGRID_mem_tag!=null && vGRID_mem_tag!=null) CORE_get('actions/file-search-list.php?tag='+vGRID_mem_tag+'&value='+vGRID_mem_val);	
+			else 
+			{
+				GRID_load(true);
+				vFILEINFOMULTISELECTION_FLAG_SAVED=false;
+			}
 		}
 		
 		$('span#tag').html('new_label');
@@ -83,7 +87,8 @@ $(document).ready(function(){
 		{
 			if(vFILEINFOMULTISELECTION_FLAG_SAVED==true)
 			{
-				GRID_load(true);
+				if(vGRID_mem_tag!=null && vGRID_mem_tag!=null) CORE_get('actions/file-search-list.php?tag='+vGRID_mem_tag+'&value='+vGRID_mem_val);	
+				else GRID_load(true);
 				vFILEINFOMULTISELECTION_FLAG_SAVED=false;
 			}
 

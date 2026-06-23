@@ -16,17 +16,23 @@ $(document).on('keydown', function(e) {
 $(document).ready(function(){
 
 	$('section#fullscreen div.button-return').on('click.gridSelect', function() {
+			
 		DISPLAY_set_view("grid");
 		
 		if(vFILEINFO_FLAG_SAVED==true)
 		{
-			GRID_load(true);
-			vFILEINFO_FLAG_SAVED=false;
+			if(vGRID_mem_tag!=null && vGRID_mem_tag!=null) CORE_get('actions/file-search-list.php?tag='+vGRID_mem_tag+'&value='+vGRID_mem_val);	
+			else 
+			{
+				GRID_load(true);
+				vFILEINFO_FLAG_SAVED=false;
+			}
 		}
 		else
 		{
 			$('main').scrollTop(vGRID_scrollmem);
 		}
+		
 	});
 
 	$('section#fullscreen').on('click.gridLeftAR', 'div.button-leftarrow', function() { Arrow(0); });			

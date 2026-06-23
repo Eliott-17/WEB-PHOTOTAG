@@ -8,7 +8,9 @@ var last_select=-1;		//mémorise le dernier uniqueid sélectioné
 var loaded_files=0;		//Chargement progressif: mémorise le nombre de fichier chargés
 var loading_limit=0;	//Chagrement progressif: mémorise le nombre de fichier à pré-chargés
 
-var mem_data=null;		//Stoque les données chargées pour les réutilisées et éviter un appel  à la base de données
+var mem_data=null;		 //Stoque les données chargées pour les réutilisées et éviter un appel  à la base de données
+var mem_data_search=null;//Stoque les données chargées pour les réutilisées et éviter un appel  à la base de données
+
 var html_mem_date;		//Pour afficher les dates correctemenr avec réinitialisation
 var undated=0;
 var scrolltop_after;
@@ -16,10 +18,11 @@ var scrolltop_after;
 var vGRID_scrollmem;
 var VGRID_scroll_lock = false;	//Chargement progressif: FLAG qui limite l'action scroll quand on est en train de charger la grille
 
+var vGRID_mem_tag=null; //permet de mémoriser la recherche la denière recheche qui à eu lieu
+var vGRID_mem_val=null; //permet de mémoriser la recherche la denière recheche qui à eu lieu
+
 var expand_block=[];
 var expand_max=[];
-
-
 
 $(document).ready(function(){
 
@@ -77,15 +80,29 @@ var GRID_load = function load(force_reload=false, init_display=false, init_html=
 
 var GRID_search_CallBack = function search_CallBack(search_data) 
 {
-	NAV_search_save_active();
-	mem_data.search=search_data.datas;
+	//UX
+	
+	if($('div#mainmenu div button.untag').hasClass("selected")) vNAV_mem_selected='div#mainmenu div button.untag';
+	if($('div#mainmenu div button.mylib').hasClass("selected")) vNAV_mem_selected='div#mainmenu div button.mylib';
+	if($('div#mainmenu div button.explore').hasClass("selected")) vNAV_mem_selected='div#mainmenu div button.explore';
+					
+	$('div#mainmenu div button').removeClass("selected");
+	
+	vNAV_search_result=true;
+		
+	//result
+
+	mem_data_search=search_data.datas;
 	DISPLAY_menu($('#select-status'),false);
 	DISPLAY_set_view('grid');
-	
+
 	let s="";
 	if(search_data.datas.length>1) s="s";
 	
-	GRID_load(false,true,'<div class="fullrow"><h2>'+search_data.datas.length+' element'+s+' found for keyword '+search_data.keywords+'</h2></div>');
+	$('nav span#filterapply').html(search_data.tagname+': '+search_data.keywords);	
+	$('nav span#filterresult').html(search_data.datas.length+ ' element'+s);
+	
+	GRID_load(false,true);
 }
 
 var GRID_load_CallBack = function load_CallBack(new_data=null)
@@ -121,11 +138,10 @@ var GRID_load_CallBack = function load_CallBack(new_data=null)
 		console.log("Source untagged");
 		source=mem_data.untagged;
 	}
-	else if(mem_data.search.length!=0)
+	else if(mem_data_search.length!=0)
 	{
 		console.log("Source search");
-		source=mem_data.search;
-		updated_data=true;
+		source=mem_data_search;
 	}
 	else {};
 	
@@ -169,8 +185,6 @@ var GRID_load_CallBack = function load_CallBack(new_data=null)
 				$("main section.date").append(addElement(mem_data.dir, bdd));
 								
 				html_mem_date=l_date_test;
-				
-				console.log(html_mem_date);
 			}
 						
 			loaded_files++;
@@ -185,13 +199,14 @@ var GRID_load_CallBack = function load_CallBack(new_data=null)
 	//****************************************************************
 	//Loop Génération des datalist & advanced filters ****************
 	//****************************************************************		
-	if(1) 
+	if(updated_data) 
 	{
 		let html = '';
 		let htmlfull = '';
 		let htmlfilter = '';
 		let filtercount=1;
 		let filtermem='';
+		//let filtermem_time='';
 		let img;
 		
 		let max_elements = 10;//Math.floor($('main').width()/170);
@@ -203,7 +218,8 @@ var GRID_load_CallBack = function load_CallBack(new_data=null)
 			tag_activity: ["My activities",1],
 			tag_comment: 0,
 			tag_people: 0,
-			tag_other: 0
+			tag_other: 0,
+			time_taken_at_date: ["By date",1]
 		};
 		
 		expand_max=[];
@@ -218,8 +234,27 @@ var GRID_load_CallBack = function load_CallBack(new_data=null)
 				htmlfull += '<option data-tag="'+index+'" value="'+optionvalue+'">';
 				
 				//filters
-				
-				if(array_config_tag_show[index][1]==1)
+			
+				if(optionvalue=='days' || optionvalue=='months' || optionvalue=='years')
+				{
+					console.log('time',optionvalue);
+					
+					if(optionvalue=='years')
+					{					
+						//if(optionvalue!=filtermem_time)
+						//{
+							htmlfilter += '<div class="fullrow"><h2>'+optionvalue.toUpperCase()+'</h2></div>';
+						//}
+						
+						$.each(ovdata, function(key, value) {
+							htmlfilter += '<div class="element cursor date yearelement" data-tag="'+optionvalue+'" data-val="'+key+'"><div>'+key+'</div></div>';
+
+						});
+						
+						//filtermem_time=optionvalue;
+					}
+				}
+				else if(array_config_tag_show[index][1]==1)
 				{
 					if(filtermem!=index)
 					{
@@ -231,6 +266,7 @@ var GRID_load_CallBack = function load_CallBack(new_data=null)
 					let name="";
 				
 					if(ovdata[1].length>3) img='sd-'+ovdata[1];
+					if(ovdata[1].length==3) img='images/flags/'+ovdata[1]+'.svg';
 					
 					if(filtercount>=max_elements) 
 					{
@@ -254,12 +290,12 @@ var GRID_load_CallBack = function load_CallBack(new_data=null)
 						htmlfilter += '<div class="fullrow"><h2 class="'+add_class+'">'+array_config_tag_show[index][0]+'</h2></div>';
 					}
 					
-					htmlfilter += '<div class="element cursor '+visibility+'" data-tag="'+index+'" data-val="'+optionvalue+'"><img src="'+img+'"><div>'+optionvalue+'</div></div>';
+					htmlfilter += '<div class="element cursor tagelement '+visibility+'" data-tag="'+index+'" data-val="'+optionvalue+'"><img src="'+img+'"><div>'+optionvalue+'</div></div>';
 
 					filtermem=index;
 					filtercount++;
-
 				}
+				else {}
 	
 			});
 
@@ -268,8 +304,7 @@ var GRID_load_CallBack = function load_CallBack(new_data=null)
 
 		$('aside div#datalist').html(html);
 		$('aside datalist#fastsearch').html(htmlfull);
-		
-		//htmlfilter += '<div class="fullrow"><h2>Most recent photos</h2></div>';
+
 		$('main section#explore').html(htmlfilter);
 		
 		//****************************************************************
@@ -278,7 +313,9 @@ var GRID_load_CallBack = function load_CallBack(new_data=null)
 		
 		$('main').off('click.expandFilters');
 		$('main').off('click.enterFilter');
-
+		$('main').off('click.enterFilterYear');
+		$('main').off('click.enterFilterMonth');
+		
 		$('main').on('click.expandFilters', 'section#explore div.expandmenu', function(e) {
 			
 			let name = $(this).attr('id');
@@ -294,12 +331,23 @@ var GRID_load_CallBack = function load_CallBack(new_data=null)
 		});
 
 
-		$('main').on('click.enterFilter', 'section#explore div.element', function(e) {
+		$('main').on('click.enterFilter', 'section#explore div.tagelement', function(e) {
 			
 			if(!$(this).hasClass('expandmenu'))
 			{			
-				CORE_get('actions/file-search-list.php?tag='+$(this).attr('data-tag')+'&value='+$(this).attr('data-val'));	
+				vGRID_mem_tag=$(this).attr('data-tag');
+				vGRID_mem_val=$(this).attr('data-val');
+
+				CORE_get('actions/file-search-list.php?tag='+vGRID_mem_tag+'&value='+vGRID_mem_val);	
 			}
+		});	
+
+		$('main').on('click.enterFilterYear', 'section#explore div.yearelement', function(e) {
+			
+			//if(!$(this).hasClass('expandmenu'))
+			//{			
+			//	CORE_get('actions/file-search-list.php?tag='+$(this).attr('data-tag')+'&value='+$(this).attr('data-val'));	
+			//}
 		});	
 	
 		if(scrolltop_after) $('main').scrollTop(0);

@@ -1,36 +1,40 @@
 var vNAV_mem_selected=null;
+var vNAV_search_result=false;
 
 $(document).ready(function(){
 
-	$('div#mainmenu div.search input').on('blur', function() {
+	$('div.mainmenu div.search input').on('blur', function() {
 	
 		$(this).val("");
 		
-		/*if(vNAV_mem_selected!=null)
-		{
-			$(vNAV_mem_selected).addClass("selected");
-			DISPLAY_menu($('#select-status'),false);
-			DISPLAY_set_view('grid');
-			GRID_load(false,true);
-		}*/
-		
 	});		
 
-	$('div#mainmenu div.search input')
+	$('div.mainmenu div.search input')
 	  .on('focus', function () {
-		$('div#mainmenu div.search button span').addClass('lowcolor');
+		$('div.mainmenu div.search button span').addClass('lowcolor');
 	  })
 	  .on('blur', function () {
-		$('div#mainmenu div.search button span').removeClass('lowcolor');
+		$('div.mainmenu div.search button span').removeClass('lowcolor');
 	  });
 
 	$(document).on('keydown', function(e) {
 		
 		if(e.which === 13) 
-		{			
-			if ($('div#mainmenu div.search input').is(':focus')) 
+		{	
+			let use="";
+	
+			if(!$('div#mainmenu').hasClass('hidden') && $('div#searchmenu').hasClass('hidden'))
+			{
+				use = 'div#mainmenu div.search input';
+			}
+			if($('div#mainmenu').hasClass('hidden') && !$('div#searchmenu').hasClass('hidden'))
+			{
+				use = 'div#searchmenu div.search input';
+			}
+			
+			if ($(use).is(':focus')) 
 			{					
-				const val = $('div#mainmenu div.search input').val();
+				const val = $(use).val();
 				
 				const option = $('#fastsearch option').filter(function () {
 					return this.value === val;
@@ -56,51 +60,28 @@ $(document).ready(function(){
 		}
 	});
 
-	$('div#mainmenu div button.mylib').on('click', function() {
-		
-		if(!$(this).hasClass('selected'))
-		{
-			$('main').scrollTop(0);
-			$('div#mainmenu div button').removeClass("selected");
-			$('div#mainmenu div button.mylib').addClass("selected");
-			DISPLAY_menu($('#select-status'),false);
-			DISPLAY_set_view('grid');
-			GRID_load(false,true);
-		}
-	});	
+	$('div#mainmenu div button.mylib').on('click', 		function() { if(!$(this).hasClass('selected')) NAV_open_lib(); });	
+	$('div#mainmenu div button.explore').on('click', 	function() { if(!$(this).hasClass('selected')) NAV_open_explore(); });	
+	$('div#mainmenu div button.untag').on('click', 		function() { if(!$(this).hasClass('selected')) NAV_open_untagg() });
 
-	$('div#mainmenu div button.explore').on('click', function() {
+	$('div#searchmenu div button.return').on('click', 	function() {
+
+		vGRID_mem_tag=null;
+		vGRID_mem_val=null;
+		vNAV_search_result=false;
 		
-		if(!$(this).hasClass('selected'))
-		{
-			$('main').scrollTop(0);
-			$('div#mainmenu div button').removeClass("selected");
-			$('div#mainmenu div button.explore').addClass("selected");
-			DISPLAY_menu($('#select-status'),false);
-			DISPLAY_set_view('explore');
-			$('main section.grid').html('');
-			//GRID_load(false,true);
-		}
-	});	
+		let fr = (vFILEINFO_FLAG_SAVED || vFILEINFOMULTISELECTION_FLAG_SAVED);
+
+		if(vNAV_mem_selected=='div#mainmenu div button.untag') NAV_open_untagg(fr);
+		else if(vNAV_mem_selected=='div#mainmenu div button.mylib') NAV_open_lib(fr);
+		else if(vNAV_mem_selected=='div#mainmenu div button.explore') NAV_open_explore(fr);
+		else {}
+		
+		vFILEINFO_FLAG_SAVED = false;
+		vFILEINFOMULTISELECTION_FLAG_SAVED = false;
+	});
 	
-	$('div#mainmenu div button.untag').on('click', function() {
-		
-		if(!$(this).hasClass('selected'))
-		{
-			$('main').scrollTop(0);
-			NAV_open_untagg();
-		}
-	});	
 });
-
-var NAV_search_save_active = function search_save_active()
-{
-	if($('div#mainmenu div button.untag').hasClass("selected")) vNAV_mem_selected='div#mainmenu div button.untag';
-	if($('div#mainmenu div button.mylib').hasClass("selected")) vNAV_mem_selected='div#mainmenu div button.mylib';
-	if($('div#mainmenu div button.explore').hasClass("selected")) vNAV_mem_selected='div#mainmenu div button.explore';
-					
-	$('div#mainmenu div button').removeClass("selected");
-}
 
 /**********************************************************************
 -Affiche les fichiers de la catégorie "untag"
@@ -112,6 +93,24 @@ var NAV_open_untagg = function open_untagg(force_reload=false)
 {
 	$('div#mainmenu div button').removeClass("selected");
 	$('div#mainmenu div button.untag').addClass("selected");
+	DISPLAY_menu($('#select-status'),false);
+	DISPLAY_set_view('grid');
+	GRID_load(force_reload,true);
+}
+
+var NAV_open_explore = function open_explore(force_reload=false)
+{
+	$('div#mainmenu div button').removeClass("selected");
+	$('div#mainmenu div button.explore').addClass("selected");
+	DISPLAY_menu($('#select-status'),false);
+	DISPLAY_set_view('explore');
+	if(force_reload)  GRID_load(force_reload,true);
+}
+
+var NAV_open_lib = function open_lib(force_reload=false)
+{
+	$('div#mainmenu div button').removeClass("selected");
+	$('div#mainmenu div button.mylib').addClass("selected");
 	DISPLAY_menu($('#select-status'),false);
 	DISPLAY_set_view('grid');
 	GRID_load(force_reload,true);

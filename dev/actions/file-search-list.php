@@ -29,6 +29,7 @@
 	$EasyPDO->addFields('id');
 	
 	$result['status']=0;
+	$tagname="";
 		
 	switch($_GET['tag'])
 	{
@@ -44,27 +45,32 @@
 			{
 				$_GET['value']=$key;
 			}
-				
-		case 'tag_city':
-		case 'tag_place':
-		case 'tag_activity':
-		case 'tag_comment':
-		case 'tag_people':
-		case 'tag_other': 
 			
-			$EasyPDO->addConditionalData('value',$_GET['value']);
-			$result=$EasyPDO->select('photos', $_GET['tag']. '=:value AND file_status = 0 ORDER BY time_taken_at_date DESC,time_taken_at_zone DESC, time_taken_at_time DESC, id ASC');		
-
-		break;		
+			$tagname="Pays";
+		
+		break;
+				
+		case 'tag_city': $tagname="City"; break;
+		case 'tag_place': $tagname="Location"; break;
+		case 'tag_activity': $tagname="Activity"; break;
+		case 'tag_comment': $tagname="Comment"; break;
+		case 'tag_people': $tagname="People"; break;
+		case 'tag_other': $tagname="Information"; break;		
 		default: 
 			$fReturn->addConsole("[PHP] Tag ".$_GET['tag']." invalid");
 		break;
 	}
-
 	
+	if(!empty($tagname))
+	{
+		$EasyPDO->addConditionalData('value',$_GET['value']);
+		$result=$EasyPDO->select('photos', $_GET['tag']. '=:value AND file_status = 0 ORDER BY time_taken_at_date DESC,time_taken_at_zone DESC, time_taken_at_time DESC, id ASC');		
+	}
+
 	if($result['status']==1) 
 	{
 		$return['keywords']=$_GET['value'];
+		$return['tagname']=$tagname;
 		$return['datas']=$result['datas'];
 		$fReturn->addCallBack("GRID_search_CallBack", $return);
 	}

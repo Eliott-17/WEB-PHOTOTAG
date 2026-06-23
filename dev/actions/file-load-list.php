@@ -64,7 +64,8 @@
 			'tag_activity' => [],
 			'tag_comment' => [],
 			'tag_people' => [],
-			'tag_other' => []
+			'tag_other' => [],
+			'time_taken_at_date' => []
 		];
 
 		foreach ($array_lib['datas'] as $index => $row) {
@@ -75,37 +76,61 @@
 
 				if ($val !== null) {
 
-					if (!isset($array_tags[$key][$val])) {
-						
+					if($key=='time_taken_at_date')
+					{
+						$dateParts = [
+							'years'  => substr($val, 0, 4),
+							'months' => substr($val, 4, 2),
+							//'days'   => substr($val, 6, 2),
+						];
+
+						foreach ($dateParts as $period => $part) {
+							$array_tags[$key][$period][$part] = ($array_tags[$key][$period][$part] ?? 0) + 1;
+						}						
+					}
+					else
+					{
+						if (!isset($array_tags[$key][$val])) 
+						{							
+							if($key=='tag_country') 
+							{
+								$array_tags[$key][$country[$val]][0] = 1;
+								$array_tags[$key][$country[$val]][1] = $val;
+							}
+							else 					
+							{
+								$array_tags[$key][$val][0] = 1;
+								$array_tags[$key][$val][1] = $array_lib['datas'][$index]['file_hash'];
+							}
+						}
+					
 						if($key=='tag_country') 
 						{
-							$array_tags[$key][$country[$val]][0] = 0;
-							$array_tags[$key][$country[$val]][1] = $val;
+							$array_tags[$key][$country[$val]][0]++;
 						}
 						else 					
 						{
-							$array_tags[$key][$val][0] = 0;
-							$array_tags[$key][$val][1] = $array_lib['datas'][$index]['file_hash'];
+							$array_tags[$key][$val][0]++;
 						}
-					}
-
-					if($key=='tag_country') 
-					{
-						$array_tags[$key][$country[$val]][0]++;
-					}
-					else 					
-					{
-						$array_tags[$key][$val][0]++;
 					}
 				}
 
-				unset($array_lib['datas'][$index][$key]);
+				if($key!='time_taken_at_date') unset($array_lib['datas'][$index][$key]);
 			}
 		}
 
 		foreach ($array_tags as $key => &$tags) 
 		{
-			arsort($tags); // tri décroissant par valeur
+			if($key!='time_taken_at_date')
+			{				
+				arsort($tags); // tri décroissant par valeur
+			}
+			else
+			{
+				krsort($tags['years']); // tri décroissant par valeur
+				krsort($tags['months']); // tri décroissant par valeur
+				//krsort($tags['days']); // tri décroissant par valeur
+			}
 		}
 		unset($tags);
 

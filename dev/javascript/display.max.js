@@ -14,6 +14,20 @@ var DISPLAY_set_view = function view_refresh(newview)
 	
 	switch(newview)
 	{
+		/*case "searchresult":
+		
+			DISPLAY_full_screen(false,true);
+			DISPLAY_selection();
+			DISPLAY_explore(false);			
+		
+		break;
+		case "searchresult-filters":
+		
+			DISPLAY_full_screen(false,true);
+			DISPLAY_selection();
+			DISPLAY_explore(false);			
+		
+		break;*/
 		case "explore":
 		
 			DISPLAY_full_screen(false);
@@ -63,15 +77,33 @@ var DISPLAY_set_view = function view_refresh(newview)
 
 var DISPLAY_is_visible_file_info = function is_visible_file_info()
 {
-	return !$('body').hasClass('no-aside');
+	return !$('body').hasClass('no-aside-files');
 }
 
 var DISPLAY_file_info = function display_aside(visibility = undefined)
 {
 	let lelement=$('body');
-	if(visibility==undefined)  	{ lelement.toggleClass('no-aside'); return; }
-	if(visibility==true) 		{ lelement.removeClass('no-aside'); return; }
-	if(visibility==false) 		{ lelement.addClass('no-aside'); return; }	
+	if(visibility==undefined)  	{ lelement.toggleClass('no-aside-files'); return; }
+	if(visibility==true) 		{ lelement.removeClass('no-aside-files'); return; }
+	if(visibility==false) 		{ lelement.addClass('no-aside-files'); return; }	
+	console.log("DISPLAY_file_info bad parameter");
+}
+
+//****************************************************************
+//Gère la visibilité des filtres avancés *************************
+//****************************************************************	
+
+var DISPLAY_is_visible_filters = function is_visible_filters()
+{
+	return !$('body').hasClass('no-aside-filters');
+}
+
+var DISPLAY_filters = function display_filters(visibility = undefined)
+{
+	let lelement=$('body');
+	if(visibility==undefined)  	{ lelement.toggleClass('no-aside-filters'); return; }
+	if(visibility==true) 		{ lelement.removeClass('no-aside-filters'); return; }
+	if(visibility==false) 		{ lelement.addClass('no-aside-filters'); return; }	
 	console.log("DISPLAY_file_info bad parameter");
 }
 
@@ -86,28 +118,35 @@ var DISPLAY_is_visible_full_screen = function is_visible_full_screen()
 
 var DISPLAY_full_screen = function display_full_screen(visibility = undefined)
 {
-	let lelement=$('div#mainmenu');
+	let lelement1=$('div#mainmenu');
+	let lelement2=$('div#searchmenu');
 	
-	if(visibility==undefined)  	
-	{ 
-		$('main section').toggleClass('hidden'); 
-		lelement.toggleClass('hidden');
-		console.log("DISPLAY_full_screen: toggeled)");		
-		return; 
-	}
 	if(visibility==true) 		
 	{ 
 		$('main section.grid').addClass('hidden');
 		$('main section#fullscreen').removeClass('hidden');
 		console.log("DISPLAY_full_screen: openned (show)");		
-		lelement.addClass('hidden');
+		lelement1.addClass('hidden');
+		lelement2.addClass('hidden');
 		return; 
 	}
+	
 	if(visibility==false) 		
 	{ 
 		$('main section.grid').removeClass('hidden');
 		$('main section#fullscreen').addClass('hidden');
-		lelement.removeClass('hidden');	
+		
+		if(vNAV_search_result==true)
+		{
+			lelement1.addClass('hidden');	
+			lelement2.removeClass('hidden');
+		}
+		else
+		{
+			lelement1.removeClass('hidden');
+			lelement2.addClass('hidden');
+		}
+		
 		console.log("DISPLAY_full_screen: closed (hide)");		
 		return; 
 		
@@ -144,14 +183,16 @@ var DISPLAY_menu = function display_menu(object=undefined, visibility=undefined)
 	console.log("DISPLAY_menu bad parameter");	
 }
 
-//blabla
+//****************************************************************
+//Gère l'affichage de l'explorer *********************************
+//****************************************************************	
 
 var DISPLAY_explore = function explore(val)
 {
 	if(val==true) 
 	{
 		$('main section#explore').removeClass('hidden');
-		$('main section.grid').html('');
+		$('main section.grid').addClass('hidden');
 	}
 	if(val==false) $('main section#explore').addClass('hidden');	
 }
