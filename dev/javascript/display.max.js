@@ -104,7 +104,6 @@ var DISPLAY_is_visible_filters = function is_visible_filters()
 var DISPLAY_filters = function display_filters(visibility = undefined)
 {
 	let lelement=$('body');
-	if(visibility==undefined) 	{ lelement.toggleClass('no-aside-filters'); return; }
 	if(visibility==true) 		{ lelement.removeClass('no-aside-filters'); return; }
 	if(visibility==false) 		{ lelement.addClass('no-aside-filters'); return; }	
 	console.log("DISPLAY_fiters bad parameter");

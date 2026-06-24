@@ -78,6 +78,7 @@
 	if($result['status']==1) 
 	{
 		$return['keywords']=$_GET['value'];
+		$return['tag']=$_GET['tag'];
 		$return['tagname']=$tagname;
 
 		$array_tags = [
@@ -92,6 +93,12 @@
 		];
 		
 		$return['tags']=retreive_sort_tags($result['datas'],$array_tags,$country);	
+		
+		foreach ($result['datas'] as &$row) {
+			$row['advfilter_hidden'] = 0;
+		}
+		unset($row);
+				
 		$return['datas']=$result['datas'];
 		$fReturn->addCallBack("GRID_search_CallBack", $return);
 	}

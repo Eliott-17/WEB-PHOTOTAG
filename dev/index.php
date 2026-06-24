@@ -23,7 +23,7 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/locations.php');
 		<link rel="stylesheet" href="style/file-multi-selection-edit.<?php echo filemtime('style/file-multi-selection-edit.'.DIM.'.css'); ?>.<?php echo DIM; ?>.css" type="text/css"/>
 		<link rel="stylesheet" href="style/file-open-fullscreen.<?php echo filemtime('style/file-open-fullscreen.'.DIM.'.css'); ?>.<?php echo DIM; ?>.css" type="text/css"/>
 		<link rel="stylesheet" href="style/explore.<?php echo filemtime('style/explore.'.DIM.'.css'); ?>.<?php echo DIM; ?>.css" type="text/css"/>
-	
+		<link rel="stylesheet" href="style/filters.<?php echo filemtime('style/filters.'.DIM.'.css'); ?>.<?php echo DIM; ?>.css" type="text/css"/>
 	
 		<link rel="stylesheet" href="style/index-grid.<?php echo filemtime('style/index-grid.'.DIM.'.css'); ?>.<?php echo DIM; ?>.css" type="text/css"/>
 		<link rel="stylesheet" href="style/index-login.<?php echo filemtime('style/index-login.'.DIM.'.css'); ?>.<?php echo DIM; ?>.css" type="text/css"/>
@@ -37,8 +37,7 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/locations.php');
 
 	<!-- BEGIN BODY -->
 
-	<body class="no-aside-files">	
-	<!--<body class="no-aside-files no-aside-filters">-->
+	<body class="no-aside-files no-aside-filters">
 	
 		<nav>
 			<?php
@@ -153,47 +152,26 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/locations.php');
 					<section class="grid nodate"></section>
 				</main>
 		
-				<!--<aside id="advancedfilters" class="ux-background">
-				
-					<h2>Advanced filters</h2>
-
-					<h2><span class="material-symbols-outlined">globe</span><span>Location&nbsp;</span><span id="tooltip-location" class="tooltip-title"></span></h2>
-					
-					<h3 class="ux-tag-location" data-tooltip="tooltip-location" data-label="Country" id="country"><span class="material-symbols-outlined">flag</span><div class="value"></div></h3>
-					<h3 class="ux-tag-location" data-tooltip="tooltip-location" data-label="City" id="city"><span class="material-symbols-outlined">location_city</span><div class="value"></div></h3>
-					<h3 class="ux-tag-location" data-tooltip="tooltip-location" data-label="Place" id="place"><span class="material-symbols-outlined">place</span><div class="value"></div></h3>
-
-					<h2><span class="material-symbols-outlined">tag</span><span>Tags&nbsp;</span><span id="tooltip-tags" class="tooltip-title"></span></h2>
-	
-					<h3 class="ux-tag-general" data-tooltip="tooltip-tags" data-label="Activity" id="activity"><span class="material-symbols-outlined">directions_run</span><div class="value"></div></h3>				
-					<h3 class="ux-tag-general" data-tooltip="tooltip-tags" data-label="Comment" id="comment"><span class="material-symbols-outlined">comment</span><div class="value"></div></h3>
-					<h3 class="ux-tag-general" data-tooltip="tooltip-tags" data-label="People" id="people"><span class="material-symbols-outlined">group</span><div class="value"></div></h3>
-					<h3 class="ux-tag-general" data-tooltip="tooltip-tags" data-label="Other informations" id="other"><span class="material-symbols-outlined">info</span><div class="value"></div></h3>
-					<h4 class="edit_ux tag-general" data-form="tag-general">
-						
-				</aside>-->
-				
 				<aside id="advancedfilters" class="ux-background">
 				
 					<h2>Advanced filters</h2>
 
 					<h2><span class="material-symbols-outlined">globe</span><span>Location&nbsp;</span><span id="tooltip-location" class="tooltip-title"></span></h2>
 					
-					<h3 class="ux-tag-location" data-tooltip="tooltip-location" data-label="Country" id="country"><span class="material-symbols-outlined">flag</span><div class="value"><span><input type="checkbox" value="{&quot;tag&quot;:&quot;tag_country&quot;,&quot;value&quot;:&quot;Portugal&quot;}"></span><span>Portugal</span><br><span><input type="checkbox" value="{&quot;tag&quot;:&quot;tag_country&quot;,&quot;value&quot;:&quot;Italy&quot;}"></span><span>Italy</span><br><span><input type="checkbox" value="{&quot;tag&quot;:&quot;tag_country&quot;,&quot;value&quot;:&quot;France&quot;}"></span><span>France</span><br></div></h3>
-					<h3 class="ux-tag-location" data-tooltip="tooltip-location" data-label="City" id="city"><span class="material-symbols-outlined">location_city</span><div class="value"><span><input type="checkbox" value="{&quot;tag&quot;:&quot;tag_city&quot;,&quot;value&quot;:&quot;Aix en Provence&quot;}"></span><span>Aix en Provence</span><br><span><input type="checkbox" value="{&quot;tag&quot;:&quot;tag_city&quot;,&quot;value&quot;:&quot;Porto&quot;}"></span><span>Porto</span><br><span><input type="checkbox" value="{&quot;tag&quot;:&quot;tag_city&quot;,&quot;value&quot;:&quot;Marseille&quot;}"></span><span>Marseille</span><br><span><input type="checkbox" value="{&quot;tag&quot;:&quot;tag_city&quot;,&quot;value&quot;:&quot;Lyon&quot;}"></span><span>Lyon</span><br></div></h3>
-					<h3 class="ux-tag-location" data-tooltip="tooltip-location" data-label="Place" id="place"><span class="material-symbols-outlined">place</span><div class="value"><span><input type="checkbox" value="{&quot;tag&quot;:&quot;tag_place&quot;,&quot;value&quot;:&quot;Clearsy&quot;}"></span><span>Clearsy</span><br></div></h3>
+					<h3 class="ux-tag-location" data-tooltip="tooltip-location" data-label="Country" id="country"><span class="material-symbols-outlined">flag</span><div class="value"></div></h3>
+					<h3 class="ux-tag-location central" data-tooltip="tooltip-location" data-label="City" id="city"><span class="material-symbols-outlined">location_city</span><div class="value"></div></h3>
+					<h3 class="ux-tag-location" data-tooltip="tooltip-location" data-label="Place" id="place"><span class="material-symbols-outlined">place</span><div class="value"></div></h3>
 
 					<h2><span class="material-symbols-outlined">tag</span><span>Tags&nbsp;</span><span id="tooltip-tags" class="tooltip-title"></span></h2>
 	
 					<h3 class="ux-tag-general" data-tooltip="tooltip-tags" data-label="Activity" id="activity"><span class="material-symbols-outlined">directions_run</span><div class="value"></div></h3>				
-					<h3 class="ux-tag-general" data-tooltip="tooltip-tags" data-label="Comment" id="comment"><span class="material-symbols-outlined">comment</span><div class="value"></div></h3>
-					<h3 class="ux-tag-general" data-tooltip="tooltip-tags" data-label="People" id="people"><span class="material-symbols-outlined">group</span><div class="value"></div></h3>
+					<h3 class="ux-tag-general central" data-tooltip="tooltip-tags" data-label="Comment" id="comment"><span class="material-symbols-outlined">comment</span><div class="value"></div></h3>
+					<h3 class="ux-tag-general bottom" data-tooltip="tooltip-tags" data-label="People" id="people"><span class="material-symbols-outlined">group</span><div class="value"></div></h3>
 					<h3 class="ux-tag-general" data-tooltip="tooltip-tags" data-label="Other informations" id="other"><span class="material-symbols-outlined">info</span><div class="value"></div></h3>
 					<h4 class="edit_ux tag-general" data-form="tag-general">
 						
-				</h4></aside>
-				
-	
+				</aside>
+
 				<aside id="infocontent" class="ux-background">
 					<form method="post" id="fileinfopost" action="actions/file-selection-load-tags.php" class="post">
 						<input type="hidden" name="token" class="token" value=""/>

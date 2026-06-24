@@ -10,13 +10,12 @@ var loading_limit=0;	//Chagrement progressif: mémorise le nombre de fichier à 
 
 var mem_data=null;		 //Stoque les données chargées pour les réutilisées et éviter un appel  à la base de données
 var vGRID_SEARCH_DATA=null;//Stoque les données chargées pour les réutilisées et éviter un appel  à la base de données
-
 var html_mem_date;		//Pour afficher les dates correctemenr avec réinitialisation
 var undated=0;
 var scrolltop_after;
 
 var vGRID_scrollmem;
-var VGRID_scroll_lock = false;	//Chargement progressif: FLAG qui limite l'action scroll quand on est en train de charger la grille
+var vGRID_scroll_lock = false;	//Chargement progressif: FLAG qui limite l'action scroll quand on est en train de charger la grille
 
 var vGRID_mem_tag=null; //permet de mémoriser la recherche la denière recheche qui à eu lieu
 var vGRID_mem_val=null; //permet de mémoriser la recherche la denière recheche qui à eu lieu
@@ -28,7 +27,7 @@ $(document).ready(function(){
 
 	$('main').on('scroll', function() {
 
-		if (VGRID_scroll_lock || mem_data==null) return;
+		if (vGRID_scroll_lock || mem_data==null) return;
 
 		let scrollTop = $('main').scrollTop();
 		let windowHeight = $('main').height();
@@ -40,7 +39,7 @@ $(document).ready(function(){
 		if (remaining < docHeight * 0.25) {
 			if(remaining>=0)
 			{
-				VGRID_scroll_lock=true;
+				vGRID_scroll_lock=true;
 				console.log("reload from scroll",remaining);
 				GRID_load();
 			}
@@ -150,7 +149,7 @@ var GRID_load_CallBack = function load_CallBack(new_data=null)
 		console.error("No source selected");
 		return;		
 	}
-	
+		
 	let total_file_library=mem_data.library.length;
 	let total_file_untagged=mem_data.untagged.length;	
 	
@@ -159,11 +158,18 @@ var GRID_load_CallBack = function load_CallBack(new_data=null)
 	//****************************************************************
 	//Loop Génération de la grille de photos *************************
 	//****************************************************************	
-			
+	
+	let j=0; //because i is not reliable (in case of skip)
+	
 	$.each(source, function(i, bdd)
-	{
-		if(i>=loaded_files)
+	{		
+		if(bdd.advfilter_hidden!=undefined)
 		{
+			if(bdd.advfilter_hidden==1) return; //skip to the next element
+		}
+		
+		if(j>=loaded_files)
+		{			
 			if(bdd.time_taken_at_date=="00000000" &&  bdd.time_taken_at_zone=="00000" && bdd.time_taken_at_time=="000000")
 			{
 				//si on à pas de date
@@ -190,7 +196,9 @@ var GRID_load_CallBack = function load_CallBack(new_data=null)
 			loaded_files++;
 		}
 		
-		if(i>(50+loading_limit)) return false;
+		j++;
+		
+		if(j>(50+loading_limit)) return false; //false = break the loop;
 
 	});
 	
@@ -333,6 +341,8 @@ var GRID_load_CallBack = function load_CallBack(new_data=null)
 
 		$('main').on('click.enterFilter', 'section#explore div.tagelement', function(e) {
 			
+			$('main').scrollTop(0);
+			
 			if(!$(this).hasClass('expandmenu'))
 			{			
 				vGRID_mem_tag=$(this).attr('data-tag');
@@ -428,12 +438,12 @@ var GRID_load_CallBack = function load_CallBack(new_data=null)
 		DISPLAY_set_view("fullscreen");	//order before DISPLAY_selection is important
 		DISPLAY_selection(vFILEOPEN_currentid,true);
 	});	
-				
-	VGRID_scroll_lock=false;	
+	
+	if(loaded_files<source.length) vGRID_scroll_lock=false;	
 	
 	DISPLAY_selection();
 	
-	console.log("GRID_load_CallBack");
+	console.log("GRID_load_CallBack",loaded_files,source.length);
 }
 
 var GRID_add_tags = function add_tags(tags)
@@ -470,7 +480,7 @@ function addElement(dir, bdd)
 	
 	if(bdd.file_type == 0) 
 	{
-		html+= '		<img src="sd-'+bdd.file_hash+'" VGRID_scroll_lock="lazy">';
+		html+= '		<img src="sd-'+bdd.file_hash+'" scroll="lazy">';
 	}
 	if(bdd.file_type == 1)
 	{

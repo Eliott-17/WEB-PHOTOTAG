@@ -79,26 +79,120 @@ $(document).ready(function(){
 			
 			vFILEINFO_FLAG_SAVED = false;
 			vFILEINFOMULTISELECTION_FLAG_SAVED = false;
+			
+			DISPLAY_filters(false);
+			$('section.grid div').removeClass('hidden');
 	});
 
 	$('div#searchmenu div button.advanced-filters').on('click', 	function() {
 
-		DISPLAY_filters();
-		
-		$.each(vGRID_SEARCH_DATA.tags, function(index0, value0) {
-		
-			//console.log('aside#advancedfilters h3#'+index.replace('tag_','')+" span.value",value);
-			$('aside#advancedfilters h3#'+index0.replace('tag_','')+" div.value").html('');
+		if(DISPLAY_is_visible_filters())
+		{
+			DISPLAY_filters(false);
+		}
+		else
+		{
+			$('aside#advancedfilters').off('click.inputFilters', 'input');
 			
-			$.each(value0, function(index1, value1) {
-		
-				const obj = { tag: index0, value: index1 };
-
-				$('aside#advancedfilters h3#'+index0.replace('tag_','')+" div.value").append(`<span><input type="checkbox" value='${JSON.stringify(obj)}'></span><span>${index1}</span><br>`);
+			$('aside#advancedfilters h3').addClass('hidden');
+			
+			$.each(vGRID_SEARCH_DATA.tags, function(index0, value0) {
 				
+				//index0 = tag_xxxx
+				
+				if(value0.length==0 || (vGRID_SEARCH_DATA.tag==index0))
+				{
+					//console.log("Terminated A",value0,vGRID_SEARCH_DATA.tag,index0);
+				}
+				else
+				{					
+					$('aside#advancedfilters h3#'+index0.replace('tag_','')+" div.value").html('');
+					
+					console.log(value0);
+					
+					$.each(value0, function(index1, value1) {
+						
+						//index1 = tag value
+						//value1[0] = count
+						//value1[1] = flie hash
+						
+						
+						if(index0=='tag_country') console.log("tg");
+						
+						console.log(value1[0]);
+						
+						if(value1[0]==vGRID_SEARCH_DATA.datas.length)
+						{
+							//console.log("Terminated B",vGRID_SEARCH_DATA.datas.length,value1[0]);
+						}
+						else
+						{
+							let val = index1;
+							
+							if(index0=='tag_country') val = value1[1];
+
+							const obj = { tag: index0, value: val };
+							
+							let elementsel='aside#advancedfilters h3#'+index0.replace('tag_','');
+							
+							$(elementsel).removeClass('hidden');
+							$(elementsel+" div.value").append(`<span><input checked="1" type="checkbox" value='${JSON.stringify(obj)}'></span><span>${index1}</span><br>`);
+						}
+						
+					});
+				}
+			
 			});
-		
-		});
+			
+						
+			$('aside#advancedfilters').on('click.inputFilters', 'input', function () {
+
+				let error = false;
+				let input = null;
+
+				try {
+					input = JSON.parse($(this).val());
+
+					if (!input || !input.tag || !input.value) {
+						error = true;
+					}
+
+				} catch (e) {
+					error = true;
+				}
+
+				if (error) {
+					console.error('JSON invalide dans checkbox value:', $(this).val());
+					return;
+				}
+				
+				//{"tag":"tag_people","value":"..."}
+				
+				FILEMULTISELECTION_unselectall();
+				
+				let store_hash=null;
+				let check_status=$(this).is(':checked');
+
+				$.each(vGRID_SEARCH_DATA.datas, function (index, value) {
+					
+					console.log(value[input.tag],'==',input.value);
+					
+					vGRID_SEARCH_DATA.datas[index]['advfilter_hidden']=0;
+					
+					if(value[input.tag] == input.value)
+					{
+						if(!check_status) 
+						{
+							vGRID_SEARCH_DATA.datas[index]['advfilter_hidden']=1;
+						}
+					}
+				});
+				
+				GRID_load(false,true);
+			});
+
+			DISPLAY_filters(true);
+		}
 	});
 
 });

@@ -231,28 +231,30 @@
 						}						
 					}
 					else
-					{	
-						if (!isset($array_tags[$key][$val])) 
-						{							
-							if($key=='tag_country') 
+					{								
+						if($key=='tag_country') 
+						{
+							if(!isset($array_tags[$key][$country[$val]]))
 							{
 								$array_tags[$key][$country[$val]][0] = 1;
 								$array_tags[$key][$country[$val]][1] = $val;
 							}
-							else 					
+							else
+							{
+								$array_tags[$key][$country[$val]][0]++;
+							}
+						}
+						else 					
+						{
+							if (!isset($array_tags[$key][$val])) 
 							{
 								$array_tags[$key][$val][0] = 1;
 								$array_tags[$key][$val][1] = $array_lib[$index]['file_hash'];
 							}
-						}
-					
-						if($key=='tag_country') 
-						{
-							$array_tags[$key][$country[$val]][0]++;
-						}
-						else 					
-						{
-							$array_tags[$key][$val][0]++;
+							else
+							{
+								$array_tags[$key][$val][0]++;	
+							}
 						}
 					}
 				}

@@ -1,166 +1,30 @@
-/*-------------------------------------------
---Fullscreen image
--------------------------------------------*/
 
-aside h2
+aside#advancedfilters h3,h2
 {
-    margin-top: 10px;
-    margin-bottom: 0px;
-    font-size: 1.2em;
-    font-weight: bolder;
-    color: #494949;
+	border-color: #494949;
+	width: 100%;
 }
-
-aside :where(h3, h4)
+aside#advancedfilters h3.central
 {
-	font-size: 1em;
+	border-top: 1px solid;
+	border-bottom: 1px solid;
+
 }
 
-aside h2 span
+aside#advancedfilters h3.bottom
 {
-	vertical-align: text-bottom;
+	border-bottom: 1px solid;	
 }
 
-aside h3:is(.ux-tag-general, .ux-tag-location) span:is(.material-symbols-outlined, .unedit)
+aside#advancedfilters h3 div.value span input
 {
-	cursor: pointer;
+	transform: scale(2);
+	margin: 20px;
 }
 
-aside h2 span.tooltip-title
-{
-	bold: normal;
-	color: #5e5e5e;
-	font-style: italic;
-	font-size: 0.7em;
-}
-
-aside :where(h3, h4):not(#exif)
-{
-	color: #5e5e5e;
-	margin: 0px;
-	display: flex;
-    align-items: center;
-}
-
-aside h4
-{
-	min-height: 40px;
-}
-
-aside button
-{
-	box-sizing: border-box;
-	border: 1px solid black;
-	border-radius: 5px;
-	width: fit-content;
-	margin-top: 10px;
-	padding: 2px 5px 2px 5px;
-	height: 30px;
-	opacity: 1;
-}
-
-aside button.taghidden
-{
-	opacity: 0;
-	pointer-events: none;
-}
-	
-aside :where(h2,h3,h4) {
-	
-	/*padding-top: 2px;
-	padding-bottom: 2px;*/
-	min-height: 30px;
-	width: fit-content;
-	font-weight: normal;
-}
-
-aside h2 span.material-symbols-outlined
-{
-	margin-right: 10px;
-}
-
-aside h3 span.material-symbols-outlined, 
-h3.margin span,
-aside :where(h3,h4) button
-{
-	margin-left: 35px;
-}
-
-aside :where(h2,h3,h4) span
+aside#advancedfilters h3 span
 {
 	vertical-align: middle;
-}
 
-aside :where(input,select)
-{
-	padding-left: 5px;
-	margin-left: 5px;
-	margin-top: 1px;
-	margin-bottom: 1px;
-	border-radius: 5px;
-	border: 1px solid transparent;
-	background-color: white;
-	width: 250px;
-	box-sizing: border-box;
-	height: 28px;
-	outline: none;
 }
-
-aside :where(input,select):focus
-{
-	border: 1px solid rgba(145,200,250,1);
-}
-
-aside :where(input,select)
-{
-	display: inline-block;
-}
-
-aside :where(span.unedit, span.solver)
-{
-	margin-left: 5px;
-}
-
-aside button.cancel
-{
-	/*color: red;*/
-}
-
-aside button.save
-{
-	color: green;
-}
-
-aside button.warning
-{
-	color: red;
-}
-
-/*aside h4.edit_ux button:hover, 
-h4.button-exif button:hover, 
-h4.button-trash button:hover, 
-h4.button-exif button:hover, 
-aside#fullscreen_edit aside h4 button:hover*/
-aside button:hover
-{
-	border: 2px solid black;
-	padding: 1px 4px 1px 4px;
-}
-
-aside h3.legend
-{
-	font-size: small;
-}
-
-aside div.exifmargin20
-{
-	margin-left: 20px;
-}
-aside div.exifmargin40
-{
-	margin-left: 40px;
-}
-aside div.exifmargin60
-{
-	margin-left: 60px;
-}
+	

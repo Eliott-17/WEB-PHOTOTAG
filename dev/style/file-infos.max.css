@@ -91,7 +91,7 @@ aside :where(h2,h3,h4) span
 	vertical-align: middle;
 }
 
-aside :where(input,select)
+aside :not(input[type="checkbox"]):where(input,select)
 {
 	padding-left: 5px;
 	margin-left: 5px;
