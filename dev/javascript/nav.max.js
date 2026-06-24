@@ -1,6 +1,8 @@
 var vNAV_mem_selected=null;
 var vNAV_search_result=false;
 
+let remaining_tags=null;
+
 $(document).ready(function(){
 
 	$('div.mainmenu div.search input').on('blur', function() {
@@ -96,55 +98,8 @@ $(document).ready(function(){
 			
 			$('aside#advancedfilters h3').addClass('hidden');
 			
-			$.each(vGRID_SEARCH_DATA.tags, function(index0, value0) {
-				
-				//index0 = tag_xxxx
-				
-				if(value0.length==0 || (vGRID_SEARCH_DATA.tag==index0))
-				{
-					//console.log("Terminated A",value0,vGRID_SEARCH_DATA.tag,index0);
-				}
-				else
-				{					
-					$('aside#advancedfilters h3#'+index0.replace('tag_','')+" div.value").html('');
-					
-					console.log(value0);
-					
-					$.each(value0, function(index1, value1) {
-						
-						//index1 = tag value
-						//value1[0] = count
-						//value1[1] = flie hash
-						
-						
-						if(index0=='tag_country') console.log("tg");
-						
-						console.log(value1[0]);
-						
-						if(value1[0]==vGRID_SEARCH_DATA.datas.length)
-						{
-							//console.log("Terminated B",vGRID_SEARCH_DATA.datas.length,value1[0]);
-						}
-						else
-						{
-							let val = index1;
+			NAV_update_checkbox();
 							
-							if(index0=='tag_country') val = value1[1];
-
-							const obj = { tag: index0, value: val };
-							
-							let elementsel='aside#advancedfilters h3#'+index0.replace('tag_','');
-							
-							$(elementsel).removeClass('hidden');
-							$(elementsel+" div.value").append(`<span><input checked="1" type="checkbox" value='${JSON.stringify(obj)}'></span><span>${index1}</span><br>`);
-						}
-						
-					});
-				}
-			
-			});
-			
-						
 			$('aside#advancedfilters').on('click.inputFilters', 'input', function () {
 
 				let error = false;
@@ -162,7 +117,7 @@ $(document).ready(function(){
 				}
 
 				if (error) {
-					console.error('JSON invalide dans checkbox value:', $(this).val());
+					console.error('JSON invalid checkbox value:', $(this).val());
 					return;
 				}
 				
@@ -172,21 +127,65 @@ $(document).ready(function(){
 				
 				let store_hash=null;
 				let check_status=$(this).is(':checked');
+				
+				let total_data=vGRID_SEARCH_DATA.datas.length;
+				
+				let i=0;
 
 				$.each(vGRID_SEARCH_DATA.datas, function (index, value) {
 					
-					console.log(value[input.tag],'==',input.value);
-					
-					vGRID_SEARCH_DATA.datas[index]['advfilter_hidden']=0;
-					
+					//console.log(value[input.tag],'==',input.value);
+										
 					if(value[input.tag] == input.value)
 					{
 						if(!check_status) 
 						{
-							vGRID_SEARCH_DATA.datas[index]['advfilter_hidden']=1;
+							vGRID_SEARCH_DATA.datas[index]['advfilter_hidden']=1; //hide
+						}
+						else
+						{
+							vGRID_SEARCH_DATA.datas[index]['advfilter_hidden']=0; //show
 						}
 					}
+				
 				});
+				
+				//recherche de tags n'existant plus.
+				
+				let remaining_tags={};
+
+				$.each(vGRID_SEARCH_DATA.datas, function (index0, value0) {
+					
+					if(vGRID_SEARCH_DATA.datas[index0]['advfilter_hidden']==0)
+					{
+						i++;
+						j=0;
+						
+						$.each(vGRID_SEARCH_DATA.tags, function (index1, value1) {
+							
+							let ext_tag = vGRID_SEARCH_DATA.datas[index0][index1];							
+														
+							if (!remaining_tags[index1]) {
+								remaining_tags[index1] = [];
+							}
+
+							if (remaining_tags[index1].indexOf(ext_tag) === -1) {
+								remaining_tags[index1].push(ext_tag);
+							}
+
+						});
+					}
+				});
+				
+				//console.log("RAW:",remaining_tags);
+				
+				NAV_update_checkbox(remaining_tags);
+				
+				let s="";
+				
+				if(i>1) s="s";
+					
+				$('#filterresult').html(i+' element'+s);
 				
 				GRID_load(false,true);
 			});
@@ -228,4 +227,60 @@ var NAV_open_lib = function open_lib(force_reload=false)
 	DISPLAY_menu($('#select-status'),false);
 	DISPLAY_set_view('grid');
 	GRID_load(force_reload,true);
+}
+
+var NAV_update_checkbox = function update_checkbox(remaining_tags=null)
+{
+	$.each(vGRID_SEARCH_DATA.tags, function(index0, value0) 
+	{
+		if(value0.length==0 || (vGRID_SEARCH_DATA.tag==index0))
+		{
+			//console.log("Terminated A",value0,vGRID_SEARCH_DATA.tag,index0);
+		}
+		else
+		{					
+			$('aside#advancedfilters h3#'+index0.replace('tag_','')+" div.value").html('');
+			
+			$.each(value0, function(index1, value1) {
+				
+				//index1 = tag value
+				//value1[0] = count
+				//value1[1] = flie hash
+									
+				if(index0=='tag_country') console.log("tg");
+							
+				if(value1[0]==vGRID_SEARCH_DATA.datas.length)
+				{
+					//console.log("Terminated B",vGRID_SEARCH_DATA.datas.length,value1[0]);
+				}
+				else
+				{
+					let val = index1;
+					
+					if(index0=='tag_country') val = value1[1];
+
+					const obj = { tag: index0, value: val };
+					
+					let elementsel='aside#advancedfilters h3#'+index0.replace('tag_','');
+					
+					let value='checked="1"';
+					
+					if(remaining_tags!=null)
+					{
+						if(remaining_tags[index0]!==undefined)
+						{
+							if(remaining_tags[index0].indexOf(val)===-1) value='';
+						}
+						else
+						{
+							value='';
+						}
+					}
+					
+					$(elementsel).removeClass('hidden');
+					$(elementsel+" div.value").append(`<span><input ${value} type="checkbox" value='${JSON.stringify(obj)}'></span><span>${index1}</span><br>`);
+				}					
+			});
+		}	
+	});
 }

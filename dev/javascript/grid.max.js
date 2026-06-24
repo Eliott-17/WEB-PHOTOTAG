@@ -160,6 +160,7 @@ var GRID_load_CallBack = function load_CallBack(new_data=null)
 	//****************************************************************	
 	
 	let j=0; //because i is not reliable (in case of skip)
+	let max_display=0; //because source.length is not reliable (in case of skip)
 	
 	$.each(source, function(i, bdd)
 	{		
@@ -167,6 +168,8 @@ var GRID_load_CallBack = function load_CallBack(new_data=null)
 		{
 			if(bdd.advfilter_hidden==1) return; //skip to the next element
 		}
+
+		max_display++;
 		
 		if(j>=loaded_files)
 		{			
@@ -439,7 +442,7 @@ var GRID_load_CallBack = function load_CallBack(new_data=null)
 		DISPLAY_selection(vFILEOPEN_currentid,true);
 	});	
 	
-	if(loaded_files<source.length) vGRID_scroll_lock=false;	
+	if(loaded_files<max_display) vGRID_scroll_lock=false;	
 	
 	DISPLAY_selection();
 	
