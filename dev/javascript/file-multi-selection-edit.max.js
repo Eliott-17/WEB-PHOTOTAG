@@ -59,9 +59,11 @@ $(document).ready(function(){
 		
 	});
 
-	$('nav').on('click', 'div#select-status div.selection', function() {
+	$('nav').on('click', 'div#select-status div.deselectall', function() {
 
-		$('main div.element').each(function () { if ($(this).hasClass('selected')) $(this).toggleClass('selected notselected');	});
+		//$('main div.element').each(function () { if ($(this).hasClass('selected')) $(this).toggleClass('selected notselected');	});
+		FILEMULTISELECTION_unselectall();	
+
 		DISPLAY_menu($('#select-status'),false);
 		
 		if(vFILEINFOMULTISELECTION_FLAG_SAVED==true)
@@ -117,6 +119,12 @@ $(document).ready(function(){
 	});
 		
 });
+
+var FILEMULTISELECTION_unselectall = function unselect_all()
+{
+	$('main div.element').removeClass('selected');
+	$('main div.element').addClass('notselected');	
+}
 
 var FILEMULTISELECTION_load = function load(force_reload=false)
 {

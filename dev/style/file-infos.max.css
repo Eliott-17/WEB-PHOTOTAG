@@ -2,7 +2,7 @@
 --Fullscreen image
 -------------------------------------------*/
 
-#infocontent h2
+aside h2
 {
     margin-top: 10px;
     margin-bottom: 0px;
@@ -11,22 +11,22 @@
     color: #494949;
 }
 
-#infocontent :where(h3, h4)
+aside :where(h3, h4)
 {
 	font-size: 1em;
 }
 
-#infocontent h2 span
+aside h2 span
 {
 	vertical-align: text-bottom;
 }
 
-#infocontent h3:is(.ux-tag-general, .ux-tag-location) span:is(.material-symbols-outlined, .unedit)
+aside h3:is(.ux-tag-general, .ux-tag-location) span:is(.material-symbols-outlined, .unedit)
 {
 	cursor: pointer;
 }
 
-#infocontent h2 span.tooltip-title
+aside h2 span.tooltip-title
 {
 	bold: normal;
 	color: #5e5e5e;
@@ -34,7 +34,7 @@
 	font-size: 0.7em;
 }
 
-#infocontent :where(h3, h4):not(#exif)
+aside :where(h3, h4):not(#exif)
 {
 	color: #5e5e5e;
 	margin: 0px;
@@ -42,12 +42,12 @@
     align-items: center;
 }
 
-#infocontent h4
+aside h4
 {
 	min-height: 40px;
 }
 
-#infocontent button
+aside button
 {
 	box-sizing: border-box;
 	border: 1px solid black;
@@ -59,13 +59,13 @@
 	opacity: 1;
 }
 
-#infocontent button.taghidden
+aside button.taghidden
 {
 	opacity: 0;
 	pointer-events: none;
 }
 	
-#infocontent :where(h2,h3,h4) {
+aside :where(h2,h3,h4) {
 	
 	/*padding-top: 2px;
 	padding-bottom: 2px;*/
@@ -74,24 +74,24 @@
 	font-weight: normal;
 }
 
-#infocontent h2 span.material-symbols-outlined
+aside h2 span.material-symbols-outlined
 {
 	margin-right: 10px;
 }
 
-#infocontent h3 span.material-symbols-outlined, 
+aside h3 span.material-symbols-outlined, 
 h3.margin span,
-#infocontent :where(h3,h4) button
+aside :where(h3,h4) button
 {
 	margin-left: 35px;
 }
 
-#infocontent :where(h2,h3,h4) span
+aside :where(h2,h3,h4) span
 {
 	vertical-align: middle;
 }
 
-#infocontent :where(input,select)
+aside :where(input,select)
 {
 	padding-left: 5px;
 	margin-left: 5px;
@@ -106,61 +106,61 @@ h3.margin span,
 	outline: none;
 }
 
-#infocontent :where(input,select):focus
+aside :where(input,select):focus
 {
 	border: 1px solid rgba(145,200,250,1);
 }
 
-#infocontent :where(input,select)
+aside :where(input,select)
 {
 	display: inline-block;
 }
 
-#infocontent :where(span.unedit, span.solver)
+aside :where(span.unedit, span.solver)
 {
 	margin-left: 5px;
 }
 
-#infocontent button.cancel
+aside button.cancel
 {
 	/*color: red;*/
 }
 
-#infocontent button.save
+aside button.save
 {
 	color: green;
 }
 
-#infocontent button.warning
+aside button.warning
 {
 	color: red;
 }
 
-/*#infocontent h4.edit_ux button:hover, 
+/*aside h4.edit_ux button:hover, 
 h4.button-exif button:hover, 
 h4.button-trash button:hover, 
 h4.button-exif button:hover, 
-aside#fullscreen_edit #infocontent h4 button:hover*/
-#infocontent button:hover
+aside#fullscreen_edit aside h4 button:hover*/
+aside button:hover
 {
 	border: 2px solid black;
 	padding: 1px 4px 1px 4px;
 }
 
-#infocontent h3.legend
+aside h3.legend
 {
 	font-size: small;
 }
 
-#infocontent div.exifmargin20
+aside div.exifmargin20
 {
 	margin-left: 20px;
 }
-#infocontent div.exifmargin40
+aside div.exifmargin40
 {
 	margin-left: 40px;
 }
-#infocontent div.exifmargin60
+aside div.exifmargin60
 {
 	margin-left: 60px;
 }

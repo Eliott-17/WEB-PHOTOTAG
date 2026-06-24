@@ -9,7 +9,7 @@ var loaded_files=0;		//Chargement progressif: mémorise le nombre de fichier cha
 var loading_limit=0;	//Chagrement progressif: mémorise le nombre de fichier à pré-chargés
 
 var mem_data=null;		 //Stoque les données chargées pour les réutilisées et éviter un appel  à la base de données
-var mem_data_search=null;//Stoque les données chargées pour les réutilisées et éviter un appel  à la base de données
+var vGRID_SEARCH_DATA=null;//Stoque les données chargées pour les réutilisées et éviter un appel  à la base de données
 
 var html_mem_date;		//Pour afficher les dates correctemenr avec réinitialisation
 var undated=0;
@@ -92,7 +92,7 @@ var GRID_search_CallBack = function search_CallBack(search_data)
 		
 	//result
 
-	mem_data_search=search_data.datas;
+	vGRID_SEARCH_DATA=search_data;
 	DISPLAY_menu($('#select-status'),false);
 	DISPLAY_set_view('grid');
 
@@ -138,10 +138,10 @@ var GRID_load_CallBack = function load_CallBack(new_data=null)
 		console.log("Source untagged");
 		source=mem_data.untagged;
 	}
-	else if(mem_data_search.length!=0)
+	else if(vGRID_SEARCH_DATA.datas.length!=0)
 	{
 		console.log("Source search");
-		source=mem_data_search;
+		source=vGRID_SEARCH_DATA.datas;
 	}
 	else {};
 	

@@ -203,8 +203,83 @@
 
 		return $result;
 	}
+	
+	function retreive_sort_tags($array_lib,$array_tags,$country)
+	{		
+		$return="";
+
+		foreach ($array_lib as $index => $row) {
+			
+			$return.='\n'.$index.'-';
+			
+			foreach ($array_tags as $key => $_) {
+				
+				$val = $row[$key] ?? null;
+
+				if ($val !== null) {
+
+					if($key=='time_taken_at_date')
+					{
+						$dateParts = [
+							'years'  => substr($val, 0, 4),
+							'months' => substr($val, 4, 2),
+							//'days'   => substr($val, 6, 2),
+						];
+
+						foreach ($dateParts as $period => $part) {
+							$array_tags[$key][$period][$part] = ($array_tags[$key][$period][$part] ?? 0) + 1;
+						}						
+					}
+					else
+					{	
+						if (!isset($array_tags[$key][$val])) 
+						{							
+							if($key=='tag_country') 
+							{
+								$array_tags[$key][$country[$val]][0] = 1;
+								$array_tags[$key][$country[$val]][1] = $val;
+							}
+							else 					
+							{
+								$array_tags[$key][$val][0] = 1;
+								$array_tags[$key][$val][1] = $array_lib[$index]['file_hash'];
+							}
+						}
+					
+						if($key=='tag_country') 
+						{
+							$array_tags[$key][$country[$val]][0]++;
+						}
+						else 					
+						{
+							$array_tags[$key][$val][0]++;
+						}
+					}
+				}
+			}
+		}
+		
+		foreach ($array_tags as $key => &$tags) 
+		{
+			if($key!='time_taken_at_date')
+			{				
+				arsort($tags); // tri décroissant par valeur
+			}
+			else
+			{
+				if(isset($tags['years'])) krsort($tags['years']); // tri décroissant par valeur
+				if(isset($tags['years'])) krsort($tags['months']); // tri décroissant par valeur
+				//krsort($tags['days']); // tri décroissant par valeur
+			}
+		}
+		unset($tags);
+		
+		return $array_tags;
+		
+	}
 		
 	$loc_dir = 'multimedia/'.$_SESSION["USER"].'/';
 	$full_dir = $_SERVER['DOCUMENT_ROOT'].'/'.$loc_dir;
+	
 
 ?>

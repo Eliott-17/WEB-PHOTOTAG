@@ -22,7 +22,7 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/locations.php');
 		<link rel="stylesheet" href="style/file-infos.<?php echo filemtime('style/file-infos.'.DIM.'.css'); ?>.<?php echo DIM; ?>.css" type="text/css"/>
 		<link rel="stylesheet" href="style/file-multi-selection-edit.<?php echo filemtime('style/file-multi-selection-edit.'.DIM.'.css'); ?>.<?php echo DIM; ?>.css" type="text/css"/>
 		<link rel="stylesheet" href="style/file-open-fullscreen.<?php echo filemtime('style/file-open-fullscreen.'.DIM.'.css'); ?>.<?php echo DIM; ?>.css" type="text/css"/>
-		<link rel="stylesheet" href="style/filters.<?php echo filemtime('style/filters.'.DIM.'.css'); ?>.<?php echo DIM; ?>.css" type="text/css"/>
+		<link rel="stylesheet" href="style/explore.<?php echo filemtime('style/explore.'.DIM.'.css'); ?>.<?php echo DIM; ?>.css" type="text/css"/>
 	
 	
 		<link rel="stylesheet" href="style/index-grid.<?php echo filemtime('style/index-grid.'.DIM.'.css'); ?>.<?php echo DIM; ?>.css" type="text/css"/>
@@ -36,8 +36,9 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/locations.php');
 	<!-- END HEAD -->
 
 	<!-- BEGIN BODY -->
-	
-	<body class="no-aside-files no-aside-filters">
+
+	<body class="no-aside-files">	
+	<!--<body class="no-aside-files no-aside-filters">-->
 	
 		<nav>
 			<?php
@@ -52,9 +53,9 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/locations.php');
 						<div class="last"><a href="actions/logout.php"><button><span class="material-symbols-outlined">logout</span>&nbsp;<span>Logout</span></button></button></a></div>
 					</div>
 					<div id="searchmenu" class="ux-background hidden mainmenu">				
-						<div><button class="return"><span class="material-symbols-outlined">arrow_back</span>&nbsp;<span>Return</span></button></div>
-						<div><span class="material-symbols-outlined">filter_arrow_right</span>&nbsp;<span id="filterapply">"</span></div>
-						<div><span class="material-symbols-outlined">equal</span>&nbsp;<span id="filterresult"></span></div>
+						<div><button class="return-explore"><span class="material-symbols-outlined">arrow_back</span>&nbsp;<span>Return</span></button></div>
+						<div><button class="advanced-filters"><span class="material-symbols-outlined">filter_arrow_right</span>&nbsp;<span id="filterapply">"</span></button></div>
+						<div><button class="advanced-filters"><span class="material-symbols-outlined">equal</span>&nbsp;<span id="filterresult"></span></button></div>
 						<div class="search"><button class="search"><span class="material-symbols-outlined">search</span>&nbsp;<span>quick search</span></button><input type="text" list="fastsearch" autocomplete="off"/></div>
 						<div class="last"><a href="actions/logout.php"><button><span class="material-symbols-outlined">logout</span>&nbsp;<span>Logout</span></button></button></a></div>
 					</div>
@@ -76,7 +77,7 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/locations.php');
 			<div id="upload-status" class="ux-infobox ux-background ux-hidden-opacity ux-hidden-zindex">Upload in progress</br><div id="progressbar">45%</div></div>
 			<div id="select-status" class="ux-infobox ux-background ux-hidden-opacity ux-hidden-zindex">Selection of <span class="elementscnt"></span></br>			
 				<div>
-					<div class="selection">
+					<div class="deselectall">
 						<span class="material-symbols-outlined cursor unselect">radio_button_unchecked</span>
 						<span class="material-symbols-outlined cursor select">check_circle</span>
 					</div>
@@ -152,11 +153,45 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/locations.php');
 					<section class="grid nodate"></section>
 				</main>
 		
+				<!--<aside id="advancedfilters" class="ux-background">
+				
+					<h2>Advanced filters</h2>
+
+					<h2><span class="material-symbols-outlined">globe</span><span>Location&nbsp;</span><span id="tooltip-location" class="tooltip-title"></span></h2>
+					
+					<h3 class="ux-tag-location" data-tooltip="tooltip-location" data-label="Country" id="country"><span class="material-symbols-outlined">flag</span><div class="value"></div></h3>
+					<h3 class="ux-tag-location" data-tooltip="tooltip-location" data-label="City" id="city"><span class="material-symbols-outlined">location_city</span><div class="value"></div></h3>
+					<h3 class="ux-tag-location" data-tooltip="tooltip-location" data-label="Place" id="place"><span class="material-symbols-outlined">place</span><div class="value"></div></h3>
+
+					<h2><span class="material-symbols-outlined">tag</span><span>Tags&nbsp;</span><span id="tooltip-tags" class="tooltip-title"></span></h2>
+	
+					<h3 class="ux-tag-general" data-tooltip="tooltip-tags" data-label="Activity" id="activity"><span class="material-symbols-outlined">directions_run</span><div class="value"></div></h3>				
+					<h3 class="ux-tag-general" data-tooltip="tooltip-tags" data-label="Comment" id="comment"><span class="material-symbols-outlined">comment</span><div class="value"></div></h3>
+					<h3 class="ux-tag-general" data-tooltip="tooltip-tags" data-label="People" id="people"><span class="material-symbols-outlined">group</span><div class="value"></div></h3>
+					<h3 class="ux-tag-general" data-tooltip="tooltip-tags" data-label="Other informations" id="other"><span class="material-symbols-outlined">info</span><div class="value"></div></h3>
+					<h4 class="edit_ux tag-general" data-form="tag-general">
+						
+				</aside>-->
+				
 				<aside id="advancedfilters" class="ux-background">
 				
 					<h2>Advanced filters</h2>
-				
-				</aside>
+
+					<h2><span class="material-symbols-outlined">globe</span><span>Location&nbsp;</span><span id="tooltip-location" class="tooltip-title"></span></h2>
+					
+					<h3 class="ux-tag-location" data-tooltip="tooltip-location" data-label="Country" id="country"><span class="material-symbols-outlined">flag</span><div class="value"><span><input type="checkbox" value="{&quot;tag&quot;:&quot;tag_country&quot;,&quot;value&quot;:&quot;Portugal&quot;}"></span><span>Portugal</span><br><span><input type="checkbox" value="{&quot;tag&quot;:&quot;tag_country&quot;,&quot;value&quot;:&quot;Italy&quot;}"></span><span>Italy</span><br><span><input type="checkbox" value="{&quot;tag&quot;:&quot;tag_country&quot;,&quot;value&quot;:&quot;France&quot;}"></span><span>France</span><br></div></h3>
+					<h3 class="ux-tag-location" data-tooltip="tooltip-location" data-label="City" id="city"><span class="material-symbols-outlined">location_city</span><div class="value"><span><input type="checkbox" value="{&quot;tag&quot;:&quot;tag_city&quot;,&quot;value&quot;:&quot;Aix en Provence&quot;}"></span><span>Aix en Provence</span><br><span><input type="checkbox" value="{&quot;tag&quot;:&quot;tag_city&quot;,&quot;value&quot;:&quot;Porto&quot;}"></span><span>Porto</span><br><span><input type="checkbox" value="{&quot;tag&quot;:&quot;tag_city&quot;,&quot;value&quot;:&quot;Marseille&quot;}"></span><span>Marseille</span><br><span><input type="checkbox" value="{&quot;tag&quot;:&quot;tag_city&quot;,&quot;value&quot;:&quot;Lyon&quot;}"></span><span>Lyon</span><br></div></h3>
+					<h3 class="ux-tag-location" data-tooltip="tooltip-location" data-label="Place" id="place"><span class="material-symbols-outlined">place</span><div class="value"><span><input type="checkbox" value="{&quot;tag&quot;:&quot;tag_place&quot;,&quot;value&quot;:&quot;Clearsy&quot;}"></span><span>Clearsy</span><br></div></h3>
+
+					<h2><span class="material-symbols-outlined">tag</span><span>Tags&nbsp;</span><span id="tooltip-tags" class="tooltip-title"></span></h2>
+	
+					<h3 class="ux-tag-general" data-tooltip="tooltip-tags" data-label="Activity" id="activity"><span class="material-symbols-outlined">directions_run</span><div class="value"></div></h3>				
+					<h3 class="ux-tag-general" data-tooltip="tooltip-tags" data-label="Comment" id="comment"><span class="material-symbols-outlined">comment</span><div class="value"></div></h3>
+					<h3 class="ux-tag-general" data-tooltip="tooltip-tags" data-label="People" id="people"><span class="material-symbols-outlined">group</span><div class="value"></div></h3>
+					<h3 class="ux-tag-general" data-tooltip="tooltip-tags" data-label="Other informations" id="other"><span class="material-symbols-outlined">info</span><div class="value"></div></h3>
+					<h4 class="edit_ux tag-general" data-form="tag-general">
+						
+				</h4></aside>
 				
 	
 				<aside id="infocontent" class="ux-background">

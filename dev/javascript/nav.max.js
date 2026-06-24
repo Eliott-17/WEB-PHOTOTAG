@@ -64,23 +64,43 @@ $(document).ready(function(){
 	$('div#mainmenu div button.explore').on('click', 	function() { if(!$(this).hasClass('selected')) NAV_open_explore(); });	
 	$('div#mainmenu div button.untag').on('click', 		function() { if(!$(this).hasClass('selected')) NAV_open_untagg() });
 
-	$('div#searchmenu div button.return').on('click', 	function() {
+	$('div#searchmenu div button.return-explore').on('click', 	function() {
 
-		vGRID_mem_tag=null;
-		vGRID_mem_val=null;
-		vNAV_search_result=false;
-		
-		let fr = (vFILEINFO_FLAG_SAVED || vFILEINFOMULTISELECTION_FLAG_SAVED);
+			vGRID_mem_tag=null;
+			vGRID_mem_val=null;
+			vNAV_search_result=false;
+			
+			let fr = (vFILEINFO_FLAG_SAVED || vFILEINFOMULTISELECTION_FLAG_SAVED);
 
-		if(vNAV_mem_selected=='div#mainmenu div button.untag') NAV_open_untagg(fr);
-		else if(vNAV_mem_selected=='div#mainmenu div button.mylib') NAV_open_lib(fr);
-		else if(vNAV_mem_selected=='div#mainmenu div button.explore') NAV_open_explore(fr);
-		else {}
-		
-		vFILEINFO_FLAG_SAVED = false;
-		vFILEINFOMULTISELECTION_FLAG_SAVED = false;
+			if(vNAV_mem_selected=='div#mainmenu div button.untag') NAV_open_untagg(fr);
+			else if(vNAV_mem_selected=='div#mainmenu div button.mylib') NAV_open_lib(fr);
+			else if(vNAV_mem_selected=='div#mainmenu div button.explore') NAV_open_explore(fr);
+			else {}
+			
+			vFILEINFO_FLAG_SAVED = false;
+			vFILEINFOMULTISELECTION_FLAG_SAVED = false;
 	});
-	
+
+	$('div#searchmenu div button.advanced-filters').on('click', 	function() {
+
+		DISPLAY_filters();
+		
+		$.each(vGRID_SEARCH_DATA.tags, function(index0, value0) {
+		
+			//console.log('aside#advancedfilters h3#'+index.replace('tag_','')+" span.value",value);
+			$('aside#advancedfilters h3#'+index0.replace('tag_','')+" div.value").html('');
+			
+			$.each(value0, function(index1, value1) {
+		
+				const obj = { tag: index0, value: index1 };
+
+				$('aside#advancedfilters h3#'+index0.replace('tag_','')+" div.value").append(`<span><input type="checkbox" value='${JSON.stringify(obj)}'></span><span>${index1}</span><br>`);
+				
+			});
+		
+		});
+	});
+
 });
 
 /**********************************************************************

@@ -52,89 +52,30 @@
 				 time_taken_at_time DESC,
 				 id ASC
 	');
+
+
+	$array_tags = [
+		'tag_country' => [],
+		'tag_city' => [],
+		'tag_place' => [],
+		'tag_activity' => [],
+		'tag_comment' => [],
+		'tag_people' => [],
+		'tag_other' => [],
+		'time_taken_at_date' => []
+	];
 	
 	if($array_lib['status']==1)
 	{		
-		//fill datalist
+		$bigarray['tags']=retreive_sort_tags($array_lib['datas'],$array_tags,$country);
+		
+		unset($array_tags['time_taken_at_date']);
+		$keysToRemove = array_flip(array_keys($array_tags));
 
-		$array_tags = [
-			'tag_country' => [],
-			'tag_city' => [],
-			'tag_place' => [],
-			'tag_activity' => [],
-			'tag_comment' => [],
-			'tag_people' => [],
-			'tag_other' => [],
-			'time_taken_at_date' => []
-		];
-
-		foreach ($array_lib['datas'] as $index => $row) {
-			
-			foreach ($array_tags as $key => $_) {
-
-				$val = $row[$key] ?? null;
-
-				if ($val !== null) {
-
-					if($key=='time_taken_at_date')
-					{
-						$dateParts = [
-							'years'  => substr($val, 0, 4),
-							'months' => substr($val, 4, 2),
-							//'days'   => substr($val, 6, 2),
-						];
-
-						foreach ($dateParts as $period => $part) {
-							$array_tags[$key][$period][$part] = ($array_tags[$key][$period][$part] ?? 0) + 1;
-						}						
-					}
-					else
-					{
-						if (!isset($array_tags[$key][$val])) 
-						{							
-							if($key=='tag_country') 
-							{
-								$array_tags[$key][$country[$val]][0] = 1;
-								$array_tags[$key][$country[$val]][1] = $val;
-							}
-							else 					
-							{
-								$array_tags[$key][$val][0] = 1;
-								$array_tags[$key][$val][1] = $array_lib['datas'][$index]['file_hash'];
-							}
-						}
-					
-						if($key=='tag_country') 
-						{
-							$array_tags[$key][$country[$val]][0]++;
-						}
-						else 					
-						{
-							$array_tags[$key][$val][0]++;
-						}
-					}
-				}
-
-				if($key!='time_taken_at_date') unset($array_lib['datas'][$index][$key]);
-			}
+		foreach ($array_lib['datas'] as &$row) {
+			$row = array_diff_key($row, $keysToRemove);
 		}
-
-		foreach ($array_tags as $key => &$tags) 
-		{
-			if($key!='time_taken_at_date')
-			{				
-				arsort($tags); // tri décroissant par valeur
-			}
-			else
-			{
-				krsort($tags['years']); // tri décroissant par valeur
-				krsort($tags['months']); // tri décroissant par valeur
-				//krsort($tags['days']); // tri décroissant par valeur
-			}
-		}
-		unset($tags);
-
-		$bigarray['tags']=$array_tags;
+		
 		$bigarray['library']=$array_lib['datas'];	
 	}
 	else

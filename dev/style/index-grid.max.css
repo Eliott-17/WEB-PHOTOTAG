@@ -223,12 +223,11 @@ div#select-status div span#tag:hover, div#select-status div span#tag.fullscreen 
 div#select-status div span#tag.green { color: green; }
 div#select-status div span#delete:hover { color: #f44336 }
 
-div#select-status div div.selection { display: inline-block; }
-div#select-status div div.selection span{ transition: opacity 0.3s ease; }
-div#select-status div div.selection span.unselect { position: absolute; left: 75px; opacity: 1; }
-div#select-status div div.selection span.select { opacity: 1; }
-div#select-status div div.selection:hover span.select { opacity: 0; }
-/*#select-status div div.selection:hover span.unselect { opacity: 1; }*/
+div#select-status div div.deselectall { display: inline-block; }
+div#select-status div div.deselectall span{ transition: opacity 0.3s ease; }
+div#select-status div div.deselectall span.unselect { position: absolute; left: 75px; opacity: 1; }
+div#select-status div div.deselectall span.select { opacity: 1; }
+div#select-status div div.deselectall:hover span.select { opacity: 0; }
 
 div#select-trash div span#delete_cancel:hover { color: red }
 div#select-trash div span#delete_confirm:hover { color: green }

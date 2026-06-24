@@ -14,20 +14,19 @@ var DISPLAY_set_view = function view_refresh(newview)
 	
 	switch(newview)
 	{
-		/*case "searchresult":
+		case "searchresult":
 		
-			DISPLAY_full_screen(false,true);
-			DISPLAY_selection();
-			DISPLAY_explore(false);			
+			DISPLAY_filters(false);				
 		
 		break;
 		case "searchresult-filters":
 		
-			DISPLAY_full_screen(false,true);
+			DISPLAY_file_info(false);
+			FILEMULTISELECTION_unselectall();
 			DISPLAY_selection();
-			DISPLAY_explore(false);			
-		
-		break;*/
+			DISPLAY_filters(true);	
+			
+		break;
 		case "explore":
 		
 			DISPLAY_full_screen(false);
@@ -45,6 +44,7 @@ var DISPLAY_set_view = function view_refresh(newview)
 		break;
 		case "grid-fileinfo":
 		
+			DISPLAY_filters(false);	
 			DISPLAY_full_screen(false);
 			DISPLAY_file_info(true);
 			
@@ -53,6 +53,7 @@ var DISPLAY_set_view = function view_refresh(newview)
 		break;
 		case "fullscreen":	
 		
+			DISPLAY_filters(false);	
 			DISPLAY_full_screen(true);
 			DISPLAY_file_info(false);
 			
@@ -64,6 +65,9 @@ var DISPLAY_set_view = function view_refresh(newview)
 			
 			FILEINFO_load();
 			
+		break;
+		default:
+			console.log("DISPLAY_set_view !!! VIEW NOT FOUND !!!");
 		break;
 	
 	}
@@ -83,7 +87,6 @@ var DISPLAY_is_visible_file_info = function is_visible_file_info()
 var DISPLAY_file_info = function display_aside(visibility = undefined)
 {
 	let lelement=$('body');
-	if(visibility==undefined)  	{ lelement.toggleClass('no-aside-files'); return; }
 	if(visibility==true) 		{ lelement.removeClass('no-aside-files'); return; }
 	if(visibility==false) 		{ lelement.addClass('no-aside-files'); return; }	
 	console.log("DISPLAY_file_info bad parameter");
@@ -101,10 +104,10 @@ var DISPLAY_is_visible_filters = function is_visible_filters()
 var DISPLAY_filters = function display_filters(visibility = undefined)
 {
 	let lelement=$('body');
-	if(visibility==undefined)  	{ lelement.toggleClass('no-aside-filters'); return; }
+	if(visibility==undefined) 	{ lelement.toggleClass('no-aside-filters'); return; }
 	if(visibility==true) 		{ lelement.removeClass('no-aside-filters'); return; }
 	if(visibility==false) 		{ lelement.addClass('no-aside-filters'); return; }	
-	console.log("DISPLAY_file_info bad parameter");
+	console.log("DISPLAY_fiters bad parameter");
 }
 
 //****************************************************************

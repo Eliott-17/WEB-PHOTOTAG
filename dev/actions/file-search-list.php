@@ -27,6 +27,14 @@
 	$EasyPDO->addFields('file_orientation');
 	$EasyPDO->addFields('file_type');
 	$EasyPDO->addFields('id');
+
+	$EasyPDO->addFields('tag_country');
+	$EasyPDO->addFields('tag_city');
+	$EasyPDO->addFields('tag_place');
+	$EasyPDO->addFields('tag_activity');
+	$EasyPDO->addFields('tag_comment');
+	$EasyPDO->addFields('tag_people');
+	$EasyPDO->addFields('tag_other');
 	
 	$result['status']=0;
 	$tagname="";
@@ -38,7 +46,7 @@
 			$key = array_search($_GET['value'], $country);
 
 			if ($key === false) {
-				$fReturn->addConsole("[PHP] Counrty value ".$_GET['value']." invalid");
+				$fReturn->addConsole("[PHP] Country value ".$_GET['value']." invalid");
 				break;
 			}
 			else
@@ -71,6 +79,19 @@
 	{
 		$return['keywords']=$_GET['value'];
 		$return['tagname']=$tagname;
+
+		$array_tags = [
+			'tag_country' => [],
+			'tag_city' => [],
+			'tag_place' => [],
+			'tag_activity' => [],
+			'tag_comment' => [],
+			'tag_people' => [],
+			'tag_other' => [],
+			'time_taken_at_date' => []
+		];
+		
+		$return['tags']=retreive_sort_tags($result['datas'],$array_tags,$country);	
 		$return['datas']=$result['datas'];
 		$fReturn->addCallBack("GRID_search_CallBack", $return);
 	}
