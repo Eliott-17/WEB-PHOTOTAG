@@ -230,7 +230,8 @@ var GRID_load_CallBack = function load_CallBack(new_data=null)
 			tag_comment: 0,
 			tag_people: 0,
 			tag_other: 0,
-			time_taken_at_date: ["By date",1]
+			years: ["By date",1],
+			months: 0
 		};
 		
 		expand_max=[];
@@ -245,51 +246,40 @@ var GRID_load_CallBack = function load_CallBack(new_data=null)
 				htmlfull += '<option data-tag="'+index+'" value="'+optionvalue+'">';
 				
 				//filters
+				
+				let date=false;
+				
+				if(index=='days' || index=='months' || index=='years') date=true;
 			
-				if(optionvalue=='days' || optionvalue=='months' || optionvalue=='years')
-				{
-					console.log('time',optionvalue);
-					
-					if(optionvalue=='years')
-					{					
-						//if(optionvalue!=filtermem_time)
-						//{
-							htmlfilter += '<div class="fullrow"><h2>'+optionvalue.toUpperCase()+'</h2></div>';
-						//}
-						
-						$.each(ovdata, function(key, value) {
-							htmlfilter += '<div class="element cursor date yearelement" data-tag="'+optionvalue+'" data-val="'+key+'"><div>'+key+'</div></div>';
-
-						});
-						
-						//filtermem_time=optionvalue;
-					}
-				}
-				else if(array_config_tag_show[index][1]==1)
+				if(array_config_tag_show[index][1]==1)
 				{
 					if(filtermem!=index)
 					{
 						filtercount=1;
 					}
-					
+
 					img="includes/401.webp";
 					let visibility="";
 					let name="";
-				
-					if(ovdata[1].length>3) img='sd-'+ovdata[1];
-					if(ovdata[1].length==3) img='images/flags/'+ovdata[1]+'.svg';
 					
-					if(filtercount>=max_elements) 
-					{
-						let id=Math.floor(filtercount/max_elements);
-						let name=index+"_filter";
-						visibility="hidden "+name+id;
-									
-						if(filtercount%max_elements==0) 
+					if(!date)
+					{						
+					
+						if(ovdata[1].length>3) img='sd-'+ovdata[1];
+						if(ovdata[1].length==3) img='images/flags/'+ovdata[1]+'.svg';
+						
+						if(filtercount>=max_elements) 
 						{
-							htmlfilter += '<div class="element cursor expandmenu" id="'+name+'"><img src="'+img+'"><span class="material-symbols-outlined">expand_circle_down</span><div>Explore more</div></div>';
-							expand_block[name]=1;
-							expand_max[name]=id;
+							let id=Math.floor(filtercount/max_elements);
+							let name=index+"_filter";
+							visibility="hidden "+name+id;
+										
+							if(filtercount%max_elements==0) 
+							{
+								htmlfilter += '<div class="element cursor expandmenu" id="'+name+'"><img src="'+img+'"><span class="material-symbols-outlined">expand_circle_down</span><div>Explore more</div></div>';
+								expand_block[name]=1;
+								expand_max[name]=id;
+							}
 						}
 					}
 					
@@ -301,12 +291,18 @@ var GRID_load_CallBack = function load_CallBack(new_data=null)
 						htmlfilter += '<div class="fullrow"><h2 class="'+add_class+'">'+array_config_tag_show[index][0]+'</h2></div>';
 					}
 					
-					htmlfilter += '<div class="element cursor tagelement '+visibility+'" data-tag="'+index+'" data-val="'+optionvalue+'"><img src="'+img+'"><div>'+optionvalue+'</div></div>';
-
+					if(!date)
+					{
+						htmlfilter += '<div class="element cursor tagelement '+visibility+'" data-tag="'+index+'" data-val="'+optionvalue+'"><img src="'+img+'"><div>'+optionvalue+'</div></div>';
+					}
+					else
+					{
+						htmlfilter += '<div class="element cursor date tagelement" data-tag="'+index+'" data-val="'+optionvalue+'"><div>'+optionvalue+'</div></div>';
+					}
+					
 					filtermem=index;
 					filtercount++;
 				}
-				else {}
 	
 			});
 
@@ -354,17 +350,8 @@ var GRID_load_CallBack = function load_CallBack(new_data=null)
 				CORE_get('actions/file-search-list.php?tag='+vGRID_mem_tag+'&value='+vGRID_mem_val);	
 			}
 		});	
-
-		$('main').on('click.enterFilterYear', 'section#explore div.yearelement', function(e) {
-			
-			//if(!$(this).hasClass('expandmenu'))
-			//{			
-			//	CORE_get('actions/file-search-list.php?tag='+$(this).attr('data-tag')+'&value='+$(this).attr('data-val'));	
-			//}
-		});	
 	
 		if(scrolltop_after) $('main').scrollTop(0);
-
 	}
 	
 	//****************************************************************

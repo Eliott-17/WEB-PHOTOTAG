@@ -94,13 +94,35 @@ $(document).ready(function(){
 		}
 		else
 		{
+			$('aside#advancedfilters h3').addClass('hidden');		
+			$('aside#advancedfilters h2:not(.title)').addClass('hidden');
+			
 			$('aside#advancedfilters').off('click.inputFilters', 'input');
+			$('aside#advancedfilters').off('click.allCheck', 'input');
 			
-			$('aside#advancedfilters h3').addClass('hidden');
+			update_checkbox();
 			
-			NAV_update_checkbox();
+			$('aside#advancedfilters').on('click.allCheck', 'h2 span.cursor', function () {
 							
+				let target_elements = $(this).parent().attr('id');
+				let val=1;
+				
+				if($(this).html()=='check_box') 
+				{
+					val = 0;
+				}
+				
+				$.each(vGRID_SEARCH_DATA.datas, function (index, v_) {
+									
+					vGRID_SEARCH_DATA.datas[index]['advfilter_hidden']=val;
+				});
+
+				update_grid();	
+			});
+					
 			$('aside#advancedfilters').on('click.inputFilters', 'input', function () {
+
+				console.log('clicked');
 
 				let error = false;
 				let input = null;
@@ -130,12 +152,8 @@ $(document).ready(function(){
 				
 				let total_data=vGRID_SEARCH_DATA.datas.length;
 				
-				let i=0;
-
 				$.each(vGRID_SEARCH_DATA.datas, function (index, value) {
-					
-					//console.log(value[input.tag],'==',input.value);
-										
+									
 					if(value[input.tag] == input.value)
 					{
 						if(!check_status) 
@@ -149,45 +167,8 @@ $(document).ready(function(){
 					}
 				
 				});
-				
-				//recherche de tags n'existant plus.
-				
-				let remaining_tags={};
 
-				$.each(vGRID_SEARCH_DATA.datas, function (index0, value0) {
-					
-					if(vGRID_SEARCH_DATA.datas[index0]['advfilter_hidden']==0)
-					{
-						i++;
-						j=0;
-						
-						$.each(vGRID_SEARCH_DATA.tags, function (index1, value1) {
-							
-							let ext_tag = vGRID_SEARCH_DATA.datas[index0][index1];							
-														
-							if (!remaining_tags[index1]) {
-								remaining_tags[index1] = [];
-							}
-
-							if (remaining_tags[index1].indexOf(ext_tag) === -1) {
-								remaining_tags[index1].push(ext_tag);
-							}
-
-						});
-					}
-				});
-				
-				//console.log("RAW:",remaining_tags);
-				
-				NAV_update_checkbox(remaining_tags);
-				
-				let s="";
-				
-				if(i>1) s="s";
-					
-				$('#filterresult').html(i+' element'+s);
-				
-				GRID_load(false,true);
+				update_grid();
 			});
 
 			DISPLAY_filters(true);
@@ -229,57 +210,122 @@ var NAV_open_lib = function open_lib(force_reload=false)
 	GRID_load(force_reload,true);
 }
 
-var NAV_update_checkbox = function update_checkbox(remaining_tags=null)
+function update_grid()
 {
+	let i=0;
+	let remaining_tags={};
+
+	$.each(vGRID_SEARCH_DATA.datas, function (index0, value0) {
+		
+		if(vGRID_SEARCH_DATA.datas[index0]['advfilter_hidden']==0)
+		{
+			i++;
+			j=0;
+			
+			$.each(vGRID_SEARCH_DATA.tags, function (index1, value1) {
+				
+				let ext_tag = vGRID_SEARCH_DATA.datas[index0][index1];							
+											
+				if (!remaining_tags[index1]) {
+					remaining_tags[index1] = [];
+				}
+
+				if (remaining_tags[index1].indexOf(ext_tag) === -1) {
+					remaining_tags[index1].push(ext_tag);
+				}
+
+			});
+		}
+	});
+					
+	update_checkbox(remaining_tags);
+	
+	let s="";
+	
+	if(i>1) s="s";
+		
+	$('#filterresult').html(i+' element'+s);
+	
+	GRID_load(false,true);
+}
+
+function update_checkbox(remaining_tags=null)
+{	
 	$.each(vGRID_SEARCH_DATA.tags, function(index0, value0) 
-	{
+	{		
 		if(value0.length==0 || (vGRID_SEARCH_DATA.tag==index0))
 		{
 			//console.log("Terminated A",value0,vGRID_SEARCH_DATA.tag,index0);
 		}
 		else
-		{					
-			$('aside#advancedfilters h3#'+index0.replace('tag_','')+" div.value").html('');
+		{				
+			let loopdata=[];
+					
+			if(index0=='time_taken_at_date')
+			{
+				loopdata[0]=value0.months;
+				loopdata[1]=value0.years;
+			}
+			else
+			{
+				loopdata[0]=value0;
+			}
 			
-			$.each(value0, function(index1, value1) {
-				
-				//index1 = tag value
-				//value1[0] = count
-				//value1[1] = flie hash
-									
-				if(index0=='tag_country') console.log("tg");
+			let uxelement='aside#advancedfilters h3#'+index0.replace('tag_','');
 							
-				if(value1[0]==vGRID_SEARCH_DATA.datas.length)
-				{
-					//console.log("Terminated B",vGRID_SEARCH_DATA.datas.length,value1[0]);
-				}
-				else
-				{
-					let val = index1;
+			$(uxelement+" div.value").html('');
+			
+			$.each(loopdata, function(loopindex, loopvalue) {
+						
+				let count=0;
+						
+				$.each(loopvalue, function(index1, value1) {
 					
-					if(index0=='tag_country') val = value1[1];
+					count++;
 
-					const obj = { tag: index0, value: val };
-					
-					let elementsel='aside#advancedfilters h3#'+index0.replace('tag_','');
-					
-					let value='checked="1"';
-					
-					if(remaining_tags!=null)
+					//index1 = tag value
+					//value1[0] = count
+					//value1[1] = flie hash
+								
+					if(value1[0]==vGRID_SEARCH_DATA.datas.length)
 					{
-						if(remaining_tags[index0]!==undefined)
-						{
-							if(remaining_tags[index0].indexOf(val)===-1) value='';
-						}
-						else
-						{
-							value='';
-						}
+						//console.log("Terminated B",vGRID_SEARCH_DATA.datas.length,value1[0]);
 					}
-					
-					$(elementsel).removeClass('hidden');
-					$(elementsel+" div.value").append(`<span><input ${value} type="checkbox" value='${JSON.stringify(obj)}'></span><span>${index1}</span><br>`);
-				}					
+					else
+					{
+						let val = index1;
+
+						if(index0=='tag_country' || index0=='months') val = value1[1];
+
+						const obj = { tag: index0, value: val };
+						
+						//console.log(val);
+						
+						let elementsel='aside#advancedfilters h3#'+index0.replace('tag_','');
+						
+						let value='checked="1"';
+
+						if(remaining_tags!=null)
+						{
+							if(remaining_tags[index0]!==undefined)
+							{
+								if(remaining_tags[index0].indexOf(val)===-1)  value='';
+							}
+							else value='';
+						}
+						
+						//console.log(elementsel,`<span class="${total_checked}"><input ${value} type="checkbox" value='${JSON.stringify(obj)}'></span><span>${index1}</span><br>`);
+						
+						$(elementsel).removeClass('hidden');
+						$('aside#advancedfilters h2#'+$(elementsel).attr('data-title')).removeClass('hidden');
+						$(elementsel+" div.value").append(`<span><input ${value} type="checkbox" value='${JSON.stringify(obj)}'></span><span>${index1}</span><br>`);
+												
+						if(count>1)
+						{
+							$(uxelement).addClass('line');
+						}
+					}					
+				});
 			});
 		}	
 	});

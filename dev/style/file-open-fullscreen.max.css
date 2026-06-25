@@ -31,9 +31,9 @@ main section#fullscreen div.media {
 
 main section#fullscreen div.media :Where(img, video) {
 	
+	z-index: -1;
 	width: 100%;
 	object-fit: contain;
-
 }
 
 main section#fullscreen div.media {

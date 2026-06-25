@@ -63,7 +63,8 @@
 		case 'tag_activity': $tagname="Activity"; break;
 		case 'tag_comment': $tagname="Comment"; break;
 		case 'tag_people': $tagname="People"; break;
-		case 'tag_other': $tagname="Information"; break;		
+		case 'tag_other': $tagname="Information"; break;
+		case 'years': $tagname='years'; break;
 		default: 
 			$fReturn->addConsole("[PHP] Tag ".$_GET['tag']." invalid");
 		break;
@@ -71,8 +72,17 @@
 	
 	if(!empty($tagname))
 	{
-		$EasyPDO->addConditionalData('value',$_GET['value']);
-		$result=$EasyPDO->select('photos', $_GET['tag']. '=:value AND file_status = 0 ORDER BY time_taken_at_date DESC,time_taken_at_zone DESC, time_taken_at_time DESC, id ASC');		
+		if($tagname=='years')
+		{
+			$EasyPDO->addConditionalData('value',$_GET['value'].'%');
+			$result=$EasyPDO->select('photos', 'time_taken_at_date LIKE :value AND file_status = 0 ORDER BY time_taken_at_date DESC,time_taken_at_zone DESC, time_taken_at_time DESC, id ASC');		
+		
+		}
+		else
+		{
+			$EasyPDO->addConditionalData('value',$_GET['value']);
+			$result=$EasyPDO->select('photos', $_GET['tag']. '=:value AND file_status = 0 ORDER BY time_taken_at_date DESC,time_taken_at_zone DESC, time_taken_at_time DESC, id ASC');		
+		}
 	}
 
 	if($result['status']==1) 
@@ -96,6 +106,8 @@
 		
 		foreach ($result['datas'] as &$row) {
 			$row['advfilter_hidden'] = 0;
+			$row['years'] = substr($row['time_taken_at_date'], 0, 4);
+			$row['months'] = substr($row['time_taken_at_date'], 4, 2);			
 		}
 		unset($row);
 				

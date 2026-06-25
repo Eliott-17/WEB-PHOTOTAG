@@ -82,6 +82,7 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/locations.php');
 					</div>
 					&nbsp;<span id="tag" class="material-symbols-outlined cursor">new_label</span>
 					&nbsp;<span id="delete" class="material-symbols-outlined cursor">delete</span>
+					&nbsp;<span id="share" class="material-symbols-outlined cursor">share</span>
 				</div>
 			</div>		
 			<div id="select-trash" class="ux-infobox ux-background ux-hidden-opacity ux-hidden-zindex">Move <span class="elementscnt"></span> elements to trash ?</br>			
@@ -154,21 +155,44 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/locations.php');
 		
 				<aside id="advancedfilters" class="ux-background">
 				
-					<h2>Advanced filters</h2>
-
-					<h2><span class="material-symbols-outlined">globe</span><span>Location&nbsp;</span><span id="tooltip-location" class="tooltip-title"></span></h2>
+					<h2 class="title">Advanced filters</h2>
+				
+					<h2 id="tag_location">
+						<span class="material-symbols-outlined">globe</span>
+						<span>Location</span>
+						<span class="material-symbols-outlined cursor">check_box</span>
+						<span class="material-symbols-outlined">compare_arrows</span>
+						<span class="material-symbols-outlined cursor">check_box_outline_blank</span>
 					
-					<h3 class="ux-tag-location" data-tooltip="tooltip-location" data-label="Country" id="country"><span class="material-symbols-outlined">flag</span><div class="value"></div></h3>
-					<h3 class="ux-tag-location central" data-tooltip="tooltip-location" data-label="City" id="city"><span class="material-symbols-outlined">location_city</span><div class="value"></div></h3>
-					<h3 class="ux-tag-location" data-tooltip="tooltip-location" data-label="Place" id="place"><span class="material-symbols-outlined">place</span><div class="value"></div></h3>
+					</h2>
+					
+					<h3 class="tag_location" data-title="tag_location" id="country"><span class="material-symbols-outlined">flag</span><div class="value"></div></h3>
+					<h3 class="tag_location" data-title="tag_location" id="city"><span class="material-symbols-outlined">location_city</span><div class="value"></div></h3>
+					<h3 class="tag_location" data-title="tag_location" id="place" class="last"><span class="material-symbols-outlined">place</span><div class="value"></div></h3>
 
-					<h2><span class="material-symbols-outlined">tag</span><span>Tags&nbsp;</span><span id="tooltip-tags" class="tooltip-title"></span></h2>
+					<h2 id="tag_tags">
+						<span class="material-symbols-outlined">tag</span>
+						<span>Tags</span>
+						<span class="material-symbols-outlined cursor">check_box</span>
+						<span class="material-symbols-outlined">compare_arrows</span>
+						<span class="material-symbols-outlined cursor">check_box_outline_blank</span>
+					</h2>
 	
-					<h3 class="ux-tag-general" data-tooltip="tooltip-tags" data-label="Activity" id="activity"><span class="material-symbols-outlined">directions_run</span><div class="value"></div></h3>				
-					<h3 class="ux-tag-general central" data-tooltip="tooltip-tags" data-label="Comment" id="comment"><span class="material-symbols-outlined">comment</span><div class="value"></div></h3>
-					<h3 class="ux-tag-general bottom" data-tooltip="tooltip-tags" data-label="People" id="people"><span class="material-symbols-outlined">group</span><div class="value"></div></h3>
-					<h3 class="ux-tag-general" data-tooltip="tooltip-tags" data-label="Other informations" id="other"><span class="material-symbols-outlined">info</span><div class="value"></div></h3>
-					<h4 class="edit_ux tag-general" data-form="tag-general">
+					<h3 class="tag_tags" data-title="tag_tags" id="activity"><span class="material-symbols-outlined">directions_run</span><div class="value"></div></h3>				
+					<h3 class="tag_tags" data-title="tag_tags" id="comment"><span class="material-symbols-outlined">comment</span><div class="value"></div></h3>
+					<h3 class="tag_tags" data-title="tag_tags" id="people"><span class="material-symbols-outlined">group</span><div class="value"></div></h3>
+					<h3 class="tag_tags" data-title="tag_tags" id="other" class="last"><span class="material-symbols-outlined">info</span><div class="value"></div></h3>
+
+					<h2 id="tag_date">
+						<span class="material-symbols-outlined">calendar_clock</span>
+						<span>Date</span>
+						<span class="material-symbols-outlined cursor">check_box</span>
+						<span class="material-symbols-outlined">compare_arrows</span>
+						<span class="material-symbols-outlined cursor">check_box_outline_blank</span>
+					</h2>
+					
+					<h3 class="tag_date" data-title="tag_date" id="years"><span class="material-symbols-outlined">calendar_today</span><div class="value"></div></h3>
+					<h3 class="tag_date" data-title="tag_date" id="months" class="last"><span class="material-symbols-outlined">calendar_month</span><div class="value"></div></h3>
 						
 				</aside>
 

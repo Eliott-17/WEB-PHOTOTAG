@@ -220,15 +220,35 @@
 
 					if($key=='time_taken_at_date')
 					{
-						$dateParts = [
-							'years'  => substr($val, 0, 4),
-							'months' => substr($val, 4, 2),
-							//'days'   => substr($val, 6, 2),
-						];
-
-						foreach ($dateParts as $period => $part) {
-							$array_tags[$key][$period][$part] = ($array_tags[$key][$period][$part] ?? 0) + 1;
-						}						
+						//months
+						$period='months';
+						$month = substr($val, 4, 2);
+					
+						switch((int)$month)
+						{
+							case 1:$label='January';break;
+							case 2:$label='Febuary';break;
+							case 3:$label='March';break;
+							case 4:$label='April';break;
+							case 5:$label='May';break;
+							case 6:$label='June';break;
+							case 7:$label='July';break;
+							case 8:$label='August';break;
+							case 9:$label='September';break;
+							case 10:$label='October';break;
+							case 11:$label='November';break;
+							case 12:$label='December';break;
+							default: $label=''; break;
+						}
+						
+						$array_tags[$period][$label][0] = ($array_tags[$period][$label][0] ?? 0) + 1;
+						$array_tags[$period][$label][1] = $month;
+					
+						//year						
+						$period='years';
+						$year = substr($val, 0, 4);
+						
+						$array_tags[$period][$year][0] = ($array_tags[$period][$year][0] ?? 0) + 1;
 					}
 					else
 					{								
@@ -260,6 +280,8 @@
 				}
 			}
 		}
+		
+		unset($array_tags['time_taken_at_date']);
 		
 		foreach ($array_tags as $key => &$tags) 
 		{

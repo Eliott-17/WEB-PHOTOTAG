@@ -74,7 +74,7 @@ aside :where(h2,h3,h4) {
 	font-weight: normal;
 }
 
-aside h2 span.material-symbols-outlined
+aside h2 span
 {
 	margin-right: 10px;
 }
