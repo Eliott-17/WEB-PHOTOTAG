@@ -36,3 +36,4 @@ multimedia
 *.tmp.driveupload
 *.log
 /dev/test
+/backup

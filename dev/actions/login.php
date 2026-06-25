@@ -191,53 +191,171 @@ else
 			$EasyPDOAuth->addConditionalData('email', $email);
 			$EasyPDOAuth->update('users', 'email = :email');				
 		}
-				
-		$structureversion=1;
 		
 		$_SESSION["USER"] = $result['datas'][0]['hash'];
-		$_SESSION["DB"] = 'sqlite:'.$_SERVER['DOCUMENT_ROOT'].'/multimedia/'.$_SESSION["USER"].'.'.$structureversion.'.db';
 
-		//iniitalize
+		//---------------------------------------------
+		//initialise directory
+		//---------------------------------------------	
 
-		if (!file_exists($_SERVER['DOCUMENT_ROOT'].'/multimedia/'.$_SESSION["USER"])) {
-			mkdir($_SERVER['DOCUMENT_ROOT'].'/multimedia/'.$_SESSION["USER"], 0777, true); // Le 3ème paramètre `true` permet de créer les répertoires parents si nécessaire
+		$user_dir = $_SERVER['DOCUMENT_ROOT'].'/multimedia/'.$_SESSION["USER"].'/trash';
+
+		if(!file_exists($user_dir)) {
+			if(!mkdir($user_dir, 0777, true))
+			{
+				$fReturn->addErrorMessage("Fatal error, unable to create user directory.");	
+				if(ENV=="DEV") $fReturn->addConsole("Unable to create user dir ".$user_dir);				
+				$fReturn->fetch();
+			}
 		}
-
-		if (!file_exists($_SERVER['DOCUMENT_ROOT'].'/multimedia/'.$_SESSION["USER"].'/trash')) {
-			mkdir($_SERVER['DOCUMENT_ROOT'].'/multimedia/'.$_SESSION["USER"].'/trash', 0777, true); // Le 3ème paramètre `true` permet de créer les répertoires parents si nécessaire
-		}
-
-		//file_status 0 = normal
-		//file_status 1 = archived
-		//file_status 2 = trashed
 		
-		$EasyPDOUser = new EasyPDO($_SESSION["DB"]);
+		$local_recyclebin = $_SERVER['DOCUMENT_ROOT'].'/multimedia/trash';
 
-		$EasyPDOUser->execbdd("CREATE TABLE IF NOT EXISTS photos (
-		  id INTEGER PRIMARY KEY,
-		  file_original_name TEXT UNIQUE,
-		  file_orientation INTEGER DEFAULT 0,
-		  file_hash TEXT,
-		  file_status INTEGER DEFAULT 0,
-		  file_size INTEGER DEFAULT 0,
-		  file_type INTERGER DEFAULT 0,
-		  
-		  time_taken_at_date TEXT,
-		  time_taken_at_time TEXT,
-		  time_taken_at_zone TEXT,
-		  time_modified_at TEXT,
-		  time_added_at TEXT,
-		  
-		  tag_status INTEGER DEFAULT 0,
-		  tag_continent TEXT,
-		  tag_country TEXT,
-		  tag_city TEXT,
-		  tag_place TEXT,
-		  tag_activity TEXT,
-		  tag_comment TEXT,
-		  tag_people TEXT,
-		  tag_other TEXT)");
-		  
+		if (!file_exists($local_recyclebin)) {
+			if(!mkdir($local_recyclebin, 0777, true))
+			{
+				$fReturn->addErrorMessage("Fatal error, unable to create system directory.");	
+				if(ENV=="DEV") $fReturn->addConsole("Unable to create user dir ".$local_recyclebin);
+				$fReturn->fetch();
+			}
+		}
+
+		//---------------------------------------------
+		//initialise databse
+		//---------------------------------------------	
+
+		$fReturn->addConsole("BDD");
+		
+		$header =  $_SERVER['DOCUMENT_ROOT'].'/multimedia/'.$_SESSION["USER"];
+		$header_file_trash =  $local_recyclebin.'/'.$_SESSION["USER"];
+		$commits=[];				
+		
+		$structureversion=2; //VERSION BDD
+		
+		for($i=$structureversion; $i>0; $i--)
+		{
+			$dbfile_original = $header.'.'.$i.'.db';
+			
+			if(is_file($dbfile_original))
+			{
+				if($i==$structureversion)
+				{		
+					$dbfile_final=$dbfile_original;		
+					$fReturn->addConsole("NORMAL START");
+					break; //normal start	
+				}
+				else if($i<$structureversion)
+				{
+					//process de migration stars
+					
+					$dbfile_migration = $header.'.'.$i.'m'.$structureversion.'.db'; //péprartion du nom du fichier pour la migration
+					
+					if(copy($dbfile_original,$header_file_trash.'.'.$i.'.'.time().'.backup')) //bacup OK
+					{
+						if(rename($dbfile_original,$dbfile_migration)) //rename OK
+						{
+							if(ENV=="DEV") $fReturn->addConsole("Migration processed file ".$dbfile_migration);
+						}
+						else
+						{
+							$commits=[]; //empty array = no modification
+							if(ENV=="DEV") $fReturn->addConsole("[FAIL] Temp name for ".$dbfile_migration);
+						}
+					}
+					else
+					{
+						$commits=[]; //enmpty array = no modification
+						if(ENV=="DEV") $fReturn->addConsole("[FAIL] Backup for ".$dbfile_migration);
+					}
+					 
+					break;
+				}
+			}
+			else
+			{
+				array_push($commits,$i); //il faudra migrer vers la dernière version
+			}
+		}
+		
+		if(!empty($commits))
+		{
+			if(ENV=="DEV") $fReturn->addConsole("Commits queue ".print_r($commits,true));
+
+			$EasyPDOUser = new EasyPDO('sqlite:'.$dbfile_migration);
+			
+			$migration_errors=0;
+		
+			if(in_array(1,$commits)) //version 1
+			{
+				//file_status 0 = normal
+				//file_status 1 = archived
+				//file_status 2 = trashed
+				
+				if($EasyPDOUser->execbdd("CREATE TABLE IF NOT EXISTS photos (
+				  id INTEGER PRIMARY KEY,
+				  file_original_name TEXT UNIQUE,
+				  file_orientation INTEGER DEFAULT 0,
+				  file_hash TEXT,
+				  file_status INTEGER DEFAULT 0,
+				  file_size INTEGER DEFAULT 0,
+				  file_type INTERGER DEFAULT 0,
+				  
+				  time_taken_at_date TEXT,
+				  time_taken_at_time TEXT,
+				  time_taken_at_zone TEXT,
+				  time_modified_at TEXT,
+				  time_added_at TEXT,
+				  
+				  tag_status INTEGER DEFAULT 0,
+				  tag_continent TEXT,
+				  tag_country TEXT,
+				  tag_city TEXT,
+				  tag_place TEXT,
+				  tag_activity TEXT,
+				  tag_comment TEXT,
+				  tag_people TEXT,
+				  tag_other TEXT)")===false)
+				  {
+						$migration_errors=1;
+				  }
+			}
+			  
+			if(in_array(2,$commits)) //version 2 - execute to migrate from 1 to 2
+			{
+				if($EasyPDOUser->execbdd("ALTER TABLE photos ADD COLUMN file_size_webp INTEGER DEFAULT 0;")===false)
+				{
+					$migration_errors+=10;
+				}
+				if($EasyPDOUser->execbdd("ALTER TABLE photos ADD COLUMN file_is_private INTEGER DEFAULT 0;")===false)
+				{
+					$migration_errors+=100;
+				}
+			}
+
+			$EasyPDOUser->closebdd();
+			
+			if($migration_errors==0)
+			{
+				$dbfile_final = $header.'.'.$structureversion.'.db';
+				
+				if(!rename($dbfile_migration,$dbfile_final)) //cration final file
+				{
+					$_SESSION["lockdown"]=true;
+					$fReturn->addErrorMessage("Fatal error, contact service immediately!")->fetch();	
+				}
+			}
+			else
+			{
+				$_SESSION["lockdown"]=true;
+				if(ENV=="DEV") $fReturn->addConsole("[FAIL] Backup for ".$migration_errors);
+				$fReturn->addErrorMessage("Fatal error, contact service immediately!")->fetch();						
+			}	
+		}
+		
+		if(!isset($dbfile_final)) $fReturn->addErrorMessage("Unable to access database.")->fetch();
+		
+		$_SESSION["DB"] = 'sqlite:'.$dbfile_final;
+	
 		create_session();
 		  	
 		$fReturn->addRedirect("/index.php")->fetch();		
