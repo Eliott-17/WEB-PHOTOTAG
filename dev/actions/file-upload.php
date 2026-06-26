@@ -15,6 +15,7 @@ $fReturn = new fReturn();
 if (!empty($_FILES['file']) && !empty($_FILES['preview'])) {
     $name = basename($_FILES['file']['name']);
     $tmp = $_FILES['file']['tmp_name'];
+	$size_webp = $_FILES['preview']['size'];
     $size = $_FILES['file']['size'];
 
     // Vérifie la taille
@@ -123,6 +124,7 @@ if (!empty($_FILES['file']) && !empty($_FILES['preview'])) {
     $EasyPDO->addFields('file_orientation', $orientation);
     $EasyPDO->addFields('file_hash', $hash);
     $EasyPDO->addFields('file_size', $size);
+    $EasyPDO->addFields('file_size_webp', $size_webp);
     $EasyPDO->addFields('file_type', $file_type);
     $EasyPDO->addFields('time_taken_at_date', $strdate_taken_at_date);
     $EasyPDO->addFields('time_taken_at_zone', $strdate_taken_at_zone);

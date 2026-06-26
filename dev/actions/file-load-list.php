@@ -10,6 +10,9 @@
 	$fReturn = new fReturn();
 	$EasyPDO = new EasyPDO($_SESSION['DB']);
 
+	$file_size_total=0;
+	$file_size_webp_total=0;
+
 	//***************************************
 	//QUERY TAGGUED FILES *******************
 	//***************************************
@@ -28,6 +31,9 @@
 	$EasyPDO->addFields('tag_comment');
 	$EasyPDO->addFields('tag_people');
 	$EasyPDO->addFields('tag_other');
+
+	$EasyPDO->addFields('file_size');
+	$EasyPDO->addFields('file_size_webp');
 
 	$EasyPDO->addFields('file_type');
 	$EasyPDO->addFields('id');
@@ -65,18 +71,28 @@
 		'time_taken_at_date' => []
 	];
 	
+	$array_tags_remove = [
+		'file_size' => [],
+		'file_size_webp' => []
+	];
+	
 	if($array_lib['status']==1)
 	{		
 		$bigarray['tags']=retreive_sort_tags($array_lib['datas'],$array_tags,$country);
 		
 		unset($array_tags['time_taken_at_date']);
-		$keysToRemove = array_flip(array_keys($array_tags));
+		
+		$keysToRemove = array_flip(array_keys(array_merge($array_tags,$array_tags_remove)));
 
 		foreach ($array_lib['datas'] as &$row) {
+			
+			$file_size_total+=$row['file_size'];
+			$file_size_webp_total+=$row['file_size_webp'];
+
 			$row = array_diff_key($row, $keysToRemove);
 		}
 		
-		$bigarray['library']=$array_lib['datas'];	
+		$bigarray['library']=array_values($array_lib['datas']);			
 	}
 	else
 	{
@@ -96,6 +112,10 @@
 	$EasyPDO->addFields('time_taken_at_zone');
 	$EasyPDO->addFields('time_taken_at_time');
 	$EasyPDO->addFields('file_orientation');
+
+	$EasyPDO->addFields('file_size');
+	$EasyPDO->addFields('file_size_webp');
+
 	$EasyPDO->addFields('file_type');
 	$EasyPDO->addFields('id');
 	
@@ -118,7 +138,17 @@
 	
 	if($array_untaged['status']==1) 
 	{
-		$bigarray['untagged']=$array_untaged['datas'];
+		$keysToRemove = array_flip(array_keys($array_tags_remove));
+
+		foreach ($array_untaged['datas'] as &$row) {
+			
+			$file_size_total+=$row['file_size'];
+			$file_size_webp_total+=$row['file_size_webp'];
+
+			$row = array_diff_key($row, $keysToRemove);
+		}
+		
+		$bigarray['untagged']=array_values($array_untaged['datas']);
 	}
 	else
 	{
@@ -128,7 +158,9 @@
 	}
 	
 	$bigarray['dir']=$_SESSION["USER"];
-
+	$bigarray['file_size_total']=$file_size_total;
+	$bigarray['file_size_webp_total']=$file_size_webp_total;
+	
 	$fReturn->addConsole("[PHP EXECUTED] file-load-list.php");
 	$fReturn->addCallBack("GRID_load_CallBack", $bigarray)->fetch();
 

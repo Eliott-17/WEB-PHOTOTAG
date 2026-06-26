@@ -311,6 +311,13 @@ var GRID_load_CallBack = function load_CallBack(new_data=null)
 
 		$('aside div#datalist').html(html);
 		$('aside datalist#fastsearch').html(htmlfull);
+		
+		let file_quota=0;
+		
+		if(mem_data.file_size_total!==undefined) file_quota+=mem_data.file_size_total;
+		if(mem_data.file_size_webp_total!==undefined) file_quota+=mem_data.file_size_webp_total;
+		
+		htmlfilter += '<div class="fullrow"><h2 class="">Total disk space '+formatBytes(file_quota)+'</h2></div>';
 
 		$('main section#explore').html(htmlfilter);
 		
