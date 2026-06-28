@@ -21,9 +21,14 @@ $(document).ready(function(){
 		
 		if(vFILEINFO_FLAG_SAVED==true)
 		{
-			if(vGRID_mem_tag!=null && vGRID_mem_tag!=null) CORE_get('actions/file-search-list.php?tag='+vGRID_mem_tag+'&value='+vGRID_mem_val);	
+			if(vGRID_mem_tag!=null && vGRID_mem_tag!=null) 
+			{
+				//si on était dans le résultat de recherche, on actualise
+				CORE_get('actions/file-search-list.php?tag='+vGRID_mem_tag+'&value='+vGRID_mem_val);
+			}
 			else 
 			{
+				//si on sauvegarde un fichier en plein écran, on recharge les donnés en cours.
 				GRID_load(true);
 				vFILEINFO_FLAG_SAVED=false;
 			}

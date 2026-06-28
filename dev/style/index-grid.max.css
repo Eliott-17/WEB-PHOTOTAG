@@ -84,6 +84,11 @@ main section.grid
 	min-width: 0;
 }
 
+main section.nodate
+{
+	margin-bottom: 5px;
+}
+
 main section.grid div.element {
 	box-sizing: border-box;
 	text-align: center;

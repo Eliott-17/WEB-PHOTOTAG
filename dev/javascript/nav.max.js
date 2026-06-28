@@ -46,6 +46,9 @@ $(document).ready(function(){
 				{
 					$(vNAV_mem_selected).addClass("selected");	
 					
+					//LANCEMENT DE LA RECHERCHE VIDE, RESTORATION DE LA GRILLE
+					//NE PAS REFRAICHIR LES DONNEES
+					//RECHARGER LA GRILLE PAR DEFAUT
 					GRID_load(false,true);
 				}
 				else if (option.length === 0) 
@@ -178,9 +181,13 @@ $(document).ready(function(){
 });
 
 /**********************************************************************
--Affiche les fichiers de la catégorie "untag"
--Est appelée à l'appuis sur le bouton du menu principal
--Est appelée à la fin d'un upload pour aficher les nouveaux fichiers
+-Affiche les fichiers de la catégorie "Untagged" ||est appelée:
+
+-A l'appuis sur le bouton du menu principal "Untagged" || pas de force_reload (empty)
+-A la fin d'un upload pour aficher les nouveaux fichiers || avec force_reload = true
+-A l'appuis sur le bouton retour de la recherche: Si on était dans la Untagged auparavant. || force_reload = true si que un fichier à été modifié
+
+-On demande la regénération de la grille complette et scroll top || paramètre 2 à true.  /!\ OPTI: pas nécessaire si aucun fichier à été modifié.
 **********************************************************************/
 
 var NAV_open_untagg = function open_untagg(force_reload=false)
@@ -192,6 +199,15 @@ var NAV_open_untagg = function open_untagg(force_reload=false)
 	GRID_load(force_reload,true);
 }
 
+/**********************************************************************
+-Affiche les fichiers par tag dans le menu "Explore" ||est appelée:
+
+-A l'appuis sur le bouton du menu principal "Explore" || pas de force_reload (empty)
+-A l'appuis sur le bouton retour de la recherche: Si on était dans le menu Explore auparavant. || force_reload = true si que un fichier à été modifié
+
+-On demande la regénération de la grille complette et scroll top || paramètre 2 à true.  /!\ OPTI: pas nécessaire si aucun fichier à été modifié.
+**********************************************************************/
+
 var NAV_open_explore = function open_explore(force_reload=false)
 {
 	$('div#mainmenu div button').removeClass("selected");
@@ -200,6 +216,16 @@ var NAV_open_explore = function open_explore(force_reload=false)
 	DISPLAY_set_view('explore');
 	if(force_reload)  GRID_load(force_reload,true);
 }
+
+
+/**********************************************************************
+-Affiche tous les fichier "My Library" ||est appelée:
+
+-A l'appuis sur le bouton du menu principal "My Library" || pas de force_reload (empty)
+-A l'appuis sur le bouton retour de la recherche: Si on était dans le menu My Library auparavant. || force_reload = true si que un fichier à été modifié
+
+-On demande la regénération de la grille complette et scroll top || paramètre 2 à true. /!\ OPTI: pas nécessaire si aucun fichier à été modifié.
+**********************************************************************/
 
 var NAV_open_lib = function open_lib(force_reload=false)
 {

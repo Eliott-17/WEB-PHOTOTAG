@@ -66,19 +66,8 @@ $(document).ready(function(){
 
 		DISPLAY_menu($('#select-status'),false);
 		
-		if(vFILEINFOMULTISELECTION_FLAG_SAVED==true)
-		{
-			if(vGRID_mem_tag!=null && vGRID_mem_tag!=null) CORE_get('actions/file-search-list.php?tag='+vGRID_mem_tag+'&value='+vGRID_mem_val);	
-			else 
-			{
-				GRID_load(true);
-				vFILEINFOMULTISELECTION_FLAG_SAVED=false;
-			}
-		}
-		
-		$('span#tag').html('new_label');
-		$('span#tag').removeClass('green');
-			
+		multiselection_close();
+					
 		DISPLAY_set_view("grid");
 		
 	});	
@@ -87,16 +76,8 @@ $(document).ready(function(){
 
 		if(DISPLAY_is_visible_file_info())
 		{
-			if(vFILEINFOMULTISELECTION_FLAG_SAVED==true)
-			{
-				if(vGRID_mem_tag!=null && vGRID_mem_tag!=null) CORE_get('actions/file-search-list.php?tag='+vGRID_mem_tag+'&value='+vGRID_mem_val);	
-				else GRID_load(true);
-				vFILEINFOMULTISELECTION_FLAG_SAVED=false;
-			}
+			multiselection_close();
 
-			$('span#tag').html('new_label');
-			$('span#tag').removeClass('green');
-			
 			DISPLAY_set_view("grid");
 		}
 		else
@@ -281,4 +262,25 @@ var FILEMULTISELECTION_CallBack_trash = function CallBack_trash()
 {
 	DISPLAY_set_view('grid');
 	GRID_load(true,true);
+}
+
+function multiselection_close()
+{
+	if(vFILEINFOMULTISELECTION_FLAG_SAVED==true)
+	{
+		if(vGRID_mem_tag!=null && vGRID_mem_tag!=null) 
+		{
+			//si on était dans le résultat de recherche, on actualise
+			CORE_get('actions/file-search-list.php?tag='+vGRID_mem_tag+'&value='+vGRID_mem_val);	
+		}
+		else 
+		{
+			//si on quitte le menu multisélection et qu'on à sauvegarder un fichier on recharge les donnés en cours.
+			GRID_load(true);
+		}
+		vFILEINFOMULTISELECTION_FLAG_SAVED=false;
+	}
+	
+	$('span#tag').html('new_label');
+	$('span#tag').removeClass('green');
 }

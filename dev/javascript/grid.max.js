@@ -101,6 +101,8 @@ var GRID_search_CallBack = function search_CallBack(search_data)
 	$('nav span#filterapply').html(search_data.tagname+': '+search_data.keywords);	
 	$('nav span#filterresult').html(search_data.datas.length+ ' element'+s);
 	
+	//après une recherche, on affiche les nouvelles données
+	//elle sont mise à jour ICI ligne 94, donc on doir juste refraichir la grille complètement.
 	GRID_load(false,true);
 }
 
@@ -111,7 +113,7 @@ var GRID_load_CallBack = function load_CallBack(new_data=null)
 	if(new_data!=null) 
 	{
 		mem_data=new_data;
-		updated_data=true;
+		GRID_load_tags();
 		console.log("reload from new data");
 	}
 	else
@@ -155,29 +157,41 @@ var GRID_load_CallBack = function load_CallBack(new_data=null)
 	
 	$('#untaggedcount').html("&nbsp;("+total_file_untagged+")");
 	$('#taggedcount').html("&nbsp;("+total_file_library+")");
+	
+	OBJ_Dest_nodate = $("main section.nodate");
+	OBJ_Dest_date = $("main section.date");
+	OBJ_Select_both = $("main section.grid");
+	
+	GRID_generage(source,OBJ_Dest_date,OBJ_Dest_nodate,OBJ_Select_both);
+}
+
 	//****************************************************************
 	//Loop Génération de la grille de photos *************************
 	//****************************************************************	
-	
+
+var GRID_generage = function generate(source,OBJ_Dest_date,OBJ_Dest_nodate,OBJ_Select_both)
+{
 	let j=0; //because i is not reliable (in case of skip)
-	let max_display=0; //because source.length is not reliable (in case of skip)
+	let max_display=source.length; //because source.length is not reliable (in case of skip)
 	
 	$.each(source, function(i, bdd)
 	{		
 		if(bdd.advfilter_hidden!=undefined)
 		{
-			if(bdd.advfilter_hidden==1) return; //skip to the next element
+			if(bdd.advfilter_hidden==1)
+			{
+				max_display--;
+				return; //skip to the next element
+			}
 		}
-
-		max_display++;
 		
 		if(j>=loaded_files)
 		{			
 			if(bdd.time_taken_at_date=="00000000" &&  bdd.time_taken_at_zone=="00000" && bdd.time_taken_at_time=="000000")
 			{
 				//si on à pas de date
-				if(undated==0) $("main section.nodate").append('<div class="fullrow"><h2>Undated</h2></div>');
-				$("main section.nodate").append(addElement(mem_data.dir, bdd));
+				if(undated==0) OBJ_Dest_nodate.append('<div class="fullrow"><h2>Undated</h2></div>');
+				OBJ_Dest_nodate.append(addElement(mem_data.dir, bdd));
 				undated++;
 			}
 			else
@@ -188,10 +202,10 @@ var GRID_load_CallBack = function load_CallBack(new_data=null)
 				
 				if(html_mem_date==null || html_mem_date!=l_date_test)
 				{
-					$("main section.date").append('<div class="fullrow"><h2>'+formatDateLocale(l_date_display)+'</h2></div>'); //on démarre une nouvelle grille
+					OBJ_Dest_date.append('<div class="fullrow"><h2>'+formatDateLocale(l_date_display)+'</h2></div>'); //on démarre une nouvelle grille
 				}
 
-				$("main section.date").append(addElement(mem_data.dir, bdd));
+				OBJ_Dest_date.append(addElement(mem_data.dir, bdd));
 								
 				html_mem_date=l_date_test;
 			}
@@ -206,160 +220,6 @@ var GRID_load_CallBack = function load_CallBack(new_data=null)
 	});
 	
 	loading_limit=loaded_files;
-
-	//****************************************************************
-	//Loop Génération des datalist & advanced filters ****************
-	//****************************************************************		
-	if(updated_data) 
-	{
-		let html = '';
-		let htmlfull = '';
-		let htmlfilter = '';
-		let filtercount=1;
-		let filtermem='';
-		//let filtermem_time='';
-		let img;
-		
-		let max_elements = 10;//Math.floor($('main').width()/170);
-
-		const array_config_tag_show = {
-			tag_country: ["By countries",1],
-			tag_city: ["Visited cities",1],
-			tag_place: ["By places",1],
-			tag_activity: ["My activities",1],
-			tag_comment: 0,
-			tag_people: 0,
-			tag_other: 0,
-			years: ["By date",1],
-			months: 0
-		};
-		
-		expand_max=[];
-
-		$.each(mem_data.tags, function(index, tagvalue) {
-
-			html += '<datalist id="'+index+'">';
-
-			$.each(tagvalue, function(optionvalue, ovdata) {
-				
-				html += '<option value="'+optionvalue+'">';
-				htmlfull += '<option data-tag="'+index+'" value="'+optionvalue+'">';
-				
-				//filters
-				
-				let date=false;
-				
-				if(index=='days' || index=='months' || index=='years') date=true;
-			
-				if(array_config_tag_show[index][1]==1)
-				{
-					if(filtermem!=index)
-					{
-						filtercount=1;
-					}
-
-					img="includes/401.webp";
-					let visibility="";
-					let name="";
-					
-					if(!date)
-					{						
-					
-						if(ovdata[1].length>3) img='sd-'+ovdata[1];
-						if(ovdata[1].length==3) img='images/flags/'+ovdata[1]+'.svg';
-						
-						if(filtercount>=max_elements) 
-						{
-							let id=Math.floor(filtercount/max_elements);
-							let name=index+"_filter";
-							visibility="hidden "+name+id;
-										
-							if(filtercount%max_elements==0) 
-							{
-								htmlfilter += '<div class="element cursor expandmenu" id="'+name+'"><img src="'+img+'"><span class="material-symbols-outlined">expand_circle_down</span><div>Explore more</div></div>';
-								expand_block[name]=1;
-								expand_max[name]=id;
-							}
-						}
-					}
-					
-					if(filtermem!=index)
-					{
-						let add_class="";
-						if(index=='tag_country') add_class="notopborder";
-						
-						htmlfilter += '<div class="fullrow"><h2 class="'+add_class+'">'+array_config_tag_show[index][0]+'</h2></div>';
-					}
-					
-					if(!date)
-					{
-						htmlfilter += '<div class="element cursor tagelement '+visibility+'" data-tag="'+index+'" data-val="'+optionvalue+'"><img src="'+img+'"><div>'+optionvalue+'</div></div>';
-					}
-					else
-					{
-						htmlfilter += '<div class="element cursor date tagelement" data-tag="'+index+'" data-val="'+optionvalue+'"><div>'+optionvalue+'</div></div>';
-					}
-					
-					filtermem=index;
-					filtercount++;
-				}
-	
-			});
-
-			html += '</datalist>';
-		});
-
-		$('aside div#datalist').html(html);
-		$('aside datalist#fastsearch').html(htmlfull);
-		
-		let file_quota=0;
-		
-		if(mem_data.file_size_total!==undefined) file_quota+=mem_data.file_size_total;
-		if(mem_data.file_size_webp_total!==undefined) file_quota+=mem_data.file_size_webp_total;
-		
-		htmlfilter += '<div class="fullrow"><h2 class="">Total disk space '+formatBytes(file_quota)+'</h2></div>';
-
-		$('main section#explore').html(htmlfilter);
-		
-		//****************************************************************
-		//Bouton expanse *************************************************
-		//****************************************************************	
-		
-		$('main').off('click.expandFilters');
-		$('main').off('click.enterFilter');
-		$('main').off('click.enterFilterYear');
-		$('main').off('click.enterFilterMonth');
-		
-		$('main').on('click.expandFilters', 'section#explore div.expandmenu', function(e) {
-			
-			let name = $(this).attr('id');
-			
-			console.log('main section div.'+name+expand_block[name]);
-			
-			$('main section div.'+name+expand_block[name]).removeClass('hidden');
-			
-			if(expand_block[name]>=expand_max[name])
-			{
-				$(this).addClass('hidden');
-			}			
-		});
-
-
-		$('main').on('click.enterFilter', 'section#explore div.tagelement', function(e) {
-			
-			$('main').scrollTop(0);
-			
-			if(!$(this).hasClass('expandmenu'))
-			{			
-				vGRID_mem_tag=$(this).attr('data-tag');
-				vGRID_mem_val=$(this).attr('data-val');
-
-				CORE_get('actions/file-search-list.php?tag='+vGRID_mem_tag+'&value='+vGRID_mem_val);	
-			}
-		});	
-	
-		if(scrolltop_after) $('main').scrollTop(0);
-	}
 	
 	//****************************************************************
 	//Déchagrement des précents boutons ******************************
@@ -407,7 +267,9 @@ var GRID_load_CallBack = function load_CallBack(new_data=null)
 
 		DISPLAY_selection(current_id);
 		
-		if(IS_VISIBLE_menu($('div#select-trash'))) $('main section.grid div.selected').addClass('delete');
+		if(IS_VISIBLE_menu($('div#select-trash'))) OBJ_Select_both.find('div.selected').addClass('delete');
+		
+		//$('main section.grid div.selected').addClass('delete');
 
 		if(DISPLAY_is_visible_file_info()) //Si on à affiché les information des fichiers lors d'une sélection multiple
 		{
@@ -440,7 +302,162 @@ var GRID_load_CallBack = function load_CallBack(new_data=null)
 	
 	DISPLAY_selection();
 	
+	if(scrolltop_after) $('main').scrollTop(0);
+
 	console.log("GRID_load_CallBack",loaded_files,source.length);
+}
+
+//****************************************************************
+//Fonction Génération des datalist & advanced filters ************
+//****************************************************************	
+
+var GRID_load_tags = function load_tags()
+{	
+	let html = '';
+	let htmlfull = '';
+	let htmlfilter = '';
+	let filtercount=1;
+	let filtermem='';
+	//let filtermem_time='';
+	let img;
+	
+	let max_elements = 10;//Math.floor($('main').width()/170);
+
+	const array_config_tag_show = {
+		tag_country: ["By countries",1],
+		tag_city: ["Visited cities",1],
+		tag_place: ["By places",1],
+		tag_activity: ["My activities",1],
+		tag_comment: 0,
+		tag_people: 0,
+		tag_other: 0,
+		years: ["By date",1],
+		months: 0
+	};
+	
+	expand_max=[];
+
+	$.each(mem_data.tags, function(index, tagvalue) {
+
+		html += '<datalist id="'+index+'">';
+
+		$.each(tagvalue, function(optionvalue, ovdata) {
+			
+			html += '<option value="'+optionvalue+'">';
+			htmlfull += '<option data-tag="'+index+'" value="'+optionvalue+'">';
+			
+			//filters
+			
+			let date=false;
+			
+			if(index=='days' || index=='months' || index=='years') date=true;
+		
+			if(array_config_tag_show[index][1]==1)
+			{
+				if(filtermem!=index)
+				{
+					filtercount=1;
+				}
+
+				img="includes/401.webp";
+				let visibility="";
+				let name="";
+				
+				if(!date)
+				{						
+				
+					if(ovdata[1].length>3) img='sd-'+ovdata[1];
+					if(ovdata[1].length==3) img='images/flags/'+ovdata[1]+'.svg';
+					
+					if(filtercount>=max_elements) 
+					{
+						let id=Math.floor(filtercount/max_elements);
+						let name=index+"_filter";
+						visibility="hidden "+name+id;
+									
+						if(filtercount%max_elements==0) 
+						{
+							htmlfilter += '<div class="element cursor expandmenu" id="'+name+'"><img src="'+img+'"><span class="material-symbols-outlined">expand_circle_down</span><div>Explore more</div></div>';
+							expand_block[name]=1;
+							expand_max[name]=id;
+						}
+					}
+				}
+				
+				if(filtermem!=index)
+				{
+					let add_class="";
+					if(index=='tag_country') add_class="notopborder";
+					
+					htmlfilter += '<div class="fullrow"><h2 class="'+add_class+'">'+array_config_tag_show[index][0]+'</h2></div>';
+				}
+				
+				if(!date)
+				{
+					htmlfilter += '<div class="element cursor tagelement '+visibility+'" data-tag="'+index+'" data-val="'+optionvalue+'"><img src="'+img+'"><div>'+optionvalue+'</div></div>';
+				}
+				else
+				{
+					htmlfilter += '<div class="element cursor date tagelement" data-tag="'+index+'" data-val="'+optionvalue+'"><div>'+optionvalue+'</div></div>';
+				}
+				
+				filtermem=index;
+				filtercount++;
+			}
+
+		});
+
+		html += '</datalist>';
+	});
+
+	$('aside div#datalist').html(html);
+	$('aside datalist#fastsearch').html(htmlfull);
+	
+	let file_quota=0;
+	
+	if(mem_data.file_size_total!==undefined) file_quota+=mem_data.file_size_total;
+	if(mem_data.file_size_webp_total!==undefined) file_quota+=mem_data.file_size_webp_total;
+	
+	htmlfilter += '<div class="fullrow"><h2 class="">Total disk space '+formatBytes(file_quota)+'</h2></div>';
+
+	$('main section#explore').html(htmlfilter);
+	
+	//****************************************************************
+	//Bouton expanse *************************************************
+	//****************************************************************	
+	
+	$('main').off('click.expandFilters');
+	$('main').off('click.enterFilter');
+	$('main').off('click.enterFilterYear');
+	$('main').off('click.enterFilterMonth');
+	
+	$('main').on('click.expandFilters', 'section#explore div.expandmenu', function(e) {
+		
+		let name = $(this).attr('id');
+		
+		console.log('main section div.'+name+expand_block[name]);
+		
+		$('main section div.'+name+expand_block[name]).removeClass('hidden');
+		
+		if(expand_block[name]>=expand_max[name])
+		{
+			$(this).addClass('hidden');
+		}			
+	});
+
+
+	$('main').on('click.enterFilter', 'section#explore div.tagelement', function(e) {
+		
+		$('main').scrollTop(0);
+		
+		if(!$(this).hasClass('expandmenu'))
+		{			
+			vGRID_mem_tag=$(this).attr('data-tag');
+			vGRID_mem_val=$(this).attr('data-val');
+
+			CORE_get('actions/file-search-list.php?tag='+vGRID_mem_tag+'&value='+vGRID_mem_val);	
+		}
+	});	
 }
 
 var GRID_add_tags = function add_tags(tags)
@@ -477,7 +494,7 @@ function addElement(dir, bdd)
 	
 	if(bdd.file_type == 0) 
 	{
-		html+= '		<img src="sd-'+bdd.file_hash+'" scroll="lazy">';
+		html+= '		<img src="sd-'+bdd.file_hash+'" loading="lazy">';
 	}
 	if(bdd.file_type == 1)
 	{
