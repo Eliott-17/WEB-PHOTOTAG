@@ -26,7 +26,7 @@ $(document).ready(function(){
 		
 		var hash_array=[];
 
-		$('main section.grid div.element').each(function () 
+		$('main section.'+vSECTION_active+' div.element').each(function () 
 		{ 
 			if($(this).hasClass('delete')) 
 			{ 
@@ -85,6 +85,8 @@ $(document).ready(function(){
 			DISPLAY_set_view("grid-fileinfo");
 		}
 		
+		GRID_load(); //recharger la grille si on à changer des photos
+		
 	});
 	
 	$('aside#infocontent h3 span.solver').on('click.solver', function() {
@@ -104,14 +106,15 @@ $(document).ready(function(){
 var FILEMULTISELECTION_unselectall = function unselect_all()
 {
 	$('main div.element').removeClass('selected');
-	$('main div.element').addClass('notselected');	
+	$('main div.element').addClass('notselected');
+	GRID_load(); //recharger la grille si on à changer des photos	
 }
 
 var FILEMULTISELECTION_load = function load(force_reload=false)
 {
 	var hash_array=[];
 
-	$('main section.grid div.element').each(function () 
+	$('main section.'+vSECTION_active+' div.element').each(function () 
 	{ 
 		if($(this).hasClass('selected')) 
 		{ 
@@ -214,16 +217,16 @@ var FILEMULTISELECTION_CallBack_load = function CallBack_load(ldata)
 
 var FILEMULTISELECTION_CallBack_success = function CallBack_success()
 {
-	$('main section.grid div.selected').addClass("transition-on");
-	$('main section.grid div.selected').addClass("success");
+	$('main section.'+vSECTION_active+' div.selected').addClass("transition-on");
+	$('main section.'+vSECTION_active+' div.selected').addClass("success");
 	
 	setTimeout(function() { 
 		
-		$('main section.grid div.selected').removeClass("success"); 
+		$('main section.'+vSECTION_active+' div.selected').removeClass("success"); 
 		
 		setTimeout(function() { 
 		
-			$('main section.grid div.selected').removeClass("transition-on"); 
+			$('main section.'+vSECTION_active+' div.selected').removeClass("transition-on"); 
 		
 		}, 500);
 		
@@ -261,26 +264,11 @@ var FILEMULTISELECTION_reset_ux = function reset_ux(obj, data)
 var FILEMULTISELECTION_CallBack_trash = function CallBack_trash()
 {
 	DISPLAY_set_view('grid');
-	GRID_load(true,true);
+	//TODO: supprimer de la grille en HTML et relancer la numérotation
 }
 
 function multiselection_close()
 {
-	if(vFILEINFOMULTISELECTION_FLAG_SAVED==true)
-	{
-		if(vGRID_mem_tag!=null && vGRID_mem_tag!=null) 
-		{
-			//si on était dans le résultat de recherche, on actualise
-			CORE_get('actions/file-search-list.php?tag='+vGRID_mem_tag+'&value='+vGRID_mem_val);	
-		}
-		else 
-		{
-			//si on quitte le menu multisélection et qu'on à sauvegarder un fichier on recharge les donnés en cours.
-			GRID_load(true);
-		}
-		vFILEINFOMULTISELECTION_FLAG_SAVED=false;
-	}
-	
 	$('span#tag').html('new_label');
 	$('span#tag').removeClass('green');
 }

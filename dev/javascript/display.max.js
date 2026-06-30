@@ -1,3 +1,5 @@
+let DISPLAY_debug=false;
+
 $(document).ready(function()
 { 
 	DISPLAY_view=0;
@@ -16,7 +18,7 @@ var DISPLAY_set_view = function view_refresh(newview)
 	{
 		case "searchresult":
 		
-			DISPLAY_filters(false);				
+			DISPLAY_filters(false);	
 		
 		break;
 		case "searchresult-filters":
@@ -27,19 +29,19 @@ var DISPLAY_set_view = function view_refresh(newview)
 			DISPLAY_filters(true);	
 			
 		break;
-		case "explore":
+		/*case "explore":
 		
 			DISPLAY_full_screen(false);
 			DISPLAY_file_info(false);
 			DISPLAY_explore(true);		
 		
-		break;
+		break;*/
 		case "grid":
 		
 			DISPLAY_full_screen(false);
 			DISPLAY_file_info(false);
 			DISPLAY_selection();
-			DISPLAY_explore(false);	
+			DISPLAY_menu(null,false);//fermer tous les menus affichés
 		
 		break;
 		case "grid-fileinfo":
@@ -67,12 +69,29 @@ var DISPLAY_set_view = function view_refresh(newview)
 			
 		break;
 		default:
-			console.log("DISPLAY_set_view !!! VIEW NOT FOUND !!!");
+			if(DISPLAY_debug) console.log("DISPLAY_set_view !!! VIEW NOT FOUND !!!");
 		break;
 	
 	}
 	
-	console.log("DISPLAY_set_view",newview,"loaded");
+	if(DISPLAY_debug) console.log("DISPLAY_set_view",newview,"loaded");
+}
+
+//
+
+var DISPLAY_section = function section(section)
+{
+	vSECTION_active=section;
+	
+	$('div#mainmenu div button').removeClass("selected");
+	$('div#mainmenu div button.'+vSECTION_active).addClass("selected");
+	
+	$('section').addClass("hidden");
+	$('section.'+vSECTION_active).removeClass("hidden");
+	
+	GRID_load();//en affichant une section on s'assure de charger les données.
+	
+	if(DISPLAY_debug) console.log("DISPLAY_section",'section.'+vSECTION_active);
 }
 
 //****************************************************************
@@ -89,7 +108,7 @@ var DISPLAY_file_info = function display_aside(visibility = undefined)
 	let lelement=$('body');
 	if(visibility==true) 		{ lelement.removeClass('no-aside-files'); return; }
 	if(visibility==false) 		{ lelement.addClass('no-aside-files'); return; }	
-	console.log("DISPLAY_file_info bad parameter");
+	if(DISPLAY_debug) console.log("DISPLAY_file_info bad parameter");
 }
 
 //****************************************************************
@@ -106,7 +125,7 @@ var DISPLAY_filters = function display_filters(visibility = undefined)
 	let lelement=$('body');
 	if(visibility==true) 		{ lelement.removeClass('no-aside-filters'); return; }
 	if(visibility==false) 		{ lelement.addClass('no-aside-filters'); return; }	
-	console.log("DISPLAY_fiters bad parameter");
+	if(DISPLAY_debug) console.log("DISPLAY_fiters bad parameter");
 }
 
 //****************************************************************
@@ -125,9 +144,9 @@ var DISPLAY_full_screen = function display_full_screen(visibility = undefined)
 	
 	if(visibility==true) 		
 	{ 
-		$('main section.grid').addClass('hidden');
+		$('main section.'+vSECTION_active).addClass('hidden');
 		$('main section#fullscreen').removeClass('hidden');
-		console.log("DISPLAY_full_screen: openned (show)");		
+		if(DISPLAY_debug) console.log("DISPLAY_full_screen: openned (show)");		
 		lelement1.addClass('hidden');
 		lelement2.addClass('hidden');
 		return; 
@@ -135,7 +154,7 @@ var DISPLAY_full_screen = function display_full_screen(visibility = undefined)
 	
 	if(visibility==false) 		
 	{ 
-		$('main section.grid').removeClass('hidden');
+		$('main section.'+vSECTION_active).removeClass('hidden');
 		$('main section#fullscreen').addClass('hidden');
 		
 		if(vNAV_search_result==true)
@@ -149,11 +168,11 @@ var DISPLAY_full_screen = function display_full_screen(visibility = undefined)
 			lelement2.addClass('hidden');
 		}
 		
-		console.log("DISPLAY_full_screen: closed (hide)");		
+		if(DISPLAY_debug) console.log("DISPLAY_full_screen: closed (hide)");		
 		return; 
 		
 	}	
-	console.log("DISPLAY_full_screen bad parameter");
+	if(DISPLAY_debug) console.log("DISPLAY_full_screen bad parameter");
 }
 
 var IS_VISIBLE_menu = function is_visible_menu(object)
@@ -178,25 +197,14 @@ var DISPLAY_menu = function display_menu(object=undefined, visibility=undefined)
 	{
 		object.addClass("ux-hidden-opacity");
 		
-		setTimeout(function() { object.addClass("ux-hidden-zindex"); }, 500);
-		return;
+		if(object!=null)
+		{
+			setTimeout(function() { object.addClass("ux-hidden-zindex"); }, 500);
+			return;
+		}
 	}	
 
-	console.log("DISPLAY_menu bad parameter");	
-}
-
-//****************************************************************
-//Gère l'affichage de l'explorer *********************************
-//****************************************************************	
-
-var DISPLAY_explore = function explore(val)
-{
-	if(val==true) 
-	{
-		$('main section#explore').removeClass('hidden');
-		$('main section.grid').addClass('hidden');
-	}
-	if(val==false) $('main section#explore').addClass('hidden');	
+	if(DISPLAY_debug) console.log("DISPLAY_menu bad parameter");	
 }
 
 //****************************************************************
@@ -233,7 +241,7 @@ var DISPLAY_fileinfo_init = function fileinfo_init(multiselectionreset=true)
 
 var DISPLAY_selection = function selection(vFILEOPEN_currentid=null,refreshfullscreen=false)
 {
-	console.log("DISPLAY_selection switch selection of element",vFILEOPEN_currentid);
+	if(DISPLAY_debug) console.log("DISPLAY_selection switch selection of element",vFILEOPEN_currentid);
 	
 	if(vFILEOPEN_currentid!=null) {
 	
@@ -241,12 +249,12 @@ var DISPLAY_selection = function selection(vFILEOPEN_currentid=null,refreshfulls
 
 		if(refreshfullscreen==false) 
 		{
-			$('div#grid_'+vFILEOPEN_currentid).toggleClass('selected notselected');
+			$('div#'+vSECTION_active+'_'+vFILEOPEN_currentid).toggleClass('selected notselected');
 		}
 		
 		//Manage fullscreen selection
 		
-		if($('div#grid_'+vFILEOPEN_currentid).hasClass('selected'))
+		if($('div#'+vSECTION_active+'_'+vFILEOPEN_currentid).hasClass('selected'))
 		{
 			$('section#fullscreen').addClass('selected');
 			$('section#fullscreen div.button-selection').addClass('selected');
@@ -293,11 +301,11 @@ var DISPLAY_trash = function trash(display)
 	if(display==true)
 	{
 		DISPLAY_menu($('div#select-trash'),true); 
-		$('main section.grid div.selected').addClass('delete'); 
+		$('main section.'+vSECTION_active+' div.selected').addClass('delete'); 
 	}
 	else
 	{		
 		DISPLAY_menu($('div#select-trash'),false); 
-		$('main section.grid div.selected').removeClass('delete');
+		$('main section.'+vSECTION_active+' div.selected').removeClass('delete');
 	}
 }

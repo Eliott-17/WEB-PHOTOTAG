@@ -59,7 +59,7 @@ else
 	$EasyPDOAuth->addConditionalData('email',$email);
 	$result=$EasyPDOAuth->select('users', 'email=:email');
 	
-	if(!$result['status'])
+	if($result['status']===false)
 	{
 		$fReturn->addFailMessage("Fatal error")->fetch();	
 	}

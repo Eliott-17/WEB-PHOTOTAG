@@ -2,45 +2,47 @@
 //Variables globales *********************************************
 //****************************************************************	
 
-var uniqueid=0;			//numéro unique pour les éléments de la grille
-var last_select=-1;		//mémorise le dernier uniqueid sélectioné
+let vSECTION_active="library";
+let vSECTION_active_mem="";
 
-var loaded_files=0;		//Chargement progressif: mémorise le nombre de fichier chargés
-var loading_limit=0;	//Chagrement progressif: mémorise le nombre de fichier à pré-chargés
+let vGRID_SEARCH_DATA=[];		//Stoque les données chargées pour les réutilisées et éviter un appel  à la base de données
+let vGRID_scroll_lock = false;	//Chargement progressif: FLAG qui limite l'action scroll quand on est en train de charger la grille
 
-var mem_data=null;		 //Stoque les données chargées pour les réutilisées et éviter un appel  à la base de données
-var vGRID_SEARCH_DATA=null;//Stoque les données chargées pour les réutilisées et éviter un appel  à la base de données
-var html_mem_date;		//Pour afficher les dates correctemenr avec réinitialisation
-var undated=0;
-var scrolltop_after;
+let vGRID_scrollmem; 			//Restaure le scroll quand on sirt du fullscreen
 
-var vGRID_scrollmem;
-var vGRID_scroll_lock = false;	//Chargement progressif: FLAG qui limite l'action scroll quand on est en train de charger la grille
+//****************************************************************
+//Variables locales *********************************************
+//****************************************************************	
 
-var vGRID_mem_tag=null; //permet de mémoriser la recherche la denière recheche qui à eu lieu
-var vGRID_mem_val=null; //permet de mémoriser la recherche la denière recheche qui à eu lieu
+let SECTIONS = {
+    library:	{update:true,offset:0,memdata:null},
+    untagged: 	{update:true,offset:0,memdata:null},
+    search: 	{update:true,offset:0,memdata:null,taglist:1},
+    explore: 	{update:false,offset:0} //chargé à l'init
+};
 
-var expand_block=[];
-var expand_max=[];
+let last_select=-1;		//mémorise le dernier uniqueid sélectioné
 
 $(document).ready(function(){
 
 	$('main').on('scroll', function() {
-
-		if (vGRID_scroll_lock || mem_data==null) return;
+		
+		if (vGRID_scroll_lock || SECTIONS[vSECTION_active].offset==-1) return;
 
 		let scrollTop = $('main').scrollTop();
 		let windowHeight = $('main').height();
-		let docHeight = $('section.date').height()+$('section.nodate').height();
+		let docHeight = $('section.date.'+vSECTION_active).height()+$('section.nodate.'+vSECTION_active).height();
 		
 		let remaining = docHeight - (scrollTop + windowHeight);
-
+		
 		// déclenche quand il reste 25%
 		if (remaining < docHeight * 0.25) {
 			if(remaining>=0)
 			{
 				vGRID_scroll_lock=true;
 				console.log("reload from scroll",remaining);
+				SECTIONS[vSECTION_active].update=true;
+				SECTIONS[vSECTION_active].offset+=50;
 				GRID_load();
 			}
 		}
@@ -48,129 +50,91 @@ $(document).ready(function(){
 
 });
 
-var GRID_load = function load(force_reload=false, init_display=false, init_html="")
+var GRID_load = function load()
 {	
-	scrolltop_after=false;
-
-	if(init_display || force_reload || init_html!="")
+	if(vFILEINFO_FLAG_SAVED || vFILEINFOMULTISELECTION_FLAG_SAVED)
 	{
-		loaded_files=0;
-		loading_limit=0;
-		undated=0;
-		uniqueid=0;	
-		html_mem_date=null;
-		$("main section.grid").html('');
-		$("main section.grid.date").html(init_html);
-		scrolltop_after=true;
-	}
-	
-	if(mem_data==null || force_reload)
-	{
-		CORE_get('actions/file-load-list.php');
-	}
-	else 
-	{
-		GRID_load_CallBack();
-	}
-	
-	console.log("GRID_loaded");
+		SECTIONS["library"].memdata=null;
+		SECTIONS["library"].offset=0;	
+		SECTIONS["library"].update=true;	
 
-}
+		SECTIONS["untagged"].memdata=null;
+		SECTIONS["untagged"].offset=0;	
+		SECTIONS["untagged"].update=true;
 
-var GRID_search_CallBack = function search_CallBack(search_data) 
-{
-	//UX
-	
-	if($('div#mainmenu div button.untag').hasClass("selected")) vNAV_mem_selected='div#mainmenu div button.untag';
-	if($('div#mainmenu div button.mylib').hasClass("selected")) vNAV_mem_selected='div#mainmenu div button.mylib';
-	if($('div#mainmenu div button.explore').hasClass("selected")) vNAV_mem_selected='div#mainmenu div button.explore';
-					
-	$('div#mainmenu div button').removeClass("selected");
-	
-	vNAV_search_result=true;
+		vFILEINFO_FLAG_SAVED=false;
+		vFILEINFOMULTISELECTION_FLAG_SAVED=false;
 		
-	//result
-
-	vGRID_SEARCH_DATA=search_data;
-	DISPLAY_menu($('#select-status'),false);
-	DISPLAY_set_view('grid');
-
-	let s="";
-	if(search_data.datas.length>1) s="s";
+		vEXPLOREFILTER_FLAG_CHANGED=true;	
+	}
 	
-	$('nav span#filterapply').html(search_data.tagname+': '+search_data.keywords);	
-	$('nav span#filterresult').html(search_data.datas.length+ ' element'+s);
-	
-	//après une recherche, on affiche les nouvelles données
-	//elle sont mise à jour ICI ligne 94, donc on doir juste refraichir la grille complètement.
-	GRID_load(false,true);
-}
-
-var GRID_load_CallBack = function load_CallBack(new_data=null)
-{	
-	let updated_data=false;
-
-	if(new_data!=null) 
+	if(vEXPLOREFILTER_FLAG_CHANGED || vFILEINFO_FLAG_SAVED || vFILEINFOMULTISELECTION_FLAG_SAVED)
 	{
-		mem_data=new_data;
-		GRID_load_tags();
-		console.log("reload from new data");
+		//SECTIONS["search"].taglist=null;
+		SECTIONS["search"].memdata=null;
+		SECTIONS["search"].offset=0;	
+		SECTIONS["search"].update=true;	
+
+
+		vEXPLOREFILTER_FLAG_CHANGED=false;		
+	}
+
+	if(SECTIONS[vSECTION_active].update==true)
+	{
+		console.log("GRID",vSECTION_active,"update request");
+		
+		SECTIONS[vSECTION_active].update=false;
+		
+		switch(vSECTION_active)
+		{
+			case "library":
+			
+				CORE_get('actions/file-load-list.php?source=0&offset='+SECTIONS[vSECTION_active].offset);
+			
+			break;
+			case "untagged":
+			
+				CORE_get('actions/file-load-list.php?source=1&offset='+SECTIONS[vSECTION_active].offset);
+			
+			break;
+			case "search":
+			
+				$("#filters").attr('action','actions/file-search-list.php?offset='+SECTIONS[vSECTION_active].offset+'&tagslist='+SECTIONS[vSECTION_active].taglist);
+
+				SECTIONS[vSECTION_active].taglist=0; //par défaut à 0;
+
+				CORE_post($("#filters"));
+			
+			break;
+			case "explore":
+			
+				CORE_get('actions/file-load-explore.php');
+				
+			break;
+			default: break;	
+		}			
 	}
 	else
 	{
-		console.log("reload from memory");
+		console.log("GRID",vSECTION_active,"no action");		
 	}
-	
-	if(mem_data==null)
-	{
-		console.log("No data loaded");
-		return;
-	}
-		
-	let source=null;
-
-	if($('div#mainmenu button.mylib').hasClass('selected')) 
-	{
-		console.log("Source library");
-		source=mem_data.library;
-	}
-	else if($('div#mainmenu button.untag').hasClass('selected')) 
-	{
-		console.log("Source untagged");
-		source=mem_data.untagged;
-	}
-	else if(vGRID_SEARCH_DATA.datas.length!=0)
-	{
-		console.log("Source search");
-		source=vGRID_SEARCH_DATA.datas;
-	}
-	else {};
-	
-	if(source==null)
-	{
-		console.error("No source selected");
-		return;		
-	}
-		
-	let total_file_library=mem_data.library.length;
-	let total_file_untagged=mem_data.untagged.length;	
-	
-	$('#untaggedcount').html("&nbsp;("+total_file_untagged+")");
-	$('#taggedcount').html("&nbsp;("+total_file_library+")");
-	
-	OBJ_Dest_nodate = $("main section.nodate");
-	OBJ_Dest_date = $("main section.date");
-	OBJ_Select_both = $("main section.grid");
-	
-	GRID_generage(source,OBJ_Dest_date,OBJ_Dest_nodate,OBJ_Select_both);
 }
 
-	//****************************************************************
-	//Loop Génération de la grille de photos *************************
-	//****************************************************************	
+var GRID_load_CallBack = function load_CallBack(data_array)
+{	
+	if(SECTIONS[vSECTION_active].offset==0) $("main section."+vSECTION_active).html('');
 
-var GRID_generage = function generate(source,OBJ_Dest_date,OBJ_Dest_nodate,OBJ_Select_both)
-{
+	OBJ_Dest_nodate = $("main section.nodate."+vSECTION_active);
+	OBJ_Dest_date = $("main section.date."+vSECTION_active);
+	OBJ_Select_both = $("main section.grid");
+	
+	source=data_array.datas;
+	
+	/*if(vSECTION_active=="search")
+	{
+		vGRID_SEARCH_DATA['datas']=source;
+	}*/
+		
 	let j=0; //because i is not reliable (in case of skip)
 	let max_display=source.length; //because source.length is not reliable (in case of skip)
 	
@@ -185,41 +149,38 @@ var GRID_generage = function generate(source,OBJ_Dest_date,OBJ_Dest_nodate,OBJ_S
 			}
 		}
 		
-		if(j>=loaded_files)
-		{			
-			if(bdd.time_taken_at_date=="00000000" &&  bdd.time_taken_at_zone=="00000" && bdd.time_taken_at_time=="000000")
+		if(bdd.time_taken_at_date=="00000000" &&  bdd.time_taken_at_zone=="00000" && bdd.time_taken_at_time=="000000")
+		{
+			//si on à pas de date
+			if(OBJ_Dest_nodate.html()=='') OBJ_Dest_nodate.append('<div class="fullrow"><h2>Undated</h2></div>');
+			OBJ_Dest_nodate.append(addElement(data_array.dir, bdd));
+		}
+		else
+		{										
+			let l_date_test = bdd.time_taken_at_date;
+
+			let l_date_display = l_date_test.substring(6,8) + "/" + l_date_test.substring(4,6) + "/" + l_date_test.substring(0,4);	
+			
+			if(SECTIONS[vSECTION_active].memdata==null || SECTIONS[vSECTION_active].memdata!=l_date_test)
 			{
-				//si on à pas de date
-				if(undated==0) OBJ_Dest_nodate.append('<div class="fullrow"><h2>Undated</h2></div>');
-				OBJ_Dest_nodate.append(addElement(mem_data.dir, bdd));
-				undated++;
+				OBJ_Dest_date.append('<div class="fullrow"><h2>'+formatDateLocale(l_date_display)+'</h2></div>'); //on démarre une nouvelle grille
 			}
-			else
-			{										
-				let l_date_test = bdd.time_taken_at_date;
 
-				let l_date_display = l_date_test.substring(6,8) + "/" + l_date_test.substring(4,6) + "/" + l_date_test.substring(0,4);	
-				
-				if(html_mem_date==null || html_mem_date!=l_date_test)
-				{
-					OBJ_Dest_date.append('<div class="fullrow"><h2>'+formatDateLocale(l_date_display)+'</h2></div>'); //on démarre une nouvelle grille
-				}
-
-				OBJ_Dest_date.append(addElement(mem_data.dir, bdd));
-								
-				html_mem_date=l_date_test;
-			}
-						
-			loaded_files++;
+			OBJ_Dest_date.append(addElement(data_array.dir, bdd));
+							
+			SECTIONS[vSECTION_active].memdata=l_date_test;
 		}
 		
 		j++;
-		
-		if(j>(50+loading_limit)) return false; //false = break the loop;
-
 	});
-	
-	loading_limit=loaded_files;
+		
+	if(max_display<50) SECTIONS[vSECTION_active].offset=-1; //bloquage du scroll
+
+	//****************************************************************
+	//Attribution d'un uniqueid aux éléments chargés *****************
+	//****************************************************************		
+		
+	let id = grid_load_id();
 	
 	//****************************************************************
 	//Déchagrement des précents boutons ******************************
@@ -234,7 +195,7 @@ var GRID_generage = function generate(source,OBJ_Dest_date,OBJ_Dest_nodate,OBJ_S
 
 	$('main').on('click.gridSelect', 'div.button-select', function(e) {
 		
-		let current_id = parseInt($(this).parent().attr('id').replace('grid_',''));
+		let current_id = parseInt($(this).parent().attr('id').replace(vSECTION_active+'_',''));
 				
 		//****************************************************************
 		//Logique de sélection en lot avec la touche SHIFT ***************
@@ -243,19 +204,19 @@ var GRID_generage = function generate(source,OBJ_Dest_date,OBJ_Dest_nodate,OBJ_S
 		if(e.shiftKey)
 		{	
 			if(last_select>=0)
-			{
+			{				
 				if(current_id>last_select)
 				{
 					for(i=(last_select+1);i<current_id;i++) 
 					{
-						$('#grid_'+i).toggleClass('selected notselected');
+						$('div#'+vSECTION_active+'_'+i).addClass('selected');
 					}
 				}
 				else
 				{				
 					for(i=(current_id+1);i<last_select;i++) 
 					{
-						$('#grid_'+i).toggleClass('selected notselected');
+						$('div#'+vSECTION_active+'_'+i).addClass('selected');
 					}
 				}	
 			}
@@ -269,15 +230,13 @@ var GRID_generage = function generate(source,OBJ_Dest_date,OBJ_Dest_nodate,OBJ_S
 		
 		if(IS_VISIBLE_menu($('div#select-trash'))) OBJ_Select_both.find('div.selected').addClass('delete');
 		
-		//$('main section.grid div.selected').addClass('delete');
-
 		if(DISPLAY_is_visible_file_info()) //Si on à affiché les information des fichiers lors d'une sélection multiple
 		{
 			FILEMULTISELECTION_load(); //On rafraichi les informations affichés au changement de sélection
 		}
 		
 		last_select=current_id;
-		
+				
 	});
 
 	//*******************************************************************
@@ -286,8 +245,9 @@ var GRID_generage = function generate(source,OBJ_Dest_date,OBJ_Dest_nodate,OBJ_S
 	
 	$('main').on('click.gridOpen', 'div.button-fullscreen', function() {
 		
-		let media_id = parseInt($(this).parent().attr('id').replace("grid_",""));
-		let max = (loaded_files-1);
+		let media_id = parseInt($(this).parent().attr('id').replace(vSECTION_active+'_',''));
+		
+		let max = (id);
 		
 		vGRID_scrollmem = $('main').scrollTop();
 		vFILEOPEN_currentid=media_id;
@@ -298,186 +258,23 @@ var GRID_generage = function generate(source,OBJ_Dest_date,OBJ_Dest_nodate,OBJ_S
 		DISPLAY_selection(vFILEOPEN_currentid,true);
 	});	
 	
-	if(loaded_files<max_display) vGRID_scroll_lock=false;	
+	vGRID_scroll_lock=false;	
 	
 	DISPLAY_selection();
-	
-	if(scrolltop_after) $('main').scrollTop(0);
 
-	console.log("GRID_load_CallBack",loaded_files,source.length);
+	console.log("GRID_load_CallBack",SECTIONS[vSECTION_active].offset);
 }
 
-//****************************************************************
-//Fonction Génération des datalist & advanced filters ************
-//****************************************************************	
-
-var GRID_load_tags = function load_tags()
-{	
-	let html = '';
-	let htmlfull = '';
-	let htmlfilter = '';
-	let filtercount=1;
-	let filtermem='';
-	//let filtermem_time='';
-	let img;
-	
-	let max_elements = 10;//Math.floor($('main').width()/170);
-
-	const array_config_tag_show = {
-		tag_country: ["By countries",1],
-		tag_city: ["Visited cities",1],
-		tag_place: ["By places",1],
-		tag_activity: ["My activities",1],
-		tag_comment: 0,
-		tag_people: 0,
-		tag_other: 0,
-		years: ["By date",1],
-		months: 0
-	};
-	
-	expand_max=[];
-
-	$.each(mem_data.tags, function(index, tagvalue) {
-
-		html += '<datalist id="'+index+'">';
-
-		$.each(tagvalue, function(optionvalue, ovdata) {
-			
-			html += '<option value="'+optionvalue+'">';
-			htmlfull += '<option data-tag="'+index+'" value="'+optionvalue+'">';
-			
-			//filters
-			
-			let date=false;
-			
-			if(index=='days' || index=='months' || index=='years') date=true;
-		
-			if(array_config_tag_show[index][1]==1)
-			{
-				if(filtermem!=index)
-				{
-					filtercount=1;
-				}
-
-				img="includes/401.webp";
-				let visibility="";
-				let name="";
-				
-				if(!date)
-				{						
-				
-					if(ovdata[1].length>3) img='sd-'+ovdata[1];
-					if(ovdata[1].length==3) img='images/flags/'+ovdata[1]+'.svg';
-					
-					if(filtercount>=max_elements) 
-					{
-						let id=Math.floor(filtercount/max_elements);
-						let name=index+"_filter";
-						visibility="hidden "+name+id;
-									
-						if(filtercount%max_elements==0) 
-						{
-							htmlfilter += '<div class="element cursor expandmenu" id="'+name+'"><img src="'+img+'"><span class="material-symbols-outlined">expand_circle_down</span><div>Explore more</div></div>';
-							expand_block[name]=1;
-							expand_max[name]=id;
-						}
-					}
-				}
-				
-				if(filtermem!=index)
-				{
-					let add_class="";
-					if(index=='tag_country') add_class="notopborder";
-					
-					htmlfilter += '<div class="fullrow"><h2 class="'+add_class+'">'+array_config_tag_show[index][0]+'</h2></div>';
-				}
-				
-				if(!date)
-				{
-					htmlfilter += '<div class="element cursor tagelement '+visibility+'" data-tag="'+index+'" data-val="'+optionvalue+'"><img src="'+img+'"><div>'+optionvalue+'</div></div>';
-				}
-				else
-				{
-					htmlfilter += '<div class="element cursor date tagelement" data-tag="'+index+'" data-val="'+optionvalue+'"><div>'+optionvalue+'</div></div>';
-				}
-				
-				filtermem=index;
-				filtercount++;
-			}
-
-		});
-
-		html += '</datalist>';
-	});
-
-	$('aside div#datalist').html(html);
-	$('aside datalist#fastsearch').html(htmlfull);
-	
-	let file_quota=0;
-	
-	if(mem_data.file_size_total!==undefined) file_quota+=mem_data.file_size_total;
-	if(mem_data.file_size_webp_total!==undefined) file_quota+=mem_data.file_size_webp_total;
-	
-	htmlfilter += '<div class="fullrow"><h2 class="">Total disk space '+formatBytes(file_quota)+'</h2></div>';
-
-	$('main section#explore').html(htmlfilter);
-	
-	//****************************************************************
-	//Bouton expanse *************************************************
-	//****************************************************************	
-	
-	$('main').off('click.expandFilters');
-	$('main').off('click.enterFilter');
-	$('main').off('click.enterFilterYear');
-	$('main').off('click.enterFilterMonth');
-	
-	$('main').on('click.expandFilters', 'section#explore div.expandmenu', function(e) {
-		
-		let name = $(this).attr('id');
-		
-		console.log('main section div.'+name+expand_block[name]);
-		
-		$('main section div.'+name+expand_block[name]).removeClass('hidden');
-		
-		if(expand_block[name]>=expand_max[name])
-		{
-			$(this).addClass('hidden');
-		}			
-	});
-
-
-	$('main').on('click.enterFilter', 'section#explore div.tagelement', function(e) {
-		
-		$('main').scrollTop(0);
-		
-		if(!$(this).hasClass('expandmenu'))
-		{			
-			vGRID_mem_tag=$(this).attr('data-tag');
-			vGRID_mem_val=$(this).attr('data-val');
-
-			CORE_get('actions/file-search-list.php?tag='+vGRID_mem_tag+'&value='+vGRID_mem_val);	
-		}
-	});	
-}
-
-var GRID_add_tags = function add_tags(tags)
+function grid_load_id()
 {
-	$.each(tags, function(index, tagvalue) {
-		
-		if(mem_data.tags[index][tagvalue] === undefined)
-		{
-			console.log("GRID_add_tags",tagvalue,"added to list");
-			
-			$('#'+index).append('<option value="'+tagvalue+'">');
-			$('aside datalist#fastsearch').append('<option data-tag="'+index+'" value="'+tagvalue+'">');
-			
-			mem_data.tags[index][tagvalue]=1;
-		}
-		else
-		{
-			console.log("GRID_add_tags",tagvalue,"aready exist");
-		}
+	let id=0;
+
+	$('main section.' + vSECTION_active+' div.element').each(function () {
+		$(this).attr('id', vSECTION_active+'_'+id);
+		id++;
 	});
+	
+	return id;
 }
 
 function addElement(dir, bdd)
@@ -488,7 +285,7 @@ function addElement(dir, bdd)
 		
 	let html ="";
 	let ux = "photo";
-	html+= '<div id="grid_'+uniqueid+'" class="element notselected wrapper '+file_orientationtxt+'">';
+	html+= '<div id="" class="element notselected wrapper '+file_orientationtxt+'">';
 	
 	html+= '	<div class="media-container" data-type="'+bdd.file_type+'" data-src="'+bdd.file_hash+'" data-id="'+bdd.id+'" id="media_'+bdd.id+'">';
 	
@@ -513,9 +310,7 @@ function addElement(dir, bdd)
 	html+= '		<span class="material-symbols-outlined">open_in_full</span>';
 	html+= '	</div>';
 	html+= '</div>';
-	
-	uniqueid++;
-	
+		
 	return html;	
 }
 

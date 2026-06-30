@@ -18,26 +18,8 @@ $(document).ready(function(){
 	$('section#fullscreen div.button-return').on('click.gridSelect', function() {
 			
 		DISPLAY_set_view("grid");
-		
-		if(vFILEINFO_FLAG_SAVED==true)
-		{
-			if(vGRID_mem_tag!=null && vGRID_mem_tag!=null) 
-			{
-				//si on était dans le résultat de recherche, on actualise
-				CORE_get('actions/file-search-list.php?tag='+vGRID_mem_tag+'&value='+vGRID_mem_val);
-			}
-			else 
-			{
-				//si on sauvegarde un fichier en plein écran, on recharge les donnés en cours.
-				GRID_load(true);
-				vFILEINFO_FLAG_SAVED=false;
-			}
-		}
-		else
-		{
-			$('main').scrollTop(vGRID_scrollmem);
-		}
-		
+		GRID_load();
+		$('main').scrollTop(vGRID_scrollmem);		
 	});
 
 	$('section#fullscreen').on('click.gridLeftAR', 'div.button-leftarrow', function() { Arrow(0); });			
@@ -100,9 +82,9 @@ function ArrowDisplay(vFILEOPEN_currentid, max_id)
 
 var FILEOPENFULLSCREEN_Loadmedia = function LoadMedia(id)
 {	
-	let file_type = $('div#grid_'+id+' div.media-container').attr("data-type");
-	let file_hash = $('div#grid_'+id+' div.media-container').attr("data-src");
-	let media_id =  $('div#grid_'+id+' div.media-container').attr("data-id");
+	let file_type = $('div#'+vSECTION_active+'_'+id+' div.media-container').attr("data-type");
+	let file_hash = $('div#'+vSECTION_active+'_'+id+' div.media-container').attr("data-src");
+	let media_id =  $('div#'+vSECTION_active+'_'+id+' div.media-container').attr("data-id");
 	
 	$('section#fullscreen div.media').attr('data-id',media_id);
 		

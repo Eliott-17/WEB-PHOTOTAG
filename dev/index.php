@@ -45,9 +45,9 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/locations.php');
 			{
 				?>
 					<div id="mainmenu" class="ux-background mainmenu">				
-						<div><button class="mylib selected"><span class="material-symbols-outlined">photo</span>&nbsp;<span>Timeline</span><span id="taggedcount"></span></button></div>
+						<div><button class="library selected"><span class="material-symbols-outlined">photo</span>&nbsp;<span>Timeline</span><span id="taggedcount"></span></button></div>
 						<div><button class="explore"><span class="material-symbols-outlined">explore</span>&nbsp;<span>Explore</span></button></div>
-						<div><button class="untag"><span class="material-symbols-outlined">new_label</span>&nbsp;<span>Untagged</span><span id="untaggedcount"></span></button></div>
+						<div><button class="untagged"><span class="material-symbols-outlined">new_label</span>&nbsp;<span>Untagged</span><span id="untaggedcount"></span></button></div>
 						<div class="search"><button class="search"><span class="material-symbols-outlined">search</span>&nbsp;<span>quick search</span></button><input type="text" list="fastsearch" autocomplete="off"/></div>
 						<div class="last"><a href="actions/logout.php"><button><span class="material-symbols-outlined">logout</span>&nbsp;<span>Logout</span></button></button></a></div>
 					</div>
@@ -148,52 +148,68 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/locations.php');
 						</div>
 						<div class="menubackground ux-background"></div>
 					</section>
-					<section id="explore" class="hidden"></section>
-					<section class="grid date"></section>
-					<section class="grid nodate"></section>
+					<section class="explore hidden"></section>
+					<section class="grid library date"></section>
+					<section class="grid library nodate"></section>
+					<section class="grid untagged date hidden"></section>
+					<section class="grid untagged nodate hidden"></section>
+					<section class="grid search date hidden"></section>
+					<section class="grid search nodate hidden"></section>
 				</main>
 		
 				<aside id="advancedfilters" class="ux-background">
 				
 					<h2 class="title">Advanced filters</h2>
-				
-					<h2 id="tag_location">
-						<span class="material-symbols-outlined">globe</span>
-						<span>Location</span>
-						<span class="material-symbols-outlined cursor">check_box</span>
-						<span class="material-symbols-outlined">compare_arrows</span>
-						<span class="material-symbols-outlined cursor">check_box_outline_blank</span>
 					
-					</h2>
+					<button><span class="material-symbols-outlined">check_box_outline_blank</span>&nbsp;<span>Clear all</span></button>
+					<button><span class="material-symbols-outlined">check_box</span>&nbsp;<span>Check all</span></button>
 					
-					<h3 class="tag_location" data-title="tag_location" id="country"><span class="material-symbols-outlined">flag</span><div class="value"></div></h3>
-					<h3 class="tag_location" data-title="tag_location" id="city"><span class="material-symbols-outlined">location_city</span><div class="value"></div></h3>
-					<h3 class="tag_location" data-title="tag_location" id="place" class="last"><span class="material-symbols-outlined">place</span><div class="value"></div></h3>
-
-					<h2 id="tag_tags">
-						<span class="material-symbols-outlined">tag</span>
-						<span>Tags</span>
-						<span class="material-symbols-outlined cursor">check_box</span>
-						<span class="material-symbols-outlined">compare_arrows</span>
-						<span class="material-symbols-outlined cursor">check_box_outline_blank</span>
-					</h2>
-	
-					<h3 class="tag_tags" data-title="tag_tags" id="activity"><span class="material-symbols-outlined">directions_run</span><div class="value"></div></h3>				
-					<h3 class="tag_tags" data-title="tag_tags" id="comment"><span class="material-symbols-outlined">comment</span><div class="value"></div></h3>
-					<h3 class="tag_tags" data-title="tag_tags" id="people"><span class="material-symbols-outlined">group</span><div class="value"></div></h3>
-					<h3 class="tag_tags" data-title="tag_tags" id="other" class="last"><span class="material-symbols-outlined">info</span><div class="value"></div></h3>
-
-					<h2 id="tag_date">
-						<span class="material-symbols-outlined">calendar_clock</span>
-						<span>Date</span>
-						<span class="material-symbols-outlined cursor">check_box</span>
-						<span class="material-symbols-outlined">compare_arrows</span>
-						<span class="material-symbols-outlined cursor">check_box_outline_blank</span>
-					</h2>
+					<form id="filters" method="post" action="actions/file-search-list.php?offset=0&tagslist=0"/>
 					
-					<h3 class="tag_date" data-title="tag_date" id="years"><span class="material-symbols-outlined">calendar_today</span><div class="value"></div></h3>
-					<h3 class="tag_date" data-title="tag_date" id="months" class="last"><span class="material-symbols-outlined">calendar_month</span><div class="value"></div></h3>
+						<input type="hidden" name="token" class="token" value=""/>
+						<input type="hidden" id="filter_tag" name="tag"/>
+						<input type="hidden" id="filter_val" name="value"/>
+						<input type="hidden" id="filters_exclude" name="filters" value="{}"/>
 						
+						<h2 id="tag_location">
+							<span class="material-symbols-outlined">globe</span>
+							<span>Location</span>
+							<span class="material-symbols-outlined cursor">check_box</span>
+							<span class="material-symbols-outlined">compare_arrows</span>
+							<span class="material-symbols-outlined cursor">check_box_outline_blank</span>
+						
+						</h2>
+						
+						<h3 class="tag_location" data-title="tag_location" id="country"><span class="material-symbols-outlined">flag</span><div class="value"></div></h3>
+						<h3 class="tag_location" data-title="tag_location" id="city"><span class="material-symbols-outlined">location_city</span><div class="value"></div></h3>
+						<h3 class="tag_location" data-title="tag_location" id="place" class="last"><span class="material-symbols-outlined">place</span><div class="value"></div></h3>
+
+						<h2 id="tag_tags">
+							<span class="material-symbols-outlined">tag</span>
+							<span>Tags</span>
+							<span class="material-symbols-outlined cursor">check_box</span>
+							<span class="material-symbols-outlined">compare_arrows</span>
+							<span class="material-symbols-outlined cursor">check_box_outline_blank</span>
+						</h2>
+		
+						<h3 class="tag_tags" data-title="tag_tags" id="activity"><span class="material-symbols-outlined">directions_run</span><div class="value"></div></h3>				
+						<h3 class="tag_tags" data-title="tag_tags" id="comment"><span class="material-symbols-outlined">comment</span><div class="value"></div></h3>
+						<h3 class="tag_tags" data-title="tag_tags" id="people"><span class="material-symbols-outlined">group</span><div class="value"></div></h3>
+						<h3 class="tag_tags" data-title="tag_tags" id="other" class="last"><span class="material-symbols-outlined">info</span><div class="value"></div></h3>
+
+						<h2 id="tag_date">
+							<span class="material-symbols-outlined">calendar_clock</span>
+							<span>Date</span>
+							<span class="material-symbols-outlined cursor">check_box</span>
+							<span class="material-symbols-outlined">compare_arrows</span>
+							<span class="material-symbols-outlined cursor">check_box_outline_blank</span>
+						</h2>
+						
+						<h3 class="tag_date" data-title="tag_date" id="years"><span class="material-symbols-outlined">calendar_today</span><div class="value"></div></h3>
+						<h3 class="tag_date" data-title="tag_date" id="months" class="last"><span class="material-symbols-outlined">calendar_month</span><div class="value"></div></h3>
+					
+					</form>
+					
 				</aside>
 
 				<aside id="infocontent" class="ux-background">
@@ -387,6 +403,8 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/locations.php');
 	<script src='javascript/common.<?php echo filemtime('javascript/common.'.DIM.'.js'); ?>.<?php echo DIM; ?>.js'></script>
 	<script src='javascript/display.<?php echo filemtime('javascript/display.'.DIM.'.js'); ?>.<?php echo DIM; ?>.js'></script>
 	<script src='javascript/grid.<?php echo filemtime('javascript/grid.'.DIM.'.js'); ?>.<?php echo DIM; ?>.js'></script>
+	<script src='javascript/explore.<?php echo filemtime('javascript/explore.'.DIM.'.js'); ?>.<?php echo DIM; ?>.js'></script>
+	<script src='javascript/filters.<?php echo filemtime('javascript/filters.'.DIM.'.js'); ?>.<?php echo DIM; ?>.js'></script>
 	<script src='javascript/nav.<?php echo filemtime('javascript/nav.'.DIM.'.js'); ?>.<?php echo DIM; ?>.js'></script>
 	<script src='javascript/login.<?php echo filemtime('javascript/login.'.DIM.'.js'); ?>.<?php echo DIM; ?>.js'></script>
 	<script src='javascript/file-open-fullscreen.<?php echo filemtime('javascript/file-open-fullscreen.'.DIM.'.js'); ?>.<?php echo DIM; ?>.js'></script>

@@ -1,4 +1,4 @@
-main section#explore {
+main section.explore {
 	display: grid;
 	grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
 	gap: 20px;
@@ -11,37 +11,37 @@ main section#explore {
 	box-sizing: border-box;
 }
 
-main section#explore div.element {
+main section.explore div.element {
 	box-sizing: border-box;
 	text-align: center;
 	position: relative;
 	overflow: hidden;
 }
 
-main section#explore div.element:hover  {
+main section.explore div.element:hover  {
 	font-weight: bolder;
 }
 
-main section#explore div.date:hover
+main section.explore div.date:hover
 {
 	border: 10px solid rgba(145,200,250,1);
 }
-main section#explore div.element:hover img 
+main section.explore div.element:hover img 
 {
 	border: 1px solid rgba(145,200,250,1);
 }
-main section#explore div img
+main section.explore div img
 {
 	box-sizing: border-box;
 	margin-bottom: 5px;
 }
 
-main section#explore div.expandmenu img
+main section.explore div.expandmenu img
 {
 	opacity: 0.3;
 }
 
-main section#explore div.expandmenu span
+main section.explore div.expandmenu span
 {
 	margin: 10px;
     top: 0px;
@@ -51,7 +51,7 @@ main section#explore div.expandmenu span
     color: #494949;
 }
 
-main section#explore div.date
+main section.explore div.date
 {	
     border: 10px solid #494949;
     width: 130px;
@@ -64,7 +64,7 @@ main section#explore div.date
 	font-size: 1.5em;
 }
 
-main section#explore div.element :where(img,video) {
+main section.explore div.element :where(img,video) {
 	width: 150px;
 	height: 150px;
 	display: block;
@@ -72,7 +72,7 @@ main section#explore div.element :where(img,video) {
 	border-radius: 250px;
 }
 
-main section#explore div.fullrow h2 
+main section.explore div.fullrow h2 
 {
 	width: 100%;
 	margin: 10px; 
@@ -85,19 +85,19 @@ main section#explore div.fullrow h2
 	border-top: 1px solid #494949;
 }
 
-main section#explore div.fullrow h2.notopborder
+main section.explore div.fullrow h2.notopborder
 {
 	border-top: 0px;
 }
 
-main section#explore div h2.title
+main section.explore div h2.title
 {
 	border-top: 0px;
 	margin: 0px;
 	padding: 0px;
 }
 
-main section#explore div.fullrow {
+main section.explore div.fullrow {
     grid-column: 1 / -1;
     height: auto;
     min-height: unset;

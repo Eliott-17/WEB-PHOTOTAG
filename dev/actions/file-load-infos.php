@@ -32,7 +32,7 @@
 		$EasyPDO->addConditionalData('hash',$_GET['hash']);
 		$array_file=$EasyPDO->select('photos', 'file_hash=:hash');
 				
-		if($array_file['status']==1)
+		if($array_file['status']===true)
 		{			
 			// Parcourir chaque ligne du résultat
 			foreach ($array_file['datas'] as &$file) {

@@ -97,7 +97,6 @@ var FILEINFO_load = function load(force_reload=false)
 		vFILEINFO_load_mem=hash;
 		vFILEINFOMULTISELECTION_mem=null; //forcer le rechargement des data en sélection multiple
 		console.log('FILEINFO_load => data update request');
-		//console.log('actions/file-load-infos.php?hash='+hash+'&lform=');
 	}
 	else
 	{

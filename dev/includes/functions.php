@@ -222,33 +222,13 @@
 					{
 						//months
 						$period='months';
-						$month = substr($val, 4, 2);
-					
-						switch((int)$month)
-						{
-							case 1:$label='January';break;
-							case 2:$label='Febuary';break;
-							case 3:$label='March';break;
-							case 4:$label='April';break;
-							case 5:$label='May';break;
-							case 6:$label='June';break;
-							case 7:$label='July';break;
-							case 8:$label='August';break;
-							case 9:$label='September';break;
-							case 10:$label='October';break;
-							case 11:$label='November';break;
-							case 12:$label='December';break;
-							default: $label=''; break;
-						}
-						
-						$array_tags[$period][$label][0] = ($array_tags[$period][$label][0] ?? 0) + 1;
-						$array_tags[$period][$label][1] = $month;
-					
+						$month = (int)substr($val, 4, 2);
+						$array_tags[$period][$month] = ($array_tags[$period][$month] ?? 0) + 1;
+
 						//year						
 						$period='years';
-						$year = substr($val, 0, 4);
-						
-						$array_tags[$period][$year][0] = ($array_tags[$period][$year][0] ?? 0) + 1;
+						$year = (int)substr($val, 0, 4);
+						$array_tags[$period][$year] = ($array_tags[$period][$year] ?? 0) + 1;
 					}
 					else
 					{								
@@ -282,21 +262,70 @@
 		}
 		
 		unset($array_tags['time_taken_at_date']);
+	
+		//MONTH SORT
 		
-		foreach ($array_tags as $key => &$tags) 
+		if(isset($array_tags['months']))
 		{
-			if($key!='time_taken_at_date')
-			{				
-				arsort($tags); // tri décroissant par valeur
-			}
-			else
+			$array_new=[];
+
+			foreach ($array_tags['months'] as $key => $value) 
 			{
-				if(isset($tags['years'])) krsort($tags['years']); // tri décroissant par valeur
-				if(isset($tags['years'])) krsort($tags['months']); // tri décroissant par valeur
-				//krsort($tags['days']); // tri décroissant par valeur
+				switch((int)$key)
+				{
+					case 1:$label='January';break;
+					case 2:$label='Febuary';break;
+					case 3:$label='March';break;
+					case 4:$label='April';break;
+					case 5:$label='May';break;
+					case 6:$label='June';break;
+					case 7:$label='July';break;
+					case 8:$label='August';break;
+					case 9:$label='September';break;
+					case 10:$label='October';break;
+					case 11:$label='November';break;
+					case 12:$label='December';break;
+					default: $label=''; break;
+				}
+				
+				$array_new[] = [$key, $label, $value];
 			}
+			
+			$array_tags['months']=$array_new;
+
+			usort($array_tags['months'], function ($a, $b) {
+				return $a[0] <=> $b[0];
+			});
+			
 		}
-		unset($tags);
+		
+		//YEAR sort
+		
+		if(isset($array_tags['years']))
+		{	
+			$array_new=[];
+			
+			foreach ($array_tags['years'] as $key => $value) 
+			{
+				$array_new[] = [$key, (string)$key, $value];
+			}
+			
+			$array_tags['years']=$array_new;
+
+			usort($array_tags['years'], function ($a, $b) {
+				return $b[0] <=> $a[0];
+			});
+			
+			
+			foreach ($array_tags as $key => &$tags) 
+			{
+				if($key!='years' && $key!='months')
+				{				
+					arsort($tags); // tri décroissant par valeur
+				}
+			}
+			unset($tags);	
+		}
 		
 		return $array_tags;
 		

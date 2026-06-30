@@ -1,5 +1,7 @@
 <?php
 
+	define("POST_LIMIT_RATE", 10);
+
 	require_once($_SERVER['DOCUMENT_ROOT'].'/core/securityheader.php');
 	require_once($_SERVER['DOCUMENT_ROOT'].'/core/class.easypdo.php');
 	require_once($_SERVER['DOCUMENT_ROOT'].'/core/class.freturn.php');
@@ -8,18 +10,26 @@
 	require_once($_SERVER['DOCUMENT_ROOT'].'/includes/locations.php');
 
 	$fReturn = new fReturn();
-	$EasyPDO = new EasyPDO($_SESSION['DB']);
+	$validation = new Validation();
+
+	$validation->addVerification('token',				'sha256',			'Token');	
+	$validation->addVerification('offset',				'int',				'Offset'			);	
+	$validation->addVerification('tag',					'string',			'Tag',					4,100	);
+	$validation->addVerification('value',				'string',			'Value',				0,100	);
+	$validation->addVerification('tagslist',			'int_interval',		'Taglist incorrect',  	0,2		);	
+	$validation->addVerification('filters',				'jsonArrayString',	'filters',  			);
 	
-	if(!isset($_GET['tag']) || !isset($_GET['value']))
+	$validation->Validate(false,true);
+	
+	if(!$validation->isValidated())
 	{
-		$fReturn->addConsole("Invalid GET")->fetch();
+		if(ENV=="DEV") $fReturn->addConsole($validation->Message());
+		$fReturn->fetch();
 	}
+	
+	$EasyPDO = new EasyPDO($_SESSION['DB']);
 
-	if(empty($_GET['value']))
-	{
-		$fReturn->addConsole("Empty GET value")->fetch();
-	}
-
+	$EasyPDO->addFields('file_status');	
 	$EasyPDO->addFields('file_hash');
 	$EasyPDO->addFields('time_taken_at_date');
 	$EasyPDO->addFields('time_taken_at_zone');
@@ -27,31 +37,34 @@
 	$EasyPDO->addFields('file_orientation');
 	$EasyPDO->addFields('file_type');
 	$EasyPDO->addFields('id');
-
-	$EasyPDO->addFields('tag_country');
-	$EasyPDO->addFields('tag_city');
-	$EasyPDO->addFields('tag_place');
-	$EasyPDO->addFields('tag_activity');
-	$EasyPDO->addFields('tag_comment');
-	$EasyPDO->addFields('tag_people');
-	$EasyPDO->addFields('tag_other');
 	
-	$result['status']=0;
+	if($_GET['tagslist']>0)
+	{
+		$EasyPDO->addFields('tag_country');
+		$EasyPDO->addFields('tag_city');
+		$EasyPDO->addFields('tag_place');
+		$EasyPDO->addFields('tag_activity');
+		$EasyPDO->addFields('tag_comment');
+		$EasyPDO->addFields('tag_people');
+		$EasyPDO->addFields('tag_other');
+	}
+	
+	$result['status']=false;
 	$tagname="";
 		
-	switch($_GET['tag'])
+	switch($_POST['tag'])
 	{
 		case 'tag_country':
 		
-			$key = array_search($_GET['value'], $country);
+			$key = array_search($_POST['value'], $country);
 
 			if ($key === false) {
-				$fReturn->addConsole("[PHP] Country value ".$_GET['value']." invalid");
+				$fReturn->addConsole("[PHP] Country value ".$_POST['value']." invalid");
 				break;
 			}
 			else
 			{
-				$_GET['value']=$key;
+				$_POST['value']=$key;
 			}
 			
 			$tagname="Pays";
@@ -66,30 +79,92 @@
 		case 'tag_other': $tagname="Information"; break;
 		case 'years': $tagname='years'; break;
 		default: 
-			$fReturn->addConsole("[PHP] Tag ".$_GET['tag']." invalid");
+			$fReturn->addConsole("[PHP] Tag ".$_POST['tag']." invalid");
 		break;
 	}
 	
-	if(!empty($tagname))
+	if($_GET['tagslist']>0)
 	{
-		if($tagname=='years')
-		{
-			$EasyPDO->addConditionalData('value',$_GET['value'].'%');
-			$result=$EasyPDO->select('photos', 'time_taken_at_date LIKE :value AND file_status = 0 ORDER BY time_taken_at_date DESC,time_taken_at_zone DESC, time_taken_at_time DESC, id ASC');		
-		
-		}
-		else
-		{
-			$EasyPDO->addConditionalData('value',$_GET['value']);
-			$result=$EasyPDO->select('photos', $_GET['tag']. '=:value AND file_status = 0 ORDER BY time_taken_at_date DESC,time_taken_at_zone DESC, time_taken_at_time DESC, id ASC');		
-		}
+		$limit = "";
+	}
+	else
+	{
+		$limit = " LIMIT 50 OFFSET:offset";
+		$EasyPDO->addConditionalData('offset',$_GET['offset']);
 	}
 
-	if($result['status']==1) 
+	//************************************************************
+	//sub filters
+	//************************************************************
+	
+	$addquery="";
+	$queryParts = [];
+	
+	$filters_raw = $_POST['filters'] ?? '';
+
+	$filters = json_decode($_POST['filters'] ?? '', true) ?: [];
+
+	foreach ($filters as $key => $values) 
 	{
-		$return['keywords']=$_GET['value'];
-		$return['tag']=$_GET['tag'];
-		$return['tagname']=$tagname;
+		$i=0;
+		$placeholders = [];
+		
+		foreach ((array)$values as $value)
+		{
+			if($key === 'months')
+			{
+				$value_int=(int)$value;
+				
+				if($value_int<=9) $value="0".$value;
+			}
+			
+			$placeholders[] = ':' . $key . '_' . $i;
+			//$fReturn->addConsole($key.'=>'.$value);
+			$EasyPDO->addConditionalData($key . '_' . $i,$value);		
+			$i++;
+		}
+		
+		// -------------------------
+		// mapping spécial date
+		// -------------------------
+		if ($key === 'years') {
+			$column = "SUBSTR(time_taken_at_date,1,4)";
+		}
+		elseif ($key === 'months') {
+			$column = "SUBSTR(time_taken_at_date,5,2)";
+		}
+		else {
+			$column = $key;
+		}
+		
+		$queryParts[] = '('.$column.' NOT IN (' . implode(',', $placeholders) . ') OR '.$column.' IS NULL)';	
+
+	}
+	
+	// -------------------------
+	// assemble WHERE
+	// -------------------------
+
+	if (!empty($queryParts)) {
+		$addquery = ' AND '.implode(' AND ', $queryParts);
+	}
+
+	if(!empty($tagname))
+	{
+		//$fReturn->addConsole('LIMIT:'.$limit);
+		//$fReturn->addConsole('value =>'.$_POST['value']);
+		$EasyPDO->addConditionalData('value',$_POST['value']);
+		$result=$EasyPDO->select('photos', $_POST['tag']. '=:value AND file_status = 0'.$addquery.' ORDER BY time_taken_at_date DESC,time_taken_at_zone DESC, time_taken_at_time DESC, id ASC'.$limit);		
+		//$fReturn->addConsole($_POST['tag']. '=:value AND file_status = 0'.$addquery.' ORDER BY time_taken_at_date DESC,time_taken_at_zone DESC, time_taken_at_time DESC, id ASC'.$limit);		
+
+	}
+
+	if($result['status']===true) 
+	{
+		$tag['keywords']=$_POST['value'];
+		$tag['tag']=$_POST['tag'];
+		$tag['tagname']=$tagname;
+		$tag['count']=count($result['datas']);
 
 		$array_tags = [
 			'tag_country' => [],
@@ -101,23 +176,39 @@
 			'tag_other' => [],
 			'time_taken_at_date' => []
 		];
-		
-		$return['tags']=retreive_sort_tags($result['datas'],$array_tags,$country);	
-		
-		foreach ($result['datas'] as &$row) {
-			$row['advfilter_hidden'] = 0;
-			$row['years'] = substr($row['time_taken_at_date'], 0, 4);
-			$row['months'] = substr($row['time_taken_at_date'], 4, 2);			
-		}
-		unset($row);
 				
-		$return['datas']=$result['datas'];
-		$fReturn->addCallBack("GRID_search_CallBack", $return);
+		if($_GET['tagslist']>0)
+		{		
+			//$fReturn->addConsole($result['datas']);
+	
+			$tag['tags']=retreive_sort_tags($result['datas'],$array_tags,$country);	
+
+			foreach ($result['datas'] as &$row) {
+				$row['years'] = substr($row['time_taken_at_date'], 0, 4);
+				$row['months'] = substr($row['time_taken_at_date'], 4, 2);			
+			}
+			unset($row);
+
+			$return = array_slice($result['datas'], 0, 50);
+			
+			if($_GET['tagslist']==1) $fReturn->addCallBack("EXPLORE_search_CallBack", $tag);
+			if($_GET['tagslist']==2) $fReturn->addCallBack("FILTERS_search_CallBack", $tag);			
+		}
+		else
+		{
+			$return = $result['datas'];
+			
+		}
+
+		$fReturn->addCallBack("GRID_load_CallBack", array("datas"=>$return));		
 	}
 	else
 	{
+		if(ENV=="DEV") $fReturn->addConsole(print_r($result,true));
 		$fReturn->addConsole("[PHP] SQL error while loading search");	
 	}
+
+	//$fReturn->addConsole(print_r($result,true));
 	
 	$fReturn->addConsole("[PHP EXECUTED] file-search-list.php");
 	$fReturn->fetch();
