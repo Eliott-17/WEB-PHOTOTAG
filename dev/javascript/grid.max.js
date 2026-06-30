@@ -18,7 +18,7 @@ let SECTIONS = {
     library:	{update:true,offset:0,memdata:null},
     untagged: 	{update:true,offset:0,memdata:null},
     search: 	{update:true,offset:0,memdata:null,taglist:1},
-    explore: 	{update:false,offset:0} //chargé à l'init
+    explore: 	{update:false} //chargé à l'init
 };
 
 let last_select=-1;		//mémorise le dernier uniqueid sélectioné
@@ -62,6 +62,8 @@ var GRID_load = function load()
 		SECTIONS["untagged"].offset=0;	
 		SECTIONS["untagged"].update=true;
 
+		SECTIONS["explore"].update=true;
+
 		vFILEINFO_FLAG_SAVED=false;
 		vFILEINFOMULTISELECTION_FLAG_SAVED=false;
 		
@@ -74,8 +76,7 @@ var GRID_load = function load()
 		SECTIONS["search"].memdata=null;
 		SECTIONS["search"].offset=0;	
 		SECTIONS["search"].update=true;	
-
-
+	
 		vEXPLOREFILTER_FLAG_CHANGED=false;		
 	}
 

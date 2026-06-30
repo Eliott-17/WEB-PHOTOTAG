@@ -16,7 +16,8 @@
 	$validation->addVerification('token',		'sha256',				'Token'							);	
 	$validation->addVerification('filesid',		'jsonArrayString',		'Files id'						);	
 	$validation->addVerification('conflictedit','jsonArrayString',		'Conflict array',		        );	
-
+	$validation->addVerification('form',		'string',				'Form select',	4,12	        );	
+	
 	switch($_GET['form'])
 	{
 		case "time":

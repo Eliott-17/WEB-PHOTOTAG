@@ -204,7 +204,7 @@
 		return $result;
 	}
 	
-	function retreive_sort_tags($array_lib,$array_tags,$country)
+	function retreive_sort_tags($array_lib,$array_tags,$DATAS_country,$DATAS_months)
 	{		
 		$return="";
 
@@ -234,14 +234,14 @@
 					{								
 						if($key=='tag_country') 
 						{
-							if(!isset($array_tags[$key][$country[$val]]))
+							if(!isset($array_tags[$key][$DATAS_country[$val]]))
 							{
-								$array_tags[$key][$country[$val]][0] = 1;
-								$array_tags[$key][$country[$val]][1] = $val;
+								$array_tags[$key][$DATAS_country[$val]][0] = 1;
+								$array_tags[$key][$DATAS_country[$val]][1] = $val;
 							}
 							else
 							{
-								$array_tags[$key][$country[$val]][0]++;
+								$array_tags[$key][$DATAS_country[$val]][0]++;
 							}
 						}
 						else 					
@@ -271,24 +271,7 @@
 
 			foreach ($array_tags['months'] as $key => $value) 
 			{
-				switch((int)$key)
-				{
-					case 1:$label='January';break;
-					case 2:$label='Febuary';break;
-					case 3:$label='March';break;
-					case 4:$label='April';break;
-					case 5:$label='May';break;
-					case 6:$label='June';break;
-					case 7:$label='July';break;
-					case 8:$label='August';break;
-					case 9:$label='September';break;
-					case 10:$label='October';break;
-					case 11:$label='November';break;
-					case 12:$label='December';break;
-					default: $label=''; break;
-				}
-				
-				$array_new[] = [$key, $label, $value];
+				$array_new[] = [$key, $DATAS_months[(int)$key], $value];
 			}
 			
 			$array_tags['months']=$array_new;

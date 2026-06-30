@@ -3,7 +3,7 @@
 	require_once($_SERVER['DOCUMENT_ROOT'].'/core/securityheader.php');
 	require_once($_SERVER['DOCUMENT_ROOT'].'/core/class.easypdo.php');
 	require_once($_SERVER['DOCUMENT_ROOT'].'/includes/functions.php');
-	require_once($_SERVER['DOCUMENT_ROOT'].'/includes/locations.php');
+	require_once($_SERVER['DOCUMENT_ROOT'].'/includes/datas.php');
 	require_once($_SERVER['DOCUMENT_ROOT'].'/core/class.freturn.php');
 	require_once($_SERVER['DOCUMENT_ROOT'].'/core/class.validation.php');
 
@@ -86,8 +86,8 @@
 				$filedata[$value['file_original_name']]['time']=$value['time_taken_at_time'];
 				$filedata[$value['file_original_name']]['zone']=$value['time_taken_at_zone'];
 				
-				$filedata[$value['file_original_name']]['continent']=$contient[$value['tag_continent']];
-				$filedata[$value['file_original_name']]['country']=$country[$value['tag_country']];
+				$filedata[$value['file_original_name']]['continent']=$$DATAS_contient[$value['tag_continent']];
+				$filedata[$value['file_original_name']]['country']=$DATAS_country[$value['tag_country']];
 				$filedata[$value['file_original_name']]['city']=$value['tag_city'];
 				$filedata[$value['file_original_name']]['place']=$value['tag_place'];
 				

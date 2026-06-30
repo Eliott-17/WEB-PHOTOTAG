@@ -7,7 +7,7 @@
 	require_once($_SERVER['DOCUMENT_ROOT'].'/core/class.freturn.php');
 	require_once($_SERVER['DOCUMENT_ROOT'].'/core/class.validation.php');
 	require_once($_SERVER['DOCUMENT_ROOT'].'/includes/functions.php');
-	require_once($_SERVER['DOCUMENT_ROOT'].'/includes/locations.php');
+	require_once($_SERVER['DOCUMENT_ROOT'].'/includes/datas.php');
 
 	$fReturn = new fReturn();
 	$validation = new Validation();
@@ -56,7 +56,7 @@
 	{
 		case 'tag_country':
 		
-			$key = array_search($_POST['value'], $country);
+			$key = array_search($_POST['value'], $DATAS_country);
 
 			if ($key === false) {
 				$fReturn->addConsole("[PHP] Country value ".$_POST['value']." invalid");
@@ -151,19 +151,54 @@
 
 	if(!empty($tagname))
 	{
-		//$fReturn->addConsole('LIMIT:'.$limit);
-		//$fReturn->addConsole('value =>'.$_POST['value']);
-		$EasyPDO->addConditionalData('value',$_POST['value']);
-		$result=$EasyPDO->select('photos', $_POST['tag']. '=:value AND file_status = 0'.$addquery.' ORDER BY time_taken_at_date DESC,time_taken_at_zone DESC, time_taken_at_time DESC, id ASC'.$limit);		
-		//$fReturn->addConsole($_POST['tag']. '=:value AND file_status = 0'.$addquery.' ORDER BY time_taken_at_date DESC,time_taken_at_zone DESC, time_taken_at_time DESC, id ASC'.$limit);		
-
+		if($_POST['tag']=='years')
+		{
+			$column='time_taken_at_date LIKE :value';
+			$EasyPDO->addConditionalData('value',$_POST['value'].'%');
+		}
+		else
+		{
+			$column=$_POST['tag']. '=:value';
+			$EasyPDO->addConditionalData('value',$_POST['value']);
+		}
+		
+		$result=$EasyPDO->select('photos', 	$column.' AND
+											time_taken_at_date != "00000000" AND
+											time_taken_at_time != "000000" AND
+											time_taken_at_zone != "00000" AND 
+											tag_country IS NOT null AND tag_country != "UNK" AND 
+											(
+												tag_city IS NOT null
+												OR tag_place IS NOT null
+												OR tag_activity IS NOT null
+											) AND
+											file_status = 0'.$addquery.' ORDER BY 	
+											time_taken_at_date DESC,
+											time_taken_at_zone DESC, 
+											time_taken_at_time DESC, 
+											id ASC'.$limit);
+	}
+	else
+	{
+		$fReturn->addConsole("Empty tagname, not executed".$tagname)->fetch();
 	}
 
 	if($result['status']===true) 
 	{
+		
+		if($_POST['tag']=='tag_country') 		$keywordsname=$DATAS_country[$_POST['value']];
+		else if($_POST['tag']=='months')		$keywordsname=$DATAS_months[$_POST['value']];
+		else 									$keywordsname=$_POST['value'];
+		
+		if($tagname=='years')					$tagname='';
+
+		$tag['keywords']=$_POST['value'];
+		$tag['tag']=$_POST['tag'];
+		
 		$tag['keywords']=$_POST['value'];
 		$tag['tag']=$_POST['tag'];
 		$tag['tagname']=$tagname;
+		$tag['keywordsname']=$keywordsname;
 		$tag['count']=count($result['datas']);
 
 		$array_tags = [
@@ -181,7 +216,7 @@
 		{		
 			//$fReturn->addConsole($result['datas']);
 	
-			$tag['tags']=retreive_sort_tags($result['datas'],$array_tags,$country);	
+			$tag['tags']=retreive_sort_tags($result['datas'],$array_tags,$DATAS_country,$DATAS_months);	
 
 			foreach ($result['datas'] as &$row) {
 				$row['years'] = substr($row['time_taken_at_date'], 0, 4);

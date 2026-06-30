@@ -2,7 +2,7 @@
 
 define("SESSION_TOKEN", "no-mandatory-session");
 require_once($_SERVER['DOCUMENT_ROOT'].'/core/securityheader.php');
-require_once($_SERVER['DOCUMENT_ROOT'].'/includes/locations.php');
+require_once($_SERVER['DOCUMENT_ROOT'].'/includes/datas.php');
 
 ?>
 <!DOCTYPE html>
@@ -53,7 +53,7 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/locations.php');
 					</div>
 					<div id="searchmenu" class="ux-background hidden mainmenu">				
 						<div><button class="return-explore"><span class="material-symbols-outlined">arrow_back</span>&nbsp;<span>Return</span></button></div>
-						<div><button class="advanced-filters"><span class="material-symbols-outlined">filter_arrow_right</span>&nbsp;<span id="filterapply">"</span></button></div>
+						<div><button class="advanced-filters"><span class="material-symbols-outlined">filter_arrow_right</span>&nbsp;<span id="filterapply"></span></button></div>
 						<div><button class="advanced-filters"><span class="material-symbols-outlined">equal</span>&nbsp;<span id="filterresult"></span></button></div>
 						<div class="search"><button class="search"><span class="material-symbols-outlined">search</span>&nbsp;<span>quick search</span></button><input type="text" list="fastsearch" autocomplete="off"/></div>
 						<div class="last"><a href="actions/logout.php"><button><span class="material-symbols-outlined">logout</span>&nbsp;<span>Logout</span></button></button></a></div>
@@ -291,8 +291,8 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/locations.php');
 						<input type="hidden" name="conflictedit" class="conflictedit" value=""/>
 						<input type="hidden" name="continent" value=""/>
 						<h3 class="ux-tag-location" data-tooltip="tooltip-location" data-label="GPS coordinates"><span class="material-symbols-outlined">my_location</span><span id="GPS" class="textlabel"></span></h3>		
-						<!--<h3 class="ux-tag-location" id="continent"><span class="material-symbols-outlined">globe_asia</span><span class="unedit"></span><span class="solver hidden">Override all values</span><select name="continent" ><?php foreach($contient as $key=>$value) echo '<option value="'.$key.'">'.$value.'</option>'; ?></select></h3>-->		
-						<h3 class="ux-tag-location" data-tooltip="tooltip-location" data-label="Country" id="country"><span class="material-symbols-outlined">flag</span><span class="unedit"></span><span class="solver hidden">Override all values</span><select name="country"><?php foreach($country as $key=>$value) echo '<option value="'.$key.'">'.$value.'</option>'; ?></select></h3>
+						<!--<h3 class="ux-tag-location" id="continent"><span class="material-symbols-outlined">globe_asia</span><span class="unedit"></span><span class="solver hidden">Override all values</span><select name="continent" ><?php foreach($$DATAS_contient as $key=>$value) echo '<option value="'.$key.'">'.$value.'</option>'; ?></select></h3>-->		
+						<h3 class="ux-tag-location" data-tooltip="tooltip-location" data-label="Country" id="country"><span class="material-symbols-outlined">flag</span><span class="unedit"></span><span class="solver hidden">Override all values</span><select name="country"><?php foreach($DATAS_country as $key=>$value) echo '<option value="'.$key.'">'.$value.'</option>'; ?></select></h3>
 						<h3 class="ux-tag-location" data-tooltip="tooltip-location" data-label="City" id="city"><span class="material-symbols-outlined">location_city</span><span class="unedit"></span><span class="solver hidden">Override all values</span><input name="city" type="text" list="tag_city" autocomplete="off"></h3>
 						<h3 class="ux-tag-location" data-tooltip="tooltip-location" data-label="Place" id="place"><span class="material-symbols-outlined">place</span><span class="unedit"></span><span class="solver hidden">Override all values</span><input name="place" type="text" list="tag_place" autocomplete="off"></h3>
 						<h4 class="edit_ux tag-location" data-form="tag-location">

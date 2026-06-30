@@ -56,10 +56,12 @@ $(document).ready(function(){
 				} 
 				else 
 				{
-					const tag = option.attr('data-tag');
-					//const 
-					
 
+					$('#filter_tag').val(option.attr('data-tag'));
+					$('#filter_val').val(option.val());
+					$('#filters_exclude').val("{}");
+					
+					EXPLORE_post_search();
 				}
 			}
 		}
@@ -101,11 +103,34 @@ $(document).ready(function(){
 			//---------------------
 			
 			let checkboxid=0;
-
+			
 			$.each(vGRID_SEARCH_DATA, function(index0, value0) 
-			{	
-				if(index0==$('#filter_tag').val() && value0[$('#filter_val').val()].length!=0) return; 
-				if(value0.length==0) return; 						
+			{
+				let verify='';
+				
+				if($('#filter_tag').val()=='years')
+				{
+					if(value0[0]!==undefined) if(value0[0][0]!==undefined) verify=value0[0][0];
+				}
+				else
+				{
+					if(value0[$('#filter_val').val()]!==undefined) verify = value0[$('#filter_val').val()];					
+				}
+				
+				if(index0==$('#filter_tag').val() && verify.length!=0)
+				{
+					console.log("ELIMINATED 1*****",value0,"*****    [",$('#filter_val').val(),"]   *****",value0[$('#filter_val').val()]);
+
+					return; 
+					
+				}
+				if(value0.length==0)
+				{
+					console.log("ELIMINATED 2*****",value0,"*****    [",$('#filter_val').val(),"]   *****",value0[$('#filter_val').val()]);
+
+
+					return; 
+				}					
 
 				let uxelement='aside#advancedfilters h3#'+index0.replace('tag_','');
 									

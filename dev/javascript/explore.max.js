@@ -44,25 +44,33 @@ $(document).ready(function(){
 			$('#filter_tag').val($(this).attr('data-tag'));
 			$('#filter_val').val($(this).attr('data-val'));
 			$('#filters_exclude').val("{}");
-			SECTIONS["search"].taglist=1; //count+tag
-						
-			vSECTION_active_mem=vSECTION_active;
-		
-			vNAV_search_result=true;
-			DISPLAY_menu($('#select-status'),false);
-			DISPLAY_set_view('grid');		
-			DISPLAY_section("search");	
+
+			EXPLORE_post_search();
 		}
 	});	
 	
 });
+
+var EXPLORE_post_search = function post_search()
+{
+	SECTIONS["search"].taglist=1; //count+tag
+				
+	vSECTION_active_mem=vSECTION_active;
+
+	vNAV_search_result=true;
+	DISPLAY_menu($('#select-status'),false);
+	DISPLAY_set_view('grid');		
+	DISPLAY_section("search");	
+}
 
 var EXPLORE_search_CallBack = function search_CallBack(datas) 
 {
 	let s="";
 	if(datas.count>1) s="s";
 	
-	$('nav span#filterapply').html(datas.tagname+': '+datas.keywords);	
+	console.log(datas);
+	
+	$('nav span#filterapply').html(datas.tagname+': '+datas.keywordsname);	
 	$('nav span#filterresult').html(datas.count+ ' element'+s);
 
 	vGRID_SEARCH_DATA=datas.tags;
@@ -118,7 +126,7 @@ var EXPLORE_CallBack = function CallBack(datas)
 	};
 	
 	expand_max=[];
-
+	
 	$.each(datas.tags, function(index, tagvalue) {
 
 		html += '<datalist id="'+index+'">';
@@ -126,16 +134,21 @@ var EXPLORE_CallBack = function CallBack(datas)
 		//console.log(tagvalue);
 
 		$.each(tagvalue, function(optionvalue, ovdata) {
-						
-			html += '<option value="'+optionvalue+'">';
-			htmlfull += '<option data-tag="'+index+'" value="'+optionvalue+'">';
-			
-			//filters
-			
+								
 			let date=false;
 			
 			if(index=='days' || index=='months' || index=='years') date=true;
 		
+			if(!date)
+			{		
+				html += '<option value="'+optionvalue+'">';
+				htmlfull += '<option data-tag="'+index+'" value="'+optionvalue+'">';
+			}
+	
+			//if(index=='years') htmlfull += '<option data-tag="'+index+'" value="'+tagvalue[optionvalue][1]+'">';
+	
+			//filters
+
 			if(array_config_tag_show[index][1]==1)
 			{
 				if(filtermem!=index)

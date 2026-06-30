@@ -5,7 +5,7 @@
 	require_once($_SERVER['DOCUMENT_ROOT'].'/core/class.freturn.php');
 	require_once($_SERVER['DOCUMENT_ROOT'].'/core/class.validation.php');
 	require_once($_SERVER['DOCUMENT_ROOT'].'/includes/functions.php');
-	require_once($_SERVER['DOCUMENT_ROOT'].'/includes/locations.php');
+	require_once($_SERVER['DOCUMENT_ROOT'].'/includes/datas.php');
 
 	$fReturn = new fReturn();
 	$validation = new Validation();

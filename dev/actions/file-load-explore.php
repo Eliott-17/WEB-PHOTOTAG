@@ -5,7 +5,7 @@
 	require_once($_SERVER['DOCUMENT_ROOT'].'/core/class.freturn.php');
 	require_once($_SERVER['DOCUMENT_ROOT'].'/core/class.validation.php');
 	require_once($_SERVER['DOCUMENT_ROOT'].'/includes/functions.php');
-	require_once($_SERVER['DOCUMENT_ROOT'].'/includes/locations.php');
+	require_once($_SERVER['DOCUMENT_ROOT'].'/includes/datas.php');
 
 	$fReturn = new fReturn();
 	$EasyPDO = new EasyPDO($_SESSION['DB']);
@@ -70,7 +70,7 @@
 	
 	if($array_lib['status']===true)
 	{		
-		$bigarray['tags']=retreive_sort_tags($array_lib['datas'],$array_tags,$country);
+		$bigarray['tags']=retreive_sort_tags($array_lib['datas'],$array_tags,$DATAS_country,$DATAS_months);
 		
 		unset($array_tags['time_taken_at_date']);
 		
