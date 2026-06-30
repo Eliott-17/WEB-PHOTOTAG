@@ -30,6 +30,8 @@ $(document).ready(function(){
 		{ 
 			if($(this).hasClass('delete')) 
 			{ 
+				$(this).remove();
+		
 				let id=parseInt($(this).find("div.media-container").attr('data-id'));
 
 				hash_array.push(id);
@@ -42,7 +44,11 @@ $(document).ready(function(){
 		
 		if(hash_array.length==0)
 		{
-			hash_array.push(parseInt($('section#fullscreen div.media').attr('data-id')));
+			let id=$('section#fullscreen div.media').attr('data-id');
+			
+			$('#media_'+id).parent().remove();
+			
+			hash_array.push(id);
 		}
 		
 		//si la tableau est toujours vide, la sélection n'existe plus
@@ -54,6 +60,8 @@ $(document).ready(function(){
 		}
 				
 		$('input.filesid').val(JSON.stringify(hash_array));
+		
+		DISPLAY_trash(false);
 		
 		CORE_post($('#filetrash'));
 		
@@ -264,7 +272,7 @@ var FILEMULTISELECTION_reset_ux = function reset_ux(obj, data)
 var FILEMULTISELECTION_CallBack_trash = function CallBack_trash()
 {
 	DISPLAY_set_view('grid');
-	//TODO: supprimer de la grille en HTML et relancer la numérotation
+	GRID_load_id();
 }
 
 function multiselection_close()

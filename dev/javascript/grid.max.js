@@ -58,16 +58,22 @@ var GRID_load = function load()
 		SECTIONS["library"].offset=0;	
 		SECTIONS["library"].update=true;	
 
-		SECTIONS["untagged"].memdata=null;
-		SECTIONS["untagged"].offset=0;	
-		SECTIONS["untagged"].update=true;
-
 		SECTIONS["explore"].update=true;
 
 		vFILEINFO_FLAG_SAVED=false;
 		vFILEINFOMULTISELECTION_FLAG_SAVED=false;
 		
+		vNAV_FLAG_UPLOAD=true;
 		vEXPLOREFILTER_FLAG_CHANGED=true;	
+	}
+	
+	if(vNAV_FLAG_UPLOAD)
+	{
+		SECTIONS["untagged"].memdata=null;
+		SECTIONS["untagged"].offset=0;	
+		SECTIONS["untagged"].update=true;
+		
+		vNAV_FLAG_UPLOAD=false;
 	}
 	
 	if(vEXPLOREFILTER_FLAG_CHANGED || vFILEINFO_FLAG_SAVED || vFILEINFOMULTISELECTION_FLAG_SAVED)
@@ -91,7 +97,7 @@ var GRID_load = function load()
 			case "library":
 			
 				CORE_get('actions/file-load-list.php?source=0&offset='+SECTIONS[vSECTION_active].offset);
-			
+
 			break;
 			case "untagged":
 			
@@ -131,10 +137,10 @@ var GRID_load_CallBack = function load_CallBack(data_array)
 	
 	source=data_array.datas;
 	
-	/*if(vSECTION_active=="search")
+	if(data_array.count!==undefined)
 	{
-		vGRID_SEARCH_DATA['datas']=source;
-	}*/
+		$('span#'+vSECTION_active+'_count').html(' ('+data_array.count+')');
+	}
 		
 	let j=0; //because i is not reliable (in case of skip)
 	let max_display=source.length; //because source.length is not reliable (in case of skip)
@@ -181,7 +187,7 @@ var GRID_load_CallBack = function load_CallBack(data_array)
 	//Attribution d'un uniqueid aux éléments chargés *****************
 	//****************************************************************		
 		
-	let id = grid_load_id();
+	let id = GRID_load_id();
 	
 	//****************************************************************
 	//Déchagrement des précents boutons ******************************
@@ -266,7 +272,7 @@ var GRID_load_CallBack = function load_CallBack(data_array)
 	console.log("GRID_load_CallBack",SECTIONS[vSECTION_active].offset);
 }
 
-function grid_load_id()
+var GRID_load_id = function load_id()
 {
 	let id=0;
 
@@ -276,6 +282,8 @@ function grid_load_id()
 	});
 	
 	return id;
+	
+	console.log("GRID_load_id");
 }
 
 function addElement(dir, bdd)

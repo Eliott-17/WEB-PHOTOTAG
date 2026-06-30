@@ -1,5 +1,5 @@
 let vNAV_search_result=false;
-
+let vNAV_FLAG_UPLOAD=false;
 let remaining_tags=null;
 
 $(document).ready(function(){
@@ -187,6 +187,7 @@ function nav_tab_change()
 
 var NAV_open_untagg = function open_untagg(force_reload=false)
 {
+	vNAV_FLAG_UPLOAD=true;
 	nav_tab_change();
 	DISPLAY_section('untagged');
 }

@@ -86,7 +86,7 @@
 				$filedata[$value['file_original_name']]['time']=$value['time_taken_at_time'];
 				$filedata[$value['file_original_name']]['zone']=$value['time_taken_at_zone'];
 				
-				$filedata[$value['file_original_name']]['continent']=$$DATAS_contient[$value['tag_continent']];
+				$filedata[$value['file_original_name']]['continent']=$DATAS_contient[$value['tag_continent']];
 				$filedata[$value['file_original_name']]['country']=$DATAS_country[$value['tag_country']];
 				$filedata[$value['file_original_name']]['city']=$value['tag_city'];
 				$filedata[$value['file_original_name']]['place']=$value['tag_place'];

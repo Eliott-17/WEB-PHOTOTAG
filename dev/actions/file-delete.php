@@ -13,8 +13,8 @@
 
 	//VALIDATION FORMULAIRE
 
-	$validation->addVerification('token',		'sha256',				'Token'							);	
-	$validation->addVerification('files_hash',		'jsonArrayString',		'Files id'						);	
+	$validation->addVerification('token',		'sha256',				'Token'			);	
+	$validation->addVerification('files_hash',	'jsonArrayString',		'Files id'		);	
 
 	$validation->Validate();
 

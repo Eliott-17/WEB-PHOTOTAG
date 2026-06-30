@@ -22,6 +22,8 @@
 		if(ENV=="DEV") $fReturn->addConsole($validation->Message());
 		$fReturn->fetch();
 	}
+	
+	//source TAG ou UNTAG
 
 	if($_GET['source']==0)
 	{		
@@ -84,6 +86,23 @@
 		$fReturn->addConsole("[PHP] SQL error while loading list");
 		if(ENV=="DEV") $fReturn->addConsole(print_r($array,true));	
 	}
+
+	if($_GET['offset']==0)
+	{
+		$EasyPDO->addFields('COUNT (*) as total');
+		$array_cnt=$EasyPDO->select('photos','file_status = 0 '.$conditionaldata);			
+
+		if($array_cnt['status']===true) 
+		{
+			$bigarray['count']=$array_cnt['datas'][0]['total'];
+		}
+		else
+		{
+			$fReturn->addConsole("[PHP] SQL error while loading cnt");
+			if(ENV=="DEV") $fReturn->addConsole(print_r($array_cnt,true));	
+		}
+	}
+	
 
 	$fReturn->addConsole("[PHP EXECUTED] file-load-list.php");
 	$fReturn->addCallBack("GRID_load_CallBack", $bigarray)->fetch();

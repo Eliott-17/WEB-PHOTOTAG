@@ -102,11 +102,11 @@ function uploadFiles(files, token) {
     let chain = Promise.resolve();
     files.forEach(file => {
         chain = chain.then(() => {
-            if (file.size > 256 * 1024 * 1024) { // 256Mo
+            if (file.size > 1024 * 1024 * 1024) { // 256Mo
                 errorCount++;
                 $('#upload-status').append(
                     `<div id="error${errorCount}" class="text errorresponse">
-                        <span>${file.name} : Fichier trop volumineux (max 55 Mo)</span>
+                        <span>${file.name} : Fichier trop volumineux (max 1 Go)</span>
                         &nbsp;<span class="material-symbols-outlined cursor">close_small</span>
                     </div>`
                 );

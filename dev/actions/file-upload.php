@@ -19,8 +19,8 @@ if (!empty($_FILES['file']) && !empty($_FILES['preview'])) {
     $size = $_FILES['file']['size'];
 
     // Vérifie la taille
-    if ($size > 256 * 1024 * 1024) {
-		$fReturn->addRawText("file is over 256Mo")->fetch();
+    if ($size > 1024 * 1024 * 1024) {
+		$fReturn->addRawText("file is over 1 Go")->fetch();
         //exit("file is over 55 Mo)");
     }
 
