@@ -313,6 +313,18 @@
 		return $array_tags;
 		
 	}
+	
+	function local_conditionalldata_fill($EasyPDO,$POST,$queryValues)
+	{
+		if($_POST['tag']=='years') 	$EasyPDO->addConditionalData('value',$POST['value'].'%');
+		else 						$EasyPDO->addConditionalData('value',$POST['value']);	
+
+		foreach($queryValues as $key=>$value)
+		{
+			//$queryValues[$key . '_' . $i]=$value);
+			$EasyPDO->addConditionalData($key,$value);
+		}
+	}
 		
 	$loc_dir = 'multimedia/'.$_SESSION["USER"].'/';
 	$full_dir = $_SERVER['DOCUMENT_ROOT'].'/'.$loc_dir;

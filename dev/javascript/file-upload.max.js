@@ -1,16 +1,16 @@
 $(document).ready(function() {
     // Gestion du drag & drop
-    $(document).on("dragover dragenter", function(e) {
+    $("div#uploaddrag").on("dragover dragenter", function(e) {
         e.preventDefault();
         e.stopPropagation();
     });
 
-    $(document).on("dragleave dragend", function(e) {
+    $("div#uploaddrag").on("dragleave dragend", function(e) {
         e.preventDefault();
         e.stopPropagation();
     });
 
-    $(document).on("drop", function(e) {
+    $("div#uploaddrag").on("drop", function(e) {
         e.preventDefault();
         e.stopPropagation();
         let files = Array.from(e.originalEvent.dataTransfer.files);
@@ -179,12 +179,12 @@ function uploadFiles(files, token) {
 							console.error("Can't parse");
 							parseApacheErrorLog(xhr.responseText);
 						}
-						
+
+                        uploadedSize += file.size;
+                        bar.css('width', Math.round((uploadedSize / totalSize) * 100) + '%');
+                        bar.html(Math.round((uploadedSize / totalSize) * 100) + '%');						
 
                         if (datatext === "OK") {
-                            uploadedSize += file.size;
-                            bar.css('width', Math.round((uploadedSize / totalSize) * 100) + '%');
-                            bar.html(Math.round((uploadedSize / totalSize) * 100) + '%');
                             resolve(datatext);
                         } else {
                             // Rejette simplement la promesse avec le message d'erreur

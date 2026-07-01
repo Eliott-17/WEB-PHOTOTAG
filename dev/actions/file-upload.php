@@ -48,7 +48,7 @@ if (!empty($_FILES['file']) && !empty($_FILES['preview'])) {
         //exit("Upload fail");
     }
 
-    $hash = hash('sha256', $name . bin2hex(random_bytes(10)));
+    $hash = hash('sha256', $name . time() .bin2hex(random_bytes(10)));
     $previewName = $hash.'.webp';
     $targetSD = $uploadDir.$previewName;
     if (!move_uploaded_file($_FILES['preview']['tmp_name'], $targetSD)) {

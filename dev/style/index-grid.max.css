@@ -252,3 +252,14 @@ div#select-status div div.deselectall:hover span.select { opacity: 0; }
 div#select-trash div span#delete_cancel:hover { color: red }
 div#select-trash div span#delete_confirm:hover { color: green }
 
+div#uploaddrag
+{
+	color: #494949bb;
+	border: 2px dashed #494949bb;
+    padding: 5px;
+    margin: 5px;
+    box-sizing: border-box;
+    text-align: center;
+	
+}
+

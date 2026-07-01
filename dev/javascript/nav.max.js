@@ -73,8 +73,6 @@ $(document).ready(function(){
 
 	$('div#searchmenu div button.return-explore').on('click', 	function() {
 
-			vGRID_mem_tag=null;
-			vGRID_mem_val=null;
 			vNAV_search_result=false;
 			
 			$('main').scrollTop(0);
@@ -104,7 +102,7 @@ $(document).ready(function(){
 			
 			let checkboxid=0;
 			
-			$.each(vGRID_SEARCH_DATA, function(index0, value0) 
+			$.each(vEXPLORE_SEARCH_TAGS, function(index0, value0) 
 			{
 				let verify='';
 				
@@ -117,21 +115,9 @@ $(document).ready(function(){
 					if(value0[$('#filter_val').val()]!==undefined) verify = value0[$('#filter_val').val()];					
 				}
 				
-				if(index0==$('#filter_tag').val() && verify.length!=0)
-				{
-					console.log("ELIMINATED 1*****",value0,"*****    [",$('#filter_val').val(),"]   *****",value0[$('#filter_val').val()]);
-
-					return; 
-					
-				}
-				if(value0.length==0)
-				{
-					console.log("ELIMINATED 2*****",value0,"*****    [",$('#filter_val').val(),"]   *****",value0[$('#filter_val').val()]);
-
-
-					return; 
-				}					
-
+				if(index0==$('#filter_tag').val() && verify.length!=0) return; 
+				if(value0.length==0) return; 
+				
 				let uxelement='aside#advancedfilters h3#'+index0.replace('tag_','');
 									
 				$(uxelement+" div.value").html('');

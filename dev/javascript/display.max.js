@@ -88,6 +88,9 @@ var DISPLAY_section = function section(section)
 	
 	$('section').addClass("hidden");
 	$('section.'+vSECTION_active).removeClass("hidden");
+
+	$('div#uploaddrag').addClass("hidden");
+	$('div.'+vSECTION_active).removeClass("hidden");
 	
 	GRID_load();//en affichant une section on s'assure de charger les données.
 	

@@ -2,8 +2,9 @@
 //Variables globales *********************************************
 //****************************************************************	
 
-let vGRID_mem_tag=null; //permet de mémoriser la recherche la denière recheche qui à eu lieu
-let vGRID_mem_val=null; //permet de mémoriser la recherche la denière recheche qui à eu lieu
+let vEXPLORE_SEARCH_TAGS=[];	//Stoque les données chargées pour les réutilisées et éviter un appel  à la base de données
+let vEXPLORE_ALL_TAGS=[];		//Stoque tous les tags
+
 let vEXPLOREFILTER_FLAG_CHANGED=false; //Si la recherche change force le rafraichissement
 
 //****************************************************************
@@ -12,7 +13,6 @@ let vEXPLOREFILTER_FLAG_CHANGED=false; //Si la recherche change force le rafraic
 
 let expand_block=[];
 let expand_max=[];
-
 
 //****************************************************************
 //Afficher et stock le r&sultat de la recherche ******************
@@ -54,6 +54,7 @@ $(document).ready(function(){
 var EXPLORE_post_search = function post_search()
 {
 	SECTIONS["search"].taglist=1; //count+tag
+	SECTIONS["search"].update=true; //count+tag
 				
 	vSECTION_active_mem=vSECTION_active;
 
@@ -67,35 +68,51 @@ var EXPLORE_search_CallBack = function search_CallBack(datas)
 {
 	let s="";
 	if(datas.count>1) s="s";
-	
-	console.log(datas);
-	
+
 	$('nav span#filterapply').html(datas.tagname+': '+datas.keywordsname);	
 	$('nav span#filterresult').html(datas.count+ ' element'+s);
 
-	vGRID_SEARCH_DATA=datas.tags;
+	vEXPLORE_SEARCH_TAGS=datas.tags; //stock le résultat de la recherche
 	
 	console.log("EXPLORE_search_CallBack");
 }
 
 var EXPLORE_add_tags = function add_tags(tags)
-{
-	/*$.each(tags, function(index, tagvalue) {
+{	
+	$.each(tags, function(index, tagvalue) {
 		
-		if(mem_data.tags[index][tagvalue] === undefined)
+		console.log("lookfor",index,tagvalue);
+		
+		let addtag=false;
+		
+		if(vEXPLORE_ALL_TAGS[index] === undefined)
+		{
+			addtag=true;
+		}
+		else
+		{
+			if(vEXPLORE_ALL_TAGS[index][tagvalue] === undefined)
+			{
+				addtag=true;
+			}
+		}
+		
+		if(addtag==true)
 		{
 			console.log("GRID_add_tags",tagvalue,"added to list");
 			
 			$('#'+index).append('<option value="'+tagvalue+'">');
 			$('aside datalist#fastsearch').append('<option data-tag="'+index+'" value="'+tagvalue+'">');
 			
-			mem_data.tags[index][tagvalue]=1;
+			vEXPLORE_SEARCH_TAGS[index][tagvalue]=1;
 		}
 		else
 		{
+			vEXPLORE_SEARCH_TAGS[index][tagvalue]++;
+			
 			console.log("GRID_add_tags",tagvalue,"aready exist");
 		}
-	});*/
+	});
 }
 
 //****************************************************************
@@ -124,6 +141,8 @@ var EXPLORE_CallBack = function CallBack(datas)
 		years: ["By date",1],
 		months: 0
 	};
+	
+	vEXPLORE_ALL_TAGS=datas.tags;
 	
 	expand_max=[];
 	

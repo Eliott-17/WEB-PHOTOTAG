@@ -5,7 +5,6 @@
 let vSECTION_active="library";
 let vSECTION_active_mem="";
 
-let vGRID_SEARCH_DATA=[];		//Stoque les données chargées pour les réutilisées et éviter un appel  à la base de données
 let vGRID_scroll_lock = false;	//Chargement progressif: FLAG qui limite l'action scroll quand on est en train de charger la grille
 
 let vGRID_scrollmem; 			//Restaure le scroll quand on sirt du fullscreen

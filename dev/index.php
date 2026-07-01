@@ -151,6 +151,7 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/datas.php');
 					<section class="explore hidden"></section>
 					<section class="grid library date"></section>
 					<section class="grid library nodate"></section>
+					<div id="uploaddrag" class="untagged hidden">Drag & drop here to add files</div>
 					<section class="grid untagged date hidden"></section>
 					<section class="grid untagged nodate hidden"></section>
 					<section class="grid search date hidden"></section>
