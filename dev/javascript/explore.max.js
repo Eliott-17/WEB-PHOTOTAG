@@ -11,9 +11,6 @@ let vEXPLOREFILTER_FLAG_CHANGED=false; //Si la recherche change force le rafraic
 //Variables locales *********************************************
 //****************************************************************	
 
-let expand_block=[];
-let expand_max=[];
-
 //****************************************************************
 //Afficher et stock le r&sultat de la recherche ******************
 //****************************************************************	
@@ -24,12 +21,9 @@ $(document).ready(function(){
 		
 		let name = $(this).attr('id');
 
-		$('main section div.'+name+expand_block[name]).removeClass('hidden');
-		
-		if(expand_block[name]>=expand_max[name])
-		{
-			$(this).addClass('hidden');
-		}			
+		$('main section div.'+name).removeClass('hidden');
+
+		$(this).remove();
 	});
 	
 	$('main').on('click.enterFilter', 'section.explore div.tagelement', function(e) {
@@ -124,11 +118,29 @@ var EXPLORE_CallBack = function CallBack(datas)
 	let html = '';
 	let htmlfull = '';
 	let htmlfilter = '';
-	let filtercount=1;
+	let filtercount=0;
+	let filtergroup=0;
+	let filterfreeze=false;
 	let filtermem='';
 	let img;
 	
-	let max_elements = 10;//Math.floor($('main').width()/170);
+	const cols = Math.floor(($('main').width() + 20) / 170);
+	let max_elements;
+	
+	console.log(cols);
+
+	switch(cols)
+	{
+		case 3: max_elements=8; break;
+		case 4: max_elements=7; break;
+		case 5: max_elements=9; break;
+		case 6: max_elements=6; break;
+		case 7: max_elements=7; break; 
+		case 8: max_elements=8; break;
+		default: max_elements=9; break;
+	}
+	
+	let top_elements = max_elements;
 
 	const array_config_tag_show = {
 		tag_country: ["By countries",1],
@@ -144,13 +156,13 @@ var EXPLORE_CallBack = function CallBack(datas)
 	
 	vEXPLORE_ALL_TAGS=datas.tags;
 	
-	expand_max=[];
-	
 	$.each(datas.tags, function(index, tagvalue) {
 
 		html += '<datalist id="'+index+'">';
 
 		//console.log(tagvalue);
+		
+		let visibility="";
 
 		$.each(tagvalue, function(optionvalue, ovdata) {
 								
@@ -164,19 +176,18 @@ var EXPLORE_CallBack = function CallBack(datas)
 				htmlfull += '<option data-tag="'+index+'" value="'+optionvalue+'">';
 			}
 	
-			//if(index=='years') htmlfull += '<option data-tag="'+index+'" value="'+tagvalue[optionvalue][1]+'">';
-	
 			//filters
 
 			if(array_config_tag_show[index][1]==1)
 			{
 				if(filtermem!=index)
 				{
-					filtercount=1;
+					visibility="";
+					filtercount=0;
+					top_elements=max_elements;
 				}
 
 				img="includes/401.webp";
-				let visibility="";
 				let name="";
 				
 				if(!date)
@@ -184,18 +195,18 @@ var EXPLORE_CallBack = function CallBack(datas)
 					if(ovdata[1].length>3) img='sd-'+ovdata[1];
 					if(ovdata[1].length==3) img='images/flags/'+ovdata[1]+'.svg';
 					
-					if(filtercount>=max_elements) 
-					{
-						let id=Math.floor(filtercount/max_elements);
-						let name=index+"_filter";
-						visibility="hidden "+name+id;
-									
-						if(filtercount%max_elements==0) 
-						{
-							htmlfilter += '<div class="element cursor expandmenu" id="'+name+'"><img src="'+img+'"><span class="material-symbols-outlined">expand_circle_down</span><div>Explore more</div></div>';
-							expand_block[name]=1;
-							expand_max[name]=id;
-						}
+					if(filtercount>=top_elements) 
+					{						
+						console.log(index,filtercount,top_elements);
+						
+						top_elements+=(max_elements+1);
+						
+						filtergroup++;
+						let name=filtergroup+'_filter';						
+						
+						htmlfilter += '<div class="element cursor expandmenu '+visibility+'" id="'+name+'"><img src="'+img+'"><span class="material-symbols-outlined">expand_circle_down</span><div>Explore more</div></div>';
+						
+						visibility="hidden "+name;
 					}
 				}
 				

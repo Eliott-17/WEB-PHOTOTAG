@@ -72,10 +72,7 @@ $(document).ready(function(){
 		//$('main div.element').each(function () { if ($(this).hasClass('selected')) $(this).toggleClass('selected notselected');	});
 		FILEMULTISELECTION_unselectall();	
 
-		DISPLAY_menu($('#select-status'),false);
-		
-		multiselection_close();
-					
+		DISPLAY_menu($('#select-status'),false);			
 		DISPLAY_set_view("grid");
 		
 	});	
@@ -84,8 +81,6 @@ $(document).ready(function(){
 
 		if(DISPLAY_is_visible_file_info())
 		{
-			multiselection_close();
-
 			DISPLAY_set_view("grid");
 		}
 		else
@@ -273,10 +268,4 @@ var FILEMULTISELECTION_CallBack_trash = function CallBack_trash()
 {
 	DISPLAY_set_view('grid');
 	GRID_load_id();
-}
-
-function multiselection_close()
-{
-	$('span#tag').html('new_label');
-	$('span#tag').removeClass('green');
 }

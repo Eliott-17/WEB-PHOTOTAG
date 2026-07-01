@@ -202,7 +202,15 @@ var DISPLAY_menu = function display_menu(object=undefined, visibility=undefined)
 		
 		if(object!=null)
 		{
-			setTimeout(function() { object.addClass("ux-hidden-zindex"); }, 500);
+			setTimeout(function() 
+			{ 
+				object.addClass("ux-hidden-zindex");
+
+				//restaure tag
+				$('span#tag').html('new_label');
+				$('span#tag').removeClass('green');
+				
+			}, 500);
 			return;
 		}
 	}	
