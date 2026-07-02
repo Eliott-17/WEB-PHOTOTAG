@@ -177,13 +177,39 @@ var FILEINFO_CallBack_data = function CallBack(data)
 		
 		if(datas?.exif_photo?.EXIF !== undefined)
 		{
+			const exif = datas.exif_photo.EXIF;
 			
-			let resolution = datas.exif_photo.EXIF.ExifImageLength+' x '+datas.exif_photo.EXIF.ExifImageWidth;
-			let [num, den] = datas.exif_photo.EXIF.FNumber.split('/');
-			let FNumber = ('<i>f</i>/'+Number(num) / Number(den)).replace('.',',');
-			let ExposureTime = formatExifDivideInfo(datas.exif_photo.EXIF.ExposureTime)+ ' s';
-			let FocalLength = (formatExifDivideInfo(datas.exif_photo.EXIF.FocalLength)+ ' mm').replace('.',',');
-			let ISO = 'ISO '+datas.exif_photo.EXIF.ISOSpeedRatings;
+			let resolution="";
+			let FNumber="";
+			let ExposureTime="";
+			let FocalLength="";
+			let ISO="";
+			
+			if(exif.ExifImageLength !== undefined && exif.ExifImageWidth !== undefined)
+			{
+				resolution = exif.ExifImageLength+' x '+exif.ExifImageWidth;
+			}
+			
+			if(exif.FNumber !== undefined)
+			{
+				let [num, den] = exif.FNumber.split('/');
+				FNumber = ('<i>f</i>/'+Number(num) / Number(den)).replace('.',',');
+			}
+			
+			if(exif.ExposureTime !==undefined)
+			{
+				ExposureTime = formatExifDivideInfo(exif.ExposureTime)+ ' s';
+			}
+			
+			if(exif.FocalLength !==undefined)
+			{
+				FocalLength = (formatExifDivideInfo(exif.FocalLength)+ ' mm').replace('.',',');
+			}
+			
+			if(exif.ISOSpeedRatings !==undefined)
+			{
+				ISO = 'ISO '+exif.ISOSpeedRatings;
+			}
 			
 			$('h3#file_exif_idf0_sensordata0 span').html(resolution);
 			$('h3#file_exif_idf0_sensordata1 span').html(FNumber+'&nbsp;&nbsp;'+ExposureTime+'&nbsp;&nbsp;'+FocalLength+'&nbsp;&nbsp;'+ISO);	

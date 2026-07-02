@@ -143,12 +143,12 @@ var EXPLORE_CallBack = function CallBack(datas)
 	let top_elements = max_elements;
 
 	const array_config_tag_show = {
-		tag_country: ["By countries",1],
+		tag_country: ["Visited countries",1],
 		tag_city: ["Visited cities",1],
 		tag_place: ["By places",1],
-		tag_activity: ["My activities",1],
-		tag_comment: 0,
-		tag_people: 0,
+		tag_activity: ["By activities",1],
+		tag_comment: ["Comment",1],
+		tag_people:  ["People",1],
 		tag_other: 0,
 		years: ["By date",1],
 		months: 0

@@ -85,16 +85,16 @@
 	{	
 		// Vérifier si le fichier existe
 		if (!file_exists($imagePath)) {
-			return("File does not exist");
+			return array("File does not exist");
 		}
 
 		// Lire les données EXIF
 		
-		$exifData = exif_read_data($imagePath, 0, true);
+		$exifData = @exif_read_data($imagePath, 0, true);
 
 		// Vérifier si des données EXIF existent
 		if ($exifData === false) {
-			return("No data found");
+			return array("No data found");
 		}
 		
 		return cleanExif($exifData);
