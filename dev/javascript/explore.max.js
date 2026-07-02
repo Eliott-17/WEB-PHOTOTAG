@@ -123,11 +123,9 @@ var EXPLORE_CallBack = function CallBack(datas)
 	let filterfreeze=false;
 	let filtermem='';
 	let img;
-	
+
 	const cols = Math.floor(($('main').width() + 20) / 170);
 	let max_elements;
-	
-	console.log(cols);
 
 	switch(cols)
 	{
@@ -145,9 +143,9 @@ var EXPLORE_CallBack = function CallBack(datas)
 	const array_config_tag_show = {
 		tag_country: ["Visited countries",1],
 		tag_city: ["Visited cities",1],
-		tag_place: ["By places",1],
-		tag_activity: ["By activities",1],
-		tag_comment: ["Comment",1],
+		tag_place: ["Places",1],
+		tag_activity: ["Activities",1],
+		tag_comment: ["Comments",1],
 		tag_people:  ["People",1],
 		tag_other: 0,
 		years: ["By date",1],
@@ -159,11 +157,12 @@ var EXPLORE_CallBack = function CallBack(datas)
 	$.each(datas.tags, function(index, tagvalue) {
 
 		html += '<datalist id="'+index+'">';
-
-		//console.log(tagvalue);
 		
 		let visibility="";
-
+		let count = Object.keys(tagvalue).length;
+		
+		if(count==1) count="";
+		
 		$.each(tagvalue, function(optionvalue, ovdata) {
 								
 			let date=false;
@@ -197,8 +196,6 @@ var EXPLORE_CallBack = function CallBack(datas)
 					
 					if(filtercount>=top_elements) 
 					{						
-						console.log(index,filtercount,top_elements);
-						
 						top_elements+=(max_elements+1);
 						
 						filtergroup++;
@@ -215,7 +212,7 @@ var EXPLORE_CallBack = function CallBack(datas)
 					let add_class="";
 					if(index=='tag_country') add_class="notopborder";
 					
-					htmlfilter += '<div class="fullrow"><h2 class="'+add_class+'">'+array_config_tag_show[index][0]+'</h2></div>';
+					htmlfilter += '<div class="fullrow"><h2 class="'+add_class+'">'+count+'&nbsp;'+array_config_tag_show[index][0]+'</h2></div>';
 				}
 				
 				if(!date)
@@ -238,7 +235,7 @@ var EXPLORE_CallBack = function CallBack(datas)
 
 	$('aside div#datalist').html(html);
 	$('aside datalist#fastsearch').html(htmlfull);
-		
+	
 	htmlfilter += '<div class="fullrow"><h2 class="">Total disk space '+formatBytes(datas.size)+'</h2></div>';
 
 	$('main section.explore').html(htmlfilter);
