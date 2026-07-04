@@ -1,4 +1,4 @@
-let DISPLAY_debug=false;
+let DISPLAY_debug=true;
 
 $(document).ready(function()
 { 
@@ -92,6 +92,17 @@ var DISPLAY_section = function section(section)
 	$('div#uploaddrag').addClass("hidden");
 	$('div.'+vSECTION_active).removeClass("hidden");
 	
+	if(vSECTION_active=="search")	
+	{
+		$('div#mainmenu').addClass('hidden');
+		$('div#searchmenu').removeClass('hidden');
+	}
+	else 							
+	{
+		$('div#mainmenu').removeClass('hidden');
+		$('div#searchmenu').addClass('hidden');
+	}
+	
 	GRID_load();//en affichant une section on s'assure de charger les données.
 	
 	if(DISPLAY_debug) console.log("DISPLAY_section",'section.'+vSECTION_active);
@@ -142,16 +153,17 @@ var DISPLAY_is_visible_full_screen = function is_visible_full_screen()
 
 var DISPLAY_full_screen = function display_full_screen(visibility = undefined)
 {
-	let lelement1=$('div#mainmenu');
-	let lelement2=$('div#searchmenu');
+	//let lelement1=$('div#mainmenu');
+	//let lelement2=$('div#searchmenu');
 	
 	if(visibility==true) 		
 	{ 
 		$('main section.'+vSECTION_active).addClass('hidden');
 		$('main section#fullscreen').removeClass('hidden');
-		if(DISPLAY_debug) console.log("DISPLAY_full_screen: openned (show)");		
-		lelement1.addClass('hidden');
-		lelement2.addClass('hidden');
+		if(DISPLAY_debug) console.log("DISPLAY_full_screen: openned (show)");
+		$('nav').addClass('hidden');
+		//lelement1.addClass('hidden');
+		//lelement2.addClass('hidden');
 		return; 
 	}
 	
@@ -159,8 +171,9 @@ var DISPLAY_full_screen = function display_full_screen(visibility = undefined)
 	{ 
 		$('main section.'+vSECTION_active).removeClass('hidden');
 		$('main section#fullscreen').addClass('hidden');
+		$('nav').removeClass('hidden');
 		
-		if(vNAV_search_result==true)
+		/*if(vNAV_search_result==true)
 		{
 			lelement1.addClass('hidden');	
 			lelement2.removeClass('hidden');
@@ -169,7 +182,7 @@ var DISPLAY_full_screen = function display_full_screen(visibility = undefined)
 		{
 			lelement1.removeClass('hidden');
 			lelement2.addClass('hidden');
-		}
+		}*/
 		
 		if(DISPLAY_debug) console.log("DISPLAY_full_screen: closed (hide)");		
 		return; 

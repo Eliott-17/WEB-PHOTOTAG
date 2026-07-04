@@ -49,13 +49,14 @@ var EXPLORE_post_search = function post_search()
 {
 	SECTIONS["search"].taglist=1; //count+tag
 	SECTIONS["search"].update=true; //count+tag
-				
-	vSECTION_active_mem=vSECTION_active;
+	
+	if(vSECTION_active!="search") vSECTION_active_mem=vSECTION_active;
 
-	vNAV_search_result=true;
+	//vNAV_search_result=true;
 	DISPLAY_menu($('#select-status'),false);
 	DISPLAY_set_view('grid');		
 	DISPLAY_section("search");	
+	//GRID_load();
 }
 
 var EXPLORE_search_CallBack = function search_CallBack(datas) 

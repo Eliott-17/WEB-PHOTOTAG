@@ -41,27 +41,25 @@ $(document).ready(function(){
 					return this.value === val;
 				});
 				
-				if(val === "")
+				
+				
+				if(option.length !== 0)
 				{
-					$(vNAV_mem_selected).addClass("selected");	
-					
-					//LANCEMENT DE LA RECHERCHE VIDE, RESTORATION DE LA GRILLE
-					//NE PAS REFRAICHIR LES DONNEES
-					//RECHARGER LA GRILLE PAR DEFAUT
-					GRID_load();
-				}
-				else if (option.length === 0) 
-				{
-					$('main section.grid.date.'+vSECTION_active).html('<div class="fullrow"><h2>Nothing found.</h2></div>');
-				} 
-				else 
-				{
-
 					$('#filter_tag').val(option.attr('data-tag'));
 					$('#filter_val').val(option.val());
 					$('#filters_exclude').val("{}");
 					
 					EXPLORE_post_search();
+				}
+				else if(val==="")
+				{
+					DISPLAY_section(vSECTION_active_mem);
+				}
+				else
+				{
+					$('#filterapply').html("No result");
+					$('main section.grid.date.search').html('');
+					DISPLAY_section("search");
 				}
 			}
 		}
@@ -73,9 +71,10 @@ $(document).ready(function(){
 
 	$('div#searchmenu div button.return-explore').on('click', 	function() {
 
-			vNAV_search_result=false;
+			//vNAV_search_result=false;
 			
 			$('main').scrollTop(0);
+			FILEMULTISELECTION_unselectall();
 			DISPLAY_set_view('grid');
 			DISPLAY_section(vSECTION_active_mem);
 			DISPLAY_filters(false);

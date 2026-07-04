@@ -53,8 +53,7 @@ var GRID_load = function load()
 {	
 	if(vFILEINFO_FLAG_SAVED || vFILEINFOMULTISELECTION_FLAG_SAVED)
 	{
-		SECTIONS["library"].memdata=null;
-		SECTIONS["library"].offset=0;	
+		SECTIONS["library"].memdata=null;	
 		SECTIONS["library"].update=true;	
 
 		SECTIONS["explore"].update=true;
@@ -69,7 +68,6 @@ var GRID_load = function load()
 	if(vNAV_FLAG_UPLOAD)
 	{
 		SECTIONS["untagged"].memdata=null;
-		SECTIONS["untagged"].offset=0;	
 		SECTIONS["untagged"].update=true;
 		
 		vNAV_FLAG_UPLOAD=false;
@@ -78,12 +76,16 @@ var GRID_load = function load()
 	if(vEXPLOREFILTER_FLAG_CHANGED || vFILEINFO_FLAG_SAVED || vFILEINFOMULTISELECTION_FLAG_SAVED)
 	{
 		//SECTIONS["search"].taglist=null;
-		SECTIONS["search"].memdata=null;
-		SECTIONS["search"].offset=0;	
+		SECTIONS["search"].memdata=null;	
 		SECTIONS["search"].update=true;	
 	
 		vEXPLOREFILTER_FLAG_CHANGED=false;		
 	}
+	
+	if(SECTIONS[vSECTION_active].offset!=undefined) {
+		if(SECTIONS[vSECTION_active].offset==-1) {
+			SECTIONS[vSECTION_active].offset=0;
+	}}
 
 	if(SECTIONS[vSECTION_active].update==true)
 	{
