@@ -1,4 +1,4 @@
-let DISPLAY_debug=true;
+let DISPLAY_debug=false;
 
 $(document).ready(function()
 { 
