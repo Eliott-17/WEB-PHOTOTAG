@@ -337,6 +337,29 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/datas.php');
 						<div class="return alert alert-success"></div>
 					</div>
 					<div class="informations">
+						<h2><span class="material-symbols-outlined cursor">shield_lock</span><span>Privacy option</span></h2>						
+						<form method="post" action="actions/file-lock.php" class="post">
+							<input type="hidden" name="token" class="token" value=""/>
+							<input type="hidden" name="filesid" class="filesid" value=""/>
+							<input type="hidden" id="lock_status" name="lock_status" value=""/>
+							<div class="privacy_mode_unlocked hidden">
+								<h3>The file is available for sharing feature.</h3>
+								<h4>
+									<button class="submit">
+										<span class="material-symbols-outlined">lock_open_right</span><span>Protect my file</span>
+									</button>
+								</h4>
+							</div>
+							<div class="privacy_mode_locked hidden">
+								<h3>This photo always remains private.</h3>
+								<h4>
+									<button class="security submit">
+										<span class="material-symbols-outlined">lock</span><span>My file is protected</span>
+									</button>
+								</h4>
+							</div>
+						</form>
+						<!--<h3 class="legend privacy_mode">Never shared mode means this photo cannot be shared through albums, links, or any other sharing feature.</h3>-->
 						<h2><span class="material-symbols-outlined cursor">info</span><span>Other informations</span></h2>
 						<h3 class="legend">Added time</h3>
 						<h3 id="time_added_at">-</h3>

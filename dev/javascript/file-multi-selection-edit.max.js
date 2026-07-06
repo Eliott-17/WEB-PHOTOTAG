@@ -217,6 +217,7 @@ var FILEMULTISELECTION_CallBack_load = function CallBack_load(ldata)
 	$('h3#file_size span').html(formatBytes(g_data['total_size']));
 	$('h3#file_original_name').addClass('hidden');
 	$('h3.ux-tag-location.gps').addClass('hidden');
+	$('h3.privacy_mode').removeClass('hidden');
 	$('input.conflictedit').val(JSON.stringify(g_data['flag']));
 	
 	console.log('FILEMULTISELECTION_CallBack_load');

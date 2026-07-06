@@ -399,12 +399,17 @@ var FILEINFO_CallBack_data = function CallBack(data)
 		$('h3#other input').val(datas.tag_other);		
 	}
 	
+	//informations
+
+	FILEINFO_CallBack_lock(datas.file_is_private);
+			
 	$('h3#time_added_at').html(formatUTCToLocalWithTimezone(datas.time_added_at));
 	
 	if (datas.time_modified_at == null) 	$('h3#time_modified_at').html("never");
 	else 									$('h3#time_modified_at').html(formatUTCToLocalWithTimezone(datas.time_modified_at));
 
 	$('h3.ux-tag-location.gps').removeClass('hidden');	
+	$('h3.privacy_mode').removeClass('hidden');	
 }
 
 var FILEINFO_CallBack_success = function CallBack_success()
@@ -426,6 +431,18 @@ var FILEINFO_CallBack_success = function CallBack_success()
 	}, 500);
 	
 	vFILEINFO_FLAG_SAVED=true;
+}
+
+function FILEINFO_CallBack_lock(value)
+{
+	$('div.privacy_mode_locked').addClass('hidden');
+	$('div.privacy_mode_unlocked').addClass('hidden');
+	$('input#lock_status').val(value);
+	
+	if(value==1) $('div.privacy_mode_locked').removeClass("hidden");
+	if(value==0) $('div.privacy_mode_unlocked').removeClass("hidden");
+	
+	console.log("FILEINFO_CallBack_lock",value);
 }
 
 function processExif(data, indent = 0) {
