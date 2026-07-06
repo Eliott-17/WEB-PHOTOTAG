@@ -273,6 +273,7 @@ else
 			}
 			else
 			{
+				$dbfile_migration = $header.'.'.$i.'m'.$structureversion.'.db'; //péprartion du nom du fichier pour la migratio
 				array_push($commits,$i); //il faudra migrer vers la dernière version
 			}
 		}

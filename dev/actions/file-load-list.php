@@ -29,7 +29,6 @@
 	{		
 		$conditionaldata='AND (
 			time_taken_at_date != "00000000"
-			AND time_taken_at_time != "000000"
 			AND time_taken_at_zone != "00000"
 			AND tag_country IS NOT null
 			AND tag_country != "UNK"
@@ -44,7 +43,6 @@
 	{			
 		$conditionaldata='AND (
 			time_taken_at_date = "00000000"
-			OR time_taken_at_time = "000000"
 			OR time_taken_at_zone = "00000"
 			OR tag_country IS null
 			OR tag_country = "UNK"

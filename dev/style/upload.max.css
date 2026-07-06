@@ -15,7 +15,7 @@
 
 .ux-infobox div#progressbar {
     height: 18px;
-    width: 0%;
+    min-width: 15%;
     background: linear-gradient(90deg, #a0d8f1, #ffd6a5);
     border-radius: 9px;
     margin-top: 8px;

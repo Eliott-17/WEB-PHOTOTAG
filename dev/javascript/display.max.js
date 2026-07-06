@@ -161,7 +161,7 @@ var DISPLAY_full_screen = function display_full_screen(visibility = undefined)
 		$('main section.'+vSECTION_active).addClass('hidden');
 		$('main section#fullscreen').removeClass('hidden');
 		if(DISPLAY_debug) console.log("DISPLAY_full_screen: openned (show)");
-		$('nav').addClass('hidden');
+		$('nav#main').addClass('hidden');
 		//lelement1.addClass('hidden');
 		//lelement2.addClass('hidden');
 		return; 
@@ -171,7 +171,7 @@ var DISPLAY_full_screen = function display_full_screen(visibility = undefined)
 	{ 
 		$('main section.'+vSECTION_active).removeClass('hidden');
 		$('main section#fullscreen').addClass('hidden');
-		$('nav').removeClass('hidden');
+		$('nav#main').removeClass('hidden');
 		
 		/*if(vNAV_search_result==true)
 		{

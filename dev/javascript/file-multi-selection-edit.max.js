@@ -101,7 +101,6 @@ $(document).ready(function(){
 
 		$('aside#infocontent h3#'+data+'.conflict input, h3#'+data+'.conflict select, h3#'+data+'.conflict span.solver').toggleClass('hidden');
 	
-		console.log(g_data['flag']);
 	});
 		
 });
@@ -110,6 +109,10 @@ var FILEMULTISELECTION_unselectall = function unselect_all()
 {
 	$('main div.element').removeClass('selected');
 	$('main div.element').addClass('notselected');
+	
+	//gestion du cas particulier ou on à un offset > 0 par défilement mais qu'on doit forcer le rafraishissement compplet à la désélection
+	if(vSECTION_active=="untagged") vNAV_FLAG_UPLOAD=true; 
+	
 	GRID_load(); //recharger la grille si on à changer des photos	
 }
 
@@ -213,6 +216,7 @@ var FILEMULTISELECTION_CallBack_load = function CallBack_load(ldata)
 	$('h2#file_type span.title').html('Multiple files selection');
 	$('h3#file_size span').html(formatBytes(g_data['total_size']));
 	$('h3#file_original_name').addClass('hidden');
+	$('h3.ux-tag-location.gps').addClass('hidden');
 	$('input.conflictedit').val(JSON.stringify(g_data['flag']));
 	
 	console.log('FILEMULTISELECTION_CallBack_load');

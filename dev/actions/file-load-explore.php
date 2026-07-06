@@ -40,7 +40,6 @@
 	'file_status = 0
 		AND (
 			time_taken_at_date != "00000000"
-			AND time_taken_at_time != "000000"
 			AND time_taken_at_zone != "00000"
 			AND tag_country IS NOT null
 			AND tag_country != "UNK"

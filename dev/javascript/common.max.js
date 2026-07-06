@@ -34,7 +34,6 @@ $(document).ready(function(){
 function formatDateTime(exifDateTime, mode = 'display') {
     if (!exifDateTime || exifDateTime.length < 19) 
 	{
-		console.log(exifDateTime,exifDateTime.length);
 		return 'bad len';
 	}
 

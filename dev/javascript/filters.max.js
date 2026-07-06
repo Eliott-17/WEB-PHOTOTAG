@@ -1,3 +1,5 @@
+let element_last_checked;
+let search_flag_limit=false;
 
 $(document).ready(function()
 {
@@ -6,17 +8,8 @@ $(document).ready(function()
 		let check=-1;
 		let html = $(this).find("span.material-symbols-outlined").html();
 		
-		if(html=='check_box')
-		{
-			console.log("Check all");
-			check=true;
-		}
-			
-		if(html=='check_box_outline_blank')
-		{
-			console.log("Uncheck all");
-			check=false;
-		}
+		if(html=='check_box') check=true;			
+		if(html=='check_box_outline_blank') check=false;
 		
 		if(check!=-1)
 		{	
@@ -43,15 +36,13 @@ $(document).ready(function()
 			
 		if($(this).html()=='check_box_outline_blank')
 		{
-			//console.log("Uncheck all",target_elements);
 			check=false;
 		}
 		
 		if(check!=-1)
 		{	
 			$('aside#advancedfilters h3.'+target_elements+' div.value input[type="checkbox"]').each(function (index, element) {
-				
-			//console.log("set",check);
+
 			if($(element).prop('disabled')==false)	$(element).prop('checked',check);  
 			
 			});
@@ -62,7 +53,8 @@ $(document).ready(function()
 		
 	$('aside#advancedfilters').on('click.inputFilters', 'div.value input[type="checkbox"]', function () {
 
-		FILTERS_checkbox_post();
+		element_last_checked = {};
+		FILTERS_checkbox_post($(this).prop('checked'));
 					
 	});
 });
@@ -74,15 +66,15 @@ var FILTERS_search_CallBack = function search_CallBack(datas)
 	if(datas.count>1) s="s";
 	
 	$('nav span#filterresult').html(datas.count+ ' element'+s);
-	
-	//console.log(datas.tags);
-	
+
+	let element_check_callback=false;		
+
 	$('aside#advancedfilters h3 div.value input[type="checkbox"]').each(function (index, element) {
 		
 		let key = $(element).attr('name').replace('[]','');
 		let value = $(element).attr('value');
 		let found=false;
-		
+
 		if(key=='years' || key=='months')
 		{
 			$.each(datas.tags[key], function(i,search) {
@@ -118,34 +110,64 @@ var FILTERS_search_CallBack = function search_CallBack(datas)
 		{
 			if($(element).prop('checked')==true) $(element).prop('disabled', true);
 		}
-		
-		//console.log(key,value,found);
 			
+		if(datas.recheck!==undefined)
+		{
+			if(datas.recheck[key]!==undefined)
+			{
+				if(datas.recheck[key]==value)
+				{
+					$(element).prop('checked',true);
+					
+					element_check_callback=true;
+				}
+			}
+		}
+		
 	});
+	
+	console.log(datas);
+	
+	if(!search_flag_limit && element_check_callback)
+	{
+		search_flag_limit=true;
+		FILTERS_checkbox_post();
+	}
+	else
+	{
+		search_flag_limit=false;
+	}			
 	
 	console.log("FILTERS_search_CallBack");
 }
 
-var FILTERS_checkbox_post = function checkbox_post()
+var FILTERS_checkbox_post = function checkbox_post(is_checked=null)
 {
-	var data = {};
+	let data = {};
 
 	$('aside#advancedfilters h3 div.value input[type="checkbox"]').each(function (index, element) {
 		
 		$('input#filters_activated').val($(element).id);
-		
+				
 		if($(element).prop('checked')==false)
 		{
-			 var name = $(this).attr('name');
-				var value = $(this).val();
+			let name = $(this).attr('name');
+			let value = $(this).val();
 
-				if (!data[name]) {
-					data[name] = [];
-				}
+			if(!data[name]) { data[name] = []; }
 
-				data[name].push(value);
+			data[name].push(value);
 		}
 	});
+	
+	if(is_checked==true)
+	{
+		$('input#last_checked').val(JSON.stringify(element_last_checked));
+	}
+	else
+	{
+		$('input#last_checked').val(JSON.stringify({}));
+	}
 	
 	$('input#filters_exclude').val(JSON.stringify(data));
 	

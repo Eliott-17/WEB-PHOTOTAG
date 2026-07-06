@@ -18,7 +18,7 @@
 	$validation->addVerification('value',				'string',			'Value',				0,100	);
 	$validation->addVerification('tagslist',			'int_interval',		'Taglist incorrect',  	0,2		);	
 	$validation->addVerification('filters',				'jsonArrayString',	'filters',  			);
-	
+	$validation->addVerification('filters',				'jsonArrayString',	'lastchecked',  		);	
 	$validation->Validate(false,true);
 	
 	if(!$validation->isValidated())
@@ -78,13 +78,16 @@
 	$queryValues = [];
 	
 	$filters_raw = $_POST['filters'] ?? '';
+	$filters_count=[];
 
 	$filters = json_decode($_POST['filters'] ?? '', true) ?: [];
-
+	
 	foreach ($filters as $key => $values) 
 	{
 		$i=0;
 		$placeholders = [];
+		
+		$filters_count[$key]=count($values);
 		
 		foreach ((array)$values as $value)
 		{
@@ -128,21 +131,7 @@
 	if($_POST['tag']=='years') 	$column='time_taken_at_date LIKE :value';
 	else 						$column=$_POST['tag']. '=:value';
 	
-	$finalquery=$column.' AND
-	time_taken_at_date != "00000000" AND
-	time_taken_at_time != "000000" AND
-	time_taken_at_zone != "00000" AND 
-	tag_country IS NOT null AND tag_country != "UNK" AND 
-	(
-		tag_city IS NOT null
-		OR tag_place IS NOT null
-		OR tag_activity IS NOT null
-	) AND
-	file_status = 0'.$addquery.' ORDER BY 	
-	time_taken_at_date DESC,
-	time_taken_at_zone DESC, 
-	time_taken_at_time DESC, 
-	id ASC';
+	$finalquery=final_query_search($column,$addquery);
 	
 	//************************************************************
 	//query result_tags
@@ -188,25 +177,58 @@
 		if(ENV=="DEV") $fReturn->addConsole(print_r($result_count,true));
 		$fReturn->addConsole("[PHP] SQL error while loading count")->fetch();	
 	}
+	
+	if($result_count['datas'][0]['total']>0)
+	{	
+		//************************************************************
+		//query result_data
+		//************************************************************
+
+		local_conditionalldata_fill($EasyPDO,$_POST,$queryValues);
 		
-	//************************************************************
-	//query result_data
-	//************************************************************
+		$EasyPDO->addFields('file_hash');
+		$EasyPDO->addFields('time_taken_at_date');
+		$EasyPDO->addFields('time_taken_at_zone');
+		$EasyPDO->addFields('time_taken_at_time');
+		$EasyPDO->addFields('file_orientation');
+		$EasyPDO->addFields('file_type');
+		$EasyPDO->addFields('id');
+		
+		$EasyPDO->addConditionalData('offset',$_GET['offset']);
 
-	local_conditionalldata_fill($EasyPDO,$_POST,$queryValues);
+		$result_data=$EasyPDO->select('photos', $finalquery." LIMIT 50 OFFSET:offset");
+	}
+	else
+	{
+		$last_checked = json_decode($_POST['lastchecked'] ?? '', true) ?: [];
+			
+		if(count($last_checked)!=0)
+		{		
+			$key = array_key_first($last_checked);
+
+			unset($filters[$key]);
+			
+			$search_for = array_key_first($filters);
+			
+			$EasyPDO->addFields($search_for);
+			$EasyPDO->addConditionalData('key',$last_checked[$key]);
+
+			$column=$key."=:key";
+			
+			$finalquery=final_query_search($column," GROUP BY ".$key);
+						
+			$result_adv=$EasyPDO->select('photos',$finalquery);
+		
+			if($result_adv['status']==true) 
+			{
+				foreach($result_adv['datas'] as $key => $value) $tag['recheck']=$value;
+			}
+		}
+			
+		$result_data['datas']=array();
+		$result_data['status']=true;
+	}
 	
-	$EasyPDO->addFields('file_hash');
-	$EasyPDO->addFields('time_taken_at_date');
-	$EasyPDO->addFields('time_taken_at_zone');
-	$EasyPDO->addFields('time_taken_at_time');
-	$EasyPDO->addFields('file_orientation');
-	$EasyPDO->addFields('file_type');
-	$EasyPDO->addFields('id');
-	
-	$EasyPDO->addConditionalData('offset',$_GET['offset']);
-
-	$result_data=$EasyPDO->select('photos', $finalquery." LIMIT 50 OFFSET:offset");
-
 	//************************************************************
 	//final merge
 	//************************************************************
@@ -232,7 +254,7 @@
 		$tag['tagname']=$tagname;
 		$tag['keywordsname']=$keywordsname;
 		$tag['count']=$result_count['datas'][0]['total'];
-
+		
 		$array_tags = [
 			'tag_country' => [],
 			'tag_city' => [],

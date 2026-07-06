@@ -39,7 +39,7 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/datas.php');
 
 	<body class="no-aside-files no-aside-filters">
 	
-		<nav>
+		<nav id="main">
 			<?php
 			if(is_session_valid())
 			{
@@ -68,11 +68,40 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/datas.php');
 						<div></div>
 						<div></div>
 						<div class="last"><button class="login"><span class="material-symbols-outlined">login</span>&nbsp;<span>Login</span></button></button></div>
-					</div>
+					</div>					
+					<div id="login" class="ux-background hidden">
+						<form method="post" data-return="blockreturnlogin" action="actions/login.php" class="post">
+							<input type="hidden" name="token" class="token" value=""/>
+							<h4>
+								<div>Email</div>
+								<input type="text" name="email"/>
+								<div>Password</div>
+								<input type="password" name="password"/>	
+								<div class="password-confirmation hidden">Password confirmation</div>
+								<input class="password-confirmation hidden" type="password" name="password_verif" autocomplete="off">					
+								<div class="code hidden">Code</div>
+								<input class="code hidden" type="text" name="code" autocomplete="off">
+							</h4>
+							<br/>
+							<h4>
+								<button class="submit">
+									<span class="material-symbols-outlined">login</span>&nbsp;&nbsp;<span>Login or Signin</span>
+								</button>					
+								<button class="">
+									<span class="material-symbols-outlined">password</span>&nbsp;&nbsp;<span>Forgot Password</span>
+								</button>	
+							</h4>	
+							<div id="blockreturnlogin" class="blockreturn">
+								<div class="loading"><span class="material-symbols-outlined">cycle</span></div>		
+								<div class="return alert alert-success"></div>
+							</div>						
+						</form>		
+					<div>	
 				<?php		
 			}
 			?>
-
+		</nav>
+		<nav>
 			<div id="upload-status" class="ux-infobox ux-background ux-hidden-opacity ux-hidden-zindex">Upload in progress</br><div id="progressbar">45%</div></div>
 			<div id="select-status" class="ux-infobox ux-background ux-hidden-opacity ux-hidden-zindex">Selection of <span class="elementscnt"></span></br>			
 				<div>
@@ -90,37 +119,7 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/datas.php');
 					&nbsp;<span id="delete_confirm" class="material-symbols-outlined cursor">check_small</span>
 					&nbsp;<span id="delete_cancel" class="material-symbols-outlined cursor">close_small</span>
 				</div>
-			</div>	
-			<div id="login" class="ux-background hidden">
-			
-				<form method="post" data-return="blockreturnlogin" action="actions/login.php" class="post">
-					<input type="hidden" name="token" class="token" value=""/>
-					<h4>
-						<div>Email</div>
-						<input type="text" name="email"/>
-						<div>Password</div>
-						<input type="password" name="password"/>	
-						<div class="password-confirmation hidden">Password confirmation</div>
-						<input class="password-confirmation hidden" type="password" name="password_verif" autocomplete="off">					
-						<div class="code hidden">Code</div>
-						<input class="code hidden" type="text" name="code" autocomplete="off">
-					</h4>
-					<br/>
-					<h4>
-						<button class="submit">
-							<span class="material-symbols-outlined">login</span>&nbsp;&nbsp;<span>Login or Signin</span>
-						</button>					
-						<button class="">
-							<span class="material-symbols-outlined">password</span>&nbsp;&nbsp;<span>Forgot Password</span>
-						</button>	
-					</h4>	
-					<div id="blockreturnlogin" class="blockreturn">
-						<div class="loading"><span class="material-symbols-outlined">cycle</span></div>		
-						<div class="return alert alert-success"></div>
-					</div>						
-				</form>		
-			<div>
-			
+			</div>			
 		</nav>
 		<?php
 			if(is_session_valid())
@@ -171,7 +170,7 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/datas.php');
 						<input type="hidden" id="filter_tag" name="tag"/>
 						<input type="hidden" id="filter_val" name="value"/>
 						<input type="hidden" id="filters_exclude" name="filters" value="{}"/>
-						
+						<input type="hidden" id="last_checked" name="lastchecked" value="{}"/>						
 						<h2 id="tag_location">
 							<span class="material-symbols-outlined">globe</span>
 							<span>Location</span>
@@ -291,7 +290,7 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/datas.php');
 						<input type="hidden" name="filesid" class="filesid" value=""/>
 						<input type="hidden" name="conflictedit" class="conflictedit" value=""/>
 						<input type="hidden" name="continent" value=""/>
-						<h3 class="ux-tag-location" data-tooltip="tooltip-location" data-label="GPS coordinates"><span class="material-symbols-outlined">my_location</span><span id="GPS" class="textlabel"></span></h3>		
+						<h3 class="ux-tag-location gps" data-tooltip="tooltip-location" data-label="GPS coordinates"><span class="material-symbols-outlined">my_location</span><span id="GPS" class="textlabel"></span></h3>		
 						<!--<h3 class="ux-tag-location" id="continent"><span class="material-symbols-outlined">globe_asia</span><span class="unedit"></span><span class="solver hidden">Override all values</span><select name="continent" ><?php foreach($$DATAS_contient as $key=>$value) echo '<option value="'.$key.'">'.$value.'</option>'; ?></select></h3>-->		
 						<h3 class="ux-tag-location" data-tooltip="tooltip-location" data-label="Country" id="country"><span class="material-symbols-outlined">flag</span><span class="unedit"></span><span class="solver hidden">Override all values</span><select name="country"><?php foreach($DATAS_country as $key=>$value) echo '<option value="'.$key.'">'.$value.'</option>'; ?></select></h3>
 						<h3 class="ux-tag-location" data-tooltip="tooltip-location" data-label="City" id="city"><span class="material-symbols-outlined">location_city</span><span class="unedit"></span><span class="solver hidden">Override all values</span><input name="city" type="text" list="tag_city" autocomplete="off"></h3>

@@ -86,7 +86,7 @@ var GRID_load = function load()
 		if(SECTIONS[vSECTION_active].offset==-1) {
 			SECTIONS[vSECTION_active].offset=0;
 	}}
-
+	
 	if(SECTIONS[vSECTION_active].update==true)
 	{
 		console.log("GRID",vSECTION_active,"update request");

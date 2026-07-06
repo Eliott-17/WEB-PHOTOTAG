@@ -64,8 +64,8 @@ var EXPLORE_search_CallBack = function search_CallBack(datas)
 	let s="";
 	if(datas.count>1) s="s";
 
-	$('nav span#filterapply').html(datas.tagname+': '+datas.keywordsname);	
-	$('nav span#filterresult').html(datas.count+ ' element'+s);
+	$('nav#main span#filterapply').html(datas.tagname+': '+datas.keywordsname);	
+	$('nav#main span#filterresult').html(datas.count+ ' element'+s);
 
 	vEXPLORE_SEARCH_TAGS=datas.tags; //stock le résultat de la recherche
 	
@@ -75,13 +75,13 @@ var EXPLORE_search_CallBack = function search_CallBack(datas)
 var EXPLORE_add_tags = function add_tags(tags)
 {	
 	$.each(tags, function(index, tagvalue) {
-		
-		console.log("lookfor",index,tagvalue);
-		
+
 		let addtag=false;
 		
 		if(vEXPLORE_ALL_TAGS[index] === undefined)
 		{
+			vEXPLORE_ALL_TAGS[index] = {};
+			
 			addtag=true;
 		}
 		else
@@ -91,21 +91,17 @@ var EXPLORE_add_tags = function add_tags(tags)
 				addtag=true;
 			}
 		}
-		
+
 		if(addtag==true)
 		{
-			console.log("GRID_add_tags",tagvalue,"added to list");
-			
 			$('#'+index).append('<option value="'+tagvalue+'">');
 			$('aside datalist#fastsearch').append('<option data-tag="'+index+'" value="'+tagvalue+'">');
-			
-			vEXPLORE_SEARCH_TAGS[index][tagvalue]=1;
+
+			vEXPLORE_ALL_TAGS[index][tagvalue]=1;
 		}
 		else
 		{
-			vEXPLORE_SEARCH_TAGS[index][tagvalue]++;
-			
-			console.log("GRID_add_tags",tagvalue,"aready exist");
+			vEXPLORE_ALL_TAGS[index][tagvalue]++;
 		}
 	});
 }

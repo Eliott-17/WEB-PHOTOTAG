@@ -325,6 +325,24 @@
 			$EasyPDO->addConditionalData($key,$value);
 		}
 	}
+	
+	function final_query_search($column,$addquery)
+	{
+		return $column.' AND
+		time_taken_at_date != "00000000" AND
+		time_taken_at_zone != "00000" AND 
+		tag_country IS NOT null AND tag_country != "UNK" AND 
+		(
+			tag_city IS NOT null
+			OR tag_place IS NOT null
+			OR tag_activity IS NOT null
+		) AND
+		file_status = 0'.$addquery.' ORDER BY 	
+		time_taken_at_date DESC,
+		time_taken_at_zone DESC, 
+		time_taken_at_time DESC, 
+		id ASC';
+	}
 		
 	$loc_dir = 'multimedia/'.$_SESSION["USER"].'/';
 	$full_dir = $_SERVER['DOCUMENT_ROOT'].'/'.$loc_dir;

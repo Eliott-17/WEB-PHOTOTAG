@@ -402,7 +402,9 @@ var FILEINFO_CallBack_data = function CallBack(data)
 	$('h3#time_added_at').html(formatUTCToLocalWithTimezone(datas.time_added_at));
 	
 	if (datas.time_modified_at == null) 	$('h3#time_modified_at').html("never");
-	else 									$('h3#time_modified_at').html(formatUTCToLocalWithTimezone(datas.time_modified_at));				
+	else 									$('h3#time_modified_at').html(formatUTCToLocalWithTimezone(datas.time_modified_at));
+
+	$('h3.ux-tag-location.gps').removeClass('hidden');	
 }
 
 var FILEINFO_CallBack_success = function CallBack_success()
