@@ -43,9 +43,11 @@ function orientation(width, height) {
 function uploadFiles(files, token) {
     const bar = $('#progressbar');
     const totalSize = files.reduce((sum, f) => sum + f.size, 0);
+	const totalFiles = files.length;
     let uploadedSize = 0;
     let errorCount = 0;
-
+	let treatedFiles = 0;
+	
     // Fonction pour générer une miniature (image ou vidéo)
     function generateThumbnail(file) {
         return new Promise((resolve, reject) => {
@@ -104,6 +106,7 @@ function uploadFiles(files, token) {
         chain = chain.then(() => {
             if (file.size > 1024 * 1024 * 1024) { // 256Mo
                 errorCount++;
+				$('span#fileprogress').html(treatedFiles+'/'+totalFiles);
                 $('#upload-status').append(
                     `<div id="error${errorCount}" class="text errorresponse">
                         <span>${file.name} : Fichier trop volumineux (max 1 Go)</span>
@@ -127,7 +130,8 @@ function uploadFiles(files, token) {
                 })
                 .catch(error => {
                     errorCount++;
-                    $('#upload-status').append(
+					$('span#fileprogress').html(treatedFiles+'/'+totalFiles);
+					$('#upload-status').append(
                         `<div id="error${errorCount}" class="text errorresponse">
                             <span>${file.name} : ${error.message || error}</span>
                             &nbsp;<span class="material-symbols-outlined cursor">close_small</span>
@@ -182,7 +186,11 @@ function uploadFiles(files, token) {
 
                         uploadedSize += file.size;
                         bar.css('width', Math.round((uploadedSize / totalSize) * 100) + '%');
-                        bar.html(Math.round((uploadedSize / totalSize) * 100) + '%');						
+                        bar.html(Math.round((uploadedSize / totalSize) * 100) + '%');
+
+						treatedFiles++;	
+
+						$('span#fileprogress').html(treatedFiles+'/'+totalFiles);
 
                         if (datatext === "OK") {
                             resolve(datatext);
