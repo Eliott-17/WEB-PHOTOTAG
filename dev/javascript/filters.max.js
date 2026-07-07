@@ -172,9 +172,7 @@ var FILTERS_checkbox_post = function checkbox_post(is_checked=null)
 	$('input#filters_exclude').val(JSON.stringify(data));
 	
 	FILEMULTISELECTION_unselectall();
-	
-	$('main').scrollTop(0);
-	
+		
 	SECTIONS[vSECTION_active].offset=0;
 	SECTIONS[vSECTION_active].taglist=2;
 	SECTIONS[vSECTION_active].update=true;

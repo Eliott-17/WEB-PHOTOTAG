@@ -50,7 +50,9 @@ $(document).ready(function(){
 });
 
 var GRID_load = function load()
-{	
+{
+	let offset_reset=false;
+	
 	if(vFILEINFO_FLAG_SAVED || vFILEINFOMULTISELECTION_FLAG_SAVED)
 	{
 		SECTIONS["library"].memdata=null;	
@@ -62,7 +64,9 @@ var GRID_load = function load()
 		vFILEINFOMULTISELECTION_FLAG_SAVED=false;
 		
 		vNAV_FLAG_UPLOAD=true;
-		vEXPLOREFILTER_FLAG_CHANGED=true;	
+		vEXPLOREFILTER_FLAG_CHANGED=true;
+		
+		offset_reset=true;
 	}
 	
 	if(vNAV_FLAG_UPLOAD)
@@ -71,6 +75,8 @@ var GRID_load = function load()
 		SECTIONS["untagged"].update=true;
 		
 		vNAV_FLAG_UPLOAD=false;
+
+		offset_reset=true;
 	}
 	
 	if(vEXPLOREFILTER_FLAG_CHANGED || vFILEINFO_FLAG_SAVED || vFILEINFOMULTISELECTION_FLAG_SAVED)
@@ -80,10 +86,12 @@ var GRID_load = function load()
 		SECTIONS["search"].update=true;	
 	
 		vEXPLOREFILTER_FLAG_CHANGED=false;		
+
+		offset_reset=true;
 	}
 	
 	if(SECTIONS[vSECTION_active].offset!=undefined) {
-		if(SECTIONS[vSECTION_active].offset==-1) {
+		if(SECTIONS[vSECTION_active].offset==-1 || offset_reset) {
 			SECTIONS[vSECTION_active].offset=0;
 	}}
 	
