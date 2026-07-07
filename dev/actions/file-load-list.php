@@ -27,7 +27,7 @@
 
 	if($_GET['source']==0)
 	{		
-		$conditionaldata='AND (
+		$conditionaldata='(
 			time_taken_at_date != "00000000"
 			AND time_taken_at_zone != "00000"
 			AND tag_country IS NOT null
@@ -41,7 +41,7 @@
 	}
 	else
 	{			
-		$conditionaldata='AND (
+		$conditionaldata='(
 			time_taken_at_date = "00000000"
 			OR time_taken_at_zone = "00000"
 			OR tag_country IS null
@@ -66,9 +66,13 @@
 
 	$array=$EasyPDO->select(
 	'photos',
-	'file_status = 0
-		'.$conditionaldata.'
-		ORDER BY time_taken_at_date DESC,
+	'file_status = 0 AND '.$conditionaldata.' ORDER BY
+		CASE
+			WHEN
+			'.$conditionaldata.'
+			THEN 0
+			ELSE 1
+		END ASC, time_taken_at_date DESC,
 				 time_taken_at_zone DESC,
 				 time_taken_at_time DESC,
 				 id ASC 
@@ -88,7 +92,7 @@
 	if($_GET['offset']==0)
 	{
 		$EasyPDO->addFields('COUNT (*) as total');
-		$array_cnt=$EasyPDO->select('photos','file_status = 0 '.$conditionaldata);			
+		$array_cnt=$EasyPDO->select('photos','file_status = 0 AND'.$conditionaldata);			
 
 		if($array_cnt['status']===true) 
 		{
