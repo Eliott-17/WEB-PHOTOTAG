@@ -25,29 +25,13 @@
 	
 	//source TAG ou UNTAG
 
-	if($_GET['source']==0)
+	if($_GET['source']==0) // tagged request
 	{		
-		$conditionaldata='(
-			time_taken_at_date != "00000000"
-			AND time_taken_at_zone != "00000"
-			AND tag_country IS NOT null
-			AND tag_country != "UNK"
-			AND (
-				tag_city IS NOT null
-				OR tag_place IS NOT null
-				OR tag_activity IS NOT null
-			)
-		)';
+		$conditionaldata=tag_query();
 	}
-	else
+	else //non tagged request
 	{			
-		$conditionaldata='(
-			time_taken_at_date = "00000000"
-			OR time_taken_at_zone = "00000"
-			OR tag_country IS null
-			OR tag_country = "UNK"
-			OR (tag_city IS null AND tag_place IS null AND tag_activity IS null)
-		)';
+		$conditionaldata=untag_query();
 	}
 	
 	$EasyPDO = new EasyPDO($_SESSION['DB']);

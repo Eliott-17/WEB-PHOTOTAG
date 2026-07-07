@@ -163,8 +163,9 @@ var EXPLORE_CallBack = function CallBack(datas)
 		$.each(tagvalue, function(optionvalue, ovdata) {
 								
 			let date=false;
+			let id="";
 			
-			if(index=='days' || index=='months' || index=='years') date=true;
+			if(index=='days' || index=='months' || index=='years') date=true;		
 		
 			if(!date)
 			{		
@@ -218,7 +219,9 @@ var EXPLORE_CallBack = function CallBack(datas)
 				}
 				else
 				{
-					htmlfilter += '<div class="element cursor date tagelement" data-tag="'+index+'" data-val="'+ovdata[0]+'"><div>'+ovdata[0]+'</div></div>';
+					let id="years_"+ovdata[0];
+					
+					htmlfilter += '<div id="'+id+'" class="element cursor date tagelement" data-tag="'+index+'" data-val="'+ovdata[0]+'">-</div>';
 				}
 				
 				filtermem=index;
@@ -232,8 +235,21 @@ var EXPLORE_CallBack = function CallBack(datas)
 
 	$('aside div#datalist').html(html);
 	$('aside datalist#fastsearch').html(htmlfull);
-	
-	htmlfilter += '<div class="fullrow"><h2 class="">Total disk space '+formatBytes(datas.size)+'</h2></div>';
+	htmlfilter += '<div class="fullrow"><h2 class="">Total disk space <span id="totaldisk">-</span></h2></div>';
 
 	$('main section.explore').html(htmlfilter);
+	
+	let size_files=0;
+	let size_webp=0;
+	
+	$.each(datas.size, function(index, value) {
+		
+		size_files+=value.size_files;
+		size_webp+=value.size_webp;
+		
+		$('div#years_'+value.years).html('<div>'+value.years+'</div><div class="legendstats">'+value.count_files+' elments</div><div class="legendstats">'+formatBytes(value.size_files)+'</div>');	
+	});
+	
+	$('span#totaldisk').html(formatBytes(size_files+size_webp));
+
 }

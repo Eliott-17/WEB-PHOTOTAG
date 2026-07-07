@@ -328,20 +328,44 @@
 	
 	function final_query_search($column,$addquery)
 	{
-		return $column.' AND
-		time_taken_at_date != "00000000" AND
-		time_taken_at_zone != "00000" AND 
-		tag_country IS NOT null AND tag_country != "UNK" AND 
-		(
-			tag_city IS NOT null
-			OR tag_place IS NOT null
-			OR tag_activity IS NOT null
-		) AND
+		return $column.' AND '.tag_query().' AND
 		file_status = 0'.$addquery.' ORDER BY 	
 		time_taken_at_date DESC,
 		time_taken_at_zone DESC, 
 		time_taken_at_time DESC, 
 		id ASC';
+	}
+	
+	function tag_query()
+	{
+		return '(
+			time_taken_at_date != "00000000"
+			AND time_taken_at_zone != "00000"
+			AND tag_country IS NOT null
+			AND tag_country != "UNK"
+			AND (
+				tag_city IS NOT null
+				OR tag_place IS NOT null
+				OR tag_activity IS NOT null
+				OR tag_comment IS NOT null
+			)
+		)';			
+	}
+	
+	function untag_query()
+	{
+		return '(
+			time_taken_at_date = "00000000"
+			OR time_taken_at_zone = "00000"
+			OR tag_country IS null
+			OR tag_country = "UNK"
+			OR (
+				tag_city IS null 
+				AND tag_place IS null 
+				AND tag_activity IS null 
+				AND tag_comment IS null
+			)
+		)';
 	}
 		
 	$loc_dir = 'multimedia/'.$_SESSION["USER"].'/';

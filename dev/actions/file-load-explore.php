@@ -38,17 +38,7 @@
 	$array_lib=$EasyPDO->select(
 	'photos',
 	'file_status = 0
-		AND (
-			time_taken_at_date != "00000000"
-			AND time_taken_at_zone != "00000"
-			AND tag_country IS NOT null
-			AND tag_country != "UNK"
-			AND (
-				tag_city IS NOT null
-				OR tag_place IS NOT null
-				OR tag_activity IS NOT null
-			)
-		)
+		AND '.tag_query().'
 		ORDER BY time_taken_at_date DESC,
 				 time_taken_at_zone DESC,
 				 time_taken_at_time DESC,
@@ -84,11 +74,11 @@
 		$bigarray['tags']=[];
 	}
 		
-	$array_lib=$EasyPDO->executequery("SELECT","SUM(file_size+file_size_webp) AS total FROM photos");
+	$array_lib=$EasyPDO->executequery("SELECT","substr(time_taken_at_date, 1, 4) AS years, SUM(file_size) AS size_files, SUM(file_size_webp) AS size_webp, COUNT() as count_files FROM photos WHERE file_status = 0 GROUP BY substr(time_taken_at_date, 1, 4)");
 
 	if($array_lib['status']===true)
 	{		
-		$bigarray['size']=$array_lib['datas'][0]['total'];
+		$bigarray['size']=$array_lib['datas'];
 	}
 	else
 	{
