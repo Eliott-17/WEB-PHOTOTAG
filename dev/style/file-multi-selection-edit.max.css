@@ -14,3 +14,8 @@ aside#infocontent h3.conflict span.solver
 	cursor: pointer;
 	display: inline;
 }
+
+aside#infocontent h3.lockconflict
+{
+	color: darkorange;
+}

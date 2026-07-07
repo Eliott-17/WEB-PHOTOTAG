@@ -45,6 +45,8 @@
 			$mem['comment']=null;
 			$mem['people']=null;
 			$mem['other']=null;
+			
+			$mem['file_is_private']=null;
 
 			$flag['date']=0;
 			$flag['time']=0;
@@ -59,6 +61,8 @@
 			$flag['comment']=0;
 			$flag['people']=0;
 			$flag['other']=0;
+
+			$flag['file_is_private']=0;
 			
 			$filedata=[];
 
@@ -66,19 +70,20 @@
 			{
 				//pour l'init
 
-				if($mem['date']==null) 			$mem['date']=$value['time_taken_at_date'];
-				if($mem['time']==null) 			$mem['time']=$value['time_taken_at_time'];
-				if($mem['zone']==null) 			$mem['zone']=$value['time_taken_at_zone'];
+				if($mem['date']==null) 					$mem['date']=$value['time_taken_at_date'];
+				if($mem['time']==null) 					$mem['time']=$value['time_taken_at_time'];
+				if($mem['zone']==null) 					$mem['zone']=$value['time_taken_at_zone'];
 				
-				if($mem['continent']==null) 	$mem['continent']=$value['tag_continent'];
-				if($mem['country']===null) 		$mem['country']=$value['tag_country'];
-				if($mem['city']===null) 		$mem['city']=$value['tag_city'];
-				if($mem['place']===null) 		$mem['place']=$value['tag_place'];
+				if($mem['continent']==null) 			$mem['continent']=$value['tag_continent'];
+				if($mem['country']===null) 				$mem['country']=$value['tag_country'];
+				if($mem['city']===null) 				$mem['city']=$value['tag_city'];
+				if($mem['place']===null) 				$mem['place']=$value['tag_place'];
 				
-				if($mem['activity']===null) 	$mem['activity']=$value['tag_activity'];
-				if($mem['comment']===null) 		$mem['comment']=$value['tag_comment'];
-				if($mem['people']===null) 		$mem['people']=$value['tag_people'];
-				if($mem['other']===null) 		$mem['other']=$value['tag_other'];
+				if($mem['activity']===null) 			$mem['activity']=$value['tag_activity'];
+				if($mem['comment']===null) 				$mem['comment']=$value['tag_comment'];
+				if($mem['people']===null) 				$mem['people']=$value['tag_people'];
+				if($mem['other']===null) 				$mem['other']=$value['tag_other'];
+				if($mem['file_is_private']===null) 		$mem['file_is_private']=$value['file_is_private'];
 				
 				//pour le storage
 
@@ -97,33 +102,36 @@
 				$filedata[$value['file_original_name']]['other']=$value['tag_other'];	
 
 				$filedata[$value['file_original_name']]['id']=$value['id'];		
+				$filedata[$value['file_original_name']]['file_is_private']=$value['file_is_private'];	
 				//$filedata[$value['file_original_name']]['file_hash']=$value['file_hash'];		
 				
 				//pour le flag
 
-				if($mem['date']!=$value['time_taken_at_date']) $flag['date']++;
-				if($mem['time']!=$value['time_taken_at_time']) $flag['time']++;
-				if($mem['zone']!=$value['time_taken_at_zone']) $flag['zone']++;
+				if($mem['date']!=$value['time_taken_at_date']) 					$flag['date']++;
+				if($mem['time']!=$value['time_taken_at_time']) 					$flag['time']++;
+				if($mem['zone']!=$value['time_taken_at_zone']) 					$flag['zone']++;
 
-				if($mem['continent']!=$value['tag_continent']) $flag['continent']++;
-				if($mem['country']!=$value['tag_country']) $flag['country']++;
-				if($mem['city']!=$value['tag_city']) $flag['city']++;
-				if($mem['place']!=$value['tag_place']) $flag['place']++;
+				if($mem['continent']!=$value['tag_continent']) 					$flag['continent']++;
+				if($mem['country']!=$value['tag_country']) 						$flag['country']++;
+				if($mem['city']!=$value['tag_city']) 							$flag['city']++;
+				if($mem['place']!=$value['tag_place']) 							$flag['place']++;
 				
-				if($mem['activity']!=$value['tag_activity']) $flag['activity']++;
-				if($mem['comment']!=$value['tag_comment']) $flag['comment']++;
-				if($mem['people']!=$value['tag_people']) $flag['people']++;
-				if($mem['other']!=$value['tag_other'])	 $flag['other']++;	
+				if($mem['activity']!=$value['tag_activity']) 					$flag['activity']++;
+				if($mem['comment']!=$value['tag_comment']) 						$flag['comment']++;
+				if($mem['people']!=$value['tag_people']) 						$flag['people']++;
+				if($mem['other']!=$value['tag_other'])	 						$flag['other']++;	
+
+				if($mem['file_is_private']!=$value['file_is_private'])	 		$flag['file_is_private']++;	
 				
 				$total_size+=$value['file_size'];
-				
-				//$fReturn->addConsole($key.":".$value['tag_continent']);
 			}
 			
 			$bigarray['flag']=$flag;
 			$bigarray['mem']=$mem;
 			$bigarray['total_size']=$total_size;			
 			$bigarray['filedata']=$filedata;
+			
+			$fReturn->addConsole(print_r($bigarray,true));
 
 			$fReturn->addConsole("[PHP EXECUTED] file-selection-load-tags.php");			
 			$fReturn->addCallBack("FILEMULTISELECTION_CallBack_load", $bigarray)->fetch();

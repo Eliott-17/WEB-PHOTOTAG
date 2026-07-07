@@ -174,8 +174,17 @@ var FILEMULTISELECTION_CallBack_load = function CallBack_load(ldata)
 				else $('aside#infocontent h3#'+key+' input').val("");
 			}
 			
-			$('aside#infocontent h3#'+key).addClass('conflict');
-			$('aside#infocontent h3#'+key+' span.unedit').html("{ Different values }");
+			if(key=="file_is_private")
+			{		
+				$('aside#infocontent h3.lockconflict').removeClass('hidden');
+				$('div.privacy_mode_locked').removeClass("hidden");
+				$('div.privacy_mode_unlocked').removeClass("hidden");	
+			}
+			else
+			{
+				$('aside#infocontent h3#'+key).addClass('conflict');
+				$('aside#infocontent h3#'+key+' span.unedit').html("{ Different values }");
+			}
 		}	
 		else
 		{
@@ -200,6 +209,11 @@ var FILEMULTISELECTION_CallBack_load = function CallBack_load(ldata)
 			{
 				$('aside#infocontent h3#'+key+' input').val(formatDateTime('00000000'+g_data['mem'][key]+'000000','input-date'));
 				$('aside#infocontent h3#'+key+' span.unedit').html(formatDateTime('00000000'+g_data['mem'][key]+'000000','output-zone'));
+			}
+			else if(key=="file_is_private")
+			{
+				$('aside#infocontent h3.lockconflict').addClass('hidden');				
+				FILEINFO_CallBack_lock(g_data['mem'][key]);
 			}
 			else
 			{
