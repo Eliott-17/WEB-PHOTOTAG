@@ -2,7 +2,7 @@
 //Variables globales *********************************************
 //****************************************************************	
 
-let vSECTION_active="library";
+let vSECTION_active="explore";
 let vSECTION_active_mem="";
 
 let vGRID_scroll_lock = false;	//Chargement progressif: FLAG qui limite l'action scroll quand on est en train de charger la grille
@@ -17,7 +17,7 @@ let SECTIONS = {
     library:	{update:true,offset:0,memdata:null},
     untagged: 	{update:true,offset:0,memdata:null},
     search: 	{update:true,offset:0,memdata:null,taglist:1},
-    explore: 	{update:false} //chargé à l'init
+    explore: 	{update:true} //chargé à l'init
 };
 
 let last_select=-1;		//mémorise le dernier uniqueid sélectioné
