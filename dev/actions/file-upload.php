@@ -80,6 +80,16 @@ if (!empty($_FILES['file']) && !empty($_FILES['preview'])) {
 			$strdate_taken_at_zone = $fuseau;
 			$strdate_taken_at_time = $date->format('His');
 		}
+		else
+		{
+			$regex = '/((?:19\d{2}|20\d{2}|2100)(?:0[0-9]|1[0-2])(?:0[0-9]|[12][0-9]|3[01]))(?:.*?((?:[01][0-9]|2[0-4])[0-5][0-9][0-5][0-9]))?/';
+			
+			if (preg_match($regex, $name, $matches)) 
+			{
+				if (isset($matches[1])) $strdate_taken_at_date = $matches[1];
+				if (isset($matches[2])) $strdate_taken_at_time = $matches[2];
+			}
+		}
     }
 	
 	if ($file_type == 1) {
@@ -132,8 +142,22 @@ if (!empty($_FILES['file']) && !empty($_FILES['preview'])) {
     $EasyPDO->addFields('time_added_at', $strdate_added);	
     $return=$EasyPDO->insert('photos');
 
-	$fReturn->addRawText("OK")->fetch();
-} else {
-    $fReturn->addRawText("Upload fail")->fetch();
-}
+	if($return['status']===true) 
+	{
+		$fReturn->addRawText("OK")->fetch();
+	}
+	else
+	{
+		if(is_file($targetHD)) unlink($targetHD);
+		if(is_file($targetSD)) unlink($targetSD);	
+		
+		$fReturn->addConsole("[PHP] SQL error while recording file");
+		if(ENV=="DEV") $fReturn->addConsole(print_r($return,true));	
+		
+		$fReturn->addRawText("Already in database")->fetch();
+	}
+} 
+
+$fReturn->addRawText("Upload form fail")->fetch();
+
 ?>

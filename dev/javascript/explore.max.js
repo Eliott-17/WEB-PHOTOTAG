@@ -234,7 +234,7 @@ var EXPLORE_CallBack = function CallBack(datas)
 	});
 
 	$('aside div#datalist').html(html);
-	$('aside datalist#fastsearch').html(htmlfull);
+	$('aside datalist#fastsearch').html('<option data-tag="trash" value="TRASH"/>'+htmlfull);
 	htmlfilter += '<div class="fullrow"><h2 class="">Total disk space <span id="totaldisk">-</span></h2></div>';
 
 	$('main section.explore').html(htmlfilter);

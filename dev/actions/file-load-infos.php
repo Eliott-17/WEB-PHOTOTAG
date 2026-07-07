@@ -54,8 +54,13 @@
 			$bigarray['info']=$array_file['datas'];
 			$bigarray['lform']=$_GET['lform'];
 		}
+		else
+		{
+			$fReturn->addConsole("[PHP] SQL error while loading list");
+			if(ENV=="DEV") $fReturn->addConsole(print_r($array,true));	
+		}
 	}
-
+	
 	$fReturn->addConsole("[PHP EXECUTED] file-load-infos.php");
 	$fReturn->addCallBack("FILEINFO_CallBack_data", $bigarray)->fetch();	
 ?>

@@ -41,8 +41,6 @@ $(document).ready(function(){
 					return this.value === val;
 				});
 				
-				
-				
 				if(option.length !== 0)
 				{
 					$('#filter_tag').val(option.attr('data-tag'));
@@ -78,7 +76,8 @@ $(document).ready(function(){
 			DISPLAY_set_view('grid');
 			DISPLAY_section(vSECTION_active_mem);
 			DISPLAY_filters(false);
-			//$('section.grid div').removeClass('hidden');
+			DISPLAY_menu($('#flush-trash'), false);
+
 	});
 
 	$('div#searchmenu div button.advanced-filters').on('click', 	function() {

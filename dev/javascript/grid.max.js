@@ -204,7 +204,30 @@ var GRID_load_CallBack = function load_CallBack(data_array)
 
 	$('main').off('click.gridSelect');
 	$('main').off('click.gridOpen');
+	$('main').off('click.gridRestaure');
+	
+	
+	//****************************************************************
+	//Ajout du bouton de restoration (en mode corbeille) *************
+	//****************************************************************	
 
+	$('main').on('click.gridRestaure', 'div.button-restaure', function(e) {
+		
+		let current_id = $(this).parent().attr('id');
+		let hash = $('div#'+current_id+' div.media-container').attr('data-src');
+		
+		CORE_get('actions/file-restaure.php?hash='+hash);
+		
+		$('div#'+current_id).remove();
+		
+		let count=parseInt($('nav#main span#filterresult').html());
+		count--;
+		$('nav#main span#filterresult').html(count);
+		
+		vFILEINFO_FLAG_SAVED=true;
+		vFILEINFOMULTISELECTION_FLAG_SAVED=true;
+			
+	});
 	//****************************************************************
 	//Ajout du bouton de sélection d'une photo sur la grille *********
 	//****************************************************************	
@@ -298,6 +321,14 @@ var GRID_load_id = function load_id()
 function addElement(dir, bdd)
 {
 	let file_orientationtxt="landscape";
+	let trash = false;
+	let target = '';
+	
+	if(bdd.file_status!=undefined) if(bdd.file_status==2) 
+	{
+		trash=true;
+		target = 't';
+	}
 	
 	if(bdd.file_orientation==1) file_orientationtxt="portrait";
 		
@@ -306,27 +337,37 @@ function addElement(dir, bdd)
 	html+= '<div id="" class="element notselected wrapper '+file_orientationtxt+'">';
 	
 	html+= '	<div class="media-container" data-type="'+bdd.file_type+'" data-src="'+bdd.file_hash+'" data-id="'+bdd.id+'" id="media_'+bdd.id+'">';
-	
+
 	if(bdd.file_type == 0) 
 	{
-		html+= '		<img src="sd-'+bdd.file_hash+'" loading="lazy">';
+		html+= '		<img src="'+target+'sd-'+bdd.file_hash+'" loading="lazy">';
 	}
 	if(bdd.file_type == 1)
 	{
-		html+= '		<video src="hd-'+bdd.file_hash+'" poster="sd-'+bdd.file_hash+'" controlslist="nodownload nofullscreen noremoteplayback"></video>';
+		html+= '		<video src="'+target+'hd-'+bdd.file_hash+'" poster="sd-'+bdd.file_hash+'" controlslist="nodownload nofullscreen noremoteplayback"></video>';
 		ux = "video";
 	}
 	
 	html+= '	</div>';
 	
-	html+= '	<div class="button-select cursor">';
-	html+= '		<span class="material-symbols-outlined nothover">radio_button_unchecked</span>';
-	html+= '		<span class="material-symbols-outlined hover">check_circle</span>';
-	html+= '		<span class="material-symbols-outlined caseselected">check</span>';
-	html+= '	</div>';
-	html+= '	<div class="button-fullscreen cursor '+ux+'">';			
-	html+= '		<span class="material-symbols-outlined">open_in_full</span>';
-	html+= '	</div>';
+	if(!trash) 
+	{
+		html+= '	<div class="button-select cursor">';
+		html+= '		<span class="material-symbols-outlined nothover">radio_button_unchecked</span>';
+		html+= '		<span class="material-symbols-outlined hover">check_circle</span>';
+		html+= '		<span class="material-symbols-outlined caseselected">check</span>';
+		html+= '	</div>';
+		html+= '	<div class="button-fullscreen cursor '+ux+'">';			
+		html+= '		<span class="material-symbols-outlined">open_in_full</span>';
+		html+= '	</div>';
+	}
+	else
+	{
+		html+= '	<div class="button-restaure cursor">';			
+		html+= '		<span class="material-symbols-outlined">restore_from_trash</span>';
+		html+= '	</div>';		
+	}
+	
 	html+= '</div>';
 		
 	return html;	

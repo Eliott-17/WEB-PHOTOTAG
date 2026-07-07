@@ -101,9 +101,9 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/datas.php');
 			}
 			?>
 		</nav>
-		<nav>
+		<nav id="status">
 			<div id="upload-status" class="ux-infobox ux-background ux-hidden-opacity ux-hidden-zindex">Upload in progress&nbsp;<span id="fileprogress"></span><br><div id="progressbar">45%</div></div>
-			<div id="select-status" class="ux-infobox ux-background ux-hidden-opacity ux-hidden-zindex">Selection of <span class="elementscnt"></span></br>			
+			<div id="select-status" class="ux-infobox ux-background ux-hidden-opacity ux-hidden-zindex">Selection of<span class="elementscnt"></span></br>			
 				<div>
 					<div class="deselectall">
 						<span class="material-symbols-outlined cursor unselect">radio_button_unchecked</span>
@@ -120,6 +120,14 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/datas.php');
 					&nbsp;<span id="delete_cancel" class="material-symbols-outlined cursor">close_small</span>
 				</div>
 			</div>			
+			<div id="flush-trash" class="ux-infobox ux-background ux-hidden-opacity ux-hidden-zindex">Empty trash</br>			
+				<form method="post" action="actions/trash-flush.php" class="post">
+					<input type="hidden" name="token" class="token" value=""/>
+					<button class="submit">
+						<span id="flush_confirm" class="material-symbols-outlined cursor">delete_forever</span>
+					</button>
+				</form>
+			</div>	
 		</nav>
 		<?php
 			if(is_session_valid())

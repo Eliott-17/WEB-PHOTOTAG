@@ -177,3 +177,21 @@ var FILTERS_checkbox_post = function checkbox_post(is_checked=null)
 
 	GRID_load();
 }
+
+var FILTERS_trash_CallBack = function trash_CallBack(count)
+{
+	
+	$('nav#main span#filterapply').html('TRASH');	
+	$('nav#main span#filterresult').html(count);
+	
+	DISPLAY_menu($('#flush-trash'), true);
+}
+
+var FILTERS_flush_CallBack = function trash_CallBack()
+{	
+	$('nav#main span#filterresult').html(0);
+	$('section.search').html('');
+	
+	DISPLAY_menu($('#flush-trash'), false);
+	
+}

@@ -154,10 +154,16 @@ main section.grid div.element
 	 height: 220px;
 }
 
-main section.grid div.element div.button-select {
+main section.grid div.element div.button-select,
+main section.grid div.element div.button-restaure
+{
   position: absolute;
   top: 10px;
   left: 10px;
+}
+
+main section.grid div.element div.button-restaure:hover span {
+	color:green;
 }
 
 main section.grid div.element div.button-fullscreen.photo {
@@ -235,8 +241,8 @@ main section.grid div.selected span.caseselected {
 	border: 0px;
 }
 
-div#select-status div span,div#select-trash div span { padding: 15px;  }
-div#select-status div,div#select-trash div { text-align: center;  }
+nav#status span { padding: 15px;  }
+nav#status div.ux-infobox div { text-align: center;  }
 
 div#select-status div span#tag:hover, div#select-status div span#tag.fullscreen { color: #0b57d0 }
 div#select-status div span#tag.green { color: green; }
@@ -249,7 +255,8 @@ div#select-status div div.deselectall span.unselect { position: absolute; left: 
 div#select-status div div.deselectall span.select { opacity: 1; }
 div#select-status div div.deselectall:hover span.select { opacity: 0; }
 
-div#select-trash div span#delete_cancel:hover { color: red }
+div#select-trash div span#delete_cancel:hover, 
+div#flush-trash div span#flush_confirm:hover { color: red }
 div#select-trash div span#delete_confirm:hover { color: green }
 
 div#uploaddrag

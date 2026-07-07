@@ -50,6 +50,12 @@
 			//$fReturn->addFailMessage('Internal error')->addConsole($filenametestSD)->fetch();
 		}	
 	}
+
+	$date = new DateTime();
+    $date->setTimezone(new DateTimeZone('UTC'));
+    $strdate_updated = $date->format('Y-m-d H:i:s');		
+
+	$EasyPDO->addFields('time_modified_at',$strdate_updated); //last updated info	
 	
 	$EasyPDO->addFields('file_status',2);		
 	$EasyPDO->update('photos', 'id IN', $ids);	

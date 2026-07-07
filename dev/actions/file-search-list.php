@@ -64,6 +64,39 @@
 		case 'tag_people': $tagname="People"; break;
 		case 'tag_other': $tagname="Information"; break;
 		case 'years': $tagname='years'; break;
+		case 'trash': 
+
+			$EasyPDO->addFields('file_hash');
+			$EasyPDO->addFields('time_taken_at_date');
+			$EasyPDO->addFields('time_taken_at_zone');
+			$EasyPDO->addFields('time_taken_at_time');
+			$EasyPDO->addFields('file_orientation');
+			$EasyPDO->addFields('file_type');
+			$EasyPDO->addFields('file_status');
+			$EasyPDO->addFields('id');
+
+			$finalquery='file_status = 2 ORDER BY time_taken_at_date DESC, time_taken_at_zone DESC, time_taken_at_time DESC, id ASC';
+
+			$EasyPDO->addConditionalData('offset',$_GET['offset']);
+
+			$result_data=$EasyPDO->select('photos', $finalquery." LIMIT 50 OFFSET:offset");
+
+			if($result_data['status']!==true) 
+			{
+				if(ENV=="DEV") $fReturn->addConsole(print_r($result_data,true));
+				$fReturn->addConsole("[PHP] SQL error while loading trash data");	
+			}
+			else
+			{
+				//$fReturn->addConsole(print_r($result_data['datas'],true));
+				$return = $result_data['datas'];		
+				$fReturn->addCallBack("GRID_load_CallBack", array("datas"=>$return));				
+				$fReturn->addCallBack("FILTERS_trash_CallBack",$result_data['count']);
+			}
+			
+			$fReturn->fetch();
+
+		break;
 		default: 
 			$fReturn->addConsole("[PHP] Tag ".$_POST['tag']." invalid")->fetch();		
 		break;
