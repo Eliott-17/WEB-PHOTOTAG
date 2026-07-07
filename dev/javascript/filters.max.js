@@ -126,8 +126,6 @@ var FILTERS_search_CallBack = function search_CallBack(datas)
 		
 	});
 	
-	console.log(datas);
-	
 	if(!search_flag_limit && element_check_callback)
 	{
 		search_flag_limit=true;

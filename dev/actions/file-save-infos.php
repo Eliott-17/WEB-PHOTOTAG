@@ -108,8 +108,8 @@
 	
 	$affectedrow = $EasyPDO->update('photos', 'id IN', $dataarray);
 
-	$fReturn->addConsole("Request update:".$count);	
-	$fReturn->addConsole("Total Update data:".$affectedrow['count']);
+	//$fReturn->addConsole("Request update:".$count);	
+	//$fReturn->addConsole("Total Update data:".$affectedrow['count']);
 	
 	if($count==1)
 	{

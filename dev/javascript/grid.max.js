@@ -39,7 +39,7 @@ $(document).ready(function(){
 			if(remaining>=0)
 			{
 				vGRID_scroll_lock=true;
-				console.log("reload from scroll",remaining);
+				//console.log("reload from scroll",remaining);
 				SECTIONS[vSECTION_active].update=true;
 				SECTIONS[vSECTION_active].offset+=50;
 				GRID_load();

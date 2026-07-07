@@ -91,5 +91,5 @@ var FILEOPENFULLSCREEN_Loadmedia = function LoadMedia(id)
 	if(file_type == 0) $('section#fullscreen div.media').html('<img src="hd-'+file_hash+'" loading="lazy">');
 	if(file_type == 1) $('section#fullscreen div.media').html('<video src="hd-'+file_hash+'" poster="sd-'+file_hash+'" controls autoplay muted preload="auto" playsinline></video>');	
 
-	console.log(vSECTION_active, media_id, file_hash);
+	//console.log(vSECTION_active, media_id, file_hash);
 }
