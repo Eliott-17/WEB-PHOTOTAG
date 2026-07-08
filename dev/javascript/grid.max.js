@@ -51,6 +51,8 @@ $(document).ready(function(){
 
 var GRID_load = function load()
 {
+	//console.log(vFILEINFO_FLAG_SAVED,vFILEINFOMULTISELECTION_FLAG_SAVED,vNAV_FLAG_UPLOAD,vEXPLOREFILTER_FLAG_CHANGED);
+	
 	let offset_reset=false;
 	
 	if(vFILEINFO_FLAG_SAVED || vFILEINFOMULTISELECTION_FLAG_SAVED)
@@ -64,8 +66,10 @@ var GRID_load = function load()
 		vFILEINFOMULTISELECTION_FLAG_SAVED=false;
 		
 		vNAV_FLAG_UPLOAD=true;
+		console.log("vNAV_FLAG_UPLOAD 2");
 		vEXPLOREFILTER_FLAG_CHANGED=true;
-		
+		console.log("vEXPLOREFILTER_FLAG_CHANGED 3");
+	
 		offset_reset=true;
 	}
 	
@@ -91,10 +95,11 @@ var GRID_load = function load()
 	}
 	
 	if(SECTIONS[vSECTION_active].offset!=undefined) {
-		if(SECTIONS[vSECTION_active].offset==-1 || offset_reset) {
+		if(offset_reset) {
 			SECTIONS[vSECTION_active].offset=0;
+			console.log("Offset reset for",vSECTION_active,"From GRID");
 	}}
-	
+		
 	if(SECTIONS[vSECTION_active].update==true)
 	{
 		console.log("GRID",vSECTION_active,"update request");
@@ -225,8 +230,9 @@ var GRID_load_CallBack = function load_CallBack(data_array)
 		$('nav#main span#filterresult').html(count);
 		
 		vFILEINFO_FLAG_SAVED=true;
-		vFILEINFOMULTISELECTION_FLAG_SAVED=true;
-			
+		console.log("vFILEINFO_FLAG_SAVED 2");
+		vFILEINFOMULTISELECTION_FLAG_SAVED=true;	
+		console.log("vFILEINFOMULTISELECTION_FLAG_SAVED 1");
 	});
 	//****************************************************************
 	//Ajout du bouton de sélection d'une photo sur la grille *********
@@ -249,6 +255,7 @@ var GRID_load_CallBack = function load_CallBack(data_array)
 					for(i=(last_select+1);i<current_id;i++) 
 					{
 						$('div#'+vSECTION_active+'_'+i).addClass('selected');
+						$('div#'+vSECTION_active+'_'+i).removeClass('notselected');
 					}
 				}
 				else
@@ -256,6 +263,7 @@ var GRID_load_CallBack = function load_CallBack(data_array)
 					for(i=(current_id+1);i<last_select;i++) 
 					{
 						$('div#'+vSECTION_active+'_'+i).addClass('selected');
+						$('div#'+vSECTION_active+'_'+i).removeClass('notselected');
 					}
 				}	
 			}

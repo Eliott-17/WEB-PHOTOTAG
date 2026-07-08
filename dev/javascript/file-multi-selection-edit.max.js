@@ -111,7 +111,11 @@ var FILEMULTISELECTION_unselectall = function unselect_all()
 	$('main div.element').addClass('notselected');
 	
 	//gestion du cas particulier ou on à un offset > 0 par défilement mais qu'on doit forcer le rafraishissement compplet à la désélection
-	if(vSECTION_active=="untagged") vNAV_FLAG_UPLOAD=true; 
+	if(vSECTION_active=="untagged") 
+	{
+		vNAV_FLAG_UPLOAD=true; 
+		console.log("vNAV_FLAG_UPLOAD 3");
+	}
 	
 	GRID_load(); //recharger la grille si on à changer des photos	
 }
@@ -258,6 +262,7 @@ var FILEMULTISELECTION_CallBack_success = function CallBack_success()
 	$('span#tag').html('refresh');
 	$('span#tag').addClass('green');	
 	vFILEINFOMULTISELECTION_FLAG_SAVED=true;
+	console.log("vFILEINFOMULTISELECTION_FLAG_SAVED 2");
 }
 
 var FILEMULTISELECTION_reset_ux = function reset_ux(obj, data)

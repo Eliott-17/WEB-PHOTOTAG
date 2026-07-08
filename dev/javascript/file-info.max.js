@@ -431,6 +431,8 @@ var FILEINFO_CallBack_success = function CallBack_success()
 	}, 500);
 	
 	vFILEINFO_FLAG_SAVED=true;
+	console.log("vFILEINFO_FLAG_SAVED 1");
+
 }
 
 function FILEINFO_CallBack_lock(value)
@@ -443,9 +445,6 @@ function FILEINFO_CallBack_lock(value)
 	if(value==0) $('div.privacy_mode_unlocked').removeClass("hidden");
 	
 	$('aside#infocontent h3.lockconflict').addClass('hidden');
-	
-	vFILEINFOMULTISELECTION_FLAG_SAVED=true;
-	vFILEINFO_FLAG_SAVED=true;	
 	
 	console.log("FILEINFO_CallBack_lock",value);
 }

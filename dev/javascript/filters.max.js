@@ -172,6 +172,7 @@ var FILTERS_checkbox_post = function checkbox_post(is_checked=null)
 	FILEMULTISELECTION_unselectall();
 		
 	SECTIONS[vSECTION_active].offset=0;
+	console.log("Offset reset for",vSECTION_active,"From FILTERS");
 	SECTIONS[vSECTION_active].taglist=2;
 	SECTIONS[vSECTION_active].update=true;
 

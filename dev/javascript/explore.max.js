@@ -33,6 +33,7 @@ $(document).ready(function(){
 			if($('#filter_tag').val()!=$(this).attr('data-tag') || $('#filter_val').val()!=$(this).attr('data-val') || $('input#filters_exclude').val()!="");
 			{
 				vEXPLOREFILTER_FLAG_CHANGED=true;
+				console.log("vEXPLOREFILTER_FLAG_CHANGED 1");
 			}
 	
 			$('#filter_tag').val($(this).attr('data-tag'));
