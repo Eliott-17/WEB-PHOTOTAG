@@ -132,7 +132,7 @@
 			$bigarray['filedata']=$filedata;
 			
 			$fReturn->addConsole("[PHP EXECUTED] file-selection-load-tags.php");			
-			$fReturn->addCallBack("FILEMULTISELECTION_CallBack_load", $bigarray)->fetch();		
+			$fReturn->addCallBack("FILEMULTISELECTION_load_CallBack", $bigarray)->fetch();		
 		}
 	}
 

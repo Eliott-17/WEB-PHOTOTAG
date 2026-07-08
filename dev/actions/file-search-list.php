@@ -319,7 +319,7 @@
 		$fReturn->addCallBack("GRID_load_CallBack", array("datas"=>$return));		
 	}
 
-	$fReturn->addConsole("[PHP EXECUTE] file-search-list.php");
+	$fReturn->addConsole("[PHP EXECUTED] file-search-list.php");
 	$fReturn->fetch();
 
 	

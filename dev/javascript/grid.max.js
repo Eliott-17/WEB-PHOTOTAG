@@ -9,6 +9,9 @@ let vGRID_scroll_lock = false;	//Chargement progressif: FLAG qui limite l'action
 
 let vGRID_scrollmem; 			//Restaure le scroll quand on sirt du fullscreen
 
+let GRID_debug=false;
+let CALLBACK_debug=false;
+
 //****************************************************************
 //Variables locales *********************************************
 //****************************************************************	
@@ -51,7 +54,7 @@ $(document).ready(function(){
 
 var GRID_load = function load()
 {
-	//console.log(vFILEINFO_FLAG_SAVED,vFILEINFOMULTISELECTION_FLAG_SAVED,vNAV_FLAG_UPLOAD,vEXPLOREFILTER_FLAG_CHANGED);
+	if(GRID_debug) console.log(vFILEINFO_FLAG_SAVED,vFILEINFOMULTISELECTION_FLAG_SAVED,vNAV_FLAG_UPLOAD,vEXPLOREFILTER_FLAG_CHANGED);
 	
 	let offset_reset=false;
 	
@@ -66,9 +69,7 @@ var GRID_load = function load()
 		vFILEINFOMULTISELECTION_FLAG_SAVED=false;
 		
 		vNAV_FLAG_UPLOAD=true;
-		console.log("vNAV_FLAG_UPLOAD 2");
 		vEXPLOREFILTER_FLAG_CHANGED=true;
-		console.log("vEXPLOREFILTER_FLAG_CHANGED 3");
 	
 		offset_reset=true;
 	}
@@ -97,7 +98,7 @@ var GRID_load = function load()
 	if(SECTIONS[vSECTION_active].offset!=undefined) {
 		if(offset_reset) {
 			SECTIONS[vSECTION_active].offset=0;
-			console.log("Offset reset for",vSECTION_active,"From GRID");
+			if(GRID_debug) console.log("Offset reset for",vSECTION_active,"From GRID");
 	}}
 		
 	if(SECTIONS[vSECTION_active].update==true)
@@ -137,7 +138,7 @@ var GRID_load = function load()
 	}
 	else
 	{
-		console.log("GRID",vSECTION_active,"no action");		
+		if(GRID_debug) console.log("GRID",vSECTION_active,"no action");		
 	}
 }
 
@@ -230,9 +231,7 @@ var GRID_load_CallBack = function load_CallBack(data_array)
 		$('nav#main span#filterresult').html(count);
 		
 		vFILEINFO_FLAG_SAVED=true;
-		console.log("vFILEINFO_FLAG_SAVED 2");
-		vFILEINFOMULTISELECTION_FLAG_SAVED=true;	
-		console.log("vFILEINFOMULTISELECTION_FLAG_SAVED 1");
+		vFILEINFOMULTISELECTION_FLAG_SAVED=true;
 	});
 	//****************************************************************
 	//Ajout du bouton de sélection d'une photo sur la grille *********
@@ -309,7 +308,7 @@ var GRID_load_CallBack = function load_CallBack(data_array)
 	
 	DISPLAY_selection();
 
-	console.log("GRID_load_CallBack",SECTIONS[vSECTION_active].offset);
+	if(CALLBACK_debug) console.log("GRID_load_CallBack",SECTIONS[vSECTION_active].offset);
 }
 
 var GRID_load_id = function load_id()

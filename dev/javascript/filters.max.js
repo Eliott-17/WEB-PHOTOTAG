@@ -136,7 +136,7 @@ var FILTERS_search_CallBack = function search_CallBack(datas)
 		search_flag_limit=false;
 	}			
 	
-	console.log("FILTERS_search_CallBack");
+	if(CALLBACK_debug) console.log("FILTERS_search_CallBack");
 }
 
 var FILTERS_checkbox_post = function checkbox_post(is_checked=null)

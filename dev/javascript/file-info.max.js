@@ -401,7 +401,7 @@ var FILEINFO_CallBack_data = function CallBack(data)
 	
 	//informations
 
-	FILEINFO_CallBack_lock(datas.file_is_private);
+	FILEINFO_lock_CallBack(datas.file_is_private);
 			
 	$('h3#time_added_at').html(formatUTCToLocalWithTimezone(datas.time_added_at));
 	
@@ -431,11 +431,9 @@ var FILEINFO_CallBack_success = function CallBack_success()
 	}, 500);
 	
 	vFILEINFO_FLAG_SAVED=true;
-	console.log("vFILEINFO_FLAG_SAVED 1");
-
 }
 
-function FILEINFO_CallBack_lock(value)
+function FILEINFO_lock_CallBack(value)
 {
 	$('div.privacy_mode_locked').addClass('hidden');
 	$('div.privacy_mode_unlocked').addClass('hidden');
@@ -446,7 +444,7 @@ function FILEINFO_CallBack_lock(value)
 	
 	$('aside#infocontent h3.lockconflict').addClass('hidden');
 	
-	console.log("FILEINFO_CallBack_lock",value);
+	if(CALLBACK_debug) console.log("FILEINFO_lock_CallBack",value);
 }
 
 function processExif(data, indent = 0) {

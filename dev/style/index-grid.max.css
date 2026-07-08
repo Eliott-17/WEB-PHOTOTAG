@@ -50,6 +50,12 @@ main {
 	overflow-x: hidden;
 }
 
+img,video {
+	
+	background: url("../images/Loading_icon.gif") center no-repeat;
+	
+}
+
 /*main:has(section#fullscreen.hidden)
 {
 	overflow-x: hidden;

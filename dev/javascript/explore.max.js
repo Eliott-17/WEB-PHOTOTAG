@@ -33,7 +33,6 @@ $(document).ready(function(){
 			if($('#filter_tag').val()!=$(this).attr('data-tag') || $('#filter_val').val()!=$(this).attr('data-val') || $('input#filters_exclude').val()!="");
 			{
 				vEXPLOREFILTER_FLAG_CHANGED=true;
-				console.log("vEXPLOREFILTER_FLAG_CHANGED 1");
 			}
 	
 			$('#filter_tag').val($(this).attr('data-tag'));
@@ -70,7 +69,7 @@ var EXPLORE_search_CallBack = function search_CallBack(datas)
 
 	vEXPLORE_SEARCH_TAGS=datas.tags; //stock le résultat de la recherche
 	
-	console.log("EXPLORE_search_CallBack");
+	if(CALLBACK_debug) console.log("EXPLORE_search_CallBack");
 }
 
 var EXPLORE_add_tags = function add_tags(tags)

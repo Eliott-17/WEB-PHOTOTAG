@@ -190,7 +190,6 @@ function nav_tab_change()
 var NAV_open_untagg = function open_untagg(force_reload=false)
 {
 	vNAV_FLAG_UPLOAD=true;
-			console.log("vNAV_FLAG_UPLOAD 1");
 	nav_tab_change();
 	DISPLAY_section('untagged');
 }

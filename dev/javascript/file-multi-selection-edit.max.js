@@ -3,10 +3,12 @@
 //en lot (bouton tag)
 //***********************************************
 
-var vFILEINFOMULTISELECTION_FLAG_SAVED=false;
-var vFILEINFOMULTISELECTION_mem=null;
-var g_data_mem=null;
-var g_data=null;
+let vFILEINFOMULTISELECTION_FLAG_SAVED=false;
+let vFILEINFOMULTISELECTION_mem=null;
+let g_data_mem=null;
+let g_data=null;
+
+let FILEMULTISELECTION_debug = false;
 
 $(document).ready(function(){
 
@@ -114,7 +116,6 @@ var FILEMULTISELECTION_unselectall = function unselect_all()
 	if(vSECTION_active=="untagged") 
 	{
 		vNAV_FLAG_UPLOAD=true; 
-		console.log("vNAV_FLAG_UPLOAD 3");
 	}
 	
 	GRID_load(); //recharger la grille si on à changer des photos	
@@ -138,7 +139,7 @@ var FILEMULTISELECTION_load = function load(force_reload=false)
 		
 	if(hash_array.length<=1)
 	{
-		console.log('FILEMULTISELECTION_load => NO data update, require two files selected');
+		if(FILEMULTISELECTION_debug) console.log('FILEMULTISELECTION_load => NO data update, require two files selected');
 	}
 	else if(JSON.stringify(vFILEINFOMULTISELECTION_mem)!==JSON.stringify(hash_array) || force_reload) 
 	{		
@@ -149,15 +150,15 @@ var FILEMULTISELECTION_load = function load(force_reload=false)
 		vFILEINFOMULTISELECTION_mem=hash_array;
 		vFILEINFO_load_mem=null; //forcer le rechargement des data en sélection simple
 		
-		console.log('FILEMULTISELECTION_load => data update request');
+		if(FILEMULTISELECTION_debug) console.log('FILEMULTISELECTION_load => data update request');
 	}
 	else
 	{
-		console.log('FILEMULTISELECTION_load => NO data update, unchanged selection');
+		if(FILEMULTISELECTION_debug) console.log('FILEMULTISELECTION_load => NO data update, unchanged selection');
 	}
 }
 
-var FILEMULTISELECTION_CallBack_load = function CallBack_load(ldata)
+var FILEMULTISELECTION_load_CallBack = function load(ldata)
 {
 	g_data = structuredClone(ldata);	
 	g_data_mem = structuredClone(ldata);	
@@ -217,7 +218,7 @@ var FILEMULTISELECTION_CallBack_load = function CallBack_load(ldata)
 			else if(key=="file_is_private")
 			{
 				$('aside#infocontent h3.lockconflict').addClass('hidden');				
-				FILEINFO_CallBack_lock(g_data['mem'][key]);
+				FILEINFO_lock_CallBack(g_data['mem'][key]);
 			}
 			else
 			{
@@ -238,7 +239,7 @@ var FILEMULTISELECTION_CallBack_load = function CallBack_load(ldata)
 	$('h3.privacy_mode').removeClass('hidden');
 	$('input.conflictedit').val(JSON.stringify(g_data['flag']));
 	
-	console.log('FILEMULTISELECTION_CallBack_load');
+	if(CALLBACK_debug) console.log('FILEMULTISELECTION_load_CallBack');
 }
 
 var FILEMULTISELECTION_CallBack_success = function CallBack_success()
@@ -262,7 +263,6 @@ var FILEMULTISELECTION_CallBack_success = function CallBack_success()
 	$('span#tag').html('refresh');
 	$('span#tag').addClass('green');	
 	vFILEINFOMULTISELECTION_FLAG_SAVED=true;
-	console.log("vFILEINFOMULTISELECTION_FLAG_SAVED 2");
 }
 
 var FILEMULTISELECTION_reset_ux = function reset_ux(obj, data)
