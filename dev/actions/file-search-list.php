@@ -67,6 +67,7 @@
 		case 'trash': 
 
 			$EasyPDO->addFields('file_hash');
+			$EasyPDO->addFields('file_original_name');	
 			$EasyPDO->addFields('time_taken_at_date');
 			$EasyPDO->addFields('time_taken_at_zone');
 			$EasyPDO->addFields('time_taken_at_time');

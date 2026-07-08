@@ -322,12 +322,27 @@ function addElement(dir, bdd)
 {
 	let file_orientationtxt="landscape";
 	let trash = false;
-	let target = '';
+	let before = '';
 	
 	if(bdd.file_status!=undefined) if(bdd.file_status==2) 
 	{
 		trash=true;
-		target = 't';
+	
+		const filename = bdd.file_original_name;
+
+		const pos = filename.indexOf('_');
+
+		if (pos !== -1) {
+			before = filename.substring(0, pos);
+			after  = filename.substring(pos + 1);
+		} else {
+			before = filename;
+			after = null;
+		}
+		
+		if(after==null) console.err('Inconsistent file name');
+		
+		before+='_';
 	}
 	
 	if(bdd.file_orientation==1) file_orientationtxt="portrait";
@@ -336,15 +351,15 @@ function addElement(dir, bdd)
 	let ux = "photo";
 	html+= '<div id="" class="element notselected wrapper '+file_orientationtxt+'">';
 	
-	html+= '	<div class="media-container" data-type="'+bdd.file_type+'" data-src="'+bdd.file_hash+'" data-id="'+bdd.id+'" id="media_'+bdd.id+'">';
+	html+= '	<div class="media-container" data-type="'+bdd.file_type+'" data-src="'+before+bdd.file_hash+'" data-id="'+bdd.id+'" id="media_'+bdd.id+'">';
 
 	if(bdd.file_type == 0) 
 	{
-		html+= '		<img src="'+target+'sd-'+bdd.file_hash+'" loading="lazy">';
+		html+= '		<img src="sd-'+before+bdd.file_hash+'" loading="lazy">';
 	}
 	if(bdd.file_type == 1)
 	{
-		html+= '		<video src="'+target+'hd-'+bdd.file_hash+'" poster="sd-'+bdd.file_hash+'" controlslist="nodownload nofullscreen noremoteplayback"></video>';
+		html+= '		<video src="hd-'+before+bdd.file_hash+'" poster="sd-'+bdd.file_hash+'" controlslist="nodownload nofullscreen noremoteplayback"></video>';
 		ux = "video";
 	}
 	

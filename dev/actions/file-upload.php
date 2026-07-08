@@ -88,6 +88,7 @@ if (!empty($_FILES['file']) && !empty($_FILES['preview'])) {
 			{
 				if (isset($matches[1])) $strdate_taken_at_date = $matches[1];
 				if (isset($matches[2])) $strdate_taken_at_time = $matches[2];
+				$strdate_taken_at_zone="+0000";
 			}
 		}
     }

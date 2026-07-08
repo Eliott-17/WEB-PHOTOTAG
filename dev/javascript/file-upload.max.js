@@ -109,7 +109,7 @@ function uploadFiles(files, token) {
 				$('span#fileprogress').html(treatedFiles+'/'+totalFiles);
                 $('#upload-status').append(
                     `<div id="error${errorCount}" class="text errorresponse">
-                        <span>${file.name} : Fichier trop volumineux (max 1 Go)</span>
+                        <span>${file.name}:<br/>Fichier trop volumineux (max 1 Go)</span>
                         &nbsp;<span class="material-symbols-outlined cursor">close_small</span>
                     </div>`
                 );
@@ -133,7 +133,7 @@ function uploadFiles(files, token) {
 					$('span#fileprogress').html(treatedFiles+'/'+totalFiles);
 					$('#upload-status').append(
                         `<div id="error${errorCount}" class="text errorresponse">
-                            <span>${file.name} : ${error.message || error}</span>
+                            <span>${file.name}:<br/>${error.message || error}</span>
                             &nbsp;<span class="material-symbols-outlined cursor">close_small</span>
                         </div>`
                     );

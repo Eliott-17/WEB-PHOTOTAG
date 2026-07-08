@@ -12,58 +12,91 @@
 	$validation = new Validation();
 
 	//VALIDATION FORMULAIRE
+	
+	$regex = '/^\d{14}_[a-f0-9]{64}$/';
 
-	$validation->addVerification('hash',	'sha256',		'Files id'		);	
+	$validation->addVerification('hash','preg','hash',$regex);	
 
 	$validation->Validate();
 
 	if(!$validation->isValidated())
 	{
-		$fReturn->addConsole($validation->Message())->fetch();	
+		$fReturn->addConsole($validation->Message());	
+		if(ENV=="DEV") $fReturn->addConsole($_GET['hash']);
+		$fReturn->fetch();
 	}
 	
 	//récupération du nom original + hash
+	$parts = explode('_', $_GET['hash'], 2);
 	
 	$EasyPDO->addFields('file_original_name');
 	$EasyPDO->addFields('file_hash');
-	$EasyPDO->addConditionalData('file_hash',$_GET['hash']);
+	$EasyPDO->addConditionalData('file_hash',$parts[1]);
 	$return=$EasyPDO->select('photos', 'file_hash=:file_hash');
 	
-	if($return['status']===true)
+	if($return['status']===true && $return['count']==1)
 	{
 		$value=$return['datas'][0];
 		
-		$filenametestHD = $full_dir.$value['file_original_name'];
-		$filenametestSD = $full_dir.$value['file_hash'].".webp";
+		$filename = $value['file_original_name'];
 
-		$filenametestHDtrash = $full_dir.'trash/'.$value['file_original_name'];
-		$filenametestSDtrash = $full_dir.'trash/'.$value['file_hash'].".webp";
-		
-		if (file_exists($filenametestHDtrash)) 
-		{
-			if(!rename($filenametestHDtrash, $filenametestHD)) $fReturn->addFailMessage('Internal error')->addConsole($filenametestHDtrash)->fetch();
+		$pos = strpos($filename, '_');
+
+		if ($pos !== false) {
+			$before = substr($filename, 0, $pos);
+			$after  = substr($filename, $pos + 1);
+		} else {
+			$before = $filename;
+			$after  = null;
 		}
-		if (file_exists($filenametestSDtrash)) 
-		{
-			if(!rename($filenametestSDtrash, $filenametestSD)) $fReturn->addFailMessage('Internal error')->addConsole($filenametestSDtrash)->fetch();	
-		}	
-	
-		$date = new DateTime();
-		$date->setTimezone(new DateTimeZone('UTC'));
-		$strdate_updated = $date->format('Y-m-d H:i:s');		
-
-		$EasyPDO->addFields('time_modified_at',$strdate_updated); //last updated info		
-		$EasyPDO->addFields('file_status',0);	
 		
-		$EasyPDO->addConditionalData('file_hash',$_GET['hash']);
-		$return=$EasyPDO->update('photos', 'file_hash=:file_hash');
+		if($after == null)
+		{
+			$fReturn->addConsole("Inconsistent file name")->fetch();
+		}
+		else
+		{
+			$original_filename = $after;
+			$trash_header = $before;
+			
+			$filenametestHD = $full_dir.$original_filename;
+			$filenametestSD = $full_dir.$value['file_hash'].".webp";
 
-		if($return['status']!==true)
-		{			
-			$fReturn->addConsole("[PHP] SQL error while restaure bdd (2)");
-			if(ENV=="DEV") $fReturn->addConsole(print_r($return,true));	
+			$filenametestHDtrash = $full_dir.'trash/'.$trash_header.'_'.$original_filename;
+			$filenametestSDtrash = $full_dir.'trash/'.$trash_header.'_'.$value['file_hash'].".webp";
+			
+			if (file_exists($filenametestHDtrash)) 
+			{
+				if(!rename($filenametestHDtrash, $filenametestHD)) $fReturn->addFailMessage('Internal error')->addConsole($filenametestHDtrash)->fetch();
+			}
+			if (file_exists($filenametestSDtrash)) 
+			{
+				if(!rename($filenametestSDtrash, $filenametestSD)) $fReturn->addFailMessage('Internal error')->addConsole($filenametestSDtrash)->fetch();	
+			}	
+		
+			$date = new DateTime();
+			$date->setTimezone(new DateTimeZone('UTC'));
+			$strdate_updated = $date->format('Y-m-d H:i:s');		
+
+			$EasyPDO->addFields('file_original_name',$original_filename); //last updated info	
+			$EasyPDO->addFields('time_modified_at',$strdate_updated); //last updated info		
+			$EasyPDO->addFields('file_status',0);	
+			
+			$EasyPDO->addConditionalData('file_hash',$value['file_hash']);
+			$return=$EasyPDO->update('photos', 'file_hash=:file_hash');
+
+			if($return['status']!==true)
+			{			
+				$fReturn->addConsole("[PHP] SQL error while restaure bdd (2)");
+				if(ENV=="DEV") $fReturn->addConsole(print_r($return,true));	
+			}
+			else
+			{
+				if(ENV=="DEV") $fReturn->addConsole($return['count']);	
+			}
 		}
 	}
+	
 	else
 	{
 		$fReturn->addConsole("[PHP] SQL error while restaure bdd (1)");

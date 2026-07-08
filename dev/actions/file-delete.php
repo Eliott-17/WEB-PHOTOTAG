@@ -33,11 +33,16 @@
 	
 	foreach($array_files['datas'] as $key => $value)
 	{	
+		$date = new DateTime();
+		$date->setTimezone(new DateTimeZone('UTC'));
+		$strdate_updated = $date->format('Y-m-d H:i:s');		
+		$strdate_file = $date->format('YmdHis');	
+		
 		$filenametestHD = $full_dir.$value['file_original_name'];
 		$filenametestSD = $full_dir.$value['file_hash'].".webp";
 
-		$filenametestHDtrash = $full_dir.'trash/'.$value['file_original_name'];
-		$filenametestSDtrash = $full_dir.'trash/'.$value['file_hash'].".webp";
+		$filenametestHDtrash = $full_dir.'trash/'.$strdate_file.'_'.$value['file_original_name'];
+		$filenametestSDtrash = $full_dir.'trash/'.$strdate_file.'_'.$value['file_hash'].".webp";
 		
 		if (file_exists($filenametestHD)) 
 		{
@@ -49,16 +54,14 @@
 			if(!rename($filenametestSD, $filenametestSDtrash)) $fReturn->addFailMessage('Internal error')->addConsole($filenametestSDtrash)->fetch();	
 			//$fReturn->addFailMessage('Internal error')->addConsole($filenametestSD)->fetch();
 		}	
+				
+		$EasyPDO->addFields('file_original_name',$strdate_file.'_'.$value['file_original_name']); //last updated info	
+		$EasyPDO->addFields('time_modified_at',$strdate_updated); //last updated info	
+		$EasyPDO->addFields('file_status',2);		
+
+		$EasyPDO->addConditionalData('file_hash',$value['file_hash']);		
+		$EasyPDO->update('photos', 'file_hash=:file_hash');	
 	}
-
-	$date = new DateTime();
-    $date->setTimezone(new DateTimeZone('UTC'));
-    $strdate_updated = $date->format('Y-m-d H:i:s');		
-
-	$EasyPDO->addFields('time_modified_at',$strdate_updated); //last updated info	
-	
-	$EasyPDO->addFields('file_status',2);		
-	$EasyPDO->update('photos', 'id IN', $ids);	
 		
 	$fReturn->addCallback('FILEMULTISELECTION_CallBack_trash');
 	$fReturn->fetch();
