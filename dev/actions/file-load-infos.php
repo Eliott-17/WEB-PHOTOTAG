@@ -46,7 +46,7 @@
 				}
 				if ($file['file_type']==1)
 				{		
-					$file['exif_video'] = $getID3->analyze(DIR_HD.$file['file_original_name']);
+					$file['exif_video'] = cleanExif($getID3->analyze(DIR_HD.$file['file_original_name']));
 				}
 			}
 			unset($file); // Important : rompre la référence après la boucle
