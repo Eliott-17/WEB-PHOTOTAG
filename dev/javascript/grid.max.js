@@ -4,6 +4,7 @@
 
 let vSECTION_active="explore";
 let vSECTION_active_mem="";
+let vSECTION_mem_offset;
 
 let vGRID_scroll_lock = false;	//Chargement progressif: FLAG qui limite l'action scroll quand on est en train de charger la grille
 
@@ -102,6 +103,7 @@ var GRID_load = function load()
 	if(SECTIONS[vSECTION_active].offset!=undefined) {
 		if(offset_reset) 
 		{
+			vSECTION_mem_offset=SECTIONS[vSECTION_active].offset;
 			SECTIONS[vSECTION_active].offset=0;
 			if(GRID_debug) console.log("Offset reset for",vSECTION_active,"From GRID");
 		}
@@ -181,6 +183,8 @@ var GRID_load_CallBack = function load_CallBack(data_array)
 			{
 				regenerate=false;
 			}
+			
+			SECTIONS[vSECTION_active].offset=vSECTION_mem_offset;
 		}
 	}
 	

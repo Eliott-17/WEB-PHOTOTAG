@@ -96,6 +96,7 @@ function uploadFiles(files, token) {
                 video.src = URL.createObjectURL(file);
             } else {
                 reject(new Error("File not supported"));
+				treatedFiles++;
             }
         });
     }
@@ -224,6 +225,8 @@ function uploadFiles(files, token) {
                 DISPLAY_menu($('div#upload-status'),false);
 				$('#upload-status div.text').remove("");
             });
+			bar.css('width', '100%');
+            bar.html('100%');
         }
         NAV_open_untagg(true); // Recharge la liste des fichiers
     });
