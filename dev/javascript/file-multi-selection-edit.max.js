@@ -8,8 +8,6 @@ let vFILEINFOMULTISELECTION_mem=null;
 let g_data_mem=null;
 let g_data=null;
 
-let FILEMULTISELECTION_debug = false;
-
 $(document).ready(function(){
 
 	$('nav').on('click', 'div#select-status span#delete', function() 		{	
@@ -71,7 +69,6 @@ $(document).ready(function(){
 
 	$('nav').on('click', 'div#select-status div.deselectall', function() {
 
-		//$('main div.element').each(function () { if ($(this).hasClass('selected')) $(this).toggleClass('selected notselected');	});
 		FILEMULTISELECTION_unselectall();	
 
 		DISPLAY_menu($('#select-status'),false);			
@@ -89,6 +86,8 @@ $(document).ready(function(){
 		{
 			DISPLAY_set_view("grid-fileinfo");
 		}
+		
+		$('main div.element.selected').addClass('memselected');
 		
 		GRID_load(); //recharger la grille si on à changer des photos
 		
@@ -109,16 +108,13 @@ $(document).ready(function(){
 
 var FILEMULTISELECTION_unselectall = function unselect_all()
 {
+	$('main div.element.selected').addClass('memselected');
 	$('main div.element').removeClass('selected');
 	$('main div.element').addClass('notselected');
 	
-	//gestion du cas particulier ou on à un offset > 0 par défilement mais qu'on doit forcer le rafraishissement compplet à la désélection
-	if(vSECTION_active=="untagged") 
-	{
-		vNAV_FLAG_UPLOAD=true; 
-	}
+	GRID_load(); //recharger la grille si on à changer des photos
+
 	
-	GRID_load(); //recharger la grille si on à changer des photos	
 }
 
 var FILEMULTISELECTION_load = function load(force_reload=false)

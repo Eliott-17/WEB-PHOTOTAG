@@ -1,5 +1,3 @@
-let DISPLAY_debug=false;
-
 $(document).ready(function()
 { 
 	DISPLAY_view=0;

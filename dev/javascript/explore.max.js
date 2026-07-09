@@ -40,6 +40,8 @@ $(document).ready(function(){
 			$('#filters_exclude').val("{}");
 
 			EXPLORE_post_search();
+			
+			$('main').scrollTop(0);
 		}
 	});	
 	
