@@ -16,7 +16,10 @@ $(document).on('keydown', function(e) {
 $(document).ready(function(){
 
 	$('section#fullscreen div.button-return').on('click.gridSelect', function() {
-			
+		
+		let fsid=$('section#fullscreen div.media').attr('data-id');
+		$('div#media_'+fsid).parent().addClass('memselected');
+		
 		DISPLAY_set_view("grid");
 		GRID_load();
 		$('main').scrollTop(vGRID_scrollmem);		

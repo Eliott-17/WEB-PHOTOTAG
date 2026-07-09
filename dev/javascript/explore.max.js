@@ -51,6 +51,7 @@ var EXPLORE_post_search = function post_search()
 {
 	SECTIONS["search"].taglist=1; //count+tag
 	SECTIONS["search"].update=true; //count+tag
+	vGRID_countmem=[];
 	
 	if(vSECTION_active!="search") vSECTION_active_mem=vSECTION_active;
 
@@ -252,6 +253,6 @@ var EXPLORE_CallBack = function CallBack(datas)
 		$('div#years_'+value.years).html('<div>'+value.years+'</div><div class="legendstats">'+value.count_files+' elments</div><div class="legendstats">'+formatBytes(value.size_files)+'</div>');	
 	});
 	
-	$('span#totaldisk').html(formatBytes(size_files+size_webp));
+	$('span#totaldisk').html(formatBytes(size_files+size_webp)+' (including '+formatBytes(size_webp)+' of thumbnail)');
 
 }

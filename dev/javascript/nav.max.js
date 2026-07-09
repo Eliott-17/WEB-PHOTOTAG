@@ -184,6 +184,8 @@ function nav_tab_change()
 	$('main div.element').removeClass('selected');
 	$('main div.element').addClass('notselected');
 	
+	vGRID_countmem=[];
+	
 	DISPLAY_set_view('grid');
 }
 

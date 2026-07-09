@@ -1,7 +1,7 @@
-let GRID_debug=false;
-let CALLBACK_debug=false;
-let DISPLAY_debug=false;
-let FILEMULTISELECTION_debug=false;
+let GRID_debug=true;
+let CALLBACK_debug=true;
+let DISPLAY_debug=true;
+let FILEMULTISELECTION_debug=true;
 
 $(document).ready(function()
 { 

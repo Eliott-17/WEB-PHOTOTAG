@@ -58,6 +58,9 @@ var GRID_load = function load()
 	
 	if(vFILEINFO_FLAG_SAVED || vFILEINFOMULTISELECTION_FLAG_SAVED)
 	{
+		console.log("REQUEST UPDATE library");
+		console.log("REQUEST UPDATE explore");
+		
 		SECTIONS["library"].memdata=null;	
 		SECTIONS["library"].update=true;	
 
@@ -74,6 +77,8 @@ var GRID_load = function load()
 	
 	if(vNAV_FLAG_UPLOAD)
 	{
+		console.log("REQUEST UPDATE untagged");
+		
 		SECTIONS["untagged"].memdata=null;
 		SECTIONS["untagged"].update=true;
 		
@@ -84,7 +89,8 @@ var GRID_load = function load()
 	
 	if(vEXPLOREFILTER_FLAG_CHANGED || vFILEINFO_FLAG_SAVED || vFILEINFOMULTISELECTION_FLAG_SAVED)
 	{
-		//SECTIONS["search"].taglist=null;
+		console.log("REQUEST UPDATE search");
+		
 		SECTIONS["search"].memdata=null;	
 		SECTIONS["search"].update=true;	
 	
@@ -140,6 +146,8 @@ var GRID_load = function load()
 	}
 	else
 	{
+		$('main section div.element.memselected').removeClass('memselected');
+		
 		if(GRID_debug) console.log("GRID",vSECTION_active,"no action");		
 	}
 }
@@ -158,13 +166,15 @@ var GRID_load_CallBack = function load_CallBack(data_array)
 		}
 		else
 		{
-			console.log(data_array.count<vGRID_countmem[vSECTION_active]);
-			
 			if(data_array.count<vGRID_countmem[vSECTION_active])
 			{
 				regenerate=false;
 				
-				$('main div.element.memselected').remove();
+				console.log('remove element');
+				
+				$('main section div.element.memselected').remove();
+				DISPLAY_selection();
+				GRID_load_id();
 			}
 
 			if(data_array.count==vGRID_countmem[vSECTION_active])
@@ -173,9 +183,9 @@ var GRID_load_CallBack = function load_CallBack(data_array)
 			}
 		}
 	}
-
+	
 	if(regenerate)
-	{	
+	{		
 		if(SECTIONS[vSECTION_active].offset==0) $("main section."+vSECTION_active).html('');
 
 		OBJ_Dest_nodate = $("main section.nodate."+vSECTION_active);
@@ -336,6 +346,8 @@ var GRID_load_CallBack = function load_CallBack(data_array)
 		DISPLAY_selection();
 		
 	}
+
+	$('main section div.element.memselected').removeClass('memselected');
 
 	if(CALLBACK_debug) console.log("GRID_load_CallBack",SECTIONS[vSECTION_active].offset,regenerate);
 }

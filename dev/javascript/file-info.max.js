@@ -431,6 +431,8 @@ var FILEINFO_CallBack_success = function CallBack_success()
 	}, 500);
 	
 	vFILEINFO_FLAG_SAVED=true;
+	
+	$('main section div.element.selected').addClass('memselected');
 }
 
 function FILEINFO_lock_CallBack(value)

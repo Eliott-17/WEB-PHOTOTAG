@@ -87,8 +87,6 @@ $(document).ready(function(){
 			DISPLAY_set_view("grid-fileinfo");
 		}
 		
-		$('main div.element.selected').addClass('memselected');
-		
 		GRID_load(); //recharger la grille si on à changer des photos
 		
 	});
@@ -108,13 +106,10 @@ $(document).ready(function(){
 
 var FILEMULTISELECTION_unselectall = function unselect_all()
 {
-	$('main div.element.selected').addClass('memselected');
 	$('main div.element').removeClass('selected');
 	$('main div.element').addClass('notselected');
 	
 	GRID_load(); //recharger la grille si on à changer des photos
-
-	
 }
 
 var FILEMULTISELECTION_load = function load(force_reload=false)
@@ -234,7 +229,7 @@ var FILEMULTISELECTION_load_CallBack = function load(ldata)
 	$('h3.ux-tag-location.gps').addClass('hidden');
 	$('h3.privacy_mode').removeClass('hidden');
 	$('input.conflictedit').val(JSON.stringify(g_data['flag']));
-	
+		
 	if(CALLBACK_debug) console.log('FILEMULTISELECTION_load_CallBack');
 }
 
@@ -258,7 +253,10 @@ var FILEMULTISELECTION_CallBack_success = function CallBack_success()
 	
 	$('span#tag').html('refresh');
 	$('span#tag').addClass('green');	
+
 	vFILEINFOMULTISELECTION_FLAG_SAVED=true;
+
+	$('main section div.element.selected').addClass('memselected');
 }
 
 var FILEMULTISELECTION_reset_ux = function reset_ux(obj, data)
