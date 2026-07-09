@@ -101,8 +101,8 @@ var DISPLAY_section = function section(section)
 		$('div#searchmenu').addClass('hidden');
 	}
 	
-	GRID_load();//en affichant une section on s'assure de charger les données.
-	
+	GRID_load("DISPLAY_section");//en affichant une section on s'assure de charger les données.
+		
 	if(DISPLAY_debug) console.log("DISPLAY_section",'section.'+vSECTION_active);
 }
 
@@ -200,6 +200,11 @@ var IS_VISIBLE_menu = function is_visible_menu(object)
 
 var DISPLAY_menu = function display_menu(object=undefined, visibility=undefined)
 {
+	if(Object==null)
+	{
+		object=$('nav#status div');
+	}
+	
 	if(visibility==true && object!=undefined)
 	{
 		object.removeClass("ux-hidden-zindex");	

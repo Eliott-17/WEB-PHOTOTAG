@@ -22,7 +22,7 @@ $(document).ready(function(){
 		
 		DISPLAY_set_view("grid");
 		DISPLAY_menu($('#flush-trash'), false);
-		GRID_load();
+		GRID_load("click.gridSelect");
 		$('main').scrollTop(vGRID_scrollmem);		
 	});
 

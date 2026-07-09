@@ -18,6 +18,8 @@ let vEXPLOREFILTER_FLAG_CHANGED=false; //Si la recherche change force le rafraic
 $(document).ready(function(){
 	
 	$('main').on('click.expandFilters', 'section.explore div.expandmenu', function(e) {
+
+		if(ON_debug) console.log('click.expandFilter');
 		
 		let name = $(this).attr('id');
 
@@ -27,7 +29,9 @@ $(document).ready(function(){
 	});
 	
 	$('main').on('click.enterFilter', 'section.explore div.tagelement', function(e) {
-				
+
+		if(ON_debug) console.log('click.enterFilter');
+			
 		if(!$(this).hasClass('expandmenu'))
 		{		
 			if($('#filter_tag').val()!=$(this).attr('data-tag') || $('#filter_val').val()!=$(this).attr('data-val') || $('input#filters_exclude').val()!="");
@@ -55,11 +59,9 @@ var EXPLORE_post_search = function post_search()
 	
 	if(vSECTION_active!="search") vSECTION_active_mem=vSECTION_active;
 
-	//vNAV_search_result=true;
 	DISPLAY_menu($('#select-status'),false);
 	DISPLAY_set_view('grid');		
 	DISPLAY_section("search");	
-	//GRID_load();
 }
 
 var EXPLORE_search_CallBack = function search_CallBack(datas) 

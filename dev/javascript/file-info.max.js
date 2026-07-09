@@ -10,6 +10,8 @@ $(document).ready(function(){
 
 	$('section#fullscreen div.button-info').on('click.infoViewInfo', function() {
 
+		if(ON_debug) console.log('click.infoViewInfo');
+
 		if(DISPLAY_is_visible_file_info())
 		{
 			DISPLAY_set_view("fullscreen");
@@ -22,6 +24,8 @@ $(document).ready(function(){
 
 	$('aside#infocontent h4.button-exif').on('click.exifInfo', function() {
 		
+		if(ON_debug) console.log('click.exiInfoFilter');
+		
 		$('aside#infocontent h3#exif').toggleClass('hidden');
 		if($('aside#infocontent h3#exif').is(':visible')) {
 			$('aside#infocontent h4.button-exif div span.material-symbols-outlined').html("collapse_all");  }
@@ -31,12 +35,16 @@ $(document).ready(function(){
 
 	$('aside#infocontent h4.button-trash').on('click.trashInfo', function() {
 		
+		if(ON_debug) console.log('click.trashInfo');
+		
 		DISPLAY_menu($('#select-trash'), true);
 		
 	});
 	
 	$('aside#infocontent h4.edit_ux').find('button.edit, button.cancel').on('click.infoViewEdit', function() {
-				
+	
+		if(ON_debug) console.log('click.infoViewEdit');
+		
 		//$(this).parent().children().toggleClass('hidden');
 		$('aside#infocontent h4.edit_ux button.edit').toggleClass('hidden');
 		$(this).parent().children().not('button.edit').toggleClass('hidden');

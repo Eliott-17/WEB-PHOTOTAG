@@ -176,7 +176,7 @@ var FILTERS_checkbox_post = function checkbox_post(is_checked=null)
 	SECTIONS[vSECTION_active].taglist=2;
 	SECTIONS[vSECTION_active].update=true;
 
-	GRID_load();
+	GRID_load("FILTERS_checkbox_post");
 }
 
 var FILTERS_trash_CallBack = function trash_CallBack(count)

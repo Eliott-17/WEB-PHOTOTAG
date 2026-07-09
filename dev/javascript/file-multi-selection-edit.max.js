@@ -10,7 +10,9 @@ let g_data=null;
 
 $(document).ready(function(){
 
-	$('nav').on('click', 'div#select-status span#delete', function() 		{	
+	$('nav').on('click.statusDelete', 'div#select-status span#delete', function() 		{	
+	
+		if(ON_debug) console.log('click.statusDelete');
 	
 		DISPLAY_menu($('div#select-status'),false); 
 		DISPLAY_trash(true);
@@ -22,7 +24,9 @@ $(document).ready(function(){
 		DISPLAY_selection();
 	});
 	
-	$('nav').on('click', 'div#select-trash span#delete_confirm', function() {
+	$('nav').on('click.deleteconfirm', 'div#select-trash span#delete_confirm', function() {
+		
+		if(ON_debug) console.log('click.deleteconfirm');
 		
 		var hash_array=[];
 
@@ -67,8 +71,10 @@ $(document).ready(function(){
 		
 	});
 
-	$('nav').on('click', 'div#select-status div.deselectall', function() {
+	$('nav').on('click.statusDeselect', 'div#select-status div.deselectall', function() {
 
+		if(ON_debug) console.log('clistatusDeselect');
+		
 		FILEMULTISELECTION_unselectall();	
 
 		DISPLAY_menu($('#select-status'),false);			
@@ -76,8 +82,10 @@ $(document).ready(function(){
 		
 	});	
 	
-	$('nav').on('click', 'div#select-status span#tag', function() {
+	$('nav').on('click.statusTag', 'div#select-status span#tag', function() {
 
+		if(ON_debug) console.log('click.statusTag');
+		
 		if(DISPLAY_is_visible_file_info())
 		{
 			DISPLAY_set_view("grid");
@@ -87,11 +95,13 @@ $(document).ready(function(){
 			DISPLAY_set_view("grid-fileinfo");
 		}
 		
-		GRID_load(); //recharger la grille si on à changer des photos
-		
+		GRID_load("click.statusTag"); //recharger la grille si on à changer des photos
+			
 	});
 	
 	$('aside#infocontent h3 span.solver').on('click.solver', function() {
+		
+		if(ON_debug) console.log('click.solver');
 		
 		let data=$(this).parent().attr('id');
 
@@ -109,7 +119,7 @@ var FILEMULTISELECTION_unselectall = function unselect_all()
 	$('main div.element').removeClass('selected');
 	$('main div.element').addClass('notselected');
 	
-	GRID_load(); //recharger la grille si on à changer des photos
+	GRID_load("FILEMULTISELECTION_unselectall"); //recharger la grille si on à changer des photos
 }
 
 var FILEMULTISELECTION_load = function load(force_reload=false)
@@ -150,9 +160,7 @@ var FILEMULTISELECTION_load = function load(force_reload=false)
 }
 
 var FILEMULTISELECTION_load_CallBack = function load(ldata)
-{
-	console.log(ldata);
-	
+{	
 	g_data = structuredClone(ldata);	
 	g_data_mem = structuredClone(ldata);	
 	

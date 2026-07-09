@@ -44,16 +44,18 @@ $(document).ready(function(){
 				//console.log("reload from scroll",remaining);
 				SECTIONS[vSECTION_active].update=true;
 				SECTIONS[vSECTION_active].offset+=50;
-				GRID_load();
+				GRID_load("scroll");
 			}
 		}
 	});
 
 });
 
-var GRID_load = function load()
+var GRID_load = function load(from)
 {
-	if(GRID_debug) console.log(vFILEINFO_FLAG_SAVED,vFILEINFOMULTISELECTION_FLAG_SAVED,vNAV_FLAG_UPLOAD,vEXPLOREFILTER_FLAG_CHANGED);
+	if(GRID_debug) console.log(from,vFILEINFO_FLAG_SAVED,vFILEINFOMULTISELECTION_FLAG_SAVED,vNAV_FLAG_UPLOAD,vEXPLOREFILTER_FLAG_CHANGED);
+	
+	vGRID_scroll_lock=true;
 	
 	let offset_reset=false;
 	
@@ -105,13 +107,13 @@ var GRID_load = function load()
 		{
 			vSECTION_mem_offset=SECTIONS[vSECTION_active].offset;
 			SECTIONS[vSECTION_active].offset=0;
-			if(GRID_debug) console.log("Offset reset for",vSECTION_active,"From GRID");
+			if(GRID_debug) console.log("GRID offset reset");
 		}
 	}
 		
 	if(SECTIONS[vSECTION_active].update==true)
 	{
-		console.log("GRID",vSECTION_active,"update request");
+		if(GRID_debug) console.log("GRID",vSECTION_active,"update request");
 		
 		SECTIONS[vSECTION_active].update=false;
 		
@@ -336,13 +338,13 @@ var GRID_load_CallBack = function load_CallBack(data_array)
 			DISPLAY_selection(vFILEOPEN_currentid,true);
 		});	
 		
-		vGRID_scroll_lock=false;	
-		
 		DISPLAY_selection();
 		
 	}
 
 	$('main section div.element.memselected').removeClass('memselected');
+	
+	vGRID_scroll_lock=false;
 
 	if(CALLBACK_debug) console.log("GRID_load_CallBack",SECTIONS[vSECTION_active].offset,regenerate);
 }
