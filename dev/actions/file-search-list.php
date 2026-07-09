@@ -89,10 +89,22 @@
 			}
 			else
 			{
+				$EasyPDO->addFields('COUNT (*) as total');
+				$array_cnt=$EasyPDO->select('photos', 'file_status = 2');			
+
+				if($array_cnt['status']===true) 
+				{
+					$bigarray['count']=$array_cnt['datas'][0]['total'];
+				}
+				else
+				{
+					$bigarray['count']="UNK";
+				}
+				
 				//$fReturn->addConsole(print_r($result_data['datas'],true));
 				$return = $result_data['datas'];		
 				$fReturn->addCallBack("GRID_load_CallBack", array("datas"=>$return));				
-				$fReturn->addCallBack("FILTERS_trash_CallBack",$result_data['count']);
+				$fReturn->addCallBack("FILTERS_trash_CallBack",$bigarray['count']);
 			}
 			
 			$fReturn->fetch();

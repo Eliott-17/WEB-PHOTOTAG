@@ -13,9 +13,11 @@
 
 	//VALIDATION FORMULAIRE
 	
-	$regex = '/^\d{14}_[a-f0-9]{64}$/';
+	$regex1='/^\d{14}_[a-f0-9]{64}$/';
+	$regex2='/^search_[0-9]{1,7}$/';
 
-	$validation->addVerification('hash','preg','hash',$regex);	
+	$validation->addVerification('hash','preg','hash',$regex1);
+	$validation->addVerification('id','preg','id',$regex2);
 
 	$validation->Validate();
 
@@ -59,11 +61,11 @@
 			$original_filename = $after;
 			$trash_header = $before;
 			
-			$filenametestHD = $full_dir.$original_filename;
-			$filenametestSD = $full_dir.$value['file_hash'].".webp";
+			$filenametestHD = DIR_HD.$original_filename;
+			$filenametestSD = DIR_SD.$value['file_hash'].".webp";
 
-			$filenametestHDtrash = $full_dir.'trash/'.$trash_header.'_'.$original_filename;
-			$filenametestSDtrash = $full_dir.'trash/'.$trash_header.'_'.$value['file_hash'].".webp";
+			$filenametestHDtrash = DIR_TRASH.$trash_header.'_'.$original_filename;
+			$filenametestSDtrash = DIR_TRASH.$trash_header.'_'.$value['file_hash'].".webp";
 			
 			if (file_exists($filenametestHDtrash)) 
 			{
@@ -92,6 +94,7 @@
 			}
 			else
 			{
+				$fReturn->addCallback("GRID_CallBack_restaure",$_GET['id']);
 				if(ENV=="DEV") $fReturn->addConsole($return['count']);	
 			}
 		}

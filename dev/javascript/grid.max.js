@@ -190,7 +190,7 @@ var GRID_load_CallBack = function load_CallBack(data_array)
 	
 	if(regenerate)
 	{		
-		if(SECTIONS[vSECTION_active].offset==0) $("main section."+vSECTION_active).html('');
+		if(SECTIONS[vSECTION_active].offset<=0) $("main section."+vSECTION_active).html('');
 
 		OBJ_Dest_nodate = $("main section.nodate."+vSECTION_active);
 		OBJ_Dest_date = $("main section.date."+vSECTION_active);
@@ -263,16 +263,7 @@ var GRID_load_CallBack = function load_CallBack(data_array)
 			let current_id = $(this).parent().attr('id');
 			let hash = $('div#'+current_id+' div.media-container').attr('data-src');
 			
-			CORE_get('actions/file-restaure.php?hash='+hash);
-			
-			$('div#'+current_id).remove();
-			
-			let count=parseInt($('nav#main span#filterresult').html());
-			count--;
-			$('nav#main span#filterresult').html(count);
-			
-			vFILEINFO_FLAG_SAVED=true;
-			vFILEINFOMULTISELECTION_FLAG_SAVED=true;
+			CORE_get('actions/file-restaure.php?hash='+hash+'&id='+current_id);	
 		});
 		//****************************************************************
 		//Ajout du bouton de sélection d'une photo sur la grille *********
@@ -354,6 +345,18 @@ var GRID_load_CallBack = function load_CallBack(data_array)
 	$('main section div.element.memselected').removeClass('memselected');
 
 	if(CALLBACK_debug) console.log("GRID_load_CallBack",SECTIONS[vSECTION_active].offset,regenerate);
+}
+
+var GRID_CallBack_restaure = function restaure(current_id)
+{
+	$('div#'+current_id).remove();
+	
+	let count=parseInt($('nav#main span#filterresult').html());
+	count--;
+	$('nav#main span#filterresult').html(count);
+	
+	vFILEINFO_FLAG_SAVED=true;
+	vFILEINFOMULTISELECTION_FLAG_SAVED=true;	
 }
 
 var GRID_load_id = function load_id()

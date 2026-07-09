@@ -21,6 +21,7 @@ $(document).ready(function(){
 		$('div#media_'+fsid).parent().addClass('memselected');
 		
 		DISPLAY_set_view("grid");
+		DISPLAY_menu($('#flush-trash'), false);
 		GRID_load();
 		$('main').scrollTop(vGRID_scrollmem);		
 	});

@@ -151,6 +151,8 @@ var FILEMULTISELECTION_load = function load(force_reload=false)
 
 var FILEMULTISELECTION_load_CallBack = function load(ldata)
 {
+	console.log(ldata);
+	
 	g_data = structuredClone(ldata);	
 	g_data_mem = structuredClone(ldata);	
 	

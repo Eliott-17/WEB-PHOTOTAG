@@ -56,10 +56,9 @@ img,video {
 	
 }
 
-/*main:has(section#fullscreen.hidden)
-{
-	overflow-x: hidden;
-}*/
+section#fullscreen img, section#fullscreen video {
+	background: none;
+}
 
 aside {
 	grid-area: aside;

@@ -368,8 +368,9 @@
 		)';
 	}
 		
-	$loc_dir = 'multimedia/'.$_SESSION["USER"].'/';
-	$full_dir = $_SERVER['DOCUMENT_ROOT'].'/'.$loc_dir;
+	define("DIR_USER", $_SERVER['DOCUMENT_ROOT'].'/multimedia/'.$_SESSION["USER"].'/');
+	define("DIR_TRASH",DIR_USER.'trash/');
+	define("DIR_HD",DIR_USER.'hd/');
+	define("DIR_SD",DIR_USER.'sd/');	
 	
-
 ?>

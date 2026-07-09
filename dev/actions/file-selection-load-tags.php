@@ -65,25 +65,33 @@
 			$flag['file_is_private']=0;
 			
 			$filedata=[];
+			
+			$first = true;
 
 			foreach($result['datas'] as $key => $value)
 			{
 				//pour l'init
-
-				if($mem['date']==null) 					$mem['date']=$value['time_taken_at_date'];
-				if($mem['time']==null) 					$mem['time']=$value['time_taken_at_time'];
-				if($mem['zone']==null) 					$mem['zone']=$value['time_taken_at_zone'];
 				
-				if($mem['continent']==null) 			$mem['continent']=$value['tag_continent'];
-				if($mem['country']===null) 				$mem['country']=$value['tag_country'];
-				if($mem['city']===null) 				$mem['city']=$value['tag_city'];
-				if($mem['place']===null) 				$mem['place']=$value['tag_place'];
-				
-				if($mem['activity']===null) 			$mem['activity']=$value['tag_activity'];
-				if($mem['comment']===null) 				$mem['comment']=$value['tag_comment'];
-				if($mem['people']===null) 				$mem['people']=$value['tag_people'];
-				if($mem['other']===null) 				$mem['other']=$value['tag_other'];
-				if($mem['file_is_private']===null) 		$mem['file_is_private']=$value['file_is_private'];
+				if($first)
+				{
+					$mem['date']=$value['time_taken_at_date'];
+					$mem['time']=$value['time_taken_at_time'];
+					$mem['zone']=$value['time_taken_at_zone'];
+					
+					$mem['continent']=$value['tag_continent'];
+					$mem['country']=$value['tag_country'];
+					$mem['city']=$value['tag_city'];
+					$mem['place']=$value['tag_place'];
+					
+					$mem['activity']=$value['tag_activity'];
+					$mem['comment']=$value['tag_comment'];
+					$mem['people']=$value['tag_people'];
+					$mem['other']=$value['tag_other'];
+					
+					$mem['file_is_private']=$value['file_is_private'];
+					
+					$first=false;
+				}
 				
 				//pour le storage
 

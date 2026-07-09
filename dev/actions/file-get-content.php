@@ -28,14 +28,19 @@ if(is_session_valid() AND $validation->isValidated())
 	
 	if(!empty($_GET['time']))
 	{	
-		$full_dir.='trash/'.$_GET['time'].'_';
+		$filename_header=DIR_TRASH.$_GET['time'].'_';
+	}
+	else
+	{
+		if($_GET['type']=="sd") $filename_header=DIR_SD;
+		if($_GET['type']=="hd") $filename_header=DIR_HD;
 	}
 	
 	if($_GET['type']=="sd")
 	{
-		$path=$full_dir.$_GET['hash'].".webp";
+		$path=$filename_header.$_GET['hash'].".webp";
 		
-		if (file_exists($path)) $filename = $path;
+		if(file_exists($path)) $filename = $path;
 	}
 	
 	if($debug) echo $path;
@@ -52,7 +57,7 @@ if(is_session_valid() AND $validation->isValidated())
 		
 		if($array_files['status']===true)
 		{
-			$filenametest = $full_dir.$array_files['datas'][0]['file_original_name'];
+			$filenametest = $filename_header.$array_files['datas'][0]['file_original_name'];
 			
 			if ($filenametest && file_exists($filenametest)) 
 			{

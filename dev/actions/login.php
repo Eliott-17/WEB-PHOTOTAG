@@ -194,30 +194,25 @@ else
 		
 		$_SESSION["USER"] = $result['datas'][0]['hash'];
 
+		require_once($_SERVER['DOCUMENT_ROOT'].'/includes/functions.php');
+		
 		//---------------------------------------------
 		//initialise directory
 		//---------------------------------------------	
-
-		$user_dir = $_SERVER['DOCUMENT_ROOT'].'/multimedia/'.$_SESSION["USER"].'/trash';
-
-		if(!file_exists($user_dir)) {
-			if(!mkdir($user_dir, 0777, true))
-			{
-				$fReturn->addErrorMessage("Fatal error, unable to create user directory.");	
-				if(ENV=="DEV") $fReturn->addConsole("Unable to create user dir ".$user_dir);				
-				$fReturn->fetch();
-			}
-		}
 		
-		$local_recyclebin = $_SERVER['DOCUMENT_ROOT'].'/multimedia/trash';
-
-		if (!file_exists($local_recyclebin)) {
-			if(!mkdir($local_recyclebin, 0777, true))
-			{
-				$fReturn->addErrorMessage("Fatal error, unable to create system directory.");	
-				if(ENV=="DEV") $fReturn->addConsole("Unable to create user dir ".$local_recyclebin);
-				$fReturn->fetch();
+		$dir_to_create=array(DIR_TRASH,DIR_HD,DIR_SD);
+		
+		foreach($dir_to_create as $value)
+		{
+			if(!file_exists($value)) {
+				if(!mkdir($value, 0777, true))
+				{
+					$fReturn->addErrorMessage("Fatal error, unable to create user directory.");	
+					if(ENV=="DEV") $fReturn->addConsole("Unable to create user dir ".$value);				
+					$fReturn->fetch();
+				}
 			}
+			
 		}
 
 		//---------------------------------------------
@@ -226,8 +221,8 @@ else
 
 		$fReturn->addConsole("BDD");
 		
-		$header =  $_SERVER['DOCUMENT_ROOT'].'/multimedia/'.$_SESSION["USER"];
-		$header_file_trash =  $local_recyclebin.'/'.$_SESSION["USER"];
+		$header =  DIR_USER.$_SESSION["USER"];
+		$header_file_trash = DIR_TRASH.$_SESSION["USER"];
 		$commits=[];				
 		
 		$structureversion=2; //VERSION BDD

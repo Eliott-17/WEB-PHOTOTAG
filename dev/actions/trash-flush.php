@@ -26,7 +26,7 @@
 	
 	if($array['status']===true) 
 	{
-		$files = glob($full_dir.'trash/*');
+		$files = glob(DIR_TRASH.'*');
 
 		foreach ($files as $file) {
 			if (is_file($file)) {

@@ -38,11 +38,11 @@
 		$strdate_updated = $date->format('Y-m-d H:i:s');		
 		$strdate_file = $date->format('YmdHis');	
 		
-		$filenametestHD = $full_dir.$value['file_original_name'];
-		$filenametestSD = $full_dir.$value['file_hash'].".webp";
+		$filenametestHD = DIR_HD.$value['file_original_name'];
+		$filenametestSD = DIR_SD.$value['file_hash'].".webp";
 
-		$filenametestHDtrash = $full_dir.'trash/'.$strdate_file.'_'.$value['file_original_name'];
-		$filenametestSDtrash = $full_dir.'trash/'.$strdate_file.'_'.$value['file_hash'].".webp";
+		$filenametestHDtrash = DIR_TRASH.$strdate_file.'_'.$value['file_original_name'];
+		$filenametestSDtrash = DIR_TRASH.$strdate_file.'_'.$value['file_hash'].".webp";
 		
 		if (file_exists($filenametestHD)) 
 		{
