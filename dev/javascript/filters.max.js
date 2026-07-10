@@ -30,7 +30,6 @@ $(document).ready(function()
 		
 		if($(this).html()=='check_box')
 		{
-			console.log("Check all",target_elements);
 			check=true;
 		}
 			
@@ -136,7 +135,7 @@ var FILTERS_search_CallBack = function search_CallBack(datas)
 		search_flag_limit=false;
 	}			
 	
-	if(CALLBACK_debug) console.log("FILTERS_search_CallBack");
+	DEBUG.log("CALLBACK","FILTERS_search_CallBack");
 }
 
 var FILTERS_checkbox_post = function checkbox_post(is_checked=null)
@@ -171,10 +170,9 @@ var FILTERS_checkbox_post = function checkbox_post(is_checked=null)
 	
 	FILEMULTISELECTION_unselectall();
 		
-	SECTIONS[vSECTION_active].offset=0;
-	console.log("Offset reset for",vSECTION_active,"From FILTERS");
-	SECTIONS[vSECTION_active].taglist=2;
-	SECTIONS[vSECTION_active].update=true;
+	SECTIONS[gSECTION_active].offset=0;
+	SECTIONS[gSECTION_active].taglist=2;
+	SECTIONS[gSECTION_active].update=true;
 
 	GRID_load("FILTERS_checkbox_post");
 }

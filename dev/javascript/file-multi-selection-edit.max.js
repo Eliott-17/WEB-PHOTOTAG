@@ -12,7 +12,7 @@ $(document).ready(function(){
 
 	$('nav').on('click.statusDelete', 'div#select-status span#delete', function() 		{	
 	
-		if(ON_debug) console.log('click.statusDelete');
+		DEBUG.log("ON",'click.statusDelete');
 	
 		DISPLAY_menu($('div#select-status'),false); 
 		DISPLAY_trash(true);
@@ -26,11 +26,11 @@ $(document).ready(function(){
 	
 	$('nav').on('click.deleteconfirm', 'div#select-trash span#delete_confirm', function() {
 		
-		if(ON_debug) console.log('click.deleteconfirm');
+		DEBUG.log("ON",'click.deleteconfirm');
 		
 		var hash_array=[];
 
-		$('main section.'+vSECTION_active+' div.element').each(function () 
+		$('main section.'+gSECTION_active+' div.element').each(function () 
 		{ 
 			if($(this).hasClass('delete')) 
 			{ 
@@ -73,7 +73,7 @@ $(document).ready(function(){
 
 	$('nav').on('click.statusDeselect', 'div#select-status div.deselectall', function() {
 
-		if(ON_debug) console.log('clistatusDeselect');
+		DEBUG.log("ON",'clistatusDeselect');
 		
 		FILEMULTISELECTION_unselectall();	
 
@@ -84,7 +84,7 @@ $(document).ready(function(){
 	
 	$('nav').on('click.statusTag', 'div#select-status span#tag', function() {
 
-		if(ON_debug) console.log('click.statusTag');
+		DEBUG.log("ON",'click.statusTag');
 		
 		if(DISPLAY_is_visible_file_info())
 		{
@@ -101,7 +101,7 @@ $(document).ready(function(){
 	
 	$('aside#infocontent h3 span.solver').on('click.solver', function() {
 		
-		if(ON_debug) console.log('click.solver');
+		DEBUG.log("ON",'click.solver');
 		
 		let data=$(this).parent().attr('id');
 
@@ -126,7 +126,7 @@ var FILEMULTISELECTION_load = function load(force_reload=false)
 {
 	var hash_array=[];
 
-	$('main section.'+vSECTION_active+' div.element').each(function () 
+	$('main section.'+gSECTION_active+' div.element').each(function () 
 	{ 
 		if($(this).hasClass('selected')) 
 		{ 
@@ -140,7 +140,7 @@ var FILEMULTISELECTION_load = function load(force_reload=false)
 		
 	if(hash_array.length<=1)
 	{
-		if(FILEMULTISELECTION_debug) console.log('FILEMULTISELECTION_load => NO data update, require two files selected');
+		DEBUG.log("FILEMULTISELECTION",'NO data update, require two files selected');
 	}
 	else if(JSON.stringify(vFILEINFOMULTISELECTION_mem)!==JSON.stringify(hash_array) || force_reload) 
 	{		
@@ -151,11 +151,11 @@ var FILEMULTISELECTION_load = function load(force_reload=false)
 		vFILEINFOMULTISELECTION_mem=hash_array;
 		vFILEINFO_load_mem=null; //forcer le rechargement des data en sélection simple
 		
-		if(FILEMULTISELECTION_debug) console.log('FILEMULTISELECTION_load => data update request');
+		DEBUG.log("FILEMULTISELECTION",'Data update request');
 	}
 	else
 	{
-		if(FILEMULTISELECTION_debug) console.log('FILEMULTISELECTION_load => NO data update, unchanged selection');
+		DEBUG.log("FILEMULTISELECTION",'NO data update, unchanged selection');
 	}
 }
 
@@ -240,21 +240,21 @@ var FILEMULTISELECTION_load_CallBack = function load(ldata)
 	$('h3.privacy_mode').removeClass('hidden');
 	$('input.conflictedit').val(JSON.stringify(g_data['flag']));
 		
-	if(CALLBACK_debug) console.log('FILEMULTISELECTION_load_CallBack');
+	DEBUG.log("CALLBACK",'FILEMULTISELECTION_load_CallBack');
 }
 
 var FILEMULTISELECTION_CallBack_success = function CallBack_success()
 {
-	$('main section.'+vSECTION_active+' div.selected').addClass("transition-on");
-	$('main section.'+vSECTION_active+' div.selected').addClass("success");
+	$('main section.'+gSECTION_active+' div.selected').addClass("transition-on");
+	$('main section.'+gSECTION_active+' div.selected').addClass("success");
 	
 	setTimeout(function() { 
 		
-		$('main section.'+vSECTION_active+' div.selected').removeClass("success"); 
+		$('main section.'+gSECTION_active+' div.selected').removeClass("success"); 
 		
 		setTimeout(function() { 
 		
-			$('main section.'+vSECTION_active+' div.selected').removeClass("transition-on"); 
+			$('main section.'+gSECTION_active+' div.selected').removeClass("transition-on"); 
 		
 		}, 500);
 		

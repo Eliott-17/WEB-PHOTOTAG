@@ -51,7 +51,7 @@ $(document).ready(function(){
 				}
 				else if(val==="")
 				{
-					DISPLAY_section(vSECTION_active_mem);
+					DISPLAY_section(gSECTION_active_mem);
 				}
 				else
 				{
@@ -74,7 +74,7 @@ $(document).ready(function(){
 			$('main').scrollTop(0);
 			FILEMULTISELECTION_unselectall();
 			DISPLAY_set_view('grid');
-			DISPLAY_section(vSECTION_active_mem);
+			DISPLAY_section(gSECTION_active_mem);
 			DISPLAY_filters(false);
 			DISPLAY_menu($('#flush-trash'), false);
 
@@ -184,7 +184,7 @@ function nav_tab_change()
 	$('main div.element').removeClass('selected');
 	$('main div.element').addClass('notselected');
 	
-	vGRID_countmem=[];
+	gGRID_countmem=[];
 	
 	DISPLAY_set_view('grid');
 }

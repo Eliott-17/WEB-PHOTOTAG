@@ -19,7 +19,7 @@ $(document).ready(function(){
 	
 	$('main').on('click.expandFilters', 'section.explore div.expandmenu', function(e) {
 
-		if(ON_debug) console.log('click.expandFilter');
+		DEBUG.log("ON",'click.expandFilter');
 		
 		let name = $(this).attr('id');
 
@@ -30,7 +30,7 @@ $(document).ready(function(){
 	
 	$('main').on('click.enterFilter', 'section.explore div.tagelement', function(e) {
 
-		if(ON_debug) console.log('click.enterFilter');
+		DEBUG.log("ON",'click.enterFilter');
 			
 		if(!$(this).hasClass('expandmenu'))
 		{		
@@ -55,9 +55,9 @@ var EXPLORE_post_search = function post_search()
 {
 	SECTIONS["search"].taglist=1; //count+tag
 	SECTIONS["search"].update=true; //count+tag
-	vGRID_countmem=[];
+	gGRID_countmem=[];
 	
-	if(vSECTION_active!="search") vSECTION_active_mem=vSECTION_active;
+	if(gSECTION_active!="search") gSECTION_active_mem=gSECTION_active;
 
 	DISPLAY_menu($('#select-status'),false);
 	DISPLAY_set_view('grid');		
@@ -74,7 +74,7 @@ var EXPLORE_search_CallBack = function search_CallBack(datas)
 
 	vEXPLORE_SEARCH_TAGS=datas.tags; //stock le résultat de la recherche
 	
-	if(CALLBACK_debug) console.log("EXPLORE_search_CallBack");
+	DEBUG.log("CALLBACK","EXPLORE_search_CallBack");
 }
 
 var EXPLORE_add_tags = function add_tags(tags)

@@ -10,7 +10,7 @@ $(document).ready(function(){
 
 	$('section#fullscreen div.button-info').on('click.infoViewInfo', function() {
 
-		if(ON_debug) console.log('click.infoViewInfo');
+		DEBUG.log("ON",'click.infoViewInfo');
 
 		if(DISPLAY_is_visible_file_info())
 		{
@@ -24,7 +24,7 @@ $(document).ready(function(){
 
 	$('aside#infocontent h4.button-exif').on('click.exifInfo', function() {
 		
-		if(ON_debug) console.log('click.exiInfoFilter');
+		DEBUG.log("ON",'click.exiInfoFilter');
 		
 		$('aside#infocontent h3#exif').toggleClass('hidden');
 		if($('aside#infocontent h3#exif').is(':visible')) {
@@ -35,7 +35,7 @@ $(document).ready(function(){
 
 	$('aside#infocontent h4.button-trash').on('click.trashInfo', function() {
 		
-		if(ON_debug) console.log('click.trashInfo');
+		DEBUG.log("ON",'click.trashInfo');
 		
 		DISPLAY_menu($('#select-trash'), true);
 		
@@ -43,7 +43,7 @@ $(document).ready(function(){
 	
 	$('aside#infocontent h4.edit_ux').find('button.edit, button.cancel').on('click.infoViewEdit', function() {
 	
-		if(ON_debug) console.log('click.infoViewEdit');
+		DEBUG.log("ON",'click.infoViewEdit');
 		
 		//$(this).parent().children().toggleClass('hidden');
 		$('aside#infocontent h4.edit_ux button.edit').toggleClass('hidden');
@@ -104,18 +104,16 @@ var FILEINFO_load = function load(force_reload=false)
 		CORE_get('actions/file-load-infos.php?hash='+hash+'&lform=');
 		vFILEINFO_load_mem=hash;
 		vFILEINFOMULTISELECTION_mem=null; //forcer le rechargement des data en sélection multiple
-		console.log('FILEINFO_load => data update request');
+		DEBUG.log('FILEINFO','Data update request');
 	}
 	else
 	{
-		console.log('FILEINFO_load => NO data update');
+		console.log('FILEINFO','NO data update');
 	}
 }
 
 var FILEINFO_CallBack_data = function CallBack(data)
-{
-	console.log('FILEINFO_CallBack');
-	
+{	
 	DISPLAY_fileinfo_init();
 	
 	let lform = data.lform;
@@ -418,6 +416,8 @@ var FILEINFO_CallBack_data = function CallBack(data)
 
 	$('h3.ux-tag-location.gps').removeClass('hidden');	
 	$('h3.privacy_mode').removeClass('hidden');	
+	
+	DEBUG.log('FILEINFO','CallBack_data');
 }
 
 var FILEINFO_CallBack_success = function CallBack_success()
@@ -454,7 +454,7 @@ function FILEINFO_lock_CallBack(value)
 	
 	$('aside#infocontent h3.lockconflict').addClass('hidden');
 	
-	if(CALLBACK_debug) console.log("FILEINFO_lock_CallBack",value);
+	DEBUG.log("CALLBACK","FILEINFO_lock_CallBack",value);
 }
 
 function processExif(data, indent = 0) {

@@ -23,7 +23,7 @@ $(document).ready(function(){
 		DISPLAY_set_view("grid");
 		DISPLAY_menu($('#flush-trash'), false);
 		GRID_load("click.gridSelect");
-		$('main').scrollTop(vGRID_scrollmem);		
+		$('main').scrollTop(gGRID_scrollmem);		
 	});
 
 	$('section#fullscreen').on('click.gridLeftAR', 'div.button-leftarrow', function() { Arrow(0); });			
@@ -86,14 +86,13 @@ function ArrowDisplay(vFILEOPEN_currentid, max_id)
 
 var FILEOPENFULLSCREEN_Loadmedia = function LoadMedia(id)
 {	
-	let file_type = $('div#'+vSECTION_active+'_'+id+' div.media-container').attr("data-type");
-	let file_hash = $('div#'+vSECTION_active+'_'+id+' div.media-container').attr("data-src");
-	let media_id =  $('div#'+vSECTION_active+'_'+id+' div.media-container').attr("data-id");
+	let file_type = $('div#'+gSECTION_active+'_'+id+' div.media-container').attr("data-type");
+	let file_hash = $('div#'+gSECTION_active+'_'+id+' div.media-container').attr("data-src");
+	let media_id =  $('div#'+gSECTION_active+'_'+id+' div.media-container').attr("data-id");
 	
 	$('section#fullscreen div.media').attr('data-id',media_id);
 		
 	if(file_type == 0) $('section#fullscreen div.media').html('<img src="hd-'+file_hash+'" loading="lazy">');
 	if(file_type == 1) $('section#fullscreen div.media').html('<video src="hd-'+file_hash+'" poster="sd-'+file_hash+'" controls autoplay muted preload="auto" playsinline></video>');	
 
-	//console.log(vSECTION_active, media_id, file_hash);
 }

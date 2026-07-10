@@ -432,6 +432,7 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/datas.php');
 	<!-- CORE JS FRAMEWORK - END --> 	
 	
 	<!-- OTHER SCRIPTS INCLUDED ON THIS PAGE - START --> 
+	<script src='javascript/debug.<?php echo filemtime('javascript/debug.'.DIM.'.js'); ?>.<?php echo DIM; ?>.js'></script>
 	<script src='javascript/common.<?php echo filemtime('javascript/common.'.DIM.'.js'); ?>.<?php echo DIM; ?>.js'></script>
 	<script src='javascript/display.<?php echo filemtime('javascript/display.'.DIM.'.js'); ?>.<?php echo DIM; ?>.js'></script>
 	<script src='javascript/grid.<?php echo filemtime('javascript/grid.'.DIM.'.js'); ?>.<?php echo DIM; ?>.js'></script>

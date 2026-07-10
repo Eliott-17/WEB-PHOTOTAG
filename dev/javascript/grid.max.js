@@ -2,14 +2,14 @@
 //Variables globales *********************************************
 //****************************************************************	
 
-let vSECTION_active="explore";
-let vSECTION_active_mem="";
-let vSECTION_mem_offset;
+let gSECTION_active="explore";
+let gSECTION_active_mem="";
+let gSECTION_mem_offset;
 
-let vGRID_scroll_lock = false;	//Chargement progressif: FLAG qui limite l'action scroll quand on est en train de charger la grille
+let gGRID_scroll_lock = false;	//Chargement progressif: FLAG qui limite l'action scroll quand on est en train de charger la grille
 
-let vGRID_scrollmem; 			//Restaure le scroll quand on sirt du fullscreen
-let vGRID_countmem=[];
+let gGRID_scrollmem; 			//Restaure le scroll quand on sirt du fullscreen
+let gGRID_countmem=[];
 
 //****************************************************************
 //Variables locales *********************************************
@@ -28,11 +28,11 @@ $(document).ready(function(){
 
 	$('main').on('scroll', function() {
 		
-		if (vGRID_scroll_lock || SECTIONS[vSECTION_active].offset==-1) return;
+		if (gGRID_scroll_lock || SECTIONS[gSECTION_active].offset==-1) return;
 
 		let scrollTop = $('main').scrollTop();
 		let windowHeight = $('main').height();
-		let docHeight = $('section.date.'+vSECTION_active).height()+$('section.nodate.'+vSECTION_active).height();
+		let docHeight = $('section.date.'+gSECTION_active).height()+$('section.nodate.'+gSECTION_active).height();
 		
 		let remaining = docHeight - (scrollTop + windowHeight);
 		
@@ -40,10 +40,9 @@ $(document).ready(function(){
 		if (remaining < docHeight * 0.25) {
 			if(remaining>=0)
 			{
-				vGRID_scroll_lock=true;
-				//console.log("reload from scroll",remaining);
-				SECTIONS[vSECTION_active].update=true;
-				SECTIONS[vSECTION_active].offset+=50;
+				gGRID_scroll_lock=true;
+				SECTIONS[gSECTION_active].update=true;
+				SECTIONS[gSECTION_active].offset+=50;
 				GRID_load("scroll");
 			}
 		}
@@ -53,16 +52,16 @@ $(document).ready(function(){
 
 var GRID_load = function load(from)
 {
-	if(GRID_debug) console.log(from,vFILEINFO_FLAG_SAVED,vFILEINFOMULTISELECTION_FLAG_SAVED,vNAV_FLAG_UPLOAD,vEXPLOREFILTER_FLAG_CHANGED);
+	DEBUG.log("GRID",from,vFILEINFO_FLAG_SAVED,vFILEINFOMULTISELECTION_FLAG_SAVED,vNAV_FLAG_UPLOAD,vEXPLOREFILTER_FLAG_CHANGED);
 	
-	vGRID_scroll_lock=true;
+	gGRID_scroll_lock=true;
 	
 	let offset_reset=false;
 	
 	if(vFILEINFO_FLAG_SAVED || vFILEINFOMULTISELECTION_FLAG_SAVED)
 	{
-		console.log("REQUEST UPDATE library");
-		console.log("REQUEST UPDATE explore");
+		DEBUG.log("GRID","REQUEST UPDATE library");
+		DEBUG.log("GRID","REQUEST UPDATE explore");
 		
 		SECTIONS["library"].memdata=null;	
 		SECTIONS["library"].update=true;	
@@ -80,7 +79,7 @@ var GRID_load = function load(from)
 	
 	if(vNAV_FLAG_UPLOAD)
 	{
-		console.log("REQUEST UPDATE untagged");
+		DEBUG.log("GRID","REQUEST UPDATE untagged");
 		
 		SECTIONS["untagged"].memdata=null;
 		SECTIONS["untagged"].update=true;
@@ -92,7 +91,7 @@ var GRID_load = function load(from)
 	
 	if(vEXPLOREFILTER_FLAG_CHANGED || vFILEINFO_FLAG_SAVED || vFILEINFOMULTISELECTION_FLAG_SAVED)
 	{
-		console.log("REQUEST UPDATE search");
+		DEBUG.log("GRID","REQUEST UPDATE search");
 		
 		SECTIONS["search"].memdata=null;	
 		SECTIONS["search"].update=true;	
@@ -102,40 +101,40 @@ var GRID_load = function load(from)
 		offset_reset=true;
 	}
 	
-	if(SECTIONS[vSECTION_active].offset!=undefined) {
+	if(SECTIONS[gSECTION_active].offset!=undefined) {
 		if(offset_reset) 
 		{
-			vSECTION_mem_offset=SECTIONS[vSECTION_active].offset;
-			SECTIONS[vSECTION_active].offset=0;
-			if(GRID_debug) console.log("GRID offset reset");
+			gSECTION_mem_offset=SECTIONS[gSECTION_active].offset;
+			SECTIONS[gSECTION_active].offset=0;
+			DEBUG.log("GRID","GRID offset reset");
 		}
 	}
 		
-	if(SECTIONS[vSECTION_active].update==true)
+	if(SECTIONS[gSECTION_active].update==true)
 	{
-		if(GRID_debug) console.log("GRID",vSECTION_active,"update request");
+		DEBUG.log("GRID","GRID",gSECTION_active,"update request");
 		
-		SECTIONS[vSECTION_active].update=false;
+		SECTIONS[gSECTION_active].update=false;
 		
 		//gestion du scroll si des photos sont supprimées (revenir en début de sélection)
 		
-		switch(vSECTION_active)
+		switch(gSECTION_active)
 		{
 			case "library":
 			
-				CORE_get('actions/file-load-list.php?source=0&offset='+SECTIONS[vSECTION_active].offset);
+				CORE_get('actions/file-load-list.php?source=0&offset='+SECTIONS[gSECTION_active].offset);
 
 			break;
 			case "untagged":
 			
-				CORE_get('actions/file-load-list.php?source=1&offset='+SECTIONS[vSECTION_active].offset);
+				CORE_get('actions/file-load-list.php?source=1&offset='+SECTIONS[gSECTION_active].offset);
 			
 			break;
 			case "search":
 			
-				$("#filters").attr('action','actions/file-search-list.php?offset='+SECTIONS[vSECTION_active].offset+'&tagslist='+SECTIONS[vSECTION_active].taglist);
+				$("#filters").attr('action','actions/file-search-list.php?offset='+SECTIONS[gSECTION_active].offset+'&tagslist='+SECTIONS[gSECTION_active].taglist);
 
-				SECTIONS[vSECTION_active].taglist=0; //par défaut à 0;
+				SECTIONS[gSECTION_active].taglist=0; //par défaut à 0;
 
 				CORE_post($("#filters"));
 			
@@ -152,7 +151,7 @@ var GRID_load = function load(from)
 	{
 		$('main section div.element.memselected').removeClass('memselected');
 		
-		if(GRID_debug) console.log("GRID",vSECTION_active,"no action");		
+		DEBUG.log("GRID","GRID",gSECTION_active,"no action");		
 	}
 }
 
@@ -162,40 +161,40 @@ var GRID_load_CallBack = function load_CallBack(data_array)
 
 	if(data_array.count!==undefined)
 	{
-		$('span#'+vSECTION_active+'_count').html(' ('+data_array.count+')');
+		$('span#'+gSECTION_active+'_count').html(' ('+data_array.count+')');
 		
-		if(vGRID_countmem[vSECTION_active]==undefined)
+		if(gGRID_countmem[gSECTION_active]==undefined)
 		{
-			vGRID_countmem[vSECTION_active]=data_array.count;
+			gGRID_countmem[gSECTION_active]=data_array.count;
 		}
 		else
 		{
-			if(data_array.count<vGRID_countmem[vSECTION_active])
+			if(data_array.count<gGRID_countmem[gSECTION_active])
 			{
 				regenerate=false;
 				
-				console.log('remove element');
+				DEBUG.log("GRID",'Remove elements');
 				
 				$('main section div.element.memselected').remove();
 				DISPLAY_selection();
 				GRID_load_id();
 			}
 
-			if(data_array.count==vGRID_countmem[vSECTION_active])
+			if(data_array.count==gGRID_countmem[gSECTION_active])
 			{
 				regenerate=false;
 			}
 			
-			SECTIONS[vSECTION_active].offset=vSECTION_mem_offset;
+			SECTIONS[gSECTION_active].offset=gSECTION_mem_offset;
 		}
 	}
 	
 	if(regenerate)
 	{		
-		if(SECTIONS[vSECTION_active].offset<=0) $("main section."+vSECTION_active).html('');
+		if(SECTIONS[gSECTION_active].offset<=0) $("main section."+gSECTION_active).html('');
 
-		OBJ_Dest_nodate = $("main section.nodate."+vSECTION_active);
-		OBJ_Dest_date = $("main section.date."+vSECTION_active);
+		OBJ_Dest_nodate = $("main section.nodate."+gSECTION_active);
+		OBJ_Dest_date = $("main section.date."+gSECTION_active);
 		OBJ_Select_both = $("main section.grid");
 		
 		source=data_array.datas;
@@ -226,20 +225,20 @@ var GRID_load_CallBack = function load_CallBack(data_array)
 
 				let l_date_display = l_date_test.substring(6,8) + "/" + l_date_test.substring(4,6) + "/" + l_date_test.substring(0,4);	
 				
-				if(SECTIONS[vSECTION_active].memdata==null || SECTIONS[vSECTION_active].memdata!=l_date_test)
+				if(SECTIONS[gSECTION_active].memdata==null || SECTIONS[gSECTION_active].memdata!=l_date_test)
 				{
 					OBJ_Dest_date.append('<div class="fullrow"><h2>'+formatDateLocale(l_date_display)+'</h2></div>'); //on démarre une nouvelle grille
 				}
 
 				OBJ_Dest_date.append(addElement(data_array.dir, bdd));
 								
-				SECTIONS[vSECTION_active].memdata=l_date_test;
+				SECTIONS[gSECTION_active].memdata=l_date_test;
 			}
 			
 			j++;
 		});
 			
-		if(max_display<50) SECTIONS[vSECTION_active].offset=-1; //bloquage du scroll
+		if(max_display<50) SECTIONS[gSECTION_active].offset=-1; //bloquage du scroll
 
 		//****************************************************************
 		//Attribution d'un uniqueid aux éléments chargés *****************
@@ -273,7 +272,7 @@ var GRID_load_CallBack = function load_CallBack(data_array)
 
 		$('main').on('click.gridSelect', 'div.button-select', function(e) {
 			
-			let current_id = parseInt($(this).parent().attr('id').replace(vSECTION_active+'_',''));
+			let current_id = parseInt($(this).parent().attr('id').replace(gSECTION_active+'_',''));
 					
 			//****************************************************************
 			//Logique de sélection en lot avec la touche SHIFT ***************
@@ -287,16 +286,16 @@ var GRID_load_CallBack = function load_CallBack(data_array)
 					{
 						for(i=(last_select+1);i<current_id;i++) 
 						{
-							$('div#'+vSECTION_active+'_'+i).addClass('selected');
-							$('div#'+vSECTION_active+'_'+i).removeClass('notselected');
+							$('div#'+gSECTION_active+'_'+i).addClass('selected');
+							$('div#'+gSECTION_active+'_'+i).removeClass('notselected');
 						}
 					}
 					else
 					{				
 						for(i=(current_id+1);i<last_select;i++) 
 						{
-							$('div#'+vSECTION_active+'_'+i).addClass('selected');
-							$('div#'+vSECTION_active+'_'+i).removeClass('notselected');
+							$('div#'+gSECTION_active+'_'+i).addClass('selected');
+							$('div#'+gSECTION_active+'_'+i).removeClass('notselected');
 						}
 					}	
 				}
@@ -325,11 +324,11 @@ var GRID_load_CallBack = function load_CallBack(data_array)
 		
 		$('main').on('click.gridOpen', 'div.button-fullscreen', function() {
 			
-			let media_id = parseInt($(this).parent().attr('id').replace(vSECTION_active+'_',''));
+			let media_id = parseInt($(this).parent().attr('id').replace(gSECTION_active+'_',''));
 			
 			let max = (id);
 			
-			vGRID_scrollmem = $('main').scrollTop();
+			gGRID_scrollmem = $('main').scrollTop();
 			vFILEOPEN_currentid=media_id;
 			max_id=max;
 			ArrowDisplay(media_id, max); 
@@ -344,9 +343,9 @@ var GRID_load_CallBack = function load_CallBack(data_array)
 
 	$('main section div.element.memselected').removeClass('memselected');
 	
-	vGRID_scroll_lock=false;
+	gGRID_scroll_lock=false;
 
-	if(CALLBACK_debug) console.log("GRID_load_CallBack",SECTIONS[vSECTION_active].offset,regenerate);
+	DEBUG.log("CALLBACK","load_CallBack",SECTIONS[gSECTION_active].offset,regenerate);
 }
 
 var GRID_CallBack_restaure = function restaure(current_id)
@@ -365,14 +364,14 @@ var GRID_load_id = function load_id()
 {
 	let id=0;
 
-	$('main section.' + vSECTION_active+' div.element').each(function () {
-		$(this).attr('id', vSECTION_active+'_'+id);
+	$('main section.' + gSECTION_active+' div.element').each(function () {
+		$(this).attr('id', gSECTION_active+'_'+id);
 		id++;
 	});
 	
 	return id;
 	
-	console.log("GRID_load_id");
+	DEBUG.log("GRID","load_id");
 }
 
 function addElement(dir, bdd)

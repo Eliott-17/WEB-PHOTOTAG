@@ -67,30 +67,30 @@ var DISPLAY_set_view = function view_refresh(newview)
 			
 		break;
 		default:
-			if(DISPLAY_debug) console.log("DISPLAY_set_view !!! VIEW NOT FOUND !!!");
+			DEBUG.log("DISPLAY","set_view !!! VIEW NOT FOUND !!!");
 		break;
 	
 	}
 	
-	if(DISPLAY_debug) console.log("DISPLAY_set_view",newview,"loaded");
+	DEBUG.log("DISPLAY","set_view",newview,"loaded");
 }
 
 //
 
 var DISPLAY_section = function section(section)
 {
-	vSECTION_active=section;
+	gSECTION_active=section;
 	
 	$('div#mainmenu div button').removeClass("selected");
-	$('div#mainmenu div button.'+vSECTION_active).addClass("selected");
+	$('div#mainmenu div button.'+gSECTION_active).addClass("selected");
 	
 	$('section').addClass("hidden");
-	$('section.'+vSECTION_active).removeClass("hidden");
+	$('section.'+gSECTION_active).removeClass("hidden");
 
 	$('div#uploaddrag').addClass("hidden");
-	$('div.'+vSECTION_active).removeClass("hidden");
+	$('div.'+gSECTION_active).removeClass("hidden");
 	
-	if(vSECTION_active=="search")	
+	if(gSECTION_active=="search")	
 	{
 		$('div#mainmenu').addClass('hidden');
 		$('div#searchmenu').removeClass('hidden');
@@ -103,7 +103,7 @@ var DISPLAY_section = function section(section)
 	
 	GRID_load("DISPLAY_section");//en affichant une section on s'assure de charger les données.
 		
-	if(DISPLAY_debug) console.log("DISPLAY_section",'section.'+vSECTION_active);
+	DEBUG.log("DISPLAY","section",'section.'+gSECTION_active);
 }
 
 //****************************************************************
@@ -120,7 +120,7 @@ var DISPLAY_file_info = function display_aside(visibility = undefined)
 	let lelement=$('body');
 	if(visibility==true) 		{ lelement.removeClass('no-aside-files'); return; }
 	if(visibility==false) 		{ lelement.addClass('no-aside-files'); return; }	
-	if(DISPLAY_debug) console.log("DISPLAY_file_info bad parameter");
+	DEBUG.log("DISPLAY","file_info bad parameter");
 }
 
 //****************************************************************
@@ -137,7 +137,7 @@ var DISPLAY_filters = function display_filters(visibility = undefined)
 	let lelement=$('body');
 	if(visibility==true) 		{ lelement.removeClass('no-aside-filters'); return; }
 	if(visibility==false) 		{ lelement.addClass('no-aside-filters'); return; }	
-	if(DISPLAY_debug) console.log("DISPLAY_fiters bad parameter");
+	DEBUG.log("DISPLAY","fiters bad parameter");
 }
 
 //****************************************************************
@@ -156,9 +156,9 @@ var DISPLAY_full_screen = function display_full_screen(visibility = undefined)
 	
 	if(visibility==true) 		
 	{ 
-		$('main section.'+vSECTION_active).addClass('hidden');
+		$('main section.'+gSECTION_active).addClass('hidden');
 		$('main section#fullscreen').removeClass('hidden');
-		if(DISPLAY_debug) console.log("DISPLAY_full_screen: openned (show)");
+		DEBUG.log("DISPLAY","full_screen: openned (show)");
 		$('nav#main').addClass('hidden');
 		//lelement1.addClass('hidden');
 		//lelement2.addClass('hidden');
@@ -167,7 +167,7 @@ var DISPLAY_full_screen = function display_full_screen(visibility = undefined)
 	
 	if(visibility==false) 		
 	{ 
-		$('main section.'+vSECTION_active).removeClass('hidden');
+		$('main section.'+gSECTION_active).removeClass('hidden');
 		$('main section#fullscreen').addClass('hidden');
 		$('nav#main').removeClass('hidden');
 		
@@ -182,11 +182,11 @@ var DISPLAY_full_screen = function display_full_screen(visibility = undefined)
 			lelement2.addClass('hidden');
 		}*/
 		
-		if(DISPLAY_debug) console.log("DISPLAY_full_screen: closed (hide)");		
+		DEBUG.log("DISPLAY","full_screen: closed (hide)");		
 		return; 
 		
 	}	
-	if(DISPLAY_debug) console.log("DISPLAY_full_screen bad parameter");
+	DEBUG.log("DISPLAY","full_screen bad parameter");
 }
 
 var IS_VISIBLE_menu = function is_visible_menu(object)
@@ -231,7 +231,7 @@ var DISPLAY_menu = function display_menu(object=undefined, visibility=undefined)
 		}
 	}	
 
-	if(DISPLAY_debug) console.log("DISPLAY_menu bad parameter");	
+	DEBUG.log("DISPLAY","menu bad parameter");	
 }
 
 //****************************************************************
@@ -268,7 +268,7 @@ var DISPLAY_fileinfo_init = function fileinfo_init(multiselectionreset=true)
 
 var DISPLAY_selection = function selection(vFILEOPEN_currentid=null,refreshfullscreen=false)
 {
-	if(DISPLAY_debug) console.log("DISPLAY_selection switch selection of element",vFILEOPEN_currentid);
+	DEBUG.log("DISPLAY","selection switch selection of element",vFILEOPEN_currentid);
 	
 	if(vFILEOPEN_currentid!=null) {
 	
@@ -276,12 +276,12 @@ var DISPLAY_selection = function selection(vFILEOPEN_currentid=null,refreshfulls
 
 		if(refreshfullscreen==false) 
 		{
-			$('div#'+vSECTION_active+'_'+vFILEOPEN_currentid).toggleClass('selected notselected');
+			$('div#'+gSECTION_active+'_'+vFILEOPEN_currentid).toggleClass('selected notselected');
 		}
 		
 		//Manage fullscreen selection
 		
-		if($('div#'+vSECTION_active+'_'+vFILEOPEN_currentid).hasClass('selected'))
+		if($('div#'+gSECTION_active+'_'+vFILEOPEN_currentid).hasClass('selected'))
 		{
 			$('section#fullscreen').addClass('selected');
 			$('section#fullscreen div.button-selection').addClass('selected');
@@ -328,11 +328,11 @@ var DISPLAY_trash = function trash(display)
 	if(display==true)
 	{
 		DISPLAY_menu($('div#select-trash'),true); 
-		$('main section.'+vSECTION_active+' div.selected').addClass('delete'); 
+		$('main section.'+gSECTION_active+' div.selected').addClass('delete'); 
 	}
 	else
 	{		
 		DISPLAY_menu($('div#select-trash'),false); 
-		$('main section.'+vSECTION_active+' div.selected').removeClass('delete');
+		$('main section.'+gSECTION_active+' div.selected').removeClass('delete');
 	}
 }
