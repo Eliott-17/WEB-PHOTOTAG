@@ -1,4 +1,3 @@
-
 $(document).ready(function(){
 
 	$('div.mainmenu div.search input').on('blur', function() {
@@ -92,18 +91,18 @@ $(document).ready(function(){
 			let checkboxid=0;
 			let sizeref=0;
 			
-			if(gEXPLORE_SEARCH_TAGS[$('#filter_tag').val()]!=undefined)
+			if(gEXPLORE_search_tags[$('#filter_tag').val()]!=undefined)
 			{
-				if(gEXPLORE_SEARCH_TAGS[$('#filter_tag').val()][$('#filter_val').val()]!=undefined)
+				if(gEXPLORE_search_tags[$('#filter_tag').val()][$('#filter_val').val()]!=undefined)
 				{
-					if(gEXPLORE_SEARCH_TAGS[$('#filter_tag').val()][$('#filter_val').val()][0]!=undefined)
+					if(gEXPLORE_search_tags[$('#filter_tag').val()][$('#filter_val').val()][0]!=undefined)
 					{
-						sizeref=gEXPLORE_SEARCH_TAGS[$('#filter_tag').val()][$('#filter_val').val()][0];
+						sizeref=gEXPLORE_search_tags[$('#filter_tag').val()][$('#filter_val').val()][0];
 					}
 				}
 			}
 
-			$.each(gEXPLORE_SEARCH_TAGS, function(index0, value0) 
+			$.each(gEXPLORE_search_tags, function(index0, value0) 
 			{
 				let verify='';
 				

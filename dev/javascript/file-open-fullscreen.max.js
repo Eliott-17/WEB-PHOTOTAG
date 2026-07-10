@@ -1,11 +1,20 @@
+//****************************************************************
+//Variables globales *********************************************
+//****************************************************************	
+
+let gFILEOPENFULLSCREEN_currentid;
+let gFILEOPENFULLSCREEN_maxid;
+
+//****************************************************************
+//Variables locales **********************************************
+//****************************************************************	
+
+let lockleft=0;
+let lockright=0;
+
 //***********************************************
 //Gère l'affichage en plein écran
 //***********************************************
-
-var vFILEOPEN_currentid;
-var max_id;
-var lockleft=0;
-var lockright=0;
 
 $(document).on('keydown', function(e) {
     if (e.which === 37) { if(!lockleft) Arrow(0); /*37 = flèche gauche*/ }
@@ -35,14 +44,14 @@ function Arrow(sens)
 {
 	if(!DISPLAY_is_visible_full_screen()) return;
 	
-	if(sens==0) vFILEOPEN_currentid--;
-	if(sens==1) vFILEOPEN_currentid++;
+	if(sens==0) gFILEOPENFULLSCREEN_currentid--;
+	if(sens==1) gFILEOPENFULLSCREEN_currentid++;
 	
 	if(sens==0 || sens==1)
 	{	
-		FILEOPENFULLSCREEN_Loadmedia(vFILEOPEN_currentid);
-		ArrowDisplay(vFILEOPEN_currentid, max_id);
-		DISPLAY_selection(vFILEOPEN_currentid,true);
+		FILEOPENFULLSCREEN_Loadmedia(gFILEOPENFULLSCREEN_currentid);
+		ArrowDisplay(gFILEOPENFULLSCREEN_currentid, gFILEOPENFULLSCREEN_maxid);
+		DISPLAY_selection(gFILEOPENFULLSCREEN_currentid,true);
 
 		if(DISPLAY_is_visible_file_info()) FILEINFO_CallBack_load();			
 	}
@@ -52,16 +61,16 @@ function Select()
 {
 	if(!DISPLAY_is_visible_full_screen()) return;
 
-	DISPLAY_selection(vFILEOPEN_currentid);		
+	DISPLAY_selection(gFILEOPENFULLSCREEN_currentid);		
 
 	if(!DISPLAY_is_visible_file_info() || DISPLAY_is_visible_full_screen()) return;
 					
 	FILEMULTISELECTION_CallBack_load(); //mettre à jour la sélection si on affiche le multifile sans full screen
 }
 
-function ArrowDisplay(vFILEOPEN_currentid, max_id)
+function ArrowDisplay(gFILEOPENFULLSCREEN_currentid, gFILEOPENFULLSCREEN_maxid)
 {
-	if(vFILEOPEN_currentid==0)
+	if(gFILEOPENFULLSCREEN_currentid==0)
 	{
 		$('div.button-leftarrow').addClass('hidden');
 		lockleft=1;
@@ -72,7 +81,7 @@ function ArrowDisplay(vFILEOPEN_currentid, max_id)
 		lockleft=0;
 	}
 
-	if(vFILEOPEN_currentid==max_id)
+	if(gFILEOPENFULLSCREEN_currentid==gFILEOPENFULLSCREEN_maxid)
 	{
 		$('div.button-rightarrow').addClass('hidden');
 		lockright=1;

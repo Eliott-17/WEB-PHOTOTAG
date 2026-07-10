@@ -2,15 +2,16 @@
 //Variables globales *********************************************
 //****************************************************************	
 
-let gEXPLORE_SEARCH_TAGS=[];	//Stoque les données chargées pour les réutilisées et éviter un appel  à la base de données
-let gEXPLORE_ALL_TAGS=[];		//Stoque tous les tags
+let gEXPLORE_search_tags=[];//Stoque les données chargées pour les réutilisées et éviter un appel  à la base de données
 
 //****************************************************************
 //Variables locales *********************************************
 //****************************************************************	
 
+let all_tags=[];//Stoque tous les tags
+
 //****************************************************************
-//Afficher et stock le r&sultat de la recherche ******************
+//Afficher et stock le résultat de la recherche explore **********
 //****************************************************************	
 
 $(document).ready(function(){
@@ -64,7 +65,7 @@ window.EXPLORE_CallBack_search = function(datas)
 	$('nav#main span#filterapply').html(datas.tagname+': '+datas.keywordsname);	
 	$('nav#main span#filterresult').html(datas.count+ ' element'+s);
 
-	gEXPLORE_SEARCH_TAGS=datas.tags; //stock le résultat de la recherche
+	gEXPLORE_search_tags=datas.tags; //stock le résultat de la recherche
 	
 	DEBUG.log("CALLBACK","EXPLORE_CallBack_search");
 }
@@ -75,15 +76,15 @@ window.EXPLORE_CallBack_addtags = function(tags)
 
 		let addtag=false;
 		
-		if(gEXPLORE_ALL_TAGS[index] === undefined)
+		if(all_tags[index] === undefined)
 		{
-			gEXPLORE_ALL_TAGS[index] = {};
+			all_tags[index] = {};
 			
 			addtag=true;
 		}
 		else
 		{
-			if(gEXPLORE_ALL_TAGS[index][tagvalue] === undefined)
+			if(all_tags[index][tagvalue] === undefined)
 			{
 				addtag=true;
 			}
@@ -94,11 +95,11 @@ window.EXPLORE_CallBack_addtags = function(tags)
 			$('#'+index).append('<option value="'+tagvalue+'">');
 			$('aside datalist#fastsearch').append('<option data-tag="'+index+'" value="'+tagvalue+'">');
 
-			gEXPLORE_ALL_TAGS[index][tagvalue]=1;
+			all_tags[index][tagvalue]=1;
 		}
 		else
 		{
-			gEXPLORE_ALL_TAGS[index][tagvalue]++;
+			all_tags[index][tagvalue]++;
 		}
 	});
 	
@@ -148,7 +149,7 @@ window.EXPLORE_CallBack_load = function(datas)
 		months: 0
 	};
 	
-	gEXPLORE_ALL_TAGS=datas.tags;
+	all_tags=datas.tags;
 	
 	$.each(datas.tags, function(index, tagvalue) {
 

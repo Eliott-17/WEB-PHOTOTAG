@@ -2,8 +2,9 @@
 //Gère l'affichage des informations des fichiers
 //***********************************************
 
-var vFILEINFO_load_mem=null;
-var tooltip_timer=null;
+let gFILEINFO_mem=null;
+
+let tooltip_timer=null;
 
 $(document).ready(function(){
 
@@ -98,16 +99,16 @@ window.FILEINFO_CallBack_load = function(force_reload=false)
 {	
 	let hash = $('section#fullscreen div.media img, section#fullscreen div.media video').attr('src').split('-').pop();
 		
-	if(vFILEINFO_load_mem!=hash || force_reload) 
+	if(gFILEINFO_mem!=hash || force_reload) 
 	{
 		CORE_get('actions/file-load-infos.php?hash='+hash+'&lform=');
-		vFILEINFO_load_mem=hash;
-		vFILEINFOMULTISELECTION_mem=null; //forcer le rechargement des data en sélection multiple
+		gFILEINFO_mem=hash;
+		gFILEMULTIPLESELECTION_mem=null; //forcer le rechargement des data en sélection multiple
 		DEBUG.log('FILEINFO','Data update request');
 	}
 	else
 	{
-		console.log('FILEINFO','NO data update');
+		DEBUG.log('FILEINFO','NO data update');
 	}
 }
 

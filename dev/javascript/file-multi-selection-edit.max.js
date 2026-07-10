@@ -3,9 +3,10 @@
 //en lot (bouton tag)
 //***********************************************
 
-let vFILEINFOMULTISELECTION_mem=null;
-let g_data_mem=null;
-let g_data=null;
+let gFILEMULTIPLESELECTION_mem=null;
+
+let datas_mem=null;
+let datas=null;
 
 $(document).ready(function(){
 
@@ -104,8 +105,8 @@ $(document).ready(function(){
 		
 		let data=$(this).parent().attr('id');
 
-		g_data['flag'][data]=0; //update
-		$('input.conflictedit').val(JSON.stringify(g_data['flag']));
+		datas['flag'][data]=0; //update
+		$('input.conflictedit').val(JSON.stringify(datas['flag']));
 
 		$('aside#infocontent h3#'+data+'.conflict input, h3#'+data+'.conflict select, h3#'+data+'.conflict span.solver').toggleClass('hidden');
 	
@@ -141,14 +142,14 @@ var FILEMULTISELECTION_CallBack_load = function load(force_reload=false)
 	{
 		DEBUG.log("FILEMULTISELECTION",'NO data update, require two files selected');
 	}
-	else if(JSON.stringify(vFILEINFOMULTISELECTION_mem)!==JSON.stringify(hash_array) || force_reload) 
+	else if(JSON.stringify(gFILEMULTIPLESELECTION_mem)!==JSON.stringify(hash_array) || force_reload) 
 	{		
 		$('input.filesid').val(JSON.stringify(hash_array));
 		
 		CORE_post($('#fileinfopost'));
 		
-		vFILEINFOMULTISELECTION_mem=hash_array;
-		vFILEINFO_load_mem=null; //forcer le rechargement des data en sélection simple
+		gFILEMULTIPLESELECTION_mem=hash_array;
+		gFILEINFO_mem=null; //forcer le rechargement des data en sélection simple
 		
 		DEBUG.log("FILEMULTISELECTION",'Data update request');
 	}
@@ -160,10 +161,10 @@ var FILEMULTISELECTION_CallBack_load = function load(force_reload=false)
 
 window.FILEMULTISELECTION_CallBack_display = function(ldata)
 {	
-	g_data = structuredClone(ldata);	
-	g_data_mem = structuredClone(ldata);	
+	datas = structuredClone(ldata);	
+	datas_mem = structuredClone(ldata);	
 	
-	$.each(g_data['flag'], function(key, value)
+	$.each(datas['flag'], function(key, value)
 	{
 		if(value!=0) //conflict
 		{
@@ -197,33 +198,33 @@ window.FILEMULTISELECTION_CallBack_display = function(ldata)
 			
 			if(key=="continent" || key=="country") 
 			{
-				$('aside#infocontent h3#'+key+' select').val(g_data['mem'][key]);
+				$('aside#infocontent h3#'+key+' select').val(datas['mem'][key]);
 				$('aside#infocontent h3#'+key+' span.unedit').html($('h3#'+key+' option:selected').text());
 			}
 			else if(key=="date")
 			{	
-				$('aside#infocontent h3#'+key+' input').val(formatDateTime(g_data['mem'][key]+'+0000000000','input-date'));
-				$('aside#infocontent h3#'+key+' span.unedit').html(formatDateTime(g_data['mem'][key]+'+0000000000','output-date'));
+				$('aside#infocontent h3#'+key+' input').val(formatDateTime(datas['mem'][key]+'+0000000000','input-date'));
+				$('aside#infocontent h3#'+key+' span.unedit').html(formatDateTime(datas['mem'][key]+'+0000000000','output-date'));
 			}
 			else if(key=="time")
 			{
-				$('aside#infocontent h3#'+key+' input').val(formatDateTime('00000000+0000'+g_data['mem'][key],'input-time'));
-				$('aside#infocontent h3#'+key+' span.unedit').html(formatDateTime('00000000+0000'+g_data['mem'][key],'output-time'));
+				$('aside#infocontent h3#'+key+' input').val(formatDateTime('00000000+0000'+datas['mem'][key],'input-time'));
+				$('aside#infocontent h3#'+key+' span.unedit').html(formatDateTime('00000000+0000'+datas['mem'][key],'output-time'));
 			}			
 			else if(key=="zone")
 			{
-				$('aside#infocontent h3#'+key+' input').val(formatDateTime('00000000'+g_data['mem'][key]+'000000','input-date'));
-				$('aside#infocontent h3#'+key+' span.unedit').html(formatDateTime('00000000'+g_data['mem'][key]+'000000','output-zone'));
+				$('aside#infocontent h3#'+key+' input').val(formatDateTime('00000000'+datas['mem'][key]+'000000','input-date'));
+				$('aside#infocontent h3#'+key+' span.unedit').html(formatDateTime('00000000'+datas['mem'][key]+'000000','output-zone'));
 			}
 			else if(key=="file_is_private")
 			{
 				$('aside#infocontent h3.lockconflict').addClass('hidden');				
-				FILEINFO_CallBack_lock(g_data['mem'][key]);
+				FILEINFO_CallBack_lock(datas['mem'][key]);
 			}
 			else
 			{
-				$('aside#infocontent h3#'+key+' input').val(g_data['mem'][key]);
-				$('aside#infocontent h3#'+key+' span.unedit').html(g_data['mem'][key]);
+				$('aside#infocontent h3#'+key+' input').val(datas['mem'][key]);
+				$('aside#infocontent h3#'+key+' span.unedit').html(datas['mem'][key]);
 			}
 		}
 		
@@ -233,11 +234,11 @@ window.FILEMULTISELECTION_CallBack_display = function(ldata)
 
 	$('h2#file_type span.material-symbols-outlined').html('files');
 	$('h2#file_type span.title').html('Multiple files selection');
-	$('h3#file_size span').html(formatBytes(g_data['total_size']));
+	$('h3#file_size span').html(formatBytes(datas['total_size']));
 	$('h3#file_original_name').addClass('hidden');
 	$('h3.ux-tag-location.gps').addClass('hidden');
 	$('h3.privacy_mode').removeClass('hidden');
-	$('input.conflictedit').val(JSON.stringify(g_data['flag']));
+	$('input.conflictedit').val(JSON.stringify(datas['flag']));
 		
 	DEBUG.log("CALLBACK",'FILEMULTISELECTION_CallBack_load');
 }
@@ -284,8 +285,8 @@ var FILEMULTISELECTION_reset_ux = function reset_ux(obj, data)
 		
 		$('h3.ux-' + data).each(function() {
 
-			g_data['flag'][$(this).attr('id')]=g_data_mem['flag'][$(this).attr('id')];
-			$('input.conflictedit').val(JSON.stringify(g_data['flag']));
+			datas['flag'][$(this).attr('id')]=datas_mem['flag'][$(this).attr('id')];
+			$('input.conflictedit').val(JSON.stringify(datas['flag']));
 			
 		});
 	};

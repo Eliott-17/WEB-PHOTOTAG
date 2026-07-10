@@ -334,12 +334,12 @@ window.GRID_CallBack_load = function(data_array)
 			let max = (id);
 			
 			gGRID_scrollmem = $('main').scrollTop();
-			vFILEOPEN_currentid=media_id;
-			max_id=max;
+			gFILEOPENFULLSCREEN_currentid=media_id;
+			gFILEOPENFULLSCREEN_maxid=max;
 			ArrowDisplay(media_id, max); 
 			FILEOPENFULLSCREEN_Loadmedia(media_id);
 			DISPLAY_set_view("fullscreen");	//order before DISPLAY_selection is important
-			DISPLAY_selection(vFILEOPEN_currentid,true);
+			DISPLAY_selection(gFILEOPENFULLSCREEN_currentid,true);
 		});	
 		
 		DISPLAY_selection();

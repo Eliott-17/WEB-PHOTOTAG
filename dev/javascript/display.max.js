@@ -255,22 +255,22 @@ var DISPLAY_fileinfo_init = function fileinfo_init(multiselectionreset=true)
 //Gère l'affichage lors de la sélection des photos ***************
 //****************************************************************	
 
-var DISPLAY_selection = function selection(vFILEOPEN_currentid=null,refreshfullscreen=false)
+var DISPLAY_selection = function selection(gFILEOPENFULLSCREEN_currentid=null,refreshfullscreen=false)
 {
-	DEBUG.log("DISPLAY","selection switch selection of element",vFILEOPEN_currentid);
+	DEBUG.log("DISPLAY","selection switch selection of element",gFILEOPENFULLSCREEN_currentid);
 	
-	if(vFILEOPEN_currentid!=null) {
+	if(gFILEOPENFULLSCREEN_currentid!=null) {
 	
 		//Manage grid selection
 
 		if(refreshfullscreen==false) 
 		{
-			$('div#'+gSECTION_active+'_'+vFILEOPEN_currentid).toggleClass('selected notselected');
+			$('div#'+gSECTION_active+'_'+gFILEOPENFULLSCREEN_currentid).toggleClass('selected notselected');
 		}
 		
 		//Manage fullscreen selection
 		
-		if($('div#'+gSECTION_active+'_'+vFILEOPEN_currentid).hasClass('selected'))
+		if($('div#'+gSECTION_active+'_'+gFILEOPENFULLSCREEN_currentid).hasClass('selected'))
 		{
 			$('section#fullscreen').addClass('selected');
 			$('section#fullscreen div.button-selection').addClass('selected');
