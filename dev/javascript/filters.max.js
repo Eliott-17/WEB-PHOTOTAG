@@ -169,11 +169,9 @@ var FILTERS_checkbox_post = function checkbox_post(is_checked=null)
 	$('input#filters_exclude').val(JSON.stringify(data));
 	
 	FILEMULTISELECTION_unselectall();
-		
-	SECTIONS[gSECTION_active].offset=0;
-	SECTIONS[gSECTION_active].taglist=2;
-	SECTIONS[gSECTION_active].update=true;
-
+	
+	$
+	GRID_reset("FILTERS_checkbox_post","SEARCH",2);
 	GRID_load("FILTERS_checkbox_post");
 }
 

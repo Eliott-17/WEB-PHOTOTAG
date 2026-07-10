@@ -322,6 +322,28 @@
 			}
 			unset($row);
 			
+			/*
+			retourne les tags existant liés à la recherche
+			
+			taglist = 0: 
+			
+			-on retourne les data liés à la recherche
+			-Appel de GRID_CallBack_load, affiche les éléments sans la grille active
+			
+			taglist = 1: 
+			
+			-set par l'appel EXPLORE_post_search: recherche par champ ou explorer
+			-on retourne les datas + EXPLORE_CallBack_search
+			-les tags liés à la recherche sont stockés dans gEXPLORE_SEARCH_TAGS
+			
+			taglist = 2:
+			
+			-set par l'appel FILTERS_checkbox_post: recherche par checkbox filtres avancés
+			-on retourne les datas + FILTERS_CallBack_search
+			-les tags liés à la recherch sont utilisé pour rafraichir les checkbox
+			
+			*/
+			
 			if($_GET['tagslist']==1) $fReturn->addCallBack("EXPLORE_CallBack_search", $tag);
 			if($_GET['tagslist']==2) $fReturn->addCallBack("FILTERS_CallBack_search", $tag);			
 		}

@@ -94,7 +94,7 @@ $(document).ready(function(){
 
 });
 
-var FILEINFO_load = function load(force_reload=false)
+window.FILEINFO_CallBack_load = function(force_reload=false)
 {	
 	let hash = $('section#fullscreen div.media img, section#fullscreen div.media video').attr('src').split('-').pop();
 		
@@ -111,7 +111,7 @@ var FILEINFO_load = function load(force_reload=false)
 	}
 }
 
-window.FILEINFO_CallBack_data = function(data)
+window.FILEINFO_CallBack_display = function(data)
 {	
 	DISPLAY_fileinfo_init();
 	
@@ -437,7 +437,7 @@ window.FILEINFO_CallBack_success = function()
 		
 	}, 500);
 	
-	gFLAGS.FILEINFO=true;
+	GRID_reset("FILEINFO_CallBack_success","FILES");
 	
 	$('main section div.element.selected').addClass('memselected');
 }

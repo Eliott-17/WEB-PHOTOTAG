@@ -48,7 +48,7 @@ var DISPLAY_set_view = function view_refresh(newview)
 			DISPLAY_full_screen(false);
 			DISPLAY_file_info(true);
 			
-			FILEMULTISELECTION_load();
+			FILEMULTISELECTION_CallBack_load();
 					
 		break;
 		case "fullscreen":	
@@ -63,7 +63,7 @@ var DISPLAY_set_view = function view_refresh(newview)
 			DISPLAY_full_screen(true);
 			DISPLAY_file_info(true);
 			
-			FILEINFO_load();
+			FILEINFO_CallBack_load();
 			
 		break;
 		default:

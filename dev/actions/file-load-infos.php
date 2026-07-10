@@ -62,5 +62,5 @@
 	}
 	
 	$fReturn->addConsole("[PHP EXECUTED] file-load-infos.php");
-	$fReturn->addCallBack("FILEINFO_CallBack_load", $bigarray)->fetch();	
+	$fReturn->addCallBack("FILEINFO_CallBack_display", $bigarray)->fetch();	
 ?>

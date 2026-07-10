@@ -44,7 +44,7 @@ function Arrow(sens)
 		ArrowDisplay(vFILEOPEN_currentid, max_id);
 		DISPLAY_selection(vFILEOPEN_currentid,true);
 
-		if(DISPLAY_is_visible_file_info()) FILEINFO_load();			
+		if(DISPLAY_is_visible_file_info()) FILEINFO_CallBack_load();			
 	}
 }
 
@@ -56,7 +56,7 @@ function Select()
 
 	if(!DISPLAY_is_visible_file_info() || DISPLAY_is_visible_full_screen()) return;
 					
-	FILEMULTISELECTION_load(); //mettre à jour la sélection si on affiche le multifile sans full screen
+	FILEMULTISELECTION_CallBack_load(); //mettre à jour la sélection si on affiche le multifile sans full screen
 }
 
 function ArrowDisplay(vFILEOPEN_currentid, max_id)

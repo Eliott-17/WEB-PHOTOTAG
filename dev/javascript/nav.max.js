@@ -40,11 +40,7 @@ $(document).ready(function(){
 				
 				if(option.length !== 0)
 				{
-					$('#filter_tag').val(option.attr('data-tag'));
-					$('#filter_val').val(option.val());
-					$('#filters_exclude').val("{}");
-					
-					EXPLORE_post_search();
+					EXPLORE_post_search(option.attr('data-tag'),option.val(),"{}");
 				}
 				else if(val==="")
 				{
@@ -178,15 +174,13 @@ function nav_tab_change()
 	$('main').scrollTop(0);	
 	$('main div.element').removeClass('selected');
 	$('main div.element').addClass('notselected');
-	
-	gGRID_countmem=[];
-	
+
 	DISPLAY_set_view('grid');
 }
 
 var NAV_open_untagg = function open_untagg(force_reload=false)
 {
-	gFLAGS.UPLOAD=force_reload;
+	if(force_reload) GRID_reset("NAV_open_untagg","UPLOAD");
 	nav_tab_change();
 	DISPLAY_section('untagged');
 }

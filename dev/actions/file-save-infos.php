@@ -108,8 +108,8 @@
 	
 	$affectedrow = $EasyPDO->update('photos', 'id IN', $dataarray);
 
-	//$fReturn->addConsole("Request update:".$count);	
-	//$fReturn->addConsole("Total Update data:".$affectedrow['count']);
+	$fReturn->addConsole("Request update:".$count);	
+	$fReturn->addConsole("Total Update data:".print_r($affectedrow,true));
 	
 	if($count==1)
 	{
@@ -119,7 +119,7 @@
 	}
 	else
 	{	
-		$fReturn->addCallback("FILEMULTISELECTION_Callback_load",true);
+		$fReturn->addCallback("FILEMULTISELECTION_CallBack_load",true);
 		$fReturn->addCallback("FILEMULTISELECTION_CallBack_success");
 		if(isset($tag))  $fReturn->addCallback("EXPLORE_CallBack_addtags",$tag);
 	}

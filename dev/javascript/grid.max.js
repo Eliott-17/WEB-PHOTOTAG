@@ -7,24 +7,15 @@ let gSECTION_active_mem="";
 let gSECTION_mem_offset;
 
 let gGRID_scrollmem; 			//Restaure le scroll quand on sirt du fullscreen
-let gGRID_countmem=[];
-
-let gFLAGS = {					//
-	
-	FILEINFO: false,
-	FILEINFOMULTISELECTION: false,
-	UPLOAD: false,
-	EXPLORER: false
-}
 	
 //****************************************************************
 //Variables locales *********************************************
 //****************************************************************	
 
 let SECTIONS = {
-    library:	{update:true,offset:0,memdata:null},
-    untagged: 	{update:true,offset:0,memdata:null},
-    search: 	{update:true,offset:0,memdata:null,taglist:1},
+    library:	{update:true,offset:0,memdata:null,countmem:null},
+    untagged: 	{update:true,offset:0,memdata:null,countmem:null},
+    search: 	{update:true,offset:0,memdata:null,taglist:0},
     explore: 	{update:true} //chargé à l'init
 };
 
@@ -56,70 +47,52 @@ $(document).ready(function(){
 	});
 
 });
-/*
-function GRID_reset(source)
+
+function GRID_reset(from,source,searchoption=null)
 {
-	switch
+	offset_reset=true;
+	
+	switch(source)
 	{
-		case "FILE":
+		case "FILES":
+
+			DEBUG.log("GRID","REQUEST UPDATE library");
+			DEBUG.log("GRID","REQUEST UPDATE explore");
+			
+			SECTIONS["library"].memdata=null;	
+			SECTIONS["library"].update=true;	
+
+			SECTIONS["explore"].update=true;
+
 		case "UPLOAD":
-		case "EXPLORE":
-	
-}
-*/
 
-function GRID_load(from)
-{
-	DEBUG.log("GRID",from,gFLAGS.FILEINFO,gFLAGS.FILEINFOMULTISELECTION,gFLAGS.UPLOAD,gFLAGS.EXPLORER);
-	
-	scroll_lock=true;
-	
-	let offset_reset=false;
-	
-	if(gFLAGS.FILEINFO || gFLAGS.FILEINFOMULTISELECTION)
-	{
-		DEBUG.log("GRID","REQUEST UPDATE library");
-		DEBUG.log("GRID","REQUEST UPDATE explore");
+			DEBUG.log("GRID","REQUEST UPDATE untagged");
+			
+			SECTIONS["untagged"].memdata=null;
+			SECTIONS["untagged"].update=true;
+
+		break;
+		case "SEARCH":		
 		
-		SECTIONS["library"].memdata=null;	
-		SECTIONS["library"].update=true;	
+			DEBUG.log("GRID","REQUEST UPDATE search");
+			
+			SECTIONS["search"].memdata=null;	
+			SECTIONS["search"].update=true;	
+			
+			if(searchoption!=null)
+			{
+				$('main').scrollTop(0);
+				SECTIONS["search"].taglist=searchoption;
+			}
 
-		SECTIONS["explore"].update=true;
-
-		gFLAGS.FILEINFO=false;
-		gFLAGS.FILEINFOMULTISELECTION=false;
-		
-		gFLAGS.UPLOAD=true;
-		gFLAGS.EXPLORER=true;
-	
-		offset_reset=true;
+		break;
+		default:
+			offset_reset=false;
+		break;
 	}
 	
-	if(gFLAGS.UPLOAD)
+	if(SECTIONS[gSECTION_active].offset!=undefined)
 	{
-		DEBUG.log("GRID","REQUEST UPDATE untagged");
-		
-		SECTIONS["untagged"].memdata=null;
-		SECTIONS["untagged"].update=true;
-		
-		gFLAGS.UPLOAD=false;
-
-		offset_reset=true;
-	}
-	
-	if(gFLAGS.EXPLORER)
-	{
-		DEBUG.log("GRID","REQUEST UPDATE search");
-		
-		SECTIONS["search"].memdata=null;	
-		SECTIONS["search"].update=true;	
-	
-		gFLAGS.EXPLORER=false;		
-
-		offset_reset=true;
-	}
-	
-	if(SECTIONS[gSECTION_active].offset!=undefined) {
 		if(offset_reset) 
 		{
 			gSECTION_mem_offset=SECTIONS[gSECTION_active].offset;
@@ -127,15 +100,20 @@ function GRID_load(from)
 			DEBUG.log("GRID","GRID offset reset");
 		}
 	}
-		
+	
+	DEBUG.log("GRID","Reset request from",from);
+}
+
+function GRID_load(from)
+{
+	scroll_lock=true;
+	
 	if(SECTIONS[gSECTION_active].update==true)
 	{
 		DEBUG.log("GRID","GRID",gSECTION_active,"update request");
 		
 		SECTIONS[gSECTION_active].update=false;
-		
-		//gestion du scroll si des photos sont supprimées (revenir en début de sélection)
-		
+
 		switch(gSECTION_active)
 		{
 			case "library":
@@ -153,6 +131,10 @@ function GRID_load(from)
 				$("#filters").attr('action','actions/file-search-list.php?offset='+SECTIONS[gSECTION_active].offset+'&tagslist='+SECTIONS[gSECTION_active].taglist);
 
 				SECTIONS[gSECTION_active].taglist=0; //par défaut à 0;
+				
+				//TAGLIST=0 > "GRID_CallBack_load" + array("datas"=>$return);
+				//TAGLIST=1 > "EXPLORE_CallBack_search" + $tag); + datas
+				//TAGLIST=2 > "FILTERS_CallBack_search" + $tag); + datas
 
 				CORE_post($("#filters"));
 			
@@ -181,29 +163,34 @@ window.GRID_CallBack_load = function(data_array)
 	{
 		$('span#'+gSECTION_active+'_count').html(' ('+data_array.count+')');
 		
-		if(gGRID_countmem[gSECTION_active]==undefined)
+		if(SECTIONS[gSECTION_active].countmem!==undefined)
 		{
-			gGRID_countmem[gSECTION_active]=data_array.count;
-		}
-		else
-		{
-			if(data_array.count<gGRID_countmem[gSECTION_active])
+			if(SECTIONS[gSECTION_active].countmem===null)
 			{
-				regenerate=false;
-				
-				DEBUG.log("GRID",'Remove elements');
-				
-				$('main section div.element.memselected').remove();
-				DISPLAY_selection();
-				GRID_load_id();
+				SECTIONS[gSECTION_active].countmem=data_array.count;
 			}
-
-			if(data_array.count==gGRID_countmem[gSECTION_active])
+			else
 			{
-				regenerate=false;
+				if(data_array.count<SECTIONS[gSECTION_active].countmem)
+				{
+					regenerate=false;
+					
+					DEBUG.log("GRID",'Remove elements');
+					
+					$('main section div.element.memselected').remove();
+					DISPLAY_selection();
+					GRID_load_id();
+				}
+
+				if(data_array.count==SECTIONS[gSECTION_active].countmem)
+				{
+					regenerate=false;
+				}
+				
+				SECTIONS[gSECTION_active].offset=gSECTION_mem_offset;
 			}
 			
-			SECTIONS[gSECTION_active].offset=gSECTION_mem_offset;
+			SECTIONS[gSECTION_active].countmem=data_array.count;
 		}
 	}
 	
@@ -329,7 +316,7 @@ window.GRID_CallBack_load = function(data_array)
 			
 			if(DISPLAY_is_visible_file_info()) //Si on à affiché les information des fichiers lors d'une sélection multiple
 			{
-				FILEMULTISELECTION_load(); //On rafraichi les informations affichés au changement de sélection
+				FILEMULTISELECTION_CallBack_load(); //On rafraichi les informations affichés au changement de sélection
 			}
 			
 			last_select=current_id;
@@ -374,8 +361,7 @@ window.GRID_CallBack_restaure = function(current_id)
 	count--;
 	$('nav#main span#filterresult').html(count);
 	
-	gFLAGS.FILEINFO=true;
-	gFLAGS.FILEINFOMULTISELECTION=true;	
+	GRID_reset("","FILES");
 }
 
 function GRID_load_id()

@@ -121,7 +121,7 @@ var FILEMULTISELECTION_unselectall = function unselect_all()
 	GRID_load("FILEMULTISELECTION_unselectall"); //recharger la grille si on à changer des photos
 }
 
-var FILEMULTISELECTION_load = function load(force_reload=false)
+var FILEMULTISELECTION_CallBack_load = function load(force_reload=false)
 {
 	var hash_array=[];
 
@@ -158,7 +158,7 @@ var FILEMULTISELECTION_load = function load(force_reload=false)
 	}
 }
 
-window.FILEMULTISELECTION_CallBack_load = function(ldata)
+window.FILEMULTISELECTION_CallBack_display = function(ldata)
 {	
 	g_data = structuredClone(ldata);	
 	g_data_mem = structuredClone(ldata);	
@@ -239,7 +239,7 @@ window.FILEMULTISELECTION_CallBack_load = function(ldata)
 	$('h3.privacy_mode').removeClass('hidden');
 	$('input.conflictedit').val(JSON.stringify(g_data['flag']));
 		
-	DEBUG.log("CALLBACK",'FILEMULTISELECTION_load_CallBack');
+	DEBUG.log("CALLBACK",'FILEMULTISELECTION_CallBack_load');
 }
 
 window.FILEMULTISELECTION_CallBack_success = function()
@@ -263,7 +263,7 @@ window.FILEMULTISELECTION_CallBack_success = function()
 	$('span#tag').html('refresh');
 	$('span#tag').addClass('green');	
 
-	gFLAGS.FILEINFOMULTISELECTION=true;
+	GRID_reset("FILEMULTISELECTION_CallBack_success","FILES");
 
 	$('main section div.element.selected').addClass('memselected');
 }
