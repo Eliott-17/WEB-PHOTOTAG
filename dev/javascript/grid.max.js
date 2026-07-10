@@ -6,11 +6,17 @@ let gSECTION_active="explore";
 let gSECTION_active_mem="";
 let gSECTION_mem_offset;
 
-let gGRID_scroll_lock = false;	//Chargement progressif: FLAG qui limite l'action scroll quand on est en train de charger la grille
-
 let gGRID_scrollmem; 			//Restaure le scroll quand on sirt du fullscreen
 let gGRID_countmem=[];
 
+let gFLAGS = {					//
+	
+	FILEINFO: false,
+	FILEINFOMULTISELECTION: false,
+	UPLOAD: false,
+	EXPLORER: false
+}
+	
 //****************************************************************
 //Variables locales *********************************************
 //****************************************************************	
@@ -22,13 +28,15 @@ let SECTIONS = {
     explore: 	{update:true} //chargé à l'init
 };
 
+
+let scroll_lock = false;	//Chargement progressif: FLAG qui limite l'action scroll quand on est en train de charger la grille
 let last_select=-1;		//mémorise le dernier uniqueid sélectioné
 
 $(document).ready(function(){
 
 	$('main').on('scroll', function() {
 		
-		if (gGRID_scroll_lock || SECTIONS[gSECTION_active].offset==-1) return;
+		if (scroll_lock || SECTIONS[gSECTION_active].offset==-1) return;
 
 		let scrollTop = $('main').scrollTop();
 		let windowHeight = $('main').height();
@@ -40,7 +48,7 @@ $(document).ready(function(){
 		if (remaining < docHeight * 0.25) {
 			if(remaining>=0)
 			{
-				gGRID_scroll_lock=true;
+				scroll_lock=true;
 				SECTIONS[gSECTION_active].update=true;
 				SECTIONS[gSECTION_active].offset+=50;
 				GRID_load("scroll");
@@ -52,13 +60,13 @@ $(document).ready(function(){
 
 var GRID_load = function load(from)
 {
-	DEBUG.log("GRID",from,vFILEINFO_FLAG_SAVED,vFILEINFOMULTISELECTION_FLAG_SAVED,vNAV_FLAG_UPLOAD,gEXPLOREFILTER_FLAG_CHANGED);
+	DEBUG.log("GRID",from,gFLAGS.FILEINFO,gFLAGS.FILEINFOMULTISELECTION,gFLAGS.UPLOAD,gFLAGS.EXPLORER);
 	
-	gGRID_scroll_lock=true;
+	scroll_lock=true;
 	
 	let offset_reset=false;
 	
-	if(vFILEINFO_FLAG_SAVED || vFILEINFOMULTISELECTION_FLAG_SAVED)
+	if(gFLAGS.FILEINFO || gFLAGS.FILEINFOMULTISELECTION)
 	{
 		DEBUG.log("GRID","REQUEST UPDATE library");
 		DEBUG.log("GRID","REQUEST UPDATE explore");
@@ -68,35 +76,35 @@ var GRID_load = function load(from)
 
 		SECTIONS["explore"].update=true;
 
-		vFILEINFO_FLAG_SAVED=false;
-		vFILEINFOMULTISELECTION_FLAG_SAVED=false;
+		gFLAGS.FILEINFO=false;
+		gFLAGS.FILEINFOMULTISELECTION=false;
 		
-		vNAV_FLAG_UPLOAD=true;
-		gEXPLOREFILTER_FLAG_CHANGED=true;
+		gFLAGS.UPLOAD=true;
+		gFLAGS.EXPLORER=true;
 	
 		offset_reset=true;
 	}
 	
-	if(vNAV_FLAG_UPLOAD)
+	if(gFLAGS.UPLOAD)
 	{
 		DEBUG.log("GRID","REQUEST UPDATE untagged");
 		
 		SECTIONS["untagged"].memdata=null;
 		SECTIONS["untagged"].update=true;
 		
-		vNAV_FLAG_UPLOAD=false;
+		gFLAGS.UPLOAD=false;
 
 		offset_reset=true;
 	}
 	
-	if(gEXPLOREFILTER_FLAG_CHANGED || vFILEINFO_FLAG_SAVED || vFILEINFOMULTISELECTION_FLAG_SAVED)
+	if(gFLAGS.EXPLORER || gFLAGS.FILEINFO || gFLAGS.FILEINFOMULTISELECTION)
 	{
 		DEBUG.log("GRID","REQUEST UPDATE search");
 		
 		SECTIONS["search"].memdata=null;	
 		SECTIONS["search"].update=true;	
 	
-		gEXPLOREFILTER_FLAG_CHANGED=false;		
+		gFLAGS.EXPLORER=false;		
 
 		offset_reset=true;
 	}
@@ -343,7 +351,7 @@ window.GRID_CallBack_load = function(data_array)
 
 	$('main section div.element.memselected').removeClass('memselected');
 	
-	gGRID_scroll_lock=false;
+	scroll_lock=false;
 
 	DEBUG.log("CALLBACK","CallBack_load",SECTIONS[gSECTION_active].offset,regenerate);
 }
@@ -356,8 +364,8 @@ window.GRID_CallBack_restaure = function(current_id)
 	count--;
 	$('nav#main span#filterresult').html(count);
 	
-	vFILEINFO_FLAG_SAVED=true;
-	vFILEINFOMULTISELECTION_FLAG_SAVED=true;	
+	gFLAGS.FILEINFO=true;
+	gFLAGS.FILEINFOMULTISELECTION=true;	
 }
 
 var GRID_load_id = function load_id()

@@ -5,8 +5,6 @@
 let gEXPLORE_SEARCH_TAGS=[];	//Stoque les données chargées pour les réutilisées et éviter un appel  à la base de données
 let gEXPLORE_ALL_TAGS=[];		//Stoque tous les tags
 
-let gEXPLOREFILTER_FLAG_CHANGED=false; //Si la recherche change force le rafraichissement
-
 //****************************************************************
 //Variables locales *********************************************
 //****************************************************************	
@@ -36,7 +34,7 @@ $(document).ready(function(){
 		{		
 			if($('#filter_tag').val()!=$(this).attr('data-tag') || $('#filter_val').val()!=$(this).attr('data-val') || $('input#filters_exclude').val()!="");
 			{
-				gEXPLOREFILTER_FLAG_CHANGED=true;
+				gFLAGS.EXPLORER=true;
 			}
 	
 			$('#filter_tag').val($(this).attr('data-tag'));

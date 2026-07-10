@@ -1,6 +1,3 @@
-let vNAV_search_result=false;
-let vNAV_FLAG_UPLOAD=false;
-let remaining_tags=null;
 
 $(document).ready(function(){
 
@@ -69,8 +66,6 @@ $(document).ready(function(){
 
 	$('div#searchmenu div button.return-explore').on('click', 	function() {
 
-			//vNAV_search_result=false;
-			
 			$('main').scrollTop(0);
 			FILEMULTISELECTION_unselectall();
 			DISPLAY_set_view('grid');
@@ -191,7 +186,7 @@ function nav_tab_change()
 
 var NAV_open_untagg = function open_untagg(force_reload=false)
 {
-	vNAV_FLAG_UPLOAD=force_reload;
+	gFLAGS.UPLOAD=force_reload;
 	nav_tab_change();
 	DISPLAY_section('untagged');
 }

@@ -3,7 +3,6 @@
 //***********************************************
 
 var vFILEINFO_load_mem=null;
-var vFILEINFO_FLAG_SAVED=false;
 var tooltip_timer=null;
 
 $(document).ready(function(){
@@ -438,7 +437,7 @@ window.FILEINFO_CallBack_success = function()
 		
 	}, 500);
 	
-	vFILEINFO_FLAG_SAVED=true;
+	gFLAGS.FILEINFO=true;
 	
 	$('main section div.element.selected').addClass('memselected');
 }

@@ -3,7 +3,6 @@
 //en lot (bouton tag)
 //***********************************************
 
-let vFILEINFOMULTISELECTION_FLAG_SAVED=false;
 let vFILEINFOMULTISELECTION_mem=null;
 let g_data_mem=null;
 let g_data=null;
@@ -264,7 +263,7 @@ window.FILEMULTISELECTION_CallBack_success = function()
 	$('span#tag').html('refresh');
 	$('span#tag').addClass('green');	
 
-	vFILEINFOMULTISELECTION_FLAG_SAVED=true;
+	gFLAGS.FILEINFOMULTISELECTION=true;
 
 	$('main section div.element.selected').addClass('memselected');
 }

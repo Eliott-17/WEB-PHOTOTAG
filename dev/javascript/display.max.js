@@ -170,18 +170,7 @@ var DISPLAY_full_screen = function display_full_screen(visibility = undefined)
 		$('main section.'+gSECTION_active).removeClass('hidden');
 		$('main section#fullscreen').addClass('hidden');
 		$('nav#main').removeClass('hidden');
-		
-		/*if(vNAV_search_result==true)
-		{
-			lelement1.addClass('hidden');	
-			lelement2.removeClass('hidden');
-		}
-		else
-		{
-			lelement1.removeClass('hidden');
-			lelement2.addClass('hidden');
-		}*/
-		
+			
 		DEBUG.log("DISPLAY","full_screen: closed (hide)");		
 		return; 
 		
