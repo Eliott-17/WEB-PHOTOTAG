@@ -2,8 +2,10 @@
 //Variables globales *********************************************
 //****************************************************************	
 
-let gFILEOPENFULLSCREEN_currentid;
-let gFILEOPENFULLSCREEN_maxid;
+let FILEOPENFULLSCREEN = {
+	id_current:0,
+	id_max:0
+}
 
 //****************************************************************
 //Variables locales **********************************************
@@ -32,7 +34,7 @@ $(document).ready(function(){
 		DISPLAY_set_view("grid");
 		DISPLAY_menu($('#flush-trash'), false);
 		GRID_load("click.gridSelect");
-		$('main').scrollTop(gGRID_scrollmem);		
+		$('main').scrollTop(GRID.scroll_mem);		
 	});
 
 	$('section#fullscreen').on('click.gridLeftAR', 'div.button-leftarrow', function() { Arrow(0); });			
@@ -44,14 +46,14 @@ function Arrow(sens)
 {
 	if(!DISPLAY_is_visible_full_screen()) return;
 	
-	if(sens==0) gFILEOPENFULLSCREEN_currentid--;
-	if(sens==1) gFILEOPENFULLSCREEN_currentid++;
+	if(sens==0) FILEOPENFULLSCREEN.id_current--;
+	if(sens==1) FILEOPENFULLSCREEN.id_current++;
 	
 	if(sens==0 || sens==1)
 	{	
-		FILEOPENFULLSCREEN_Loadmedia(gFILEOPENFULLSCREEN_currentid);
-		ArrowDisplay(gFILEOPENFULLSCREEN_currentid, gFILEOPENFULLSCREEN_maxid);
-		DISPLAY_selection(gFILEOPENFULLSCREEN_currentid,true);
+		FILEOPENFULLSCREEN_Loadmedia(FILEOPENFULLSCREEN.id_current);
+		ArrowDisplay(FILEOPENFULLSCREEN.id_current, FILEOPENFULLSCREEN.id_max);
+		DISPLAY_selection(FILEOPENFULLSCREEN.id_current,true);
 
 		if(DISPLAY_is_visible_file_info()) FILEINFO_CallBack_load();			
 	}
@@ -61,16 +63,16 @@ function Select()
 {
 	if(!DISPLAY_is_visible_full_screen()) return;
 
-	DISPLAY_selection(gFILEOPENFULLSCREEN_currentid);		
+	DISPLAY_selection(FILEOPENFULLSCREEN.id_current);		
 
 	if(!DISPLAY_is_visible_file_info() || DISPLAY_is_visible_full_screen()) return;
 					
 	FILEMULTISELECTION_CallBack_load(); //mettre à jour la sélection si on affiche le multifile sans full screen
 }
 
-function ArrowDisplay(gFILEOPENFULLSCREEN_currentid, gFILEOPENFULLSCREEN_maxid)
+function ArrowDisplay(current_id, max_id)
 {
-	if(gFILEOPENFULLSCREEN_currentid==0)
+	if(current_id==0)
 	{
 		$('div.button-leftarrow').addClass('hidden');
 		lockleft=1;
@@ -81,7 +83,7 @@ function ArrowDisplay(gFILEOPENFULLSCREEN_currentid, gFILEOPENFULLSCREEN_maxid)
 		lockleft=0;
 	}
 
-	if(gFILEOPENFULLSCREEN_currentid==gFILEOPENFULLSCREEN_maxid)
+	if(current_id==max_id)
 	{
 		$('div.button-rightarrow').addClass('hidden');
 		lockright=1;
@@ -95,9 +97,9 @@ function ArrowDisplay(gFILEOPENFULLSCREEN_currentid, gFILEOPENFULLSCREEN_maxid)
 
 var FILEOPENFULLSCREEN_Loadmedia = function LoadMedia(id)
 {	
-	let file_type = $('div#'+gSECTION_active+'_'+id+' div.media-container').attr("data-type");
-	let file_hash = $('div#'+gSECTION_active+'_'+id+' div.media-container').attr("data-src");
-	let media_id =  $('div#'+gSECTION_active+'_'+id+' div.media-container').attr("data-id");
+	let file_type = $('div#'+GRID.section_active+'_'+id+' div.media-container').attr("data-type");
+	let file_hash = $('div#'+GRID.section_active+'_'+id+' div.media-container').attr("data-src");
+	let media_id =  $('div#'+GRID.section_active+'_'+id+' div.media-container').attr("data-id");
 	
 	$('section#fullscreen div.media').attr('data-id',media_id);
 		

@@ -2,11 +2,12 @@
 //Variables globales *********************************************
 //****************************************************************	
 
-let gSECTION_active="explore";
-let gSECTION_active_mem="";
-let gSECTION_mem_offset;
-
-let gGRID_scrollmem; 			//Restaure le scroll quand on sirt du fullscreen
+let GRID = {
+	section_active:"explore",
+	section_mem:"",
+	offset_mem:null,
+	scroll_mem:0
+}
 	
 //****************************************************************
 //Variables locales *********************************************
@@ -26,11 +27,11 @@ $(document).ready(function(){
 
 	$('main').on('scroll', function() {
 		
-		if (scroll_lock || SECTIONS[gSECTION_active].offset==-1) return;
+		if (scroll_lock || SECTIONS[GRID.section_active].offset==-1) return;
 
 		let scrollTop = $('main').scrollTop();
 		let windowHeight = $('main').height();
-		let docHeight = $('section.date.'+gSECTION_active).height()+$('section.nodate.'+gSECTION_active).height();
+		let docHeight = $('section.date.'+GRID.section_active).height()+$('section.nodate.'+GRID.section_active).height();
 		
 		let remaining = docHeight - (scrollTop + windowHeight);
 		
@@ -39,8 +40,8 @@ $(document).ready(function(){
 			if(remaining>=0)
 			{
 				scroll_lock=true;
-				SECTIONS[gSECTION_active].update=true;
-				SECTIONS[gSECTION_active].offset+=50;
+				SECTIONS[GRID.section_active].update=true;
+				SECTIONS[GRID.section_active].offset+=50;
 				GRID_load("scroll");
 			}
 		}
@@ -91,12 +92,12 @@ function GRID_reset(from,source,searchoption=null)
 		break;
 	}
 	
-	if(SECTIONS[gSECTION_active].offset!=undefined)
+	if(SECTIONS[GRID.section_active].offset!=undefined)
 	{
 		if(offset_reset) 
 		{
-			gSECTION_mem_offset=SECTIONS[gSECTION_active].offset;
-			SECTIONS[gSECTION_active].offset=0;
+			GRID.offset_mem=SECTIONS[GRID.section_active].offset;
+			SECTIONS[GRID.section_active].offset=0;
 			DEBUG.log("GRID","GRID offset reset");
 		}
 	}
@@ -108,29 +109,29 @@ function GRID_load(from)
 {
 	scroll_lock=true;
 	
-	if(SECTIONS[gSECTION_active].update==true)
+	if(SECTIONS[GRID.section_active].update==true)
 	{
-		DEBUG.log("GRID","GRID",gSECTION_active,"update request");
+		DEBUG.log("GRID","GRID",GRID.section_active,"update request");
 		
-		SECTIONS[gSECTION_active].update=false;
+		SECTIONS[GRID.section_active].update=false;
 
-		switch(gSECTION_active)
+		switch(GRID.section_active)
 		{
 			case "library":
 			
-				CORE_get('actions/file-load-list.php?source=0&offset='+SECTIONS[gSECTION_active].offset);
+				CORE_get('actions/file-load-list.php?source=0&offset='+SECTIONS[GRID.section_active].offset);
 
 			break;
 			case "untagged":
 			
-				CORE_get('actions/file-load-list.php?source=1&offset='+SECTIONS[gSECTION_active].offset);
+				CORE_get('actions/file-load-list.php?source=1&offset='+SECTIONS[GRID.section_active].offset);
 			
 			break;
 			case "search":
 			
-				$("#filters").attr('action','actions/file-search-list.php?offset='+SECTIONS[gSECTION_active].offset+'&tagslist='+SECTIONS[gSECTION_active].taglist);
+				$("#filters").attr('action','actions/file-search-list.php?offset='+SECTIONS[GRID.section_active].offset+'&tagslist='+SECTIONS[GRID.section_active].taglist);
 
-				SECTIONS[gSECTION_active].taglist=0; //par défaut à 0;
+				SECTIONS[GRID.section_active].taglist=0; //par défaut à 0;
 				
 				//TAGLIST=0 > "GRID_CallBack_load" + array("datas"=>$return);
 				//TAGLIST=1 > "EXPLORE_CallBack_search" + $tag); + datas
@@ -151,7 +152,7 @@ function GRID_load(from)
 	{
 		$('main section div.element.memselected').removeClass('memselected');
 		
-		DEBUG.log("GRID","GRID",gSECTION_active,"no action");		
+		DEBUG.log("GRID","GRID",GRID.section_active,"no action");		
 	}
 }
 
@@ -161,17 +162,17 @@ window.GRID_CallBack_load = function(data_array)
 
 	if(data_array.count!==undefined)
 	{
-		$('span#'+gSECTION_active+'_count').html(' ('+data_array.count+')');
+		$('span#'+GRID.section_active+'_count').html(' ('+data_array.count+')');
 		
-		if(SECTIONS[gSECTION_active].countmem!==undefined)
+		if(SECTIONS[GRID.section_active].countmem!==undefined)
 		{
-			if(SECTIONS[gSECTION_active].countmem===null)
+			if(SECTIONS[GRID.section_active].countmem===null)
 			{
-				SECTIONS[gSECTION_active].countmem=data_array.count;
+				SECTIONS[GRID.section_active].countmem=data_array.count;
 			}
 			else
 			{
-				if(data_array.count<SECTIONS[gSECTION_active].countmem)
+				if(data_array.count<SECTIONS[GRID.section_active].countmem)
 				{
 					regenerate=false;
 					
@@ -182,24 +183,24 @@ window.GRID_CallBack_load = function(data_array)
 					GRID_load_id();
 				}
 
-				if(data_array.count==SECTIONS[gSECTION_active].countmem)
+				if(data_array.count==SECTIONS[GRID.section_active].countmem)
 				{
 					regenerate=false;
 				}
 				
-				SECTIONS[gSECTION_active].offset=gSECTION_mem_offset;
+				SECTIONS[GRID.section_active].offset=GRID.offset_mem;
 			}
 			
-			SECTIONS[gSECTION_active].countmem=data_array.count;
+			SECTIONS[GRID.section_active].countmem=data_array.count;
 		}
 	}
 	
 	if(regenerate)
 	{		
-		if(SECTIONS[gSECTION_active].offset<=0) $("main section."+gSECTION_active).html('');
+		if(SECTIONS[GRID.section_active].offset<=0) $("main section."+GRID.section_active).html('');
 
-		OBJ_Dest_nodate = $("main section.nodate."+gSECTION_active);
-		OBJ_Dest_date = $("main section.date."+gSECTION_active);
+		OBJ_Dest_nodate = $("main section.nodate."+GRID.section_active);
+		OBJ_Dest_date = $("main section.date."+GRID.section_active);
 		OBJ_Select_both = $("main section.grid");
 		
 		source=data_array.datas;
@@ -230,20 +231,20 @@ window.GRID_CallBack_load = function(data_array)
 
 				let l_date_display = l_date_test.substring(6,8) + "/" + l_date_test.substring(4,6) + "/" + l_date_test.substring(0,4);	
 				
-				if(SECTIONS[gSECTION_active].memdata==null || SECTIONS[gSECTION_active].memdata!=l_date_test)
+				if(SECTIONS[GRID.section_active].memdata==null || SECTIONS[GRID.section_active].memdata!=l_date_test)
 				{
 					OBJ_Dest_date.append('<div class="fullrow"><h2>'+formatDateLocale(l_date_display)+'</h2></div>'); //on démarre une nouvelle grille
 				}
 
 				OBJ_Dest_date.append(addElement(data_array.dir, bdd));
 								
-				SECTIONS[gSECTION_active].memdata=l_date_test;
+				SECTIONS[GRID.section_active].memdata=l_date_test;
 			}
 			
 			j++;
 		});
 			
-		if(max_display<50) SECTIONS[gSECTION_active].offset=-1; //bloquage du scroll
+		if(max_display<50) SECTIONS[GRID.section_active].offset=-1; //bloquage du scroll
 
 		//****************************************************************
 		//Attribution d'un uniqueid aux éléments chargés *****************
@@ -277,7 +278,7 @@ window.GRID_CallBack_load = function(data_array)
 
 		$('main').on('click.gridSelect', 'div.button-select', function(e) {
 			
-			let current_id = parseInt($(this).parent().attr('id').replace(gSECTION_active+'_',''));
+			let current_id = parseInt($(this).parent().attr('id').replace(GRID.section_active+'_',''));
 					
 			//****************************************************************
 			//Logique de sélection en lot avec la touche SHIFT ***************
@@ -291,16 +292,16 @@ window.GRID_CallBack_load = function(data_array)
 					{
 						for(i=(last_select+1);i<current_id;i++) 
 						{
-							$('div#'+gSECTION_active+'_'+i).addClass('selected');
-							$('div#'+gSECTION_active+'_'+i).removeClass('notselected');
+							$('div#'+GRID.section_active+'_'+i).addClass('selected');
+							$('div#'+GRID.section_active+'_'+i).removeClass('notselected');
 						}
 					}
 					else
 					{				
 						for(i=(current_id+1);i<last_select;i++) 
 						{
-							$('div#'+gSECTION_active+'_'+i).addClass('selected');
-							$('div#'+gSECTION_active+'_'+i).removeClass('notselected');
+							$('div#'+GRID.section_active+'_'+i).addClass('selected');
+							$('div#'+GRID.section_active+'_'+i).removeClass('notselected');
 						}
 					}	
 				}
@@ -329,17 +330,17 @@ window.GRID_CallBack_load = function(data_array)
 		
 		$('main').on('click.gridOpen', 'div.button-fullscreen', function() {
 			
-			let media_id = parseInt($(this).parent().attr('id').replace(gSECTION_active+'_',''));
+			let media_id = parseInt($(this).parent().attr('id').replace(GRID.section_active+'_',''));
 			
 			let max = (id);
 			
-			gGRID_scrollmem = $('main').scrollTop();
-			gFILEOPENFULLSCREEN_currentid=media_id;
-			gFILEOPENFULLSCREEN_maxid=max;
+			GRID.scroll_mem = $('main').scrollTop();
+			FILEOPENFULLSCREEN.id_current=media_id;
+			FILEOPENFULLSCREEN.id_max=max;
 			ArrowDisplay(media_id, max); 
 			FILEOPENFULLSCREEN_Loadmedia(media_id);
 			DISPLAY_set_view("fullscreen");	//order before DISPLAY_selection is important
-			DISPLAY_selection(gFILEOPENFULLSCREEN_currentid,true);
+			DISPLAY_selection(FILEOPENFULLSCREEN.id_current,true);
 		});	
 		
 		DISPLAY_selection();
@@ -350,7 +351,7 @@ window.GRID_CallBack_load = function(data_array)
 	
 	scroll_lock=false;
 
-	DEBUG.log("CALLBACK","CallBack_load",SECTIONS[gSECTION_active].offset,regenerate);
+	DEBUG.log("CALLBACK","CallBack_load",SECTIONS[GRID.section_active].offset,regenerate);
 }
 
 window.GRID_CallBack_restaure = function(current_id)
@@ -368,8 +369,8 @@ function GRID_load_id()
 {
 	let id=0;
 
-	$('main section.' + gSECTION_active+' div.element').each(function () {
-		$(this).attr('id', gSECTION_active+'_'+id);
+	$('main section.' + GRID.section_active+' div.element').each(function () {
+		$(this).attr('id', GRID.section_active+'_'+id);
 		id++;
 	});
 	

@@ -3,7 +3,7 @@
 //en lot (bouton tag)
 //***********************************************
 
-let gFILEMULTIPLESELECTION_mem=null;
+let FILEMULTIPLESELECTION_mem=null;
 
 let datas_mem=null;
 let datas=null;
@@ -30,7 +30,7 @@ $(document).ready(function(){
 		
 		var hash_array=[];
 
-		$('main section.'+gSECTION_active+' div.element').each(function () 
+		$('main section.'+GRID.section_active+' div.element').each(function () 
 		{ 
 			if($(this).hasClass('delete')) 
 			{ 
@@ -126,7 +126,7 @@ var FILEMULTISELECTION_CallBack_load = function load(force_reload=false)
 {
 	var hash_array=[];
 
-	$('main section.'+gSECTION_active+' div.element').each(function () 
+	$('main section.'+GRID.section_active+' div.element').each(function () 
 	{ 
 		if($(this).hasClass('selected')) 
 		{ 
@@ -142,14 +142,14 @@ var FILEMULTISELECTION_CallBack_load = function load(force_reload=false)
 	{
 		DEBUG.log("FILEMULTISELECTION",'NO data update, require two files selected');
 	}
-	else if(JSON.stringify(gFILEMULTIPLESELECTION_mem)!==JSON.stringify(hash_array) || force_reload) 
+	else if(JSON.stringify(FILEMULTIPLESELECTION_mem)!==JSON.stringify(hash_array) || force_reload) 
 	{		
 		$('input.filesid').val(JSON.stringify(hash_array));
 		
 		CORE_post($('#fileinfopost'));
 		
-		gFILEMULTIPLESELECTION_mem=hash_array;
-		gFILEINFO_mem=null; //forcer le rechargement des data en sélection simple
+		FILEMULTIPLESELECTION_mem=hash_array;
+		FILEINFO_mem=null; //forcer le rechargement des data en sélection simple
 		
 		DEBUG.log("FILEMULTISELECTION",'Data update request');
 	}
@@ -245,16 +245,16 @@ window.FILEMULTISELECTION_CallBack_display = function(ldata)
 
 window.FILEMULTISELECTION_CallBack_success = function()
 {
-	$('main section.'+gSECTION_active+' div.selected').addClass("transition-on");
-	$('main section.'+gSECTION_active+' div.selected').addClass("success");
+	$('main section.'+GRID.section_active+' div.selected').addClass("transition-on");
+	$('main section.'+GRID.section_active+' div.selected').addClass("success");
 	
 	setTimeout(function() { 
 		
-		$('main section.'+gSECTION_active+' div.selected').removeClass("success"); 
+		$('main section.'+GRID.section_active+' div.selected').removeClass("success"); 
 		
 		setTimeout(function() { 
 		
-			$('main section.'+gSECTION_active+' div.selected').removeClass("transition-on"); 
+			$('main section.'+GRID.section_active+' div.selected').removeClass("transition-on"); 
 		
 		}, 500);
 		

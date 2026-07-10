@@ -2,7 +2,7 @@
 //Variables globales *********************************************
 //****************************************************************	
 
-let gEXPLORE_search_tags=[];//Stoque les données chargées pour les réutilisées et éviter un appel  à la base de données
+let EXPLORE_search_tags=[];//Stoque les données chargées pour les réutilisées et éviter un appel  à la base de données
 
 //****************************************************************
 //Variables locales *********************************************
@@ -50,7 +50,7 @@ function EXPLORE_post_search(tag,val,exclude)
 	$('#filter_val').val(val);
 	$('#filters_exclude').val(exclude);
 
-	if(gSECTION_active!="search") gSECTION_active_mem=gSECTION_active;
+	if(GRID.section_active!="search") GRID.section_mem=GRID.section_active;
 
 	DISPLAY_menu($('#select-status'),false);
 	DISPLAY_set_view('grid');		
@@ -65,7 +65,7 @@ window.EXPLORE_CallBack_search = function(datas)
 	$('nav#main span#filterapply').html(datas.tagname+': '+datas.keywordsname);	
 	$('nav#main span#filterresult').html(datas.count+ ' element'+s);
 
-	gEXPLORE_search_tags=datas.tags; //stock le résultat de la recherche
+	EXPLORE_search_tags=datas.tags; //stock le résultat de la recherche
 	
 	DEBUG.log("CALLBACK","EXPLORE_CallBack_search");
 }

@@ -2,7 +2,7 @@
 //Gère l'affichage des informations des fichiers
 //***********************************************
 
-let gFILEINFO_mem=null;
+let FILEINFO_mem=null;
 
 let tooltip_timer=null;
 
@@ -99,10 +99,10 @@ window.FILEINFO_CallBack_load = function(force_reload=false)
 {	
 	let hash = $('section#fullscreen div.media img, section#fullscreen div.media video').attr('src').split('-').pop();
 		
-	if(gFILEINFO_mem!=hash || force_reload) 
+	if(FILEINFO_mem!=hash || force_reload) 
 	{
 		CORE_get('actions/file-load-infos.php?hash='+hash+'&lform=');
-		gFILEINFO_mem=hash;
+		FILEINFO_mem=hash;
 		gFILEMULTIPLESELECTION_mem=null; //forcer le rechargement des data en sélection multiple
 		DEBUG.log('FILEINFO','Data update request');
 	}

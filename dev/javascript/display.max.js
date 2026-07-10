@@ -79,18 +79,18 @@ var DISPLAY_set_view = function view_refresh(newview)
 
 var DISPLAY_section = function section(section)
 {
-	gSECTION_active=section;
+	GRID.section_active=section;
 	
 	$('div#mainmenu div button').removeClass("selected");
-	$('div#mainmenu div button.'+gSECTION_active).addClass("selected");
+	$('div#mainmenu div button.'+GRID.section_active).addClass("selected");
 	
 	$('section').addClass("hidden");
-	$('section.'+gSECTION_active).removeClass("hidden");
+	$('section.'+GRID.section_active).removeClass("hidden");
 
 	$('div#uploaddrag').addClass("hidden");
-	$('div.'+gSECTION_active).removeClass("hidden");
+	$('div.'+GRID.section_active).removeClass("hidden");
 	
-	if(gSECTION_active=="search")	
+	if(GRID.section_active=="search")	
 	{
 		$('div#mainmenu').addClass('hidden');
 		$('div#searchmenu').removeClass('hidden');
@@ -103,7 +103,7 @@ var DISPLAY_section = function section(section)
 	
 	GRID_load("DISPLAY_section");//en affichant une section on s'assure de charger les données.
 		
-	DEBUG.log("DISPLAY","section",'section.'+gSECTION_active);
+	DEBUG.log("DISPLAY","section",'section.'+GRID.section_active);
 }
 
 //****************************************************************
@@ -156,7 +156,7 @@ var DISPLAY_full_screen = function display_full_screen(visibility = undefined)
 	
 	if(visibility==true) 		
 	{ 
-		$('main section.'+gSECTION_active).addClass('hidden');
+		$('main section.'+GRID.section_active).addClass('hidden');
 		$('main section#fullscreen').removeClass('hidden');
 		DEBUG.log("DISPLAY","full_screen: openned (show)");
 		$('nav#main').addClass('hidden');
@@ -167,7 +167,7 @@ var DISPLAY_full_screen = function display_full_screen(visibility = undefined)
 	
 	if(visibility==false) 		
 	{ 
-		$('main section.'+gSECTION_active).removeClass('hidden');
+		$('main section.'+GRID.section_active).removeClass('hidden');
 		$('main section#fullscreen').addClass('hidden');
 		$('nav#main').removeClass('hidden');
 			
@@ -255,22 +255,22 @@ var DISPLAY_fileinfo_init = function fileinfo_init(multiselectionreset=true)
 //Gère l'affichage lors de la sélection des photos ***************
 //****************************************************************	
 
-var DISPLAY_selection = function selection(gFILEOPENFULLSCREEN_currentid=null,refreshfullscreen=false)
+var DISPLAY_selection = function selection(id_current=null,refreshfullscreen=false)
 {
-	DEBUG.log("DISPLAY","selection switch selection of element",gFILEOPENFULLSCREEN_currentid);
+	DEBUG.log("DISPLAY","selection switch selection of element",id_current);
 	
-	if(gFILEOPENFULLSCREEN_currentid!=null) {
+	if(id_current!=null) {
 	
 		//Manage grid selection
 
 		if(refreshfullscreen==false) 
 		{
-			$('div#'+gSECTION_active+'_'+gFILEOPENFULLSCREEN_currentid).toggleClass('selected notselected');
+			$('div#'+GRID.section_active+'_'+id_current).toggleClass('selected notselected');
 		}
 		
 		//Manage fullscreen selection
 		
-		if($('div#'+gSECTION_active+'_'+gFILEOPENFULLSCREEN_currentid).hasClass('selected'))
+		if($('div#'+GRID.section_active+'_'+id_current).hasClass('selected'))
 		{
 			$('section#fullscreen').addClass('selected');
 			$('section#fullscreen div.button-selection').addClass('selected');
@@ -317,11 +317,11 @@ var DISPLAY_trash = function trash(display)
 	if(display==true)
 	{
 		DISPLAY_menu($('div#select-trash'),true); 
-		$('main section.'+gSECTION_active+' div.selected').addClass('delete'); 
+		$('main section.'+GRID.section_active+' div.selected').addClass('delete'); 
 	}
 	else
 	{		
 		DISPLAY_menu($('div#select-trash'),false); 
-		$('main section.'+gSECTION_active+' div.selected').removeClass('delete');
+		$('main section.'+GRID.section_active+' div.selected').removeClass('delete');
 	}
 }
