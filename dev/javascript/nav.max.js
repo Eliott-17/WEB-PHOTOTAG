@@ -101,18 +101,18 @@ $(document).ready(function(){
 			let checkboxid=0;
 			let sizeref=0;
 			
-			if(vEXPLORE_SEARCH_TAGS[$('#filter_tag').val()]!=undefined)
+			if(gEXPLORE_SEARCH_TAGS[$('#filter_tag').val()]!=undefined)
 			{
-				if(vEXPLORE_SEARCH_TAGS[$('#filter_tag').val()][$('#filter_val').val()]!=undefined)
+				if(gEXPLORE_SEARCH_TAGS[$('#filter_tag').val()][$('#filter_val').val()]!=undefined)
 				{
-					if(vEXPLORE_SEARCH_TAGS[$('#filter_tag').val()][$('#filter_val').val()][0]!=undefined)
+					if(gEXPLORE_SEARCH_TAGS[$('#filter_tag').val()][$('#filter_val').val()][0]!=undefined)
 					{
-						sizeref=vEXPLORE_SEARCH_TAGS[$('#filter_tag').val()][$('#filter_val').val()][0];
+						sizeref=gEXPLORE_SEARCH_TAGS[$('#filter_tag').val()][$('#filter_val').val()][0];
 					}
 				}
 			}
 
-			$.each(vEXPLORE_SEARCH_TAGS, function(index0, value0) 
+			$.each(gEXPLORE_SEARCH_TAGS, function(index0, value0) 
 			{
 				let verify='';
 				

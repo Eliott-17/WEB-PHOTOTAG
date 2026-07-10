@@ -113,15 +113,15 @@
 	
 	if($count==1)
 	{
-		$fReturn->addCallback("FILEINFO_load",true);
+		$fReturn->addCallback("FILEINFO_CallBack_load",true);
 		$fReturn->addCallback("FILEINFO_CallBack_success");
-		if(isset($tag))  $fReturn->addCallback("EXPLORE_add_tags",$tag);
+		if(isset($tag))  $fReturn->addCallback("EXPLORE_CallBack_addtags",$tag);
 	}
 	else
 	{	
-		$fReturn->addCallback("FILEMULTISELECTION_load",true);
+		$fReturn->addCallback("FILEMULTISELECTION_Callback_load",true);
 		$fReturn->addCallback("FILEMULTISELECTION_CallBack_success");
-		if(isset($tag))  $fReturn->addCallback("EXPLORE_add_tags",$tag);
+		if(isset($tag))  $fReturn->addCallback("EXPLORE_CallBack_addtags",$tag);
 	}
 	
 	$fReturn->fetch();

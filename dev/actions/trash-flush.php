@@ -34,7 +34,7 @@
 			}
 		}
 		
-		$fReturn->addCallBack("FILTERS_flush_CallBack");
+		$fReturn->addCallBack("FILTERS_CallBack_flush");
 	}
 	else
 	{

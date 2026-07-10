@@ -112,7 +112,7 @@ var FILEINFO_load = function load(force_reload=false)
 	}
 }
 
-var FILEINFO_CallBack_data = function CallBack(data)
+window.FILEINFO_CallBack_data = function(data)
 {	
 	DISPLAY_fileinfo_init();
 	
@@ -407,7 +407,7 @@ var FILEINFO_CallBack_data = function CallBack(data)
 	
 	//informations
 
-	FILEINFO_lock_CallBack(datas.file_is_private);
+	FILEINFO_CallBack_lock(datas.file_is_private);
 			
 	$('h3#time_added_at').html(formatUTCToLocalWithTimezone(datas.time_added_at));
 	
@@ -420,7 +420,7 @@ var FILEINFO_CallBack_data = function CallBack(data)
 	DEBUG.log('FILEINFO','CallBack_data');
 }
 
-var FILEINFO_CallBack_success = function CallBack_success()
+window.FILEINFO_CallBack_success = function()
 {
 	$('main section#fullscreen').addClass("transition-on");
 	$('main section#fullscreen').addClass("success");
@@ -443,7 +443,7 @@ var FILEINFO_CallBack_success = function CallBack_success()
 	$('main section div.element.selected').addClass('memselected');
 }
 
-function FILEINFO_lock_CallBack(value)
+window.FILEINFO_CallBack_lock = function(value)
 {
 	$('div.privacy_mode_locked').addClass('hidden');
 	$('div.privacy_mode_unlocked').addClass('hidden');

@@ -59,7 +59,7 @@ $(document).ready(function()
 });
 
 
-var FILTERS_search_CallBack = function search_CallBack(datas) 
+window.FILTERS_CallBack_search = function(datas) 
 {
 	let s="";
 	if(datas.count>1) s="s";
@@ -135,7 +135,7 @@ var FILTERS_search_CallBack = function search_CallBack(datas)
 		search_flag_limit=false;
 	}			
 	
-	DEBUG.log("CALLBACK","FILTERS_search_CallBack");
+	DEBUG.log("CALLBACK","FILTERS_CallBack_search");
 }
 
 var FILTERS_checkbox_post = function checkbox_post(is_checked=null)
@@ -177,7 +177,7 @@ var FILTERS_checkbox_post = function checkbox_post(is_checked=null)
 	GRID_load("FILTERS_checkbox_post");
 }
 
-var FILTERS_trash_CallBack = function trash_CallBack(count)
+window.FILTERS_CallBack_trash = function(count)
 {
 	
 	$('nav#main span#filterapply').html('TRASH');	
@@ -186,7 +186,7 @@ var FILTERS_trash_CallBack = function trash_CallBack(count)
 	DISPLAY_menu($('#flush-trash'), true);
 }
 
-var FILTERS_flush_CallBack = function trash_CallBack()
+window.FILTERS_CallBack_flush = function()
 {	
 	$('nav#main span#filterresult').html(0);
 	$('section.search').html('');

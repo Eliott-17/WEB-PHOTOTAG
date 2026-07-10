@@ -7,12 +7,12 @@ $(document).ready(function(){
 	});	
 });
 
-var LOGIN_password_verif_CallBack = function password_verif()
+window.LOGIN_CallBack_passwordverif = function()
 {
 	$('nav #login .password-confirmation').removeClass('hidden');
 }
 
-var LOGIN_a2f_verif_CallBack = function a2f_verif()
+window.OGIN_CallBack_a2fverif = function()
 {
 	$('nav #login .code').removeClass('hidden');
 

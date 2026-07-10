@@ -52,7 +52,7 @@ $(document).ready(function(){
 
 var GRID_load = function load(from)
 {
-	DEBUG.log("GRID",from,vFILEINFO_FLAG_SAVED,vFILEINFOMULTISELECTION_FLAG_SAVED,vNAV_FLAG_UPLOAD,vEXPLOREFILTER_FLAG_CHANGED);
+	DEBUG.log("GRID",from,vFILEINFO_FLAG_SAVED,vFILEINFOMULTISELECTION_FLAG_SAVED,vNAV_FLAG_UPLOAD,gEXPLOREFILTER_FLAG_CHANGED);
 	
 	gGRID_scroll_lock=true;
 	
@@ -72,7 +72,7 @@ var GRID_load = function load(from)
 		vFILEINFOMULTISELECTION_FLAG_SAVED=false;
 		
 		vNAV_FLAG_UPLOAD=true;
-		vEXPLOREFILTER_FLAG_CHANGED=true;
+		gEXPLOREFILTER_FLAG_CHANGED=true;
 	
 		offset_reset=true;
 	}
@@ -89,14 +89,14 @@ var GRID_load = function load(from)
 		offset_reset=true;
 	}
 	
-	if(vEXPLOREFILTER_FLAG_CHANGED || vFILEINFO_FLAG_SAVED || vFILEINFOMULTISELECTION_FLAG_SAVED)
+	if(gEXPLOREFILTER_FLAG_CHANGED || vFILEINFO_FLAG_SAVED || vFILEINFOMULTISELECTION_FLAG_SAVED)
 	{
 		DEBUG.log("GRID","REQUEST UPDATE search");
 		
 		SECTIONS["search"].memdata=null;	
 		SECTIONS["search"].update=true;	
 	
-		vEXPLOREFILTER_FLAG_CHANGED=false;		
+		gEXPLOREFILTER_FLAG_CHANGED=false;		
 
 		offset_reset=true;
 	}
@@ -155,7 +155,7 @@ var GRID_load = function load(from)
 	}
 }
 
-var GRID_load_CallBack = function load_CallBack(data_array)
+window.GRID_CallBack_load = function(data_array)
 {
 	let regenerate=true;
 
@@ -345,10 +345,10 @@ var GRID_load_CallBack = function load_CallBack(data_array)
 	
 	gGRID_scroll_lock=false;
 
-	DEBUG.log("CALLBACK","load_CallBack",SECTIONS[gSECTION_active].offset,regenerate);
+	DEBUG.log("CALLBACK","CallBack_load",SECTIONS[gSECTION_active].offset,regenerate);
 }
 
-var GRID_CallBack_restaure = function restaure(current_id)
+window.GRID_CallBack_restaure = function(current_id)
 {
 	$('div#'+current_id).remove();
 	

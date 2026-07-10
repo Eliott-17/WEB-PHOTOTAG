@@ -86,6 +86,6 @@
 	}
 			
 	$fReturn->addConsole("[PHP EXECUTED] file-load-explore.php");
-	$fReturn->addCallBack("EXPLORE_CallBack", $bigarray)->fetch();
+	$fReturn->addCallBack("EXPLORE_CallBack_load", $bigarray)->fetch();
 
 ?>

@@ -91,6 +91,6 @@
 	
 
 	$fReturn->addConsole("[PHP EXECUTED] file-load-list.php");
-	$fReturn->addCallBack("GRID_load_CallBack", $bigarray)->fetch();
+	$fReturn->addCallBack("GRID_CallBack_load", $bigarray)->fetch();
 
 ?>

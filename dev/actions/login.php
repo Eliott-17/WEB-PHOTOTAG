@@ -70,7 +70,7 @@ else
 	{
 		if(empty($_POST['password_verif']))
 		{
-			$fReturn->addInfoMessage("Confirm you password to create an account.")->addCallBack("LOGIN_password_verif_CallBack")->fetch();	 
+			$fReturn->addInfoMessage("Confirm you password to create an account.")->addCallBack("LOGIN_CallBack_passwordverif")->fetch();	 
 		}
 		
 		if($_POST['password_verif']!=$_POST['password'])
@@ -100,7 +100,7 @@ else
 		}
 		
 		//TODO send_a2f_email($_POST['email'],$a2f_code);
-		$fReturn->addInfoMessage("Please enter the security code received by email")->addCallBack("LOGIN_a2f_verif_CallBack")->fetch(); //CallBack faire apparaitre le chanmp CODE en javascript
+		$fReturn->addInfoMessage("Please enter the security code received by email")->addCallBack("LOGIN_CallBack_a2fverif")->fetch(); //CallBack faire apparaitre le chanmp CODE en javascript
 	}
 	else if($result['count']==1) //account exist
 	{				
@@ -122,7 +122,7 @@ else
 		{
 			if(empty($_POST['code'])) 
 			{
-				$fReturn->addInfoMessage("Please enter the security code received by email")->addCallBack("LOGIN_a2f_verif_CallBack")->fetch();
+				$fReturn->addInfoMessage("Please enter the security code received by email")->addCallBack("LOGIN_CallBack_a2fverif")->fetch();
 			}
 			
 			if($result['datas'][0]['a2f_exp'] < $time OR $_SESSION['try_a2f'] >= 2) 
@@ -182,7 +182,7 @@ else
 				$fReturn->addInfoMessage("Please enter the security code received by email");
 			}
 			
-			$fReturn->addCallBack("LOGIN_a2f_verif_CallBack")->fetch(); //CallBack faire apparaitre le chanmp CODE en javascript			
+			$fReturn->addCallBack("LOGIN_CallBack_a2fverif")->fetch(); //CallBack faire apparaitre le chanmp CODE en javascript			
 		}
 		
 		if($usedA2F)

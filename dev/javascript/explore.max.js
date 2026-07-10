@@ -2,10 +2,10 @@
 //Variables globales *********************************************
 //****************************************************************	
 
-let vEXPLORE_SEARCH_TAGS=[];	//Stoque les données chargées pour les réutilisées et éviter un appel  à la base de données
-let vEXPLORE_ALL_TAGS=[];		//Stoque tous les tags
+let gEXPLORE_SEARCH_TAGS=[];	//Stoque les données chargées pour les réutilisées et éviter un appel  à la base de données
+let gEXPLORE_ALL_TAGS=[];		//Stoque tous les tags
 
-let vEXPLOREFILTER_FLAG_CHANGED=false; //Si la recherche change force le rafraichissement
+let gEXPLOREFILTER_FLAG_CHANGED=false; //Si la recherche change force le rafraichissement
 
 //****************************************************************
 //Variables locales *********************************************
@@ -36,7 +36,7 @@ $(document).ready(function(){
 		{		
 			if($('#filter_tag').val()!=$(this).attr('data-tag') || $('#filter_val').val()!=$(this).attr('data-val') || $('input#filters_exclude').val()!="");
 			{
-				vEXPLOREFILTER_FLAG_CHANGED=true;
+				gEXPLOREFILTER_FLAG_CHANGED=true;
 			}
 	
 			$('#filter_tag').val($(this).attr('data-tag'));
@@ -64,7 +64,7 @@ var EXPLORE_post_search = function post_search()
 	DISPLAY_section("search");	
 }
 
-var EXPLORE_search_CallBack = function search_CallBack(datas) 
+var EXPLORE_CallBack_search = function search(datas) 
 {
 	let s="";
 	if(datas.count>1) s="s";
@@ -72,7 +72,7 @@ var EXPLORE_search_CallBack = function search_CallBack(datas)
 	$('nav#main span#filterapply').html(datas.tagname+': '+datas.keywordsname);	
 	$('nav#main span#filterresult').html(datas.count+ ' element'+s);
 
-	vEXPLORE_SEARCH_TAGS=datas.tags; //stock le résultat de la recherche
+	gEXPLORE_SEARCH_TAGS=datas.tags; //stock le résultat de la recherche
 	
 	DEBUG.log("CALLBACK","EXPLORE_search_CallBack");
 }
@@ -83,15 +83,15 @@ var EXPLORE_add_tags = function add_tags(tags)
 
 		let addtag=false;
 		
-		if(vEXPLORE_ALL_TAGS[index] === undefined)
+		if(gEXPLORE_ALL_TAGS[index] === undefined)
 		{
-			vEXPLORE_ALL_TAGS[index] = {};
+			gEXPLORE_ALL_TAGS[index] = {};
 			
 			addtag=true;
 		}
 		else
 		{
-			if(vEXPLORE_ALL_TAGS[index][tagvalue] === undefined)
+			if(gEXPLORE_ALL_TAGS[index][tagvalue] === undefined)
 			{
 				addtag=true;
 			}
@@ -102,11 +102,11 @@ var EXPLORE_add_tags = function add_tags(tags)
 			$('#'+index).append('<option value="'+tagvalue+'">');
 			$('aside datalist#fastsearch').append('<option data-tag="'+index+'" value="'+tagvalue+'">');
 
-			vEXPLORE_ALL_TAGS[index][tagvalue]=1;
+			gEXPLORE_ALL_TAGS[index][tagvalue]=1;
 		}
 		else
 		{
-			vEXPLORE_ALL_TAGS[index][tagvalue]++;
+			gEXPLORE_ALL_TAGS[index][tagvalue]++;
 		}
 	});
 }
@@ -115,7 +115,7 @@ var EXPLORE_add_tags = function add_tags(tags)
 //Fonction Génération des datalist & advanced filters ************
 //****************************************************************	
 
-var EXPLORE_CallBack = function CallBack(datas)
+window.EXPLORE_CallBack_load = function(datas) 
 {	
 	let html = '';
 	let htmlfull = '';
@@ -154,7 +154,7 @@ var EXPLORE_CallBack = function CallBack(datas)
 		months: 0
 	};
 	
-	vEXPLORE_ALL_TAGS=datas.tags;
+	gEXPLORE_ALL_TAGS=datas.tags;
 	
 	$.each(datas.tags, function(index, tagvalue) {
 

@@ -159,7 +159,7 @@ var FILEMULTISELECTION_load = function load(force_reload=false)
 	}
 }
 
-var FILEMULTISELECTION_load_CallBack = function load(ldata)
+window.FILEMULTISELECTION_CallBack_load = function(ldata)
 {	
 	g_data = structuredClone(ldata);	
 	g_data_mem = structuredClone(ldata);	
@@ -219,7 +219,7 @@ var FILEMULTISELECTION_load_CallBack = function load(ldata)
 			else if(key=="file_is_private")
 			{
 				$('aside#infocontent h3.lockconflict').addClass('hidden');				
-				FILEINFO_lock_CallBack(g_data['mem'][key]);
+				FILEINFO_CallBack_lock(g_data['mem'][key]);
 			}
 			else
 			{
@@ -243,7 +243,7 @@ var FILEMULTISELECTION_load_CallBack = function load(ldata)
 	DEBUG.log("CALLBACK",'FILEMULTISELECTION_load_CallBack');
 }
 
-var FILEMULTISELECTION_CallBack_success = function CallBack_success()
+window.FILEMULTISELECTION_CallBack_success = function()
 {
 	$('main section.'+gSECTION_active+' div.selected').addClass("transition-on");
 	$('main section.'+gSECTION_active+' div.selected').addClass("success");
@@ -292,7 +292,7 @@ var FILEMULTISELECTION_reset_ux = function reset_ux(obj, data)
 	};
 }
 
-var FILEMULTISELECTION_CallBack_trash = function CallBack_trash()
+window.FILEMULTISELECTION_CallBack_trash = function()
 {
 	DISPLAY_set_view('grid');
 	GRID_load_id();

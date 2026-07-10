@@ -33,6 +33,6 @@
 		$fReturn->addConsole("[PHP] SQL error while update")->fetch();	
 	}
 
-	$fReturn->addCallback("FILEINFO_lock_CallBack",$lock_status);	
+	$fReturn->addCallback("FILEINFO_CallBack_lock",$lock_status);	
 	$fReturn->fetch();
 ?>	
