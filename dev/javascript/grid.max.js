@@ -28,7 +28,6 @@ let SECTIONS = {
     explore: 	{update:true} //chargé à l'init
 };
 
-
 let scroll_lock = false;	//Chargement progressif: FLAG qui limite l'action scroll quand on est en train de charger la grille
 let last_select=-1;		//mémorise le dernier uniqueid sélectioné
 
@@ -57,8 +56,19 @@ $(document).ready(function(){
 	});
 
 });
+/*
+function GRID_reset(source)
+{
+	switch
+	{
+		case "FILE":
+		case "UPLOAD":
+		case "EXPLORE":
+	
+}
+*/
 
-var GRID_load = function load(from)
+function GRID_load(from)
 {
 	DEBUG.log("GRID",from,gFLAGS.FILEINFO,gFLAGS.FILEINFOMULTISELECTION,gFLAGS.UPLOAD,gFLAGS.EXPLORER);
 	
@@ -97,7 +107,7 @@ var GRID_load = function load(from)
 		offset_reset=true;
 	}
 	
-	if(gFLAGS.EXPLORER || gFLAGS.FILEINFO || gFLAGS.FILEINFOMULTISELECTION)
+	if(gFLAGS.EXPLORER)
 	{
 		DEBUG.log("GRID","REQUEST UPDATE search");
 		
@@ -368,7 +378,7 @@ window.GRID_CallBack_restaure = function(current_id)
 	gFLAGS.FILEINFOMULTISELECTION=true;	
 }
 
-var GRID_load_id = function load_id()
+function GRID_load_id()
 {
 	let id=0;
 
