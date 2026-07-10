@@ -27,13 +27,6 @@ var DISPLAY_set_view = function view_refresh(newview)
 			DISPLAY_filters(true);	
 			
 		break;
-		/*case "explore":
-		
-			DISPLAY_full_screen(false);
-			DISPLAY_file_info(false);
-			DISPLAY_explore(true);		
-		
-		break;*/
 		case "grid":
 		
 			DISPLAY_full_screen(false);

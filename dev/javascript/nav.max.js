@@ -1,3 +1,5 @@
+let timernav0=null;
+
 $(document).ready(function(){
 
 	$('div.mainmenu div.search input').on('blur', function() {
@@ -177,9 +179,28 @@ function nav_tab_change()
 	DISPLAY_set_view('grid');
 }
 
-var NAV_open_untagg = function open_untagg(force_reload=false)
+window.NAV_open_untagg = function(force_reload=false)
 {
 	if(force_reload) GRID_reset("NAV_open_untagg","UPLOAD");
 	nav_tab_change();
 	DISPLAY_section('untagged');
 }
+
+window.NAV_CallBack_error = function(message)
+{
+	if($('div#error-message div').html()!='') $('div#error-message div').append('<br/>');
+	
+	$('div#error-message div').append(message);
+	DISPLAY_menu($('div#error-message'),true); 
+	
+	if(timernav0!==null) clearTimeout(timernav0);
+	
+	timernav0=setTimeout(function()  
+	{
+		DISPLAY_menu($('div#error-message'),false);
+		$('div#error-message div').html('');		
+		timernav0 = null;
+	
+	}, 10000);
+}
+

@@ -69,9 +69,9 @@
 	}
 	else
 	{
-		$fReturn->addConsole("[PHP] SQL error while loading explore");
-		if(ENV=="DEV") $fReturn->addConsole(print_r($array_lib,true));
-		$bigarray['tags']=[];
+		$fReturn->addCallback("NAV_CallBack_error","Fatal error while selecting from database");
+		if(ENV=="DEV") $fReturn->addFailMessage('Internal error')->addConsole(print_r($array_lib,true));
+		$fReturn->fetch();
 	}
 		
 	$array_lib=$EasyPDO->executequery("SELECT","substr(time_taken_at_date, 1, 4) AS years, SUM(file_size) AS size_files, SUM(file_size_webp) AS size_webp, COUNT() as count_files FROM photos WHERE file_status = 0 GROUP BY substr(time_taken_at_date, 1, 4)");
@@ -82,10 +82,12 @@
 	}
 	else
 	{
-		$bigarray['size']=0;
+		$fReturn->addCallback("NAV_CallBack_error","Fatal error while selecting from database");
+		if(ENV=="DEV") $fReturn->addFailMessage('Internal error')->addConsole(print_r($array_lib,true));
+		$fReturn->fetch();
 	}
 			
-	$fReturn->addConsole("[PHP EXECUTED] file-load-explore.php");
+	if(ENV=="DEV") $fReturn->addConsole("[PHP EXECUTED] file-load-explore.php");
 	$fReturn->addCallBack("EXPLORE_CallBack_load", $bigarray)->fetch();
 
 ?>

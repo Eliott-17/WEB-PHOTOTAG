@@ -19,7 +19,8 @@
 
 	if(!$validation->isValidated())
 	{
-		if(ENV=="DEV") $fReturn->addConsole($validation->Message());
+		$fReturn->addCallback("NAV_CallBack_error","Data request error");
+		if(ENV=="DEV") $fReturn->addConsole($validation->Message());	
 		$fReturn->fetch();
 	}
 	
@@ -69,8 +70,9 @@
 	}
 	else
 	{
-		$fReturn->addConsole("[PHP] SQL error while loading list");
-		if(ENV=="DEV") $fReturn->addConsole(print_r($array,true));	
+		$fReturn->addCallback("NAV_CallBack_error","Fatal error while selecting from database");
+		if(ENV=="DEV") $fReturn->addFailMessage('Internal error')->addConsole(print_r($array,true));
+		$fReturn->fetch();
 	}
 
 	if($_GET['offset']==0)
@@ -84,13 +86,14 @@
 		}
 		else
 		{
-			$fReturn->addConsole("[PHP] SQL error while loading cnt");
-			if(ENV=="DEV") $fReturn->addConsole(print_r($array_cnt,true));	
+			$fReturn->addCallback("NAV_CallBack_error","Fatal error while selecting from database");
+			if(ENV=="DEV") $fReturn->addFailMessage('Internal error')->addConsole(print_r($array_cnt,true));
+			$fReturn->fetch();
 		}
 	}
 	
 
-	$fReturn->addConsole("[PHP EXECUTED] file-load-list.php");
+	if(ENV=="DEV") $fReturn->addConsole("[PHP EXECUTED] file-load-list.php");
 	$fReturn->addCallBack("GRID_CallBack_load", $bigarray)->fetch();
 
 ?>

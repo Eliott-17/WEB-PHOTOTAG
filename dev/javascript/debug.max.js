@@ -1,6 +1,6 @@
 const DEBUG = {
 
-    enabled: true,
+    enabled: false,
 
     modules: {
         GRID: true,
@@ -37,4 +37,14 @@ const DEBUG = {
 
     }
 
+};
+
+window.DEBUG_enable = function()
+{
+    DEBUG.enabled = true;
+};
+
+window.DEBUG_disable = function()
+{
+    DEBUG.enabled = false;
 };

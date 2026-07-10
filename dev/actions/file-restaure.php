@@ -23,8 +23,8 @@
 
 	if(!$validation->isValidated())
 	{
-		$fReturn->addConsole($validation->Message());	
-		if(ENV=="DEV") $fReturn->addConsole($_GET['hash']);
+		$fReturn->addCallback("NAV_CallBack_error","Data request error");
+		if(ENV=="DEV") $fReturn->addConsole($validation->Message());	
 		$fReturn->fetch();
 	}
 	
@@ -54,7 +54,9 @@
 		
 		if($after == null)
 		{
-			$fReturn->addConsole("Inconsistent file name")->fetch();
+			$fReturn->addCallback("NAV_CallBack_error","Inconsistent file name");
+			if(ENV=="DEV") $fReturn->addFailMessage('Internal error')->addConsole($filename);
+			$fReturn->fetch();
 		}
 		else
 		{
@@ -69,12 +71,24 @@
 			
 			if (file_exists($filenametestHDtrash)) 
 			{
-				if(!rename($filenametestHDtrash, $filenametestHD)) $fReturn->addFailMessage('Internal error')->addConsole($filenametestHDtrash)->fetch();
+				if(!rename($filenametestHDtrash, $filenametestHD)) 
+				{		
+					$fReturn->addCallback("NAV_CallBack_error","Fatal error while moving HD file");
+					if(ENV=="DEV") $fReturn->addFailMessage('Internal error')->addConsole($filenametestHDtrash);
+					if(ENV=="DEV") $fReturn->addFailMessage('Internal error')->addConsole($filenametestHD);
+					$fReturn->fetch();
+				}
 			}
 			if (file_exists($filenametestSDtrash)) 
 			{
-				if(!rename($filenametestSDtrash, $filenametestSD)) $fReturn->addFailMessage('Internal error')->addConsole($filenametestSDtrash)->fetch();	
-			}	
+				if(!rename($filenametestSDtrash, $filenametestSD)) 
+				{
+					$fReturn->addCallback("NAV_CallBack_error","Fatal error while moving SD file");
+					if(ENV=="DEV") $fReturn->addFailMessage('Internal error')->addConsole($filenametestSDtrash);
+					if(ENV=="DEV") $fReturn->addFailMessage('Internal error')->addConsole($filenametestSD);
+					$fReturn->fetch();
+				}
+			}
 		
 			$date = new DateTime();
 			$date->setTimezone(new DateTimeZone('UTC'));
@@ -87,25 +101,22 @@
 			$EasyPDO->addConditionalData('file_hash',$value['file_hash']);
 			$return=$EasyPDO->update('photos', 'file_hash=:file_hash');
 
-			if($return['status']!==true)
-			{			
-				$fReturn->addConsole("[PHP] SQL error while restaure bdd (2)");
-				if(ENV=="DEV") $fReturn->addConsole(print_r($return,true));	
+			if($return['status']===true)
+			{
+				$fReturn->addCallback("GRID_CallBack_restaure",$_GET['id'])->fetch();
 			}
 			else
 			{
-				$fReturn->addCallback("GRID_CallBack_restaure",$_GET['id']);
-				if(ENV=="DEV") $fReturn->addConsole($return['count']);	
+				$fReturn->addCallback("NAV_CallBack_error","Fatal error while updating to database");
+				if(ENV=="DEV") $fReturn->addFailMessage('Internal error')->addConsole(print_r($return,true));
+				$fReturn->fetch();
 			}
 		}
 	}
-	
 	else
 	{
-		$fReturn->addConsole("[PHP] SQL error while restaure bdd (1)");
-		if(ENV=="DEV") $fReturn->addConsole(print_r($return,true));	
-	}
-	
-	$fReturn->fetch();
-	
+		$fReturn->addCallback("NAV_CallBack_error","Fatal error while selecting from database");
+		if(ENV=="DEV") $fReturn->addFailMessage('Internal error')->addConsole(print_r($return,true));
+		$fReturn->fetch();
+	}	
 ?>	

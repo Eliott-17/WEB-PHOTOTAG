@@ -6,7 +6,7 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/datas.php');
 
 ?>
 <!DOCTYPE html>
-<html>
+<html data-env="<?php echo ENV; ?>">
 	<!-- BEGIN HEAD -->
 	<head>
 		<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
@@ -103,15 +103,15 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/datas.php');
 		</nav>
 		<nav id="status">
 			<div id="upload-status" class="ux-infobox ux-background ux-hidden-opacity ux-hidden-zindex">Upload in progress&nbsp;<span id="fileprogress"></span><br><div id="progressbar">45%</div></div>
-			<div id="select-status" class="ux-infobox ux-background ux-hidden-opacity ux-hidden-zindex">Selection of<span class="elementscnt"></span></br>			
+			<div id="select-status" class="ux-infobox ux-background ux-hidden-opacity ux-hidden-zindex">Selection off&nbsp;<span class="elementscnt"></span></br>			
 				<div>
 					<div class="deselectall">
 						<span class="material-symbols-outlined cursor unselect">radio_button_unchecked</span>
 						<span class="material-symbols-outlined cursor select">check_circle</span>
 					</div>
-					&nbsp;<span id="tag" class="material-symbols-outlined cursor">new_label</span>
-					&nbsp;<span id="delete" class="material-symbols-outlined cursor">delete</span>
-					&nbsp;<span id="share" class="material-symbols-outlined cursor">share</span>
+					<span id="tag" class="material-symbols-outlined cursor">new_label</span>
+					<span id="delete" class="material-symbols-outlined cursor">delete</span>
+					<span id="share" class="material-symbols-outlined cursor">share</span>
 				</div>
 			</div>		
 			<div id="select-trash" class="ux-infobox ux-background ux-hidden-opacity ux-hidden-zindex">Move <span class="elementscnt"></span> elements to trash ?</br>			
@@ -128,6 +128,9 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/datas.php');
 					</button>
 				</form>
 			</div>	
+			<div id="error-message" class="ux-infobox ux-background ux-hidden-opacity ux-hidden-zindex">Error</br>			
+				<div></div>
+			</div>
 		</nav>
 		<?php
 			if(is_session_valid())

@@ -246,11 +246,18 @@ main section.grid div.selected span.caseselected {
 	border: 0px;
 }
 
-nav#status span { padding: 15px;  }
+nav#status span.material-symbols-outlined { padding: 15px;  }
 nav#status div.ux-infobox div { text-align: center;  }
+nav#status > div
+{
+	max-height: 50%;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
 
 div#upload-status span { padding: 0px; !important;  }
 div#upload-status div { text-align: left !important;  }
+div#error-message div { text-align: left !important; color: red; padding: 10px 0px 10px 0px; }
 
 div#select-status div span#tag:hover, div#select-status div span#tag.fullscreen { color: #0b57d0 }
 div#select-status div span#tag.green { color: green; }
@@ -259,7 +266,7 @@ div#select-status div span#share:hover { color: #ffc107 }
 
 div#select-status div div.deselectall { display: inline-block; }
 div#select-status div div.deselectall span{ transition: opacity 0.3s ease; }
-div#select-status div div.deselectall span.unselect { position: absolute; left: 44px; opacity: 1; }
+div#select-status div div.deselectall span.unselect { position: absolute; left: 50px; opacity: 1; }
 div#select-status div div.deselectall span.select { opacity: 1; }
 div#select-status div div.deselectall:hover span.select { opacity: 0; }
 

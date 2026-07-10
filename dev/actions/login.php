@@ -28,7 +28,9 @@ else
 
 	if(!$validation->isValidated())
 	{
-		$fReturn->addInfoMessage($validation->Message())->fetch();	
+		$fReturn->addCallback("NAV_CallBack_error","Data request error");
+		if(ENV=="DEV") $fReturn->addConsole($validation->Message());	
+		$fReturn->fetch();
 	}
 	
 	//INITIALISATION BDD

@@ -23,15 +23,12 @@
 	
 	if(!$validation->isValidated())
 	{
-		if(ENV=="DEV") $fReturn->addConsole($validation->Message());
+		$fReturn->addCallback("NAV_CallBack_error","Data request error");
+		if(ENV=="DEV") $fReturn->addConsole($validation->Message());	
 		$fReturn->fetch();
 	}
 	
 	$EasyPDO = new EasyPDO($_SESSION['DB']);
-
-	$result_tags['status']=false;
-	$result_data['status']=false;
-	$result_count['status']=false;
 	$tagname="";
 	
 	//************************************************************
@@ -84,8 +81,8 @@
 
 			if($result_data['status']!==true) 
 			{
-				if(ENV=="DEV") $fReturn->addConsole(print_r($result_data,true));
-				$fReturn->addConsole("[PHP] SQL error while loading trash data");	
+				$fReturn->addCallback("NAV_CallBack_error","Fatal error while selecting from database");
+				if(ENV=="DEV") $fReturn->addFailMessage('Internal error')->addConsole(print_r($result_data,true));	
 			}
 			else
 			{
@@ -220,8 +217,9 @@
 
 	if($result_count['status']!==true)
 	{
-		if(ENV=="DEV") $fReturn->addConsole(print_r($result_count,true));
-		$fReturn->addConsole("[PHP] SQL error while loading count")->fetch();	
+		$fReturn->addCallback("NAV_CallBack_error","Fatal error while selecting from database");
+		if(ENV=="DEV") $fReturn->addFailMessage('Internal error')->addConsole(print_r($result_count,true));	
+		$fReturn->fetch();
 	}
 	
 	if($result_count['datas'][0]['total']>0)
@@ -243,6 +241,13 @@
 		$EasyPDO->addConditionalData('offset',$_GET['offset']);
 
 		$result_data=$EasyPDO->select('photos', $finalquery." LIMIT 50 OFFSET:offset");
+	
+		if($result_data['status']!==true) 
+		{
+			$fReturn->addCallback("NAV_CallBack_error","Fatal error while selecting from database");
+			if(ENV=="DEV") $fReturn->addFailMessage('Internal error')->addConsole(print_r($result_data,true));	
+			$fReturn->fetch();
+		}
 	}
 	else
 	{
@@ -265,96 +270,89 @@
 						
 			$result_adv=$EasyPDO->select('photos',$finalquery);
 		
-			if($result_adv['status']==true) 
+			if($result_adv['status']===true) 
 			{
 				foreach($result_adv['datas'] as $key => $value) $tag['recheck']=$value;
 			}
+			else
+			{
+				$fReturn->addCallback("NAV_CallBack_error","Fatal error while selecting from database");
+				if(ENV=="DEV") $fReturn->addFailMessage('Internal error')->addConsole(print_r($result_adv,true));	
+				$fReturn->fetch();
+			}
 		}
-			
+		
 		$result_data['datas']=array();
-		$result_data['status']=true;
 	}
 	
 	//************************************************************
 	//final merge
 	//************************************************************
 
-	if($result_data['status']!==true) 
-	{
-		if(ENV=="DEV") $fReturn->addConsole(print_r($result_data,true));
-		$fReturn->addConsole("[PHP] SQL error while loading data");	
-	}
-	else
-	{	
-		if($_POST['tag']=='tag_country') 		$keywordsname=$DATAS_country[$_POST['value']];
-		else if($_POST['tag']=='months')		$keywordsname=$DATAS_months[$_POST['value']];
-		else 									$keywordsname=$_POST['value'];
-		
-		if($tagname=='years')					$tagname='';
 
-		$tag['keywords']=$_POST['value'];
-		$tag['tag']=$_POST['tag'];
-		
-		$tag['keywords']=$_POST['value'];
-		$tag['tag']=$_POST['tag'];
-		$tag['tagname']=$tagname;
-		$tag['keywordsname']=$keywordsname;
-		$tag['count']=$result_count['datas'][0]['total'];
-		
-		$array_tags = [
-			'tag_country' => [],
-			'tag_city' => [],
-			'tag_place' => [],
-			'tag_activity' => [],
-			'tag_comment' => [],
-			'tag_people' => [],
-			'tag_other' => [],
-			'time_taken_at_date' => []
-		];
-				
-		if($_GET['tagslist']>0)
-		{		
-			$tag['tags']=retreive_sort_tags($result_tags['datas'],$array_tags,$DATAS_country,$DATAS_months);	
-
-			foreach ($result_tags['datas'] as &$row) {
-				$row['years'] = substr($row['time_taken_at_date'], 0, 4);
-				$row['months'] = substr($row['time_taken_at_date'], 4, 2);			
-			}
-			unset($row);
-			
-			/*
-			retourne les tags existant liés à la recherche
-			
-			taglist = 0: 
-			
-			-on retourne les data liés à la recherche
-			-Appel de GRID_CallBack_load, affiche les éléments sans la grille active
-			
-			taglist = 1: 
-			
-			-set par l'appel EXPLORE_post_search: recherche par champ ou explorer
-			-on retourne les datas + EXPLORE_CallBack_search
-			-les tags liés à la recherche sont stockés dans gEXPLORE_SEARCH_TAGS
-			
-			taglist = 2:
-			
-			-set par l'appel FILTERS_checkbox_post: recherche par checkbox filtres avancés
-			-on retourne les datas + FILTERS_CallBack_search
-			-les tags liés à la recherch sont utilisé pour rafraichir les checkbox
-			
-			*/
-			
-			if($_GET['tagslist']==1) $fReturn->addCallBack("EXPLORE_CallBack_search", $tag);
-			if($_GET['tagslist']==2) $fReturn->addCallBack("FILTERS_CallBack_search", $tag);			
-		}
-
-		$return = $result_data['datas'];	
-		
-		$fReturn->addCallBack("GRID_CallBack_load", array("datas"=>$return));		
-	}
-
-	$fReturn->addConsole("[PHP EXECUTED] file-search-list.php");
-	$fReturn->fetch();
-
+	if($_POST['tag']=='tag_country') 		$keywordsname=$DATAS_country[$_POST['value']];
+	else if($_POST['tag']=='months')		$keywordsname=$DATAS_months[$_POST['value']];
+	else 									$keywordsname=$_POST['value'];
 	
+	if($tagname=='years')					$tagname='';
+
+	$tag['keywords']=$_POST['value'];
+	$tag['tag']=$_POST['tag'];
+	
+	$tag['keywords']=$_POST['value'];
+	$tag['tag']=$_POST['tag'];
+	$tag['tagname']=$tagname;
+	$tag['keywordsname']=$keywordsname;
+	$tag['count']=$result_count['datas'][0]['total'];
+	
+	$array_tags = [
+		'tag_country' => [],
+		'tag_city' => [],
+		'tag_place' => [],
+		'tag_activity' => [],
+		'tag_comment' => [],
+		'tag_people' => [],
+		'tag_other' => [],
+		'time_taken_at_date' => []
+	];
+			
+	if($_GET['tagslist']>0)
+	{		
+		$tag['tags']=retreive_sort_tags($result_tags['datas'],$array_tags,$DATAS_country,$DATAS_months);	
+
+		foreach ($result_tags['datas'] as &$row) {
+			$row['years'] = substr($row['time_taken_at_date'], 0, 4);
+			$row['months'] = substr($row['time_taken_at_date'], 4, 2);			
+		}
+		unset($row);
+		
+		/*
+		retourne les tags existant liés à la recherche
+		
+		taglist = 0: 
+		
+		-on retourne les data liés à la recherche
+		-Appel de GRID_CallBack_load, affiche les éléments sans la grille active
+		
+		taglist = 1: 
+		
+		-set par l'appel EXPLORE_post_search: recherche par champ ou explorer
+		-on retourne les datas + EXPLORE_CallBack_search
+		-les tags liés à la recherche sont stockés dans gEXPLORE_SEARCH_TAGS
+		
+		taglist = 2:
+		
+		-set par l'appel FILTERS_checkbox_post: recherche par checkbox filtres avancés
+		-on retourne les datas + FILTERS_CallBack_search
+		-les tags liés à la recherch sont utilisé pour rafraichir les checkbox
+		
+		*/
+		
+		if($_GET['tagslist']==1) $fReturn->addCallBack("EXPLORE_CallBack_search", $tag);
+		if($_GET['tagslist']==2) $fReturn->addCallBack("FILTERS_CallBack_search", $tag);			
+	}
+
+	$fReturn->addCallBack("GRID_CallBack_load", array("datas"=>$result_data['datas']));
+	$fReturn->addConsole("[PHP EXECUTED] file-search-list.php");
+	$fReturn->fetch();	
 ?>

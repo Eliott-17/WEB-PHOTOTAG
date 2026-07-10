@@ -16,6 +16,15 @@
 	$validation->addVerification('token',		'sha256',				'Token'				);	
 	$validation->addVerification('filesid',		'jsonArrayString',		'Files id'			);	
 	$validation->addVerification('lock_status',	'int',					'status',	0,1		);	
+
+	$validation->Validate();
+
+	if(!$validation->isValidated())
+	{
+		$fReturn->addCallback("NAV_CallBack_error","Data request error".print_r($_POST,true));
+		if(ENV=="DEV") $fReturn->addConsole($validation->Message());	
+		$fReturn->fetch();
+	}
 	
 	$lock_status=1;
 	
@@ -29,10 +38,11 @@
 
 	if($return['status']!==true)
 	{
-		if(ENV=="DEV") $fReturn->addConsole(print_r($return,true));
-		$fReturn->addConsole("[PHP] SQL error while update")->fetch();	
+		$fReturn->addCallback("NAV_CallBack_error","Fatal error while updating to database");
+		if(ENV=="DEV") $fReturn->addFailMessage('Internal error')->addConsole(print_r($return,true));
+		$fReturn->fetch();
 	}
 
-	$fReturn->addCallback("FILEINFO_CallBack_lock",$lock_status);	
+	if(ENV=="DEV") $fReturn->addCallback("FILEINFO_CallBack_lock",$lock_status);	
 	$fReturn->fetch();
 ?>	

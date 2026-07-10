@@ -38,7 +38,7 @@
 	}
 	else
 	{
-		$fReturn->addConsole("[PHP] SQL error while supress bdd");
+		$fReturn->addCallback("NAV_CallBack_error","Fatal error while deleting to database");
 		if(ENV=="DEV") $fReturn->addConsole(print_r($array,true));	
 	}
 	

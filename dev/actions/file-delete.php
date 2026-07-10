@@ -46,13 +46,21 @@
 		
 		if (file_exists($filenametestHD)) 
 		{
-			//$fReturn->addFailMessage('Internal error')->addConsole($filenametestHD)->fetch();
-			if(!rename($filenametestHD, $filenametestHDtrash)) $fReturn->addFailMessage('Internal error')->addConsole($filenametestHDtrash)->fetch();
+			if(!rename($filenametestHD, $filenametestHDtrash)) 
+			{
+				$fReturn->addCallback("NAV_CallBack_error","Fatal error while moving HD file");
+				if(ENV=="DEV") $fReturn->addFailMessage('Internal error')->addConsole($filenametestHDtrash);
+				$fReturn->fetch();
+			}
 		}
 		if (file_exists($filenametestSD)) 
 		{
-			if(!rename($filenametestSD, $filenametestSDtrash)) $fReturn->addFailMessage('Internal error')->addConsole($filenametestSDtrash)->fetch();	
-			//$fReturn->addFailMessage('Internal error')->addConsole($filenametestSD)->fetch();
+			if(!rename($filenametestSD, $filenametestSDtrash)) 
+			{
+				$fReturn->addCallback("NAV_CallBack_error","Fatal error while moving SD file");
+				if(ENV=="DEV") $fReturn->addFailMessage('Internal error')->addConsole($filenametestSDtrash);
+				$fReturn->fetch();
+			}
 		}	
 				
 		$EasyPDO->addFields('file_original_name',$strdate_file.'_'.$value['file_original_name']); //last updated info	
@@ -60,9 +68,17 @@
 		$EasyPDO->addFields('file_status',2);		
 
 		$EasyPDO->addConditionalData('file_hash',$value['file_hash']);		
-		$EasyPDO->update('photos', 'file_hash=:file_hash');	
+		$return=$EasyPDO->update('photos', 'file_hash=:file_hash');
+
+		if($return['status']!==true)
+		{			
+			$fReturn->addCallback("NAV_CallBack_error","Fatal error while updating to database");
+			if(ENV=="DEV") $fReturn->addFailMessage('Internal error')->addConsole(print_r($return,true));
+			$fReturn->fetch();
+		}		
 	}
-		
+	
+	if(ENV=="DEV") $fReturn->addConsole("[PHP EXECUTED] file-delete.php");	
 	$fReturn->addCallback('FILEMULTISELECTION_CallBack_trash');
 	$fReturn->fetch();
 	

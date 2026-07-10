@@ -51,7 +51,12 @@
 		
 	$validation->Validate();
 
-	if(!$validation->isValidated()) $fReturn->addInfoMessage($validation->Message())->fetch();	
+	if(!$validation->isValidated())
+	{
+		$fReturn->addCallback("NAV_CallBack_error","Data request error");
+		if(ENV=="DEV") $fReturn->addConsole($validation->Message());	
+		$fReturn->fetch();
+	}
 	
 	$conflict = json_decode($_POST['conflictedit']);
 	
@@ -108,21 +113,27 @@
 	
 	$affectedrow = $EasyPDO->update('photos', 'id IN', $dataarray);
 
-	$fReturn->addConsole("Request update:".$count);	
-	$fReturn->addConsole("Total Update data:".print_r($affectedrow,true));
-	
-	if($count==1)
-	{
-		$fReturn->addCallback("FILEINFO_CallBack_load",true);
-		$fReturn->addCallback("FILEINFO_CallBack_success");
-		if(isset($tag))  $fReturn->addCallback("EXPLORE_CallBack_addtags",$tag);
+	if($affectedrow['status']===true)
+	{	
+		if($count==1)
+		{
+			$fReturn->addCallback("FILEINFO_CallBack_load",true);
+			$fReturn->addCallback("FILEINFO_CallBack_success");
+			if(isset($tag))  $fReturn->addCallback("EXPLORE_CallBack_addtags",$tag);
+		}
+		else
+		{	
+			$fReturn->addCallback("FILEMULTISELECTION_CallBack_load",true);
+			$fReturn->addCallback("FILEMULTISELECTION_CallBack_success");
+			if(isset($tag))  $fReturn->addCallback("EXPLORE_CallBack_addtags",$tag);
+		}
 	}
 	else
-	{	
-		$fReturn->addCallback("FILEMULTISELECTION_CallBack_load",true);
-		$fReturn->addCallback("FILEMULTISELECTION_CallBack_success");
-		if(isset($tag))  $fReturn->addCallback("EXPLORE_CallBack_addtags",$tag);
+	{
+		$fReturn->addCallback("NAV_CallBack_error","Fatal error while updating to database");
+		if(ENV=="DEV") $fReturn->addFailMessage('Internal error')->addConsole(print_r($affectedrow,true));
 	}
-	
+
+	if(ENV=="DEV") $fReturn->addConsole("[PHP EXECUTED] file-save-infos.php");	
 	$fReturn->fetch();
 ?>	
