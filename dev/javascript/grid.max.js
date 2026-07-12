@@ -6,11 +6,12 @@ let GRID = {
 	section_active:"explore",
 	section_mem:"",
 	offset_mem:null,
-	scroll_mem:0
+	scroll_mem:0,
+	max_elements:0
 }
 	
 //****************************************************************
-//Variables locales *********************************************
+//Variables locales **********************************************
 //****************************************************************	
 
 let SECTIONS = {
@@ -24,6 +25,10 @@ let scroll_lock = false;	//Chargement progressif: FLAG qui limite l'action scrol
 let last_select=-1;		//mémorise le dernier uniqueid sélectioné
 
 $(document).ready(function(){
+
+	//****************************************************************
+	//Scroll progressif, chargement des élments 50/50 ****************
+	//****************************************************************	
 
 	$('main').on('scroll', function() {
 		
@@ -46,6 +51,119 @@ $(document).ready(function(){
 			}
 		}
 	});
+
+
+	$(document).on('keydown.fullscreen', function(e) {
+	 
+		const tag = e.target.tagName;
+		
+		if (
+			tag === "INPUT" ||
+			tag === "TEXTAREA" ||
+			e.target.isContentEditable
+		) {
+			return;
+		}
+			
+		if(DISPLAY_is_visible_full_screen()) return;
+				
+		if (e.ctrlKey && e.key.toLowerCase() === 'a')
+		{
+			e.preventDefault();
+			$('main section.'+GRID.section_active+' div.element').addClass('selected');
+			$('main section.'+GRID.section_active+' div.element').removeClass('notselected');
+			DISPLAY_selection();
+		}
+
+		if (e.key === "Escape") //undelect all
+		{
+			$('main div.element').removeClass('selected');
+			$('main div.element').addClass('notselected');
+			DISPLAY_selection();
+		}	
+	});
+
+	//****************************************************************
+	//Ajout du bouton de restoration (en mode corbeille) *************
+	//****************************************************************	
+
+	$('main').on('click.gridRestaure', 'div.button-restaure', function(e) {
+		
+		let current_id = $(this).parent().attr('id');
+		let hash = $('div#'+current_id+' div.media-container').attr('data-src');
+		
+		CORE_get('actions/file-restaure.php?hash='+hash+'&id='+current_id);	
+	});
+	//****************************************************************
+	//Ajout du bouton de sélection d'une photo sur la grille *********
+	//****************************************************************	
+
+	$('main').on('click.gridSelect', 'div.button-select', function(e) {
+		
+		let current_id = parseInt($(this).parent().attr('id').replace(GRID.section_active+'_',''));
+				
+		//****************************************************************
+		//Logique de sélection en lot avec la touche SHIFT ***************
+		//****************************************************************		
+
+		if(e.shiftKey)
+		{	
+			if(last_select>=0)
+			{				
+				if(current_id>last_select)
+				{
+					for(i=(last_select+1);i<current_id;i++) 
+					{
+						$('div#'+GRID.section_active+'_'+i).addClass('selected');
+						$('div#'+GRID.section_active+'_'+i).removeClass('notselected');
+					}
+				}
+				else
+				{				
+					for(i=(current_id+1);i<last_select;i++) 
+					{
+						$('div#'+GRID.section_active+'_'+i).addClass('selected');
+						$('div#'+GRID.section_active+'_'+i).removeClass('notselected');
+					}
+				}	
+			}
+		}
+
+		//****************************************************************
+		//Action à effectué après la sélection effective *****************
+		//****************************************************************
+
+		DISPLAY_selection(current_id);
+		
+		if(IS_VISIBLE_menu($('div#select-trash'))) OBJ_Select_both.find('div.selected').addClass('delete');
+		
+		if(DISPLAY_is_visible_file_info()) //Si on à affiché les information des fichiers lors d'une sélection multiple
+		{
+			FILEMULTISELECTION_CallBack_load(); //On rafraichi les informations affichés au changement de sélection
+		}
+		
+		last_select=current_id;
+				
+	});
+
+	//*******************************************************************
+	//Ajout du bouton plein écran d'une photo sur la grille *************
+	//*******************************************************************	
+	
+	$('main').on('click.gridOpen', 'div.button-fullscreen', function() {
+		
+		let media_id = parseInt($(this).parent().attr('id').replace(GRID.section_active+'_',''));
+		
+		let max = GRID.max_elements;
+		
+		GRID.scroll_mem = $('main').scrollTop();
+		FILEOPENFULLSCREEN.id_current=media_id;
+		FILEOPENFULLSCREEN.id_max=max;
+		ArrowDisplay(media_id, max); 
+		FILEOPENFULLSCREEN_Loadmedia(media_id);
+		DISPLAY_set_view("fullscreen");	//order before DISPLAY_selection is important
+		DISPLAY_selection(FILEOPENFULLSCREEN.id_current,true);
+	});	
 
 });
 
@@ -245,106 +363,10 @@ window.GRID_CallBack_load = function(data_array)
 		});
 			
 		if(max_display<50) SECTIONS[GRID.section_active].offset=-1; //bloquage du scroll
-
-		//****************************************************************
-		//Attribution d'un uniqueid aux éléments chargés *****************
-		//****************************************************************		
-			
-		let id = GRID_load_id();
 		
-		//****************************************************************
-		//Déchagrement des précents boutons ******************************
-		//****************************************************************	
+		GRID.max_elements = GRID_load_id();
 
-		$('main').off('click.gridSelect');
-		$('main').off('click.gridOpen');
-		$('main').off('click.gridRestaure');
-		
-		
-		//****************************************************************
-		//Ajout du bouton de restoration (en mode corbeille) *************
-		//****************************************************************	
-
-		$('main').on('click.gridRestaure', 'div.button-restaure', function(e) {
-			
-			let current_id = $(this).parent().attr('id');
-			let hash = $('div#'+current_id+' div.media-container').attr('data-src');
-			
-			CORE_get('actions/file-restaure.php?hash='+hash+'&id='+current_id);	
-		});
-		//****************************************************************
-		//Ajout du bouton de sélection d'une photo sur la grille *********
-		//****************************************************************	
-
-		$('main').on('click.gridSelect', 'div.button-select', function(e) {
-			
-			let current_id = parseInt($(this).parent().attr('id').replace(GRID.section_active+'_',''));
-					
-			//****************************************************************
-			//Logique de sélection en lot avec la touche SHIFT ***************
-			//****************************************************************		
-
-			if(e.shiftKey)
-			{	
-				if(last_select>=0)
-				{				
-					if(current_id>last_select)
-					{
-						for(i=(last_select+1);i<current_id;i++) 
-						{
-							$('div#'+GRID.section_active+'_'+i).addClass('selected');
-							$('div#'+GRID.section_active+'_'+i).removeClass('notselected');
-						}
-					}
-					else
-					{				
-						for(i=(current_id+1);i<last_select;i++) 
-						{
-							$('div#'+GRID.section_active+'_'+i).addClass('selected');
-							$('div#'+GRID.section_active+'_'+i).removeClass('notselected');
-						}
-					}	
-				}
-			}
-
-			//****************************************************************
-			//Action à effectué après la sélection effective *****************
-			//****************************************************************
-
-			DISPLAY_selection(current_id);
-			
-			if(IS_VISIBLE_menu($('div#select-trash'))) OBJ_Select_both.find('div.selected').addClass('delete');
-			
-			if(DISPLAY_is_visible_file_info()) //Si on à affiché les information des fichiers lors d'une sélection multiple
-			{
-				FILEMULTISELECTION_CallBack_load(); //On rafraichi les informations affichés au changement de sélection
-			}
-			
-			last_select=current_id;
-					
-		});
-
-		//*******************************************************************
-		//Ajout du bouton plein écran d'une photo sur la grille *************
-		//*******************************************************************	
-		
-		$('main').on('click.gridOpen', 'div.button-fullscreen', function() {
-			
-			let media_id = parseInt($(this).parent().attr('id').replace(GRID.section_active+'_',''));
-			
-			let max = (id);
-			
-			GRID.scroll_mem = $('main').scrollTop();
-			FILEOPENFULLSCREEN.id_current=media_id;
-			FILEOPENFULLSCREEN.id_max=max;
-			ArrowDisplay(media_id, max); 
-			FILEOPENFULLSCREEN_Loadmedia(media_id);
-			DISPLAY_set_view("fullscreen");	//order before DISPLAY_selection is important
-			DISPLAY_selection(FILEOPENFULLSCREEN.id_current,true);
-		});	
-		
-		DISPLAY_selection();
-		
+		DISPLAY_selection();		
 	}
 
 	$('main section div.element.memselected').removeClass('memselected');

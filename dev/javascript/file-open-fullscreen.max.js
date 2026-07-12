@@ -18,10 +18,25 @@ let lockright=0;
 //Gère l'affichage en plein écran
 //***********************************************
 
-$(document).on('keydown', function(e) {
-    if (e.which === 37) { if(!lockleft) Arrow(0); /*37 = flèche gauche*/ }
-    if (e.which === 39) { if(!lockright) Arrow(1); /*39 = flèche droite*/ }
-    if (e.which === 32) { Select(); /*37 = espace*/ }
+$(document).on('keydown.fullscreen', function(e) {
+ 
+	const tag = e.target.tagName;
+	
+    if (
+        tag === "INPUT" ||
+        tag === "TEXTAREA" ||
+        e.target.isContentEditable
+    ) {
+        return;
+    }
+	
+	if(!DISPLAY_is_visible_full_screen()) return;
+	
+	if (e.which === 37)	{ if(!lockleft) Arrow(0); 		/*37 = flèche gauche*/  }
+	if (e.which === 39) { if(!lockright) Arrow(1); 		/*39 = flèche droite*/  }
+	if (e.which === 32) { Select(); 					/*37 = espace*/ 		}
+	if (e.which === 27)	 { DISPLAY_set_view('grid');	/*27 = echap*/ 			}
+
 });
 
 $(document).ready(function(){
