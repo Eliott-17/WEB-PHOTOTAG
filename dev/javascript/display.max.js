@@ -80,9 +80,9 @@ var DISPLAY_section = function section(section)
 	$('section').addClass("hidden");
 	$('section.'+GRID.section_active).removeClass("hidden");
 
-	$('div#uploaddrag').addClass("hidden");
+	$('div#uploaddrag span').addClass("hidden");
 	$('div.'+GRID.section_active).removeClass("hidden");
-	
+	$('span.'+GRID.section_active).removeClass("hidden");	
 	if(GRID.section_active=="search")	
 	{
 		$('div#mainmenu').addClass('hidden');

@@ -276,12 +276,26 @@ div#select-trash div span#delete_confirm:hover { color: green }
 
 div#uploaddrag
 {
+	display: flex;
+}
+
+div#uploaddrag span
+{	
 	color: #494949bb;
 	border: 2px dashed #494949bb;
     padding: 5px;
     margin: 5px;
     box-sizing: border-box;
     text-align: center;
-	
 }
+
+span#uploadmedia
+{
+	flex: 4;
+}
+
+span#uploadjson
+{
+	flex: 1;
+}	
 

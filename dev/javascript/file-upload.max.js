@@ -1,16 +1,16 @@
 $(document).ready(function() {
     // Gestion du drag & drop
-    $("div#uploaddrag").on("dragover dragenter", function(e) {
+    $("div#uploaddrag span").on("dragover dragenter", function(e) {
         e.preventDefault();
         e.stopPropagation();
     });
 
-    $("div#uploaddrag").on("dragleave dragend", function(e) {
+    $("div#uploaddrag span").on("dragleave dragend", function(e) {
         e.preventDefault();
         e.stopPropagation();
     });
 
-    $("div#uploaddrag").on("drop", function(e) {
+    $("span#uploadmedia").on("drop", function(e) {
         e.preventDefault();
         e.stopPropagation();
         let files = Array.from(e.originalEvent.dataTransfer.files);
@@ -33,6 +33,31 @@ $(document).ready(function() {
 			});
         }
     });
+
+	$("span#uploadjson").on("drop", function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        let files = Array.from(e.originalEvent.dataTransfer.files);
+        if (files.length > 0) {
+			
+			DISPLAY_menu($('div#upload-status'),true);
+				
+			$.get("../core/securitytoken.php")
+			.then(token => {
+				uploadFiles(files, token);
+			})
+			.catch(err => {
+				console.error("Can't get token", err);				
+				$('#upload-status').append(
+					`<div id="errorgeneral" class="text">
+						<span>Internal error</span>
+						&nbsp;<span class="material-symbols-outlined cursor"></span>
+					</div>`
+				);
+			});
+        }
+    });
+
 });
 
 function orientation(width, height) {
@@ -49,9 +74,9 @@ function uploadFiles(files, token) {
 	let treatedFiles = 0;
 	
     // Fonction pour générer une miniature (image ou vidéo)
-    function generateThumbnail(file) {
+    function generateThumbnail(file,ThumbnailFileType) {
         return new Promise((resolve, reject) => {
-            if (file.type.startsWith('image/')) {
+            if (ThumbnailFileType.startsWith('image/')) {
                 const img = new Image();
                 const canvas = document.createElement('canvas');
                 const ctx = canvas.getContext('2d');
@@ -73,7 +98,7 @@ function uploadFiles(files, token) {
                     img.src = e.target.result;
                 };
                 reader.readAsDataURL(file);
-            } else if (file.type.startsWith('video/')) {
+            } else if (ThumbnailFileType.startsWith('video/')) {
                 const video = document.createElement('video');
                 const canvas = document.createElement('canvas');
                 const ctx = canvas.getContext('2d');
@@ -95,7 +120,7 @@ function uploadFiles(files, token) {
 
                 video.src = URL.createObjectURL(file);
             } else {
-                reject(new Error("File not supported"));
+                reject(new Error("File not supported: "+ThumbnailFileType));
 				treatedFiles++;
             }
         });
@@ -105,7 +130,7 @@ function uploadFiles(files, token) {
     let chain = Promise.resolve();
     files.forEach(file => {
         chain = chain.then(() => {
-            if (file.size > 1024 * 1024 * 1024) { // 256Mo
+            if (file.size > 1024 * 1024 * 1024) { // 1Go
                 errorCount++;
 				$('span#fileprogress').html(treatedFiles+'/'+totalFiles);
                 $('#upload-status').append(
@@ -119,8 +144,29 @@ function uploadFiles(files, token) {
                 });
                 return Promise.resolve();
             }
+			
+			let ThumbnailFileType = file.type;
+						
+			if(file.type=="")
+			{
+				const lastDot = file.name.lastIndexOf('.');
 
-            return generateThumbnail(file)
+				if (lastDot === -1 || lastDot === 0) 
+				{
+					return '';//no . in the file
+				}
+				else
+				{
+					let ext = file.name.substring(lastDot + 1).toLowerCase();
+					
+					if (ext === "heic" || ext === "heif")
+					{
+						ThumbnailFileType="image/"+ext;
+					}
+				}
+			}
+	
+            return generateThumbnail(file,ThumbnailFileType)
                 .then(({ file, preview, orientation }) => {
                     const formData = new FormData();
                     formData.append('file', file);

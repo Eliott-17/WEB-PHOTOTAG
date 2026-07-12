@@ -8,8 +8,6 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/core/class.freturn.php');
 require_once($_SERVER['DOCUMENT_ROOT'].'/includes/functions.php');
 require_once($_SERVER['DOCUMENT_ROOT'].'/includes/getid3/getid3.php');
 
-$uploadDir = $_SERVER['DOCUMENT_ROOT'].'/multimedia/'.$_SESSION["USER"].'/';
-
 $fReturn = new fReturn();
 
 if (!empty($_FILES['file']) && !empty($_FILES['preview'])) {
@@ -25,7 +23,7 @@ if (!empty($_FILES['file']) && !empty($_FILES['preview'])) {
     }
 
     $ext = strtolower(pathinfo($name, PATHINFO_EXTENSION));
-    $allowedImages = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp', 'tif', 'tiff'];
+    $allowedImages = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp', 'tif', 'tiff','heic','heif'];
     $allowedVideos = ['mp4', 'webm', 'mov', 'mkv', 'avi', '3gp'];
 
     if (in_array($ext, $allowedImages)) {
@@ -37,7 +35,7 @@ if (!empty($_FILES['file']) && !empty($_FILES['preview'])) {
         //exit("Invalid file");
     }
 
-    $targetHD = $uploadDir.$name;
+    $targetHD = DIR_HD.$name;
     if (is_file($targetHD)) {
 		$fReturn->addRawText("Already exist")->fetch();
 		//exit("already exist");
@@ -50,7 +48,7 @@ if (!empty($_FILES['file']) && !empty($_FILES['preview'])) {
 
     $hash = hash('sha256', $name . time() .bin2hex(random_bytes(10)));
     $previewName = $hash.'.webp';
-    $targetSD = $uploadDir.$previewName;
+    $targetSD = DIR_SD.$previewName;
     if (!move_uploaded_file($_FILES['preview']['tmp_name'], $targetSD)) {
         $fReturn->addRawText("Preview upload fail")->fetch();
 		//exit("Preview upload fail");
