@@ -106,11 +106,11 @@ function GRID_reset(from,source,searchoption=null)
 }
 
 function GRID_load(from)
-{
-	scroll_lock=true;
-	
+{	
 	if(SECTIONS[GRID.section_active].update==true)
 	{
+		scroll_lock=true;
+		
 		DEBUG.log("GRID","GRID",GRID.section_active,"update request");
 		
 		SECTIONS[GRID.section_active].update=false;

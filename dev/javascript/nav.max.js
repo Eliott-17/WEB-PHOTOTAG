@@ -85,6 +85,8 @@ $(document).ready(function(){
 			
 			$('aside#advancedfilters').off('click.inputFilters', 'input');
 			$('aside#advancedfilters').off('click.allCheck', 'input');
+			
+			DEBUG.log("DATAS",EXPLORE_search_tags);
 		
 			//---------------------
 			//LOOAD CHECKBOX ------

@@ -52,7 +52,7 @@ main {
 
 img,video {
 	
-	background: url("../images/Loading_icon.gif") center no-repeat;
+	background-color: lightgray;
 	
 }
 
