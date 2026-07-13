@@ -48,6 +48,8 @@ function EXPLORE_post_search(tag,val,exclude)
 
 	$('#filter_tag').val(tag);
 	$('#filter_val').val(val);
+	$('.save_tag').val(tag);
+	$('.save_val').val(val);
 	$('#filters_exclude').val(exclude);
 
 	if(GRID.section_active!="search") GRID.section_mem=GRID.section_active;

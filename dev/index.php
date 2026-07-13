@@ -244,7 +244,7 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/datas.php');
 						<input type="hidden" name="token" class="token" value=""/>
 						<input type="hidden" name="filesid" class="filesid" value=""/>
 						<input type="hidden" name="conflictedit" class="conflictedit" value=""/>
-						<input type="hidden" name="utcflag" class="utcflag" value="0"/>
+						<input type="hidden" name="utcflag" class="utcflag" value="0"/>	
 						<h3 class="ux-tag-time" id="date"><span class="material-symbols-outlined">event</span><span class="unedit"></span><span class="solver hidden">Override all values</span><input name="date" type="date"/></h3>				
 						<h3 class="ux-tag-time" id="time"><span class="material-symbols-outlined">nest_clock_farsight_analog</span><span class="unedit"></span><span class="solver hidden">Override all values</span><input name="time" type="time" step="1"/></h3>
 						<h3 class="ux-tag-time" id="zone"><span class="material-symbols-outlined">south_america</span><span class="unedit"></span><span class="solver hidden">Override all values</span><select name="zone">
@@ -311,7 +311,7 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/datas.php');
 					<form method="post" data-return="blockreturnloc" action="actions/file-save-infos.php?form=tag-location" class="post">		
 						<input type="hidden" name="token" class="token" value=""/>
 						<input type="hidden" name="filesid" class="filesid" value=""/>
-						<input type="hidden" name="conflictedit" class="conflictedit" value=""/>
+						<input type="hidden" name="conflictedit" class="conflictedit" value=""/>	
 						<h3 class="ux-tag-location gps" data-tooltip="tooltip-location" data-label="GPS coordinates"><span class="material-symbols-outlined">my_location</span><span id="GPS" class="textlabel"></span></h3>		
 						<!--<h3 class="ux-tag-location" id="continent"><span class="material-symbols-outlined">globe_asia</span><span class="unedit"></span><span class="solver hidden">Override all values</span><select name="continent" ><?php foreach($DATAS_contient as $key=>$value) echo '<option value="'.$key.'">'.$value.'</option>'; ?></select></h3>-->		
 						<h3 class="ux-tag-location" data-tooltip="tooltip-location" data-label="Country" id="country"><span class="material-symbols-outlined">flag</span><span class="unedit"></span><span class="solver hidden">Override all values</span><select name="country"><?php foreach($DATAS_country as $key=>$value) echo '<option value="'.$key.'">'.$value.'</option>'; ?></select></h3>

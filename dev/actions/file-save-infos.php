@@ -17,7 +17,7 @@
 	$validation->addVerification('filesid',		'jsonArrayString',		'Files id'						);	
 	$validation->addVerification('conflictedit','jsonArrayString',		'Conflict array',		        );	
 	$validation->addVerification('form',		'string',				'Form select',	4,12	        );	
-	
+
 	switch($_GET['form'])
 	{
 		case "time":
@@ -30,7 +30,7 @@
 		break;
 		case "tag-location":
 
-			$validation->addVerification('continent',	'string',				'Continent',	0,2);	
+			/*$validation->addVerification('continent',	'string',				'Continent',	0,2);*/	
 			$validation->addVerification('country',		'string',				'Country',		0,3);	
 			$validation->addVerification('city',		'string',				'City',			0,200);	
 			$validation->addVerification('place',		'string',				'Place',		0,200);	
@@ -86,15 +86,13 @@
 		break;
 		case "tag-location":
 
-			if(empty($_POST['continent'])) 	$_POST['continent']=null;
 			if(empty($_POST['country'])) 	$_POST['country']=null;		/*else	$tag['tag_country']=$_POST['country'];*/
 			if(empty($_POST['city'])) 		$_POST['city']=null;		else	$tag['tag_city']=$_POST['city'];
 			if(empty($_POST['place'])) 		$_POST['place']=null;		else	$tag['tag_place']=$_POST['place'];
 			
-			if($conflict->continent==0)		$EasyPDO->addFields('tag_continent',$_POST['continent']);
 			if($conflict->country==0)		$EasyPDO->addFields('tag_country',$_POST['country']);
 			if($conflict->city==0)			$EasyPDO->addFields('tag_city',$_POST['city']);
-			if($conflict->place==0)			$EasyPDO->addFields('tag_place',$_POST['place']);	
+			if($conflict->place==0)			$EasyPDO->addFields('tag_place',$_POST['place']);
 
 		break;
 		case "tag-general":
@@ -116,6 +114,11 @@
 			
 		break;
 	}	
+	
+	/*if($tag[$_POST['save_tag']]!=$_POST['save_val'])
+	{
+		
+	}*/
 
 	$date = new DateTime();
     $date->setTimezone(new DateTimeZone('UTC'));

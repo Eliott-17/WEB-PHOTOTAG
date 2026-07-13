@@ -3,8 +3,8 @@
 //****************************************************************	
 
 let GRID = {
-	//section_active:"explore",
-	section_active:"untagged",
+	section_active:"explore",
+	//section_active:"untagged",
 	section_mem:"",
 	offset_mem:null,
 	scroll_mem:0,
@@ -18,7 +18,7 @@ let GRID = {
 let SECTIONS = {
     library:	{update:true,offset:0,memdata:null,countmem:null},
     untagged: 	{update:true,offset:0,memdata:null,countmem:null},
-    search: 	{update:true,offset:0,memdata:null,taglist:0},
+    search: 	{update:true,offset:0,memdata:null,countmem:null,taglist:0},
     explore: 	{update:true} //chargé à l'init
 };
 
@@ -170,45 +170,45 @@ $(document).ready(function(){
 
 function GRID_reset(from,source,searchoption=null)
 {
-	offset_reset=true;
-	
-	switch(source)
+	offset_reset=false;
+
+	if(source=="FILES")
 	{
-		case "FILES":
-
-			DEBUG.log("GRID","REQUEST UPDATE library");
-			DEBUG.log("GRID","REQUEST UPDATE explore");
-			
-			SECTIONS["library"].memdata=null;	
-			SECTIONS["library"].update=true;	
-
-			SECTIONS["explore"].update=true;
-
-		case "UPLOAD":
-
-			DEBUG.log("GRID","REQUEST UPDATE untagged");
-			
-			SECTIONS["untagged"].memdata=null;
-			SECTIONS["untagged"].update=true;
-
-		break;
-		case "SEARCH":		
+		DEBUG.log("GRID","REQUEST UPDATE library");
+		DEBUG.log("GRID","REQUEST UPDATE explore");
 		
-			DEBUG.log("GRID","REQUEST UPDATE search");
-			
-			SECTIONS["search"].memdata=null;	
-			SECTIONS["search"].update=true;	
-			
-			if(searchoption!=null)
-			{
-				$('main').scrollTop(0);
-				SECTIONS["search"].taglist=searchoption;
-			}
+		SECTIONS["library"].memdata=null;	
+		SECTIONS["library"].update=true;	
 
-		break;
-		default:
-			offset_reset=false;
-		break;
+		SECTIONS["explore"].update=true;
+		
+		offset_reset=true;
+	}
+	
+	if(source=="UPLOAD" || source=="FILES")
+	{
+		DEBUG.log("GRID","REQUEST UPDATE untagged");
+		
+		SECTIONS["untagged"].memdata=null;
+		SECTIONS["untagged"].update=true;
+
+		offset_reset=true;
+	}
+
+	if(source=="SEARCH" || source=="FILES")
+	{
+		DEBUG.log("GRID","REQUEST UPDATE search");
+		
+		SECTIONS["search"].memdata=null;	
+		SECTIONS["search"].update=true;	
+		
+		if(searchoption!=null)
+		{
+			$('main').scrollTop(0);
+			SECTIONS["search"].taglist=searchoption;
+		}
+		
+		offset_reset=true;
 	}
 	
 	if(SECTIONS[GRID.section_active].offset!=undefined)
@@ -217,7 +217,7 @@ function GRID_reset(from,source,searchoption=null)
 		{
 			GRID.offset_mem=SECTIONS[GRID.section_active].offset;
 			SECTIONS[GRID.section_active].offset=0;
-			DEBUG.log("GRID","GRID offset reset");
+			DEBUG.log("GRID","offset reset");
 		}
 	}
 	
@@ -230,7 +230,7 @@ function GRID_load(from)
 	{
 		scroll_lock=true;
 		
-		DEBUG.log("GRID","GRID",GRID.section_active,"update request");
+		DEBUG.log("GRID",GRID.section_active,"update request");
 		
 		SECTIONS[GRID.section_active].update=false;
 
@@ -278,6 +278,8 @@ function GRID_load(from)
 window.GRID_CallBack_load = function(data_array)
 {
 	let regenerate=true;
+	
+	DEBUG.log("DATAS",data_array);
 
 	if(data_array.count!==undefined)
 	{
@@ -315,7 +317,9 @@ window.GRID_CallBack_load = function(data_array)
 	}
 	
 	if(regenerate)
-	{		
+	{
+		DEBUG.log("GRID",'Regenerated');
+		
 		if(SECTIONS[GRID.section_active].offset<=0) $("main section."+GRID.section_active).html('');
 
 		OBJ_Dest_nodate = $("main section.nodate."+GRID.section_active);

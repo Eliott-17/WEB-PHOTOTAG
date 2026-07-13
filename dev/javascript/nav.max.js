@@ -69,6 +69,8 @@ $(document).ready(function(){
 			DISPLAY_section(GRID.section_mem);
 			DISPLAY_filters(false);
 			DISPLAY_menu($('#flush-trash'), false);
+			$('.save_tag').val('');
+			$('.save_val').val('');
 
 	});
 
