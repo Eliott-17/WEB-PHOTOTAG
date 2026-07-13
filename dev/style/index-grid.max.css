@@ -255,7 +255,7 @@ nav#status > div
     overflow-x: hidden;
 }
 
-div#upload-status span { padding: 0px; !important;  }
+div#upload-status span.material-symbols-outlined { padding: 0px; !important;  }
 div#upload-status div { text-align: left !important;  }
 div#error-message div { text-align: left !important; color: red; padding: 10px 0px 10px 0px; }
 

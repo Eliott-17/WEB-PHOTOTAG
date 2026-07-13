@@ -69,7 +69,8 @@
 		$flag['people']=0;
 		$flag['other']=0;
 
-		$flag['file_is_private']=0;
+		$flag['private']=0;
+		$flag['utc']=0;
 		
 		$filedata=[];
 		
@@ -95,8 +96,9 @@
 				$mem['people']=$value['tag_people'];
 				$mem['other']=$value['tag_other'];
 				
-				$mem['file_is_private']=$value['file_is_private'];
-				
+				$mem['private']=$value['file_is_private'];
+				$mem['utc']=$value['time_taken_is_utc'];				
+
 				$first=false;
 			}
 			
@@ -117,7 +119,9 @@
 			$filedata[$value['file_original_name']]['other']=$value['tag_other'];	
 
 			$filedata[$value['file_original_name']]['id']=$value['id'];		
-			$filedata[$value['file_original_name']]['file_is_private']=$value['file_is_private'];	
+			$filedata[$value['file_original_name']]['private']=$value['file_is_private'];	
+			$filedata[$value['file_original_name']]['utc']=$value['time_taken_is_utc'];				
+			
 			//$filedata[$value['file_original_name']]['file_hash']=$value['file_hash'];		
 			
 			//pour le flag
@@ -136,7 +140,8 @@
 			if($mem['people']!=$value['tag_people']) 						$flag['people']++;
 			if($mem['other']!=$value['tag_other'])	 						$flag['other']++;	
 
-			if($mem['file_is_private']!=$value['file_is_private'])	 		$flag['file_is_private']++;	
+			if($mem['private']!=$value['file_is_private'])	 				$flag['private']++;	
+			if($mem['utc']!=$value['time_taken_is_utc'])	 				$flag['utc']++;	
 			
 			$total_size+=$value['file_size'];
 		}

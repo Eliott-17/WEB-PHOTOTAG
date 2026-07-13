@@ -22,6 +22,20 @@ $(document).ready(function(){
 		}
 	});
 
+	$('aside#infocontent h3#zone select').on('change.zone',function() {
+
+		DEBUG.log("ON",'change.zone');		
+
+		if($('aside#infocontent h3 input[type="checkbox"]').prop('disabled')==false) utczonechange();
+	});
+		
+	$('aside#infocontent h3#utcinfo input').on('click.utctolocal', function() {
+		
+		DEBUG.log("ON",'click.utctolocal');
+		
+		utczonechange();
+	});
+
 	$('aside#infocontent h4.button-exif').on('click.exifInfo', function() {
 		
 		DEBUG.log("ON",'click.exiInfoFilter');
@@ -54,7 +68,9 @@ $(document).ready(function(){
 	
 		let data=$(this).parent().attr('data-form');
 		
-		$('aside#infocontent h3.ux-'+data+':not(.conflict) input, h3.ux-'+data+':not(.conflict) select, h3.ux-'+data+':not(.conflict) span.unedit').toggleClass('hidden');
+		$('aside#infocontent h3.ux-'+data+':not(.conflict) input, aside#infocontent h3.ux-'+data+' div.edit, h3.ux-'+data+':not(.conflict) select, h3.ux-'+data+':not(.conflict) span.unedit').toggleClass('hidden');
+		
+		$('aside#infocontent h3 input[type="checkbox"]').removeClass('hidden');
 		
 		if(!DISPLAY_is_visible_full_screen())	FILEMULTISELECTION_reset_ux($(this),data);
 		
@@ -95,6 +111,52 @@ $(document).ready(function(){
 
 });
 
+function utczonechange()
+{
+	let currenttime=$('h3#time span.unedit').html();	
+	
+	if($('#utcinfo input').prop('checked')==false)
+	{
+		$('h3#time input').val(currenttime);
+	}
+	else
+	{
+		let hours=parseInt(currenttime.split(':')[0]);
+		let minutes=parseInt(currenttime.split(':')[1]);	
+		let seconds=currenttime.split(':')[2];	
+		
+		let zonesign=$('h3#zone select').val().substr(0, 1);
+		let zonehours=parseInt($('h3#zone select').val().substr(1, 2));
+		let zoneminutes=parseInt($('h3#zone select').val().substr(3, 2));
+		
+		let hoursoffset=0;
+		
+		if(zonesign=='-')
+		{
+			zonehours*=-1;
+			zoneminutes*=-1;
+		}
+			
+		let newminutes = zoneminutes+minutes;
+			
+		if(newminutes>=60) hoursoffset++;
+		else if(newminutes<0) hoursoffset--;	
+
+		let newhour=hours+zonehours+hoursoffset;
+
+		if(newhour>=24) newhour-=24;
+		else if(newhour<0) newhour+=24;					
+		
+		newhour=String(newhour);
+		newminutes=String(newminutes);
+		
+		if(newhour.length==1) newhour='0'+newhour;
+		if(newminutes.length==1) newminutes='0'+newminutes;
+		
+		$('h3#time input').val(newhour+":"+newminutes+":"+seconds);
+	}
+}
+
 window.FILEINFO_CallBack_load = function(force_reload=false)
 {	
 	let hash = $('section#fullscreen div.media img, section#fullscreen div.media video').attr('src').split('-').pop();
@@ -120,7 +182,17 @@ window.FILEINFO_CallBack_display = function(data)
 	let datas = data.info[0];
 	
 	$('input.filesid').val("["+data.info[0].id+"]");
-	$('input.conflictedit').val('{"date":0,"time":0,"zone":0,"continent":0,"country":0,"city":0,"place":0,"activity":0,"comment":0,"people":0,"other":0}');
+	$('input.conflictedit').val('{"date":0,"time":0,"zone":0,"continent":0,"country":0,"city":0,"place":0,"activity":0,"comment":0,"people":0,"other":0,"private":0,"utc":0}');
+	$('input.utcflag').val(datas.time_taken_is_utc);
+	
+	if(datas.time_taken_is_utc)
+	{
+		$('aside#infocontent h3#utcinfo').removeClass('hidden');
+	}
+	else
+	{
+		$('aside#infocontent h3#utcinfo').addClass('hidden');
+	}
 
 	if(lform !=="")
 	{
@@ -129,7 +201,7 @@ window.FILEINFO_CallBack_display = function(data)
 		$('aside#infocontent h3.ux-'+lform+' span').removeClass('hidden');				
 		$('aside#infocontent h4.'+lform+' button.edit').removeClass('hidden');
 	}
-
+	
 	if(datas.file_type==1) 	$('h2#file_type span.material-symbols-outlined').html('video_file');
 	else  					$('h2#file_type span.material-symbols-outlined').html('photo');
 	
@@ -142,27 +214,38 @@ window.FILEINFO_CallBack_display = function(data)
 	
 	let time_taken_at = datas.time_taken_at_date+datas.time_taken_at_zone+datas.time_taken_at_time;
 	
-	if(time_taken_at=="0000000000000000000")
+	if(datas.time_taken_at_date=="00000000")
 	{
 		$('h3#date span.unedit').html('Unknown');
-		$('h3#time span.unedit').html('Unknown');
-		$('h3#zone span.unedit').html('Unknown');
-
 		$('h3#date input').val("1900-01-01");
+	}
+	else
+	{
+		$('h3#date input').val(formatDateTime(time_taken_at,'input-date'));
+		$('h3#date span.unedit').html(formatDateTime(time_taken_at,'output-date'));
+	}
+	
+	if(datas.time_taken_at_time=="000000")
+	{	
+		$('h3#time span.unedit').html('Unknown');
 		$('h3#time input').val("00:00:00");
-		$('h3#zone select').val("+0000");
 	}
 	else
 	{		
-		$('h3#date input').val(formatDateTime(time_taken_at,'input-date'));
-		$('h3#time input').val(formatDateTime(time_taken_at,'input-time'));
-		$('h3#zone select').val(formatDateTime(time_taken_at,'input-zone').replace('UTC',''));
-		
-		$('h3#date span.unedit').html(formatDateTime(time_taken_at,'output-date'));
+		$('h3#time input').val(formatDateTime(time_taken_at,'input-time'));		
 		$('h3#time span.unedit').html(formatDateTime(time_taken_at,'output-time'));
-		$('h3#zone span.unedit').html(formatDateTime(time_taken_at,'output-zone'));
 	}
 
+	if(datas.time_taken_at_zone=="00000")
+	{		
+		$('h3#zone span.unedit').html('Unknown');
+		$('h3#zone select').val("+0000");	
+	}
+	else
+	{
+		$('h3#zone select').val(formatDateTime(time_taken_at,'input-zone').replace('UTC',''));	
+		$('h3#zone span.unedit').html(formatDateTime(time_taken_at,'output-zone'));
+	}
 
 	$('h3#file_exif_idf0_sensordata0').addClass('hidden');
 	$('h3#file_exif_idf0_sensordata1').addClass('hidden');
@@ -414,9 +497,12 @@ window.FILEINFO_CallBack_display = function(data)
 	if (datas.time_modified_at == null) 	$('h3#time_modified_at').html("never");
 	else 									$('h3#time_modified_at').html(formatUTCToLocalWithTimezone(datas.time_modified_at));
 
-	$('h3.ux-tag-location.gps').removeClass('hidden');	
-	$('h3.privacy_mode').removeClass('hidden');	
-	
+	$('aside#infocontent h3.ux-tag-location.gps').removeClass('hidden');
+	$('aside#infocontent h3.privacy_mode').removeClass('hidden');	
+	$('aside#infocontent h3 input[type="checkbox"]').removeClass('hidden');
+	$('aside#infocontent h3 input[type="checkbox"]').prop('disabled',false);
+	$('aside#infocontent h3#utcinfo div.edit').addClass('hidden');
+		
 	DEBUG.log('FILEINFO','CallBack_data');
 }
 

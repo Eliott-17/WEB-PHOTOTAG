@@ -158,6 +158,26 @@ aside h3.legend
 	font-size: small;
 }
 
+aside h3#utcinfo
+{
+	flex-direction: column;
+	padding-left:35px;
+	margin: 10px 0px;
+	align-items: normal;
+	justify-content: center;
+	grid-gap: 10px;
+}
+
+aside h3#utcinfo div span
+{
+	margin-bottom: 10px;
+}
+
+aside h3#utcinfo select
+{
+	margin-top: 15px;
+}
+
 aside div.exifmargin20
 {
 	margin-left: 20px;

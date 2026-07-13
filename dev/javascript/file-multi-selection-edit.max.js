@@ -190,6 +190,7 @@ window.FILEMULTISELECTION_CallBack_display = function(ldata)
 			{
 				$('aside#infocontent h3#'+key).addClass('conflict');
 				$('aside#infocontent h3#'+key+' span.unedit').html("{ Different values }");
+				if(key=="time") $('aside#infocontent h3 input[type="checkbox"]').prop('disabled',true);
 			}
 		}	
 		else
@@ -210,6 +211,7 @@ window.FILEMULTISELECTION_CallBack_display = function(ldata)
 			{
 				$('aside#infocontent h3#'+key+' input').val(formatDateTime('00000000+0000'+datas['mem'][key],'input-time'));
 				$('aside#infocontent h3#'+key+' span.unedit').html(formatDateTime('00000000+0000'+datas['mem'][key],'output-time'));
+				$('aside#infocontent h3 input[type="checkbox"]').prop('disabled',false);
 			}			
 			else if(key=="zone")
 			{
@@ -220,6 +222,17 @@ window.FILEMULTISELECTION_CallBack_display = function(ldata)
 			{
 				$('aside#infocontent h3.lockconflict').addClass('hidden');				
 				FILEINFO_CallBack_lock(datas['mem'][key]);
+			}
+			else if(key=="utc")
+			{
+				if(datas['mem'][key]==1)
+				{
+					$('aside#infocontent h3#utcinfo').removeClass('hidden');
+				}
+				else
+				{
+					$('aside#infocontent h3#utcinfo').addClass('hidden');
+				}
 			}
 			else
 			{

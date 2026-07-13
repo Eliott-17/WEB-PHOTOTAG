@@ -227,7 +227,7 @@ else
 		$header_file_trash = DIR_TRASH.$_SESSION["USER"];
 		$commits=[];				
 		
-		$structureversion=2; //VERSION BDD
+		$structureversion=3; //VERSION BDD
 		
 		for($i=$structureversion; $i>0; $i--)
 		{
@@ -327,6 +327,14 @@ else
 				if($EasyPDOUser->execbdd("ALTER TABLE photos ADD COLUMN file_is_private INTEGER DEFAULT 0;")===false)
 				{
 					$migration_errors+=100;
+				}
+			}
+
+			if(in_array(3,$commits)) //version 3 - execute to migrate from 2 to 3
+			{
+				if($EasyPDOUser->execbdd("ALTER TABLE photos ADD COLUMN time_taken_is_utc INTEGER DEFAULT 0;")===false)
+				{
+					$migration_errors+=1000;
 				}
 			}
 

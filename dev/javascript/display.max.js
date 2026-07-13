@@ -237,7 +237,7 @@ var DISPLAY_fileinfo_init = function fileinfo_init(multiselectionreset=true)
 		$('div#actions').addClass('hidden');
 	}
 	//edit-cancel ux display reset
-	$('aside#infocontent h3 input, h3 select').addClass('hidden');
+	$('aside#infocontent h3 input, h3 select:not(.utc)').addClass('hidden');
 	$('aside#infocontent h4.edit_ux button.save').addClass('hidden');
 	$('aside#infocontent h4.edit_ux button.cancel').addClass('hidden');
 	$('aside#infocontent h4.edit_ux button.edit').removeClass('hidden');

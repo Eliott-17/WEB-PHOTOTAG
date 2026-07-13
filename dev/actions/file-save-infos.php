@@ -25,7 +25,8 @@
 			$validation->addVerification('date',		'string',				'Date',			10,10);	
 			$validation->addVerification('time',		'string',				'Time',			8,8);	
 			$validation->addVerification('zone',		'string',				'Zone',			5,5);
-
+			$validation->addVerification('utcflag',		'int',					'UTC Flag',		0,1);
+			
 		break;
 		case "tag-location":
 
@@ -53,8 +54,9 @@
 
 	if(!$validation->isValidated())
 	{
-		$fReturn->addCallback("NAV_CallBack_error","Data request error");
-		if(ENV=="DEV") $fReturn->addConsole($validation->Message());	
+		$fReturn->addFailMessage("One field has an incorrect value");
+		$fReturn->addCallback("NAV_CallBack_error",$validation->Message());
+		//if(ENV=="DEV") $fReturn->addConsole($validation->Message());	
 		$fReturn->fetch();
 	}
 	
@@ -67,6 +69,19 @@
 			if($conflict->date==0) $EasyPDO->addFields('time_taken_at_date',str_replace('-','',$_POST['date']));
 			if($conflict->zone==0) $EasyPDO->addFields('time_taken_at_zone',$_POST['zone']);
 			if($conflict->time==0) $EasyPDO->addFields('time_taken_at_time',str_replace(':','',$_POST['time']));
+			if($conflict->utc==0) 
+			{
+				if($_POST['utcflag']==1)
+				{
+					//convert from UTC to NORMAL
+				}
+				
+				$EasyPDO->addFields('time_taken_is_utc',0);
+			}
+			else
+			{
+				$fReturn->addInfoMessage("Can't update with mismatch UTC flag")->fetch();
+			}
 			
 		break;
 		case "tag-location":

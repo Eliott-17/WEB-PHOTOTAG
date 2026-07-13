@@ -3,7 +3,8 @@
 //****************************************************************	
 
 let GRID = {
-	section_active:"explore",
+	//section_active:"explore",
+	section_active:"untagged",
 	section_mem:"",
 	offset_mem:null,
 	scroll_mem:0,
