@@ -283,13 +283,13 @@ window.GRID_CallBack_load = function(data_array)
 
 	if(data_array.count!==undefined)
 	{
-		$('span#'+GRID.section_active+'_count').html(' ('+data_array.count+')');
+		$('span#'+GRID.section_active+'_count').html(' ('+data_array.count.total+')');
 		
 		if(SECTIONS[GRID.section_active].countmem!==undefined)
 		{
 			if(SECTIONS[GRID.section_active].countmem===null)
 			{
-				SECTIONS[GRID.section_active].countmem=data_array.count;
+				SECTIONS[GRID.section_active].countmem=data_array.count.total;
 			}
 			else
 			{

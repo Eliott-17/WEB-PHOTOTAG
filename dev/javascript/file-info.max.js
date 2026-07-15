@@ -178,6 +178,8 @@ window.FILEINFO_CallBack_display = function(data)
 {	
 	DISPLAY_fileinfo_init();
 	
+	DEBUG.log("DATAS",data);
+	
 	let lform = data.lform;
 	let datas = data.info[0];
 	
@@ -207,8 +209,18 @@ window.FILEINFO_CallBack_display = function(data)
 	
 	$('h2#file_type span.title').html('File');
 	
-	$('h3#file_original_name span').html(datas.file_original_name);
+	$('h3#file_original_name span').html('<a href="dl-'+datas.file_hash+'">'+datas.file_original_name+'</a>');
+	
 	$('h3#file_original_name').removeClass('hidden');
+	
+	if($('main section#fullscreen div.button-info').hasClass("error"))
+	{
+		$('h3#file_hd_error').removeClass('hidden');
+	}
+	else
+	{
+		$('h3#file_hd_error').addClass('hidden');
+	}
 	
 	$('h3#file_size span').html(formatBytes(datas.file_size));
 	

@@ -60,7 +60,7 @@
 
 #upload-status div.errorresponse 
 {
-	color: orange;
+	color: darkorange;
 }
 
 #upload-status div#errorgeneral 

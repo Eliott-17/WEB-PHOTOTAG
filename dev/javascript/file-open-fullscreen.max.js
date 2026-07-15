@@ -49,7 +49,9 @@ $(document).ready(function(){
 		DISPLAY_set_view("grid");
 		DISPLAY_menu($('#flush-trash'), false);
 		GRID_load("click.gridSelect");
-		$('main').scrollTop(GRID.scroll_mem);		
+		$('main').scrollTop(GRID.scroll_mem);	
+
+		$('main section#fullscreen div.button-info').removeClass("error");		
 	});
 
 	$('section#fullscreen').on('click.gridLeftAR', 'div.button-leftarrow', function() { Arrow(0); });			
@@ -117,8 +119,54 @@ var FILEOPENFULLSCREEN_Loadmedia = function LoadMedia(id)
 	let media_id =  $('div#'+GRID.section_active+'_'+id+' div.media-container').attr("data-id");
 	
 	$('section#fullscreen div.media').attr('data-id',media_id);
+	
+	$('section#fullscreen div.media img').off("error.imgfullscreen");
+	$('section#fullscreen div.media img').on("error.imgfullscreen", function (e) {
+		console.log(e);
+	});
 		
 	if(file_type == 0) $('section#fullscreen div.media').html('<img src="hd-'+file_hash+'" loading="lazy">');
 	if(file_type == 1) $('section#fullscreen div.media').html('<video src="hd-'+file_hash+'" poster="sd-'+file_hash+'" controls autoplay muted preload="auto" playsinline></video>');	
 
+}
+
+var FILEOPENFULLSCREEN_Loadmedia = function LoadMedia(id)
+{
+    let file_type = $('div#'+GRID.section_active+'_'+id+' div.media-container').attr("data-type");
+    let file_hash = $('div#'+GRID.section_active+'_'+id+' div.media-container').attr("data-src");
+    let media_id = $('div#'+GRID.section_active+'_'+id+' div.media-container').attr("data-id");
+
+    let container = $('section#fullscreen div.media');
+
+    container.attr('data-id', media_id);
+
+    container.empty();
+
+    if (file_type == 0) {
+
+        let img = $('<img>', {
+            loading: 'lazy'
+        });
+
+        img.on("error.imgfullscreen", function(e) {
+            console.log("Erreur image", this.src);
+			
+			img.attr('src', img.attr('src').replace('hd','sd'));
+			
+			$('main section#fullscreen div.button-info').addClass("error");
+        });
+
+        img.attr('src', 'hd-' + file_hash);
+
+        container.append(img);
+
+    }
+
+    if (file_type == 1) {
+
+        container.html(
+            '<video src="hd-'+file_hash+'" poster="sd-'+file_hash+'" controls autoplay muted preload="auto" playsinline></video>'
+        );
+
+    }
 }

@@ -31,7 +31,8 @@
 			$total_size=0;
 			
 			$EasyPDO = new EasyPDO($_SESSION['DB']);
-			$EasyPDO->addFields('file_original_name');	
+			$EasyPDO->addFields('file_original_name');
+			$EasyPDO->setPdoOption(PDO::FETCH_COLUMN);			
 			
 			$result = $EasyPDO->select('photos', 'file_original_name IN', $ids);
 			

@@ -2,7 +2,8 @@
 --Fullscreen image edit multiple
 -------------------------------------------*/
 
-aside#infocontent h3.conflict span.material-symbols-outlined
+aside#infocontent h3.conflict span.material-symbols-outlined,
+aside#infocontent h3.lockconflict
 {
 	color: darkorange;
 }
@@ -13,9 +14,4 @@ aside#infocontent h3.conflict span.solver
 	text-decoration: underline;
 	cursor: pointer;
 	display: inline;
-}
-
-aside#infocontent h3.lockconflict
-{
-	color: darkorange;
 }

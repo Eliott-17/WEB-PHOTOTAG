@@ -25,7 +25,7 @@ if($debug)
 if(is_session_valid() AND $validation->isValidated())
 {
 	require_once($_SERVER['DOCUMENT_ROOT'].'/includes/functions.php');
-	
+		
 	if(!empty($_GET['time']))
 	{	
 		$filename_header=DIR_TRASH.$_GET['time'].'_';
@@ -33,7 +33,7 @@ if(is_session_valid() AND $validation->isValidated())
 	else
 	{
 		if($_GET['type']=="sd") $filename_header=DIR_SD;
-		if($_GET['type']=="hd") $filename_header=DIR_HD;
+		if($_GET['type']=="hd" || $_GET['type']=="dl") $filename_header=DIR_HD;
 	}
 	
 	if($_GET['type']=="sd")
@@ -43,9 +43,7 @@ if(is_session_valid() AND $validation->isValidated())
 		if(file_exists($path)) $filename = $path;
 	}
 	
-	if($debug) echo $path;
-	
-	if($_GET['type']=="hd")
+	if($_GET['type']=="hd" || $_GET['type']=="dl")
 	{	
 		require_once($_SERVER['DOCUMENT_ROOT'].'/core/class.easypdo.php');
 
@@ -57,8 +55,10 @@ if(is_session_valid() AND $validation->isValidated())
 		
 		if($array_files['status']===true)
 		{
-			$filenametest = $filename_header.$array_files['datas'][0]['file_original_name'];
+			$originalName = $array_files['datas'][0]['file_original_name'];
 			
+			$filenametest = $filename_header.$originalName;
+
 			if ($filenametest && file_exists($filenametest)) 
 			{
 				$filename=$filenametest;
@@ -81,6 +81,14 @@ else
 	}
 
 	header('Content-Type: ' . mime_content_type($filename));
+
+	if($_GET['type']=='dl' && isset($originalName))
+	{
+		header('Content-Disposition: attachment; filename="' . basename($originalName) . '"; filename*=UTF-8\'\'' . rawurlencode($originalName));
+	}
+	
+	header('Content-Length: ' . filesize($filename));
+
 	readfile($filename);
 }
 

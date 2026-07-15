@@ -232,8 +232,9 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/datas.php');
 						<input type="hidden" name="files_hash" class="filesid" value=""/>
 					</form>
 					<h2 id="file_type"><span class="material-symbols-outlined"></span><span class="title"></span></h2>
-					<h3 id="file_original_name" class="margin"></span><span></h3>
-					<h3 id="file_size" class="margin"></span><span></h3>
+					<h3 id="file_hd_error" class="margin hidden"><span>Can't display HD file</span></h3>
+					<h3 id="file_original_name" class="margin"><span></span></h3>
+					<h3 id="file_size" class="margin"><span></span></h3>
 					<div class="informations">
 						<h2 id="file_exif_idf0_make_model"><span class="material-symbols-outlined">camera</span><span class="title"></span></h2>
 						<h3 id="file_exif_idf0_sensordata0" class="margin"><span></span></h3>

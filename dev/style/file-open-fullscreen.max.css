@@ -114,6 +114,23 @@ main section#fullscreen div.button-info
 	left: 90px;
 }
 
+h3#file_hd_error
+{
+	color:red;
+}
+
+main section#fullscreen div.button-info.error
+{
+	color: red;
+	animation: blink 1s infinite;
+}
+
+@keyframes blink {
+    50% {
+        opacity: 0;
+    }
+}
+
 main section#fullscreen div.button-leftarrow
 {
 	left: 10px;
