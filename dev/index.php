@@ -442,7 +442,8 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/datas.php');
 	<!-- END BODY -->
 		
 	<!-- CORE JS FRAMEWORK - START --> 
-	<script src="javascript/jquery-3.7.0.min.js" type="text/javascript"></script>
+	<script src='javascript/jquery-3.7.0.min.js' type="text/javascript"></script>
+	<script src='javascript/heic2any.min.js' type="text/javascript"></script>
 	<!-- CORE JS FRAMEWORK - END --> 	
 	
 	<!-- OTHER SCRIPTS INCLUDED ON THIS PAGE - START --> 
@@ -458,7 +459,7 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/datas.php');
 	<script src='javascript/file-info.<?php echo filemtime('javascript/file-info.'.DIM.'.js'); ?>.<?php echo DIM; ?>.js'></script>
 	<script src='javascript/file-multi-selection-edit.<?php echo filemtime('javascript/file-multi-selection-edit.'.DIM.'.js'); ?>.<?php echo DIM; ?>.js'></script>
 	<script src='javascript/file-upload.<?php echo filemtime('javascript/file-upload.'.DIM.'.js'); ?>.<?php echo DIM; ?>.js'></script>
-	<script src='core/post.<?php echo DIM; ?>.js'></script>
+	<script src='core/post.<?php echo DIM; ?>.js' type="text/javascript"></script>
 	
 	<?php 
 	

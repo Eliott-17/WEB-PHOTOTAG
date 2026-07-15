@@ -5,6 +5,8 @@ let uploadedSize;
 let errorCount;
 let treatedFiles;;
 let lock=false;
+let heicalert=false;
+let filelist=[];
 
 $(document).ready(function() {
     // Gestion du drag & drop
@@ -28,20 +30,70 @@ $(document).ready(function() {
 			if (files.length > 0) {
 				
 				DISPLAY_menu($('div#upload-status'),true);
-					
+				
 				$.get("../core/securitytoken.php")
 				.then(token => {
-					lock=true;
-					uploadMedia(files, token);
+
+					return $.ajax({
+						url: 'actions/file-exist.php',
+						method: 'POST',
+						data: {
+							token: token,
+							files: JSON.stringify(files.map(file => file.name))
+						},
+					})
+					.then(datas => {
+						
+						if(datas.status==false)
+						{
+							throw new Error(datas.datas);
+						}
+						else
+						{
+							errorCount = 0;
+
+							const existingFiles = new Set(datas.datas);
+
+							$.each(files, function(key, value) {
+
+								if (existingFiles.has(value.name)) {
+
+									errorCount++;
+
+									$('#upload-status').append(
+										`<div id="error${errorCount}" class="text errorresponse">
+											<span>${value.name}:<br/>Already Exist !</span>
+											&nbsp;<span class="material-symbols-outlined cursor">close_small</span>
+										</div>`
+									);
+								}
+							});
+
+							// Suppression des fichiers existants
+							files = files.filter(file => !existingFiles.has(file.name));
+
+							lock = true;
+							totalSize = 0;
+							totalFiles = 0;
+
+							DEBUG.log("UPLOAD", files, "media dropped LOCK ON");
+
+							uploadMedia(files, token);
+						}
+					});
+
 				})
 				.catch(err => {
-					console.error("Can't get token", err);				
+
+					DEBUG.error("UPLOAD", "Upload preparation failed", err);
+
 					$('#upload-status').append(
 						`<div id="errorgeneral" class="text">
 							<span>Internal error</span>
 							&nbsp;<span class="material-symbols-outlined cursor"></span>
 						</div>`
 					);
+
 				});
 			}
 		}
@@ -64,10 +116,14 @@ $(document).ready(function() {
 					
 				$.get("../core/securitytoken.php")
 				.then(token => {
+					
+					DEBUG.log("UPLOAD",files, "metadata dropped LOCK ON");
+					totalSize = 0;
+					totalFiles =0;
 					uploadMetadata(files, token);
 				})
 				.catch(err => {
-					console.error("Can't get token", err);				
+					DEBUG.error("UPLOAD","Can't get token", err);				
 					$('#upload-status').append(
 						`<div id="errorgeneral" class="text">
 							<span>Internal error</span>
@@ -92,10 +148,16 @@ function uploadMetadata(files, token)
 	uploadedSize = 0;
 	errorCount = 0;
 	treatedFiles = 0;	
+ 
+	bar.css('width', '0%');
+	bar.html('0%');
+	$('span#fileprogress').html('0/'+totalFiles);
     // Upload séquentiel avec génération de miniature
     let chain = Promise.resolve();
     files.forEach(file => {
         chain = chain.then(() => {
+			
+			DEBUG.log("UPLOAD",file.name, "is on treatment");
 			
             if (file.size > 2048) { // 1Mo
                 errorCount++;
@@ -114,6 +176,8 @@ function uploadMetadata(files, token)
 						
 			return CheckFile(file)
 			.then(({ time }) => {
+				
+				DEBUG.log("UPLOAD",file.name, "CheckFile OK");
 				
 				const date = new Date(time * 1000);
 
@@ -154,6 +218,7 @@ function uploadMetadata(files, token)
     chain.then(() => {
         if (errorCount === 0) {
 			DISPLAY_menu($('div#upload-status'),false);
+			NAV_open_untagg(true); // Recharge la liste des fichiers
         } else {
             $('#upload-status').append(
                 `<div id="errorgeneral" class="text">
@@ -170,7 +235,6 @@ function uploadMetadata(files, token)
 			
         }
 		lock=false;
-        //NAV_open_untagg(true); // Recharge la liste des fichiers
     });
 }
 		
@@ -179,12 +243,18 @@ function uploadMedia(files, token) {
     totalSize = files.reduce((sum, f) => sum + f.size, 0);
 	totalFiles = files.length;	
 	uploadedSize = 0;
-	errorCount = 0;
 	treatedFiles = 0;	
-    // Upload séquentiel avec génération de miniature
+ 
+	bar.css('width', '0%');
+	bar.html('0%');
+	$('span#fileprogress').html('0/'+totalFiles);
+ // Upload séquentiel avec génération de miniature
     let chain = Promise.resolve();
     files.forEach(file => {
         chain = chain.then(() => {
+			
+			DEBUG.log("UPLOAD",file.name, "is on treatment");
+			
             if (file.size > 1024 * 1024 * 1024) { // 1Go
                 errorCount++;
 				$('span#fileprogress').html(treatedFiles+'/'+totalFiles);
@@ -217,12 +287,25 @@ function uploadMedia(files, token) {
 					if (ext === "heic" || ext === "heif")
 					{
 						ThumbnailFileType="image/"+ext;
+						
+						if(heicalert==false)
+						{
+							heicalert=true;
+							
+							$('#upload-status').append(
+							`<div class="text errorresponse">
+								<span class="material-symbols-outlined cursor">warning</span>&nbsp;<span>HEIC processing may take longer.</span>
+							</div>`);
+						}
 					}
 				}
 			}
 	
 			return generateThumbnail(file,ThumbnailFileType)
 			.then(({ file, preview, orientation }) => {
+				
+				DEBUG.log("UPLOAD",file.name, "generateThumbnail OK");
+				
 				const formData = new FormData();
 				formData.append('file', file);
 				formData.append('preview', preview, 'preview.webp');
@@ -272,6 +355,9 @@ function uploadMedia(files, token) {
 
 // Fonction d'upload d'un seul fichier
 function uploadSingle(file, formData, action) {
+	
+	DEBUG.log("UPLOAD",file.name, "PHP upload");
+	
 	return new Promise((resolve, reject) => {
 		const xhr = new XMLHttpRequest();
 
@@ -336,6 +422,8 @@ function uploadSingle(file, formData, action) {
 
 function CheckFile(file) 
 {
+	DEBUG.log("UPLOAD",file.name, "CheckFile in progress");
+	
     if (file.type !== 'application/json') {
         treatedFiles++;
         return Promise.reject(new Error("File not supported"));
@@ -367,8 +455,10 @@ function CheckFile(file)
 }
 
 // Fonction pour générer une miniature (image ou vidéo)
-function generateThumbnail(file,ThumbnailFileType) 
+/*function generateThumbnail(file,ThumbnailFileType) 
 {
+	DEBUG.log("UPLOAD",file.name, "generateThumbnail in progress");
+	
 	return new Promise((resolve, reject) => {
 		if (ThumbnailFileType.startsWith('image/')) {
 			const img = new Image();
@@ -418,6 +508,285 @@ function generateThumbnail(file,ThumbnailFileType)
 			treatedFiles++;
 		}
 	});
+}*/
+
+const timeouts = {};
+
+function generateThumbnail(file, ThumbnailFileType)
+{
+    DEBUG.log("UPLOAD", file.name, "generateThumbnail()");
+
+    return new Promise((resolve, reject) =>
+    {
+        let finished = false;
+
+        timeouts[file.name] = setTimeout(function()
+        {
+			DEBUG.log("UPLOAD","TIMEOUT FIRE", file.name, timeouts[file.name]);
+            fail("Timeout pendant la génération de la miniature.");
+        }, 30000);
+		
+		DEBUG.log("UPLOAD","TIMEOUT CREATED", file.name, timeouts[file.name]);
+
+        function success(result)
+        {
+			if (finished) return;
+
+            finished = true;
+            clearTimeout(timeouts[file.name]);
+			delete timeouts[file.name];
+
+            DEBUG.log("UPLOAD", file.name, "Thumbnail generated");
+
+            resolve(result);
+        }
+
+        function fail(message, error = null)
+        {
+            if (finished) return;
+
+            finished = true;
+            clearTimeout(timeouts[file.name]);
+			delete timeouts[file.name];
+
+            DEBUG.log("UPLOAD", file.name, message, error);
+
+            reject(new Error(message));
+        }
+
+        //==============================================================
+        // IMAGE
+        //==============================================================
+
+        if (ThumbnailFileType.startsWith("image/"))
+        {
+            DEBUG.log("UPLOAD", file.name, "Image detected");
+
+            const img = new Image();
+            const canvas = document.createElement("canvas");
+            const ctx = canvas.getContext("2d");
+
+            if (!ctx)
+            {
+                fail("Impossible de créer le contexte Canvas.");
+                return;
+            }
+
+            img.onload = function()
+            {
+                DEBUG.log("UPLOAD", file.name, "Image loaded", img.width + "x" + img.height);
+
+                try
+                {
+                    const width = Math.max(1, Math.round(img.width / 4));
+                    const height = Math.max(1, Math.round(img.height / 4));
+
+                    canvas.width = width;
+                    canvas.height = height;
+
+                    ctx.drawImage(img, 0, 0, width, height);
+
+                    DEBUG.log("UPLOAD", file.name, "Canvas drawn");
+
+                    canvas.toBlob(function(blob)
+                    {
+                        if (!blob)
+                        {
+                            fail("canvas.toBlob() returned null.");
+                            return;
+                        }
+
+                        DEBUG.log("UPLOAD", file.name, "Blob created", blob.size + " bytes");
+
+                        success({
+                            file: file,
+                            preview: blob,
+                            orientation: orientation(img.width, img.height)
+                        });
+
+                    }, "image/webp", 0.3);
+                }
+                catch(e)
+                {
+                    fail("Exception dans img.onload()", e);
+                }
+            };
+
+			img.onerror = async function(e)
+			{
+				DEBUG.log("UPLOAD", file.name, "Native decode failed, trying heic2any");
+
+				try
+				{
+					const convertedBlob = await heic2any({
+						blob: file,
+						toType: "image/jpeg",
+						quality: 0.8
+					});
+
+					// heic2any peut retourner un tableau
+					const jpegBlob = Array.isArray(convertedBlob)
+						? convertedBlob[0]
+						: convertedBlob;
+
+					DEBUG.log("UPLOAD", file.name, "HEIC converted");
+
+					const url = URL.createObjectURL(jpegBlob);
+
+					img.onload = function()
+					{
+						URL.revokeObjectURL(url);
+
+						DEBUG.log("UPLOAD", file.name, "Converted image loaded");
+
+						const width = Math.round(img.width / 4);
+						const height = Math.round(img.height / 4);
+
+						canvas.width = width;
+						canvas.height = height;
+
+						ctx.drawImage(img, 0, 0, width, height);
+
+						canvas.toBlob(blob =>
+						{
+							if (!blob)
+							{
+								fail(new Error("WebP generation failed"));
+								return;
+							}
+
+							success({
+								file: file,
+								preview: blob,
+								orientation: orientation(img.width, img.height)
+							});
+
+						}, "image/webp", 0.3);
+					};
+
+					img.src = url;
+
+				}
+				catch(err)
+				{
+					DEBUG.log("UPLOAD", file.name, "HEIC conversion failed", err);
+					fail(err);
+				}
+			};
+
+            const reader = new FileReader();
+
+            reader.onloadstart = function()
+            {
+                DEBUG.log("UPLOAD", file.name, "FileReader start");
+            };
+
+            reader.onload = function(e)
+            {
+                DEBUG.log("UPLOAD", file.name, "FileReader finished");
+
+                try
+                {
+                    img.src = e.target.result;
+                    DEBUG.log("UPLOAD", file.name, "img.src assigned");
+                }
+                catch(err)
+                {
+                    fail("Internal error img.src", err);
+                }
+            };
+
+            reader.onerror = function(e)
+            {
+                fail("FileReader error.", e);
+            };
+
+            reader.onabort = function()
+            {
+                fail("FileReader aborted.");
+            };
+
+            DEBUG.log("UPLOAD", file.name, "readAsDataURL()");
+
+            reader.readAsDataURL(file);
+
+            return;
+        }
+
+        //==============================================================
+        // VIDEO
+        //==============================================================
+
+        if (ThumbnailFileType.startsWith("video/"))
+        {
+            DEBUG.log("UPLOAD", file.name, "Video detected");
+
+            const video = document.createElement("video");
+            const canvas = document.createElement("canvas");
+            const ctx = canvas.getContext("2d");
+
+            if (!ctx)
+            {
+                fail("Can't create Canvas.");
+                return;
+            }
+
+            video.onerror = function(e)
+            {
+                fail("video.onerror()", e);
+            };
+
+            video.onloadeddata = function()
+            {
+                DEBUG.log("UPLOAD", file.name, "Video loaded");
+
+                canvas.width = 320;
+                canvas.height = (video.videoHeight / video.videoWidth) * 320;
+
+                video.currentTime = 1;
+            };
+
+            video.onseeked = function()
+            {
+                DEBUG.log("UPLOAD", file.name, "Video seeked");
+
+                try
+                {
+                    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+                    canvas.toBlob(function(blob)
+                    {
+                        if (!blob)
+                        {
+                            fail("canvas.toBlob() returned null.");
+                            return;
+                        }
+
+                        success({
+                            file: file,
+                            preview: blob,
+                            orientation: orientation(video.videoWidth, video.videoHeight)
+                        });
+
+                    }, "image/webp", 0.3);
+                }
+                catch(e)
+                {
+                    fail("Exception during video capture", e);
+                }
+            };
+
+            video.src = URL.createObjectURL(file);
+
+            return;
+        }
+
+        //==============================================================
+        // TYPE NON SUPPORTE
+        //==============================================================
+
+        fail("Unsupported file" + ThumbnailFileType);
+    });
 }
 
 function orientation(width, height) 
