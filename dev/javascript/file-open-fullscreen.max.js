@@ -162,11 +162,31 @@ var FILEOPENFULLSCREEN_Loadmedia = function LoadMedia(id)
 
     }
 
-    if (file_type == 1) {
+	if (file_type == 1) {
 
-        container.html(
-            '<video src="hd-'+file_hash+'" poster="sd-'+file_hash+'" controls autoplay muted preload="auto" playsinline></video>'
-        );
+		let video = $('<video>', {
+			controls: true,
+			autoplay: true,
+			muted: true,
+			preload: 'auto',
+			playsinline: true,
+			poster: 'sd-' + file_hash
+		});
 
-    }
+		video.on("loadedmetadata", function () {
+
+			if (this.videoWidth === 0 || this.videoHeight === 0) $('main section#fullscreen div.button-info').addClass("error");
+			
+		});
+		
+		video.on("error.videofullscreen", function(e) {
+
+			$('main section#fullscreen div.button-info').addClass("error");
+
+		});
+
+		video.attr('src', 'hd-' + file_hash);
+
+		container.append(video);
+	}
 }

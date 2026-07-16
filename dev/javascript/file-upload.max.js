@@ -302,7 +302,7 @@ function uploadMedia(files, token) {
 			}
 	
 			return generateThumbnail(file,ThumbnailFileType)
-			.then(({ file, preview, orientation }) => {
+			.then(({ file, preview, orientation, previewfail=false }) => {
 				
 				DEBUG.log("UPLOAD",file.name, "generateThumbnail OK");
 				
@@ -311,6 +311,16 @@ function uploadMedia(files, token) {
 				formData.append('preview', preview, 'preview.webp');
 				formData.append('orientation', orientation);
 				formData.append('token', token);
+				
+				if(previewfail==true)
+				{				
+					$('#upload-status').append(
+					`<div class="text">
+						<span>${file.name}:<br/>File uploaded without preview</span>
+						&nbsp;<span class="material-symbols-outlined cursor">close_small</span>
+					</div>`);
+				}
+				
 				return uploadSingle(file, formData, 'actions/file-upload.php');
 			})
 			.catch(error => {
@@ -522,37 +532,58 @@ function generateThumbnail(file, ThumbnailFileType)
 
         timeouts[file.name] = setTimeout(function()
         {
-			DEBUG.log("UPLOAD","TIMEOUT FIRE", file.name, timeouts[file.name]);
+            DEBUG.log("UPLOAD", "TIMEOUT FIRE", file.name, timeouts[file.name]);
             fail("Timeout pendant la génération de la miniature.");
         }, 30000);
-		
-		DEBUG.log("UPLOAD","TIMEOUT CREATED", file.name, timeouts[file.name]);
+
+        DEBUG.log("UPLOAD", "TIMEOUT CREATED", file.name, timeouts[file.name]);
+
 
         function success(result)
         {
-			if (finished) return;
+            if (finished) return;
 
             finished = true;
-            clearTimeout(timeouts[file.name]);
-			delete timeouts[file.name];
 
-            DEBUG.log("UPLOAD", file.name, "Thumbnail generated");
+            clearTimeout(timeouts[file.name]);
+            delete timeouts[file.name];
+
+            DEBUG.log(
+                "UPLOAD",
+                file.name,
+                result.previewfail ? "Thumbnail fallback" : "Thumbnail generated"
+            );
 
             resolve(result);
         }
+
 
         function fail(message, error = null)
         {
             if (finished) return;
 
-            finished = true;
             clearTimeout(timeouts[file.name]);
-			delete timeouts[file.name];
+            delete timeouts[file.name];
 
             DEBUG.log("UPLOAD", file.name, message, error);
 
-            reject(new Error(message));
+            const canvas = document.createElement("canvas");
+            canvas.width = 1;
+            canvas.height = 1;
+
+            canvas.toBlob(function(blob)
+            {
+                success({
+                    file: file,
+                    preview: blob,
+                    orientation: 0,
+                    previewfail: true,
+                    previewError: message
+                });
+
+            }, "image/webp", 0.8);
         }
+
 
         //==============================================================
         // IMAGE
@@ -572,10 +603,9 @@ function generateThumbnail(file, ThumbnailFileType)
                 return;
             }
 
-            img.onload = function()
-            {
-                DEBUG.log("UPLOAD", file.name, "Image loaded", img.width + "x" + img.height);
 
+            function generateImagePreview()
+            {
                 try
                 {
                     const width = Math.max(1, Math.round(img.width / 4));
@@ -586,8 +616,6 @@ function generateThumbnail(file, ThumbnailFileType)
 
                     ctx.drawImage(img, 0, 0, width, height);
 
-                    DEBUG.log("UPLOAD", file.name, "Canvas drawn");
-
                     canvas.toBlob(function(blob)
                     {
                         if (!blob)
@@ -596,8 +624,6 @@ function generateThumbnail(file, ThumbnailFileType)
                             return;
                         }
 
-                        DEBUG.log("UPLOAD", file.name, "Blob created", blob.size + " bytes");
-
                         success({
                             file: file,
                             preview: blob,
@@ -605,90 +631,85 @@ function generateThumbnail(file, ThumbnailFileType)
                         });
 
                     }, "image/webp", 0.3);
+
                 }
                 catch(e)
                 {
-                    fail("Exception dans img.onload()", e);
+                    fail("Exception image processing", e);
                 }
+            }
+
+
+            img.onload = function()
+            {
+                DEBUG.log(
+                    "UPLOAD",
+                    file.name,
+                    "Image loaded",
+                    img.width + "x" + img.height
+                );
+
+                generateImagePreview();
             };
 
-			img.onerror = async function(e)
-			{
-				DEBUG.log("UPLOAD", file.name, "Native decode failed, trying heic2any");
 
-				try
-				{
-					const convertedBlob = await heic2any({
-						blob: file,
-						toType: "image/jpeg",
-						quality: 0.8
-					});
-
-					// heic2any peut retourner un tableau
-					const jpegBlob = Array.isArray(convertedBlob)
-						? convertedBlob[0]
-						: convertedBlob;
-
-					DEBUG.log("UPLOAD", file.name, "HEIC converted");
-
-					const url = URL.createObjectURL(jpegBlob);
-
-					img.onload = function()
-					{
-						URL.revokeObjectURL(url);
-
-						DEBUG.log("UPLOAD", file.name, "Converted image loaded");
-
-						const width = Math.round(img.width / 4);
-						const height = Math.round(img.height / 4);
-
-						canvas.width = width;
-						canvas.height = height;
-
-						ctx.drawImage(img, 0, 0, width, height);
-
-						canvas.toBlob(blob =>
-						{
-							if (!blob)
-							{
-								fail(new Error("WebP generation failed"));
-								return;
-							}
-
-							success({
-								file: file,
-								preview: blob,
-								orientation: orientation(img.width, img.height)
-							});
-
-						}, "image/webp", 0.3);
-					};
-
-					img.src = url;
-
-				}
-				catch(err)
-				{
-					DEBUG.log("UPLOAD", file.name, "HEIC conversion failed", err);
-					fail(err);
-				}
-			};
-
-            const reader = new FileReader();
-
-            reader.onloadstart = function()
+            img.onerror = async function()
             {
-                DEBUG.log("UPLOAD", file.name, "FileReader start");
-            };
-
-            reader.onload = function(e)
-            {
-                DEBUG.log("UPLOAD", file.name, "FileReader finished");
+                DEBUG.log(
+                    "UPLOAD",
+                    file.name,
+                    "Native decode failed, trying heic2any"
+                );
 
                 try
                 {
+                    const convertedBlob = await heic2any({
+                        blob: file,
+                        toType: "image/jpeg",
+                        quality: 0.8
+                    });
+
+
+                    const jpegBlob = Array.isArray(convertedBlob)
+                        ? convertedBlob[0]
+                        : convertedBlob;
+
+
+                    const url = URL.createObjectURL(jpegBlob);
+
+
+                    img.onload = function()
+                    {
+                        URL.revokeObjectURL(url);
+
+                        DEBUG.log(
+                            "UPLOAD",
+                            file.name,
+                            "Converted image loaded"
+                        );
+
+                        generateImagePreview();
+                    };
+
+
+                    img.src = url;
+
+                }
+                catch(err)
+                {
+                    fail("HEIC conversion failed", err);
+                }
+            };
+
+
+            const reader = new FileReader();
+
+
+            reader.onload = function(e)
+            {
+                try
+                {
                     img.src = e.target.result;
-                    DEBUG.log("UPLOAD", file.name, "img.src assigned");
                 }
                 catch(err)
                 {
@@ -696,22 +717,25 @@ function generateThumbnail(file, ThumbnailFileType)
                 }
             };
 
+
             reader.onerror = function(e)
             {
-                fail("FileReader error.", e);
+                fail("FileReader error", e);
             };
+
 
             reader.onabort = function()
             {
-                fail("FileReader aborted.");
+                fail("FileReader aborted");
             };
 
-            DEBUG.log("UPLOAD", file.name, "readAsDataURL()");
 
             reader.readAsDataURL(file);
 
             return;
         }
+
+
 
         //==============================================================
         // VIDEO
@@ -721,9 +745,15 @@ function generateThumbnail(file, ThumbnailFileType)
         {
             DEBUG.log("UPLOAD", file.name, "Video detected");
 
+
             const video = document.createElement("video");
             const canvas = document.createElement("canvas");
             const ctx = canvas.getContext("2d");
+
+            video.muted = true;
+            video.playsInline = true;
+            video.preload = "metadata";
+
 
             if (!ctx)
             {
@@ -731,28 +761,60 @@ function generateThumbnail(file, ThumbnailFileType)
                 return;
             }
 
+
+            const videoURL = URL.createObjectURL(file);
+
+
             video.onerror = function(e)
             {
+                URL.revokeObjectURL(videoURL);
                 fail("video.onerror()", e);
             };
 
-            video.onloadeddata = function()
+
+            video.onloadedmetadata = function()
             {
-                DEBUG.log("UPLOAD", file.name, "Video loaded");
+                DEBUG.log(
+                    "UPLOAD",
+                    file.name,
+                    "Video metadata",
+                    video.videoWidth + "x" + video.videoHeight
+                );
+
+
+                if (!video.videoWidth || !video.videoHeight)
+                {
+                    URL.revokeObjectURL(videoURL);
+                    fail("Video codec unsupported by browser.");
+                    return;
+                }
+
 
                 canvas.width = 320;
-                canvas.height = (video.videoHeight / video.videoWidth) * 320;
+                canvas.height = Math.round(
+                    (video.videoHeight / video.videoWidth) * 320
+                );
 
-                video.currentTime = 1;
+
+                video.currentTime = Math.min(1, video.duration / 2);
             };
+
 
             video.onseeked = function()
             {
                 DEBUG.log("UPLOAD", file.name, "Video seeked");
 
+
                 try
                 {
-                    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+                    ctx.drawImage(
+                        video,
+                        0,
+                        0,
+                        canvas.width,
+                        canvas.height
+                    );
+
 
                     canvas.toBlob(function(blob)
                     {
@@ -762,13 +824,22 @@ function generateThumbnail(file, ThumbnailFileType)
                             return;
                         }
 
+
+                        URL.revokeObjectURL(videoURL);
+
+
                         success({
                             file: file,
                             preview: blob,
-                            orientation: orientation(video.videoWidth, video.videoHeight)
+                            orientation: orientation(
+                                video.videoWidth,
+                                video.videoHeight
+                            )
                         });
 
+
                     }, "image/webp", 0.3);
+
                 }
                 catch(e)
                 {
@@ -776,16 +847,21 @@ function generateThumbnail(file, ThumbnailFileType)
                 }
             };
 
-            video.src = URL.createObjectURL(file);
+
+            video.src = videoURL;
+            video.load();
 
             return;
         }
+
+
 
         //==============================================================
         // TYPE NON SUPPORTE
         //==============================================================
 
-        fail("Unsupported file" + ThumbnailFileType);
+        fail("Unsupported file " + ThumbnailFileType);
+
     });
 }
 

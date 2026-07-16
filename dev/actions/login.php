@@ -222,9 +222,14 @@ else
 		//---------------------------------------------	
 
 		$fReturn->addConsole("BDD");
+
+		$date = new DateTime();
+		$date->setTimezone(new DateTimeZone('UTC'));
+		$strdate_updated = $date->format('Y-m-d H:i:s');		
+		$strdate_file = $date->format('YmdHis');
 		
 		$header =  DIR_USER.$_SESSION["USER"];
-		$header_file_trash = DIR_TRASH.$_SESSION["USER"];
+		$header_file_trash = DIR_TRASH.$strdate_file.'_'.$_SESSION["USER"];
 		$commits=[];				
 		
 		$structureversion=3; //VERSION BDD
@@ -246,8 +251,8 @@ else
 					//process de migration stars
 					
 					$dbfile_migration = $header.'.'.$i.'m'.$structureversion.'.db'; //péprartion du nom du fichier pour la migration
-					
-					if(copy($dbfile_original,$header_file_trash.'.'.$i.'.'.time().'.backup')) //bacup OK
+									
+					if(copy($dbfile_original,$header_file_trash.'.'.$i.'.backup')) //bacup OK
 					{
 						if(rename($dbfile_original,$dbfile_migration)) //rename OK
 						{

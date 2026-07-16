@@ -35,24 +35,9 @@ $(document).ready(function(){
 		
 		if (scroll_lock || SECTIONS[GRID.section_active].offset==-1) return;
 
-		let scrollTop = $('main').scrollTop();
-		let windowHeight = $('main').height();
-		let docHeight = $('section.date.'+GRID.section_active).height()+$('section.nodate.'+GRID.section_active).height();
+		scroll_refresh();
 		
-		let remaining = docHeight - (scrollTop + windowHeight);
-		
-		// déclenche quand il reste 25%
-		if (remaining < docHeight * 0.25) {
-			if(remaining>=0)
-			{
-				scroll_lock=true;
-				SECTIONS[GRID.section_active].update=true;
-				SECTIONS[GRID.section_active].offset+=50;
-				GRID_load("scroll");
-			}
-		}
 	});
-
 
 	$(document).on('keydown.fullscreen', function(e) {
 	 
@@ -167,6 +152,26 @@ $(document).ready(function(){
 	});	
 
 });
+
+function scroll_refresh()
+{
+	let scrollTop = $('main').scrollTop();
+	let windowHeight = $('main').height();
+	let docHeight = $('section.date.'+GRID.section_active).height()+$('section.nodate.'+GRID.section_active).height();
+	
+	let remaining = docHeight - (scrollTop + windowHeight);
+	
+	// déclenche quand il reste 25%
+	if (remaining < docHeight * 0.25) {
+		if(remaining>=0)
+		{
+			scroll_lock=true;
+			SECTIONS[GRID.section_active].update=true;
+			SECTIONS[GRID.section_active].offset+=50;
+			GRID_load("scroll");
+		}
+	}
+}
 
 function GRID_reset(from,source,searchoption=null)
 {
@@ -401,7 +406,7 @@ function GRID_load_id()
 		id++;
 	});
 	
-	return id;
+	return (id-1);
 	
 	DEBUG.log("GRID","load_id");
 }

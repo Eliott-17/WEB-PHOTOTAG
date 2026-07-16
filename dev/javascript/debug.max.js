@@ -9,7 +9,7 @@ const DEBUG = {
 		FILEINFO: true,
         FILEMULTISELECTION: true,
         CALLBACK: true,
-		DATAS: false,
+		DATAS: true,
 		UPLOAD: true
     },
 

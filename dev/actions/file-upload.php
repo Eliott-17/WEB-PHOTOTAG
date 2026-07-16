@@ -48,11 +48,32 @@ if (!empty($_FILES['file']) && !empty($_FILES['preview'])) {
 
     $hash = hash('sha256', $name . time() .bin2hex(random_bytes(10)));
     $previewName = $hash.'.webp';
-    $targetSD = DIR_SD.$previewName;
-    if (!move_uploaded_file($_FILES['preview']['tmp_name'], $targetSD)) {
-        $fReturn->addRawText("Preview upload fail")->fetch();
-		//exit("Preview upload fail");
-    }
+	$targetSD = DIR_SD.$previewName;
+	$finaliseSDupload=true;
+		
+	if($size_webp<1000 && $file_type==1) //pixel car preview fail, fallback ffmpeg
+	{
+		$returnencode=generateVideoThumbnail($targetHD,$targetSD);
+		
+		if($returnencode['status']==true)
+		{
+			$finaliseSDupload=false;
+			$orientation = ($returnencode['width'] >= $returnencode['height']) ? 1 : 0;
+		}
+		else
+		{
+			$fReturn->addConsole("[PHP] Can't generate preview ffmpeg");
+			if(ENV=="DEV") $fReturn->addConsole(print_r($returnencode,true));	
+		}
+	}
+	
+	if($finaliseSDupload)
+	{
+		if (!move_uploaded_file($_FILES['preview']['tmp_name'], $targetSD)) {
+			$fReturn->addRawText("Preview upload fail")->fetch();
+			//exit("Preview upload fail");
+		}
+	}
 
     // Récupère la date de prise de vue
 	//				  YYYYMMDD+ZZZZHHMMSS
@@ -121,7 +142,7 @@ if (!empty($_FILES['file']) && !empty($_FILES['preview'])) {
 		}
 	}
 	
-	$orientation = (!empty($_POST['orientation']) && $_POST['orientation'] == "1") ? 1 : 0;
+	if(!isset($orientation)) $orientation = (!empty($_POST['orientation']) && $_POST['orientation'] == "1") ? 1 : 0;
 
     // Enregistre en base de données
     $date = new DateTime();

@@ -67,6 +67,21 @@ $(document).ready(function(){
 		
 		DISPLAY_trash(false);
 		
+		const match = $('span#'+GRID.section_active+'_count').html().match(/\((\d+)\)/);
+
+		if(match) 
+		{
+			let value = parseInt(match[1], 10);
+			
+			console.log(value,hash_array.length);
+		
+			value-=hash_array.length;	
+			
+			$('span#'+GRID.section_active+'_count').html(' ('+value+')');
+		}	
+		
+		scroll_refresh();
+		
 		CORE_post($('#filetrash'));
 		
 	});

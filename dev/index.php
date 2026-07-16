@@ -138,7 +138,6 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/datas.php');
 				?>
 				<main>
 					<section id="fullscreen" class="hidden">
-						<div class="media"></div>
 						<div class="ux button-selection notselected">
 							<span class="material-symbols-outlined nothover">radio_button_unchecked</span>
 							<span class="material-symbols-outlined hover">check_circle</span>
@@ -157,6 +156,7 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/datas.php');
 							<span class="material-symbols-outlined">play_arrow</span>
 						</div>
 						<div class="menubackground ux-background"></div>
+						<div class="media"></div>
 					</section>
 					<section class="explore hidden"></section>
 					<section class="grid library nodate"></section>
@@ -232,7 +232,7 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/datas.php');
 						<input type="hidden" name="files_hash" class="filesid" value=""/>
 					</form>
 					<h2 id="file_type"><span class="material-symbols-outlined"></span><span class="title"></span></h2>
-					<h3 id="file_hd_error" class="margin hidden"><span>Can't display HD file</span></h3>
+					<h3 id="file_hd_error" class="margin hidden"><span>Can't display HD media</span></h3>
 					<h3 id="file_original_name" class="margin"><span></span></h3>
 					<h3 id="file_size" class="margin"><span></span></h3>
 					<div class="informations">

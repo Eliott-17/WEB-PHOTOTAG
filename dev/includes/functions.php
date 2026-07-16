@@ -367,6 +367,50 @@
 			)
 		)';
 	}
+
+	function generateVideoThumbnail($input, $output)
+	{
+		$ffmpeg = 'C:\\ffmpeg\\bin\\ffmpeg.exe';
+		$ffprobe = 'C:\\ffmpeg\\bin\\ffprobe.exe';
+		
+		$cmd = sprintf(
+			'"%s" -y -ss 1 -i %s -frames:v 1 -vf scale=320:-1 -c:v libwebp -quality 70 %s 2>&1',
+			$ffmpeg,
+			escapeshellarg($input),
+			escapeshellarg($output)
+		);
+
+		exec($cmd, $result, $returnCode);
+
+		$response = [
+			'status' => false,
+			'return' => $returnCode,
+			'result' => $result,
+			'width' => null,
+			'height' => null
+		];
+
+		if ($returnCode === 0 && file_exists($output) && filesize($output) > 0)
+		{
+			$cmd = sprintf(
+				'"%s" -v error -select_streams v:0 -show_entries stream=width,height -of csv=s=x:p=0 %s 2>&1',
+				$ffprobe,
+				escapeshellarg($input)
+			);
+
+			exec($cmd, $probeResult, $probeReturn);
+
+			if ($probeReturn === 0 && isset($probeResult[0]))
+			{
+				list($response['width'], $response['height']) =
+					array_map('intval', explode('x', $probeResult[0]));
+			}
+
+			$response['status'] = true;
+		}
+
+		return $response;
+	}
 		
 	define("DIR_USER", $_SERVER['DOCUMENT_ROOT'].'/multimedia/'.$_SESSION["USER"].'/');
 	define("DIR_TRASH",DIR_USER.'trash/');
