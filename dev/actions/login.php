@@ -28,8 +28,8 @@ else
 
 	if(!$validation->isValidated())
 	{
-		$fReturn->addCallback("NAV_CallBack_error","Data request error");
-		if(ENV=="DEV") $fReturn->addConsole($validation->Message());	
+		//$fReturn->addCallback("NAV_CallBack_error","Data request error");
+		if(ENV=="DEV") $fReturn->addFailMessage($validation->Message());	
 		$fReturn->fetch();
 	}
 	
@@ -65,9 +65,7 @@ else
 	{
 		$fReturn->addFailMessage("Fatal error")->fetch();	
 	}
-	
-	$fReturn->addConsole($result['count']);
-	
+		
 	if($result['count']==0) //account don't exist
 	{
 		if(empty($_POST['password_verif']))
@@ -95,11 +93,7 @@ else
 	
 		//redirection
 	
-		if(ENV=="DEV")
-		{
-			//$fReturn->addConsole(print_r($return, true));
-			$fReturn->addConsole($a2f_code);
-		}
+		if(ENV=="DEV") $fReturn->addConsole($a2f_code);
 		
 		//TODO send_a2f_email($_POST['email'],$a2f_code);
 		$fReturn->addInfoMessage("Please enter the security code received by email")->addCallBack("LOGIN_CallBack_a2fverif")->fetch(); //CallBack faire apparaitre le chanmp CODE en javascript
@@ -124,6 +118,8 @@ else
 		{
 			if(empty($_POST['code'])) 
 			{
+				if(ENV=="DEV") $fReturn->addConsole($result['datas'][0]['a2f_code']);
+				
 				$fReturn->addInfoMessage("Please enter the security code received by email")->addCallBack("LOGIN_CallBack_a2fverif")->fetch();
 			}
 			

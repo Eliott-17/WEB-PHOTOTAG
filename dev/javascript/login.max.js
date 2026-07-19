@@ -12,7 +12,7 @@ window.LOGIN_CallBack_passwordverif = function()
 	$('nav #login .password-confirmation').removeClass('hidden');
 }
 
-window.OGIN_CallBack_a2fverif = function()
+window.LOGIN_CallBack_a2fverif = function()
 {
 	$('nav #login .code').removeClass('hidden');
 

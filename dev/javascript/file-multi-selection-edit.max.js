@@ -72,9 +72,7 @@ $(document).ready(function(){
 		if(match) 
 		{
 			let value = parseInt(match[1], 10);
-			
-			console.log(value,hash_array.length);
-		
+
 			value-=hash_array.length;	
 			
 			$('span#'+GRID.section_active+'_count').html(' ('+value+')');

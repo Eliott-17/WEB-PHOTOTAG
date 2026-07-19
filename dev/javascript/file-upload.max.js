@@ -312,14 +312,15 @@ function uploadMedia(files, token) {
 				formData.append('orientation', orientation);
 				formData.append('token', token);
 				
-				if(previewfail==true)
+				//fallback ffmpeg php
+				/*if(previewfail==true)
 				{				
 					$('#upload-status').append(
 					`<div class="text">
 						<span>${file.name}:<br/>File uploaded without preview</span>
 						&nbsp;<span class="material-symbols-outlined cursor">close_small</span>
 					</div>`);
-				}
+				}*/
 				
 				return uploadSingle(file, formData, 'actions/file-upload.php');
 			})

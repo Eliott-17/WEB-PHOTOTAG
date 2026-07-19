@@ -50,6 +50,7 @@ if (!empty($_FILES['file']) && !empty($_FILES['preview'])) {
     $previewName = $hash.'.webp';
 	$targetSD = DIR_SD.$previewName;
 	$finaliseSDupload=true;
+	$ffmpegfail=false;
 		
 	if($size_webp<1000 && $file_type==1) //pixel car preview fail, fallback ffmpeg
 	{
@@ -62,6 +63,7 @@ if (!empty($_FILES['file']) && !empty($_FILES['preview'])) {
 		}
 		else
 		{
+			$ffmpegfail=true;
 			$fReturn->addConsole("[PHP] Can't generate preview ffmpeg");
 			if(ENV=="DEV") $fReturn->addConsole(print_r($returnencode,true));	
 		}
@@ -164,7 +166,14 @@ if (!empty($_FILES['file']) && !empty($_FILES['preview'])) {
 
 	if($return['status']===true) 
 	{
-		$fReturn->addRawText("OK")->fetch();
+		if($ffmpegfail)
+		{
+			$fReturn->addRawText("File uploaded without preview")->fetch();			
+		}
+		else
+		{
+			$fReturn->addRawText("OK")->fetch();
+		}
 	}
 	else
 	{
