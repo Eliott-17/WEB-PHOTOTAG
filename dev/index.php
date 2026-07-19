@@ -103,7 +103,7 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/datas.php');
 		</nav>
 		<nav id="status">
 			<div id="upload-status" class="ux-infobox ux-background ux-hidden-opacity ux-hidden-zindex">Upload in progress&nbsp;<span id="fileprogress"></span><br><div id="progressbar">45%</div></div>
-			<div id="select-status" class="ux-infobox ux-background ux-hidden-opacity ux-hidden-zindex">Selection off&nbsp;<span class="elementscnt"></span></br>			
+			<div id="select-status" class="ux-infobox ux-background ux-hidden-opacity ux-hidden-zindex">Selection of&nbsp;<span class="elementscnt"></span></br>			
 				<div>
 					<div class="deselectall">
 						<span class="material-symbols-outlined cursor unselect">radio_button_unchecked</span>

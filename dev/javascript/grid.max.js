@@ -289,48 +289,43 @@ window.GRID_CallBack_load = function(data_array)
 	
 	DEBUG.log("DATAS",data_array);
 
-	if(GRID.changed)
-	{
-		if(data_array.count!==undefined)
+	if(data_array.count!==undefined)
+	{	
+		if(data_array.count.total!==undefined)
 		{
-			$('span#'+GRID.section_active+'_count').html(' ('+data_array.count.total+')');
+			let count = data_array.count.total;
+
+			$('span#'+GRID.section_active+'_count').html(' ('+count+')');
 			
-			if(SECTIONS[GRID.section_active].countmem!==undefined)
+			if(SECTIONS[GRID.section_active].countmem!==null && GRID.changed)
 			{
 				DEBUG.log("GRID","count mem",SECTIONS[GRID.section_active].countmem);
-				
-				if(SECTIONS[GRID.section_active].countmem===null)
-				{
-					SECTIONS[GRID.section_active].countmem=data_array.count.total;
-				}
-				else
-				{
-					if(data_array.count<SECTIONS[GRID.section_active].countmem)
-					{
-						regenerate=false;
-						
-						DEBUG.log("GRID",'Remove elements');
-						
-						$('main section div.element.memselected').remove();
-						DISPLAY_selection();
-						GRID_load_id();
-					}
 
-					if(data_array.count==SECTIONS[GRID.section_active].countmem)
-					{
-						regenerate=false;
-					}
+				if(count<SECTIONS[GRID.section_active].countmem)
+				{
+					regenerate=false;
 					
-					SECTIONS[GRID.section_active].offset=GRID.offset_mem;
+					DEBUG.log("GRID",'Remove elements');
 					
-					DEBUG.log("GRID","Offset udated to",GRID.offset_mem);
+					$('main section div.element.memselected').remove();
+					DISPLAY_selection();
+					GRID_load_id();
+				}
+
+				if(count==SECTIONS[GRID.section_active].countmem)
+				{
+					regenerate=false;
 				}
 				
-				SECTIONS[GRID.section_active].countmem=data_array.count;
+				SECTIONS[GRID.section_active].offset=GRID.offset_mem;
+				
+				DEBUG.log("GRID","Offset udated to",GRID.offset_mem);
+
+				GRID.changed=false;
 			}
+			
+			SECTIONS[GRID.section_active].countmem=count;
 		}
-		
-		GRID.changed=false;
 	}
 	
 	if(regenerate)
