@@ -44,6 +44,8 @@ $(document).ready(function(){
 	$('section#fullscreen div.button-return').on('click.gridSelect', function() {
 		
 		let fsid=$('section#fullscreen div.media').attr('data-id');
+		
+		GRID.changed=true;
 		$('div#media_'+fsid).parent().addClass('memselected');
 		
 		DISPLAY_set_view("grid");

@@ -177,6 +177,8 @@ window.FILEMULTISELECTION_CallBack_display = function(ldata)
 	datas = structuredClone(ldata);	
 	datas_mem = structuredClone(ldata);	
 	
+	$('h3#file_hd_error').addClass('hidden');
+	
 	$.each(datas['flag'], function(key, value)
 	{
 		if(value!=0) //conflict
@@ -290,9 +292,11 @@ window.FILEMULTISELECTION_CallBack_success = function()
 	$('span#tag').html('refresh');
 	$('span#tag').addClass('green');	
 
-	GRID_reset("FILEMULTISELECTION_CallBack_success","FILES");
-
+	GRID.changed=true;
 	$('main section div.element.selected').addClass('memselected');
+
+	GRID_reset("FILEMULTISELECTION_CallBack_success","FILES");
+	
 }
 
 var FILEMULTISELECTION_reset_ux = function reset_ux(obj, data)

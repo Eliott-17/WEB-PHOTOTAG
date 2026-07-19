@@ -170,7 +170,6 @@ var FILTERS_checkbox_post = function checkbox_post(is_checked=null)
 	
 	FILEMULTISELECTION_unselectall();
 	
-	$
 	GRID_reset("FILTERS_checkbox_post","SEARCH",2);
 	GRID_load("FILTERS_checkbox_post");
 }

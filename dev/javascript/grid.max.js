@@ -8,7 +8,8 @@ let GRID = {
 	section_mem:"",
 	offset_mem:null,
 	scroll_mem:0,
-	max_elements:0
+	max_elements:0,
+	changed:false
 }
 	
 //****************************************************************
@@ -171,6 +172,8 @@ function scroll_refresh()
 			GRID_load("scroll");
 		}
 	}
+	
+	//DEBUG.log("GRID","scroll refresh");
 }
 
 function GRID_reset(from,source,searchoption=null)
@@ -269,7 +272,7 @@ function GRID_load(from)
 				CORE_get('actions/file-load-explore.php');
 				
 			break;
-			default: break;	
+			default: break;
 		}			
 	}
 	else
@@ -286,39 +289,48 @@ window.GRID_CallBack_load = function(data_array)
 	
 	DEBUG.log("DATAS",data_array);
 
-	if(data_array.count!==undefined)
+	if(GRID.changed)
 	{
-		$('span#'+GRID.section_active+'_count').html(' ('+data_array.count.total+')');
-		
-		if(SECTIONS[GRID.section_active].countmem!==undefined)
+		if(data_array.count!==undefined)
 		{
-			if(SECTIONS[GRID.section_active].countmem===null)
+			$('span#'+GRID.section_active+'_count').html(' ('+data_array.count.total+')');
+			
+			if(SECTIONS[GRID.section_active].countmem!==undefined)
 			{
-				SECTIONS[GRID.section_active].countmem=data_array.count.total;
-			}
-			else
-			{
-				if(data_array.count<SECTIONS[GRID.section_active].countmem)
+				DEBUG.log("GRID","count mem",SECTIONS[GRID.section_active].countmem);
+				
+				if(SECTIONS[GRID.section_active].countmem===null)
 				{
-					regenerate=false;
-					
-					DEBUG.log("GRID",'Remove elements');
-					
-					$('main section div.element.memselected').remove();
-					DISPLAY_selection();
-					GRID_load_id();
+					SECTIONS[GRID.section_active].countmem=data_array.count.total;
 				}
-
-				if(data_array.count==SECTIONS[GRID.section_active].countmem)
+				else
 				{
-					regenerate=false;
+					if(data_array.count<SECTIONS[GRID.section_active].countmem)
+					{
+						regenerate=false;
+						
+						DEBUG.log("GRID",'Remove elements');
+						
+						$('main section div.element.memselected').remove();
+						DISPLAY_selection();
+						GRID_load_id();
+					}
+
+					if(data_array.count==SECTIONS[GRID.section_active].countmem)
+					{
+						regenerate=false;
+					}
+					
+					SECTIONS[GRID.section_active].offset=GRID.offset_mem;
+					
+					DEBUG.log("GRID","Offset udated to",GRID.offset_mem);
 				}
 				
-				SECTIONS[GRID.section_active].offset=GRID.offset_mem;
+				SECTIONS[GRID.section_active].countmem=data_array.count;
 			}
-			
-			SECTIONS[GRID.section_active].countmem=data_array.count;
 		}
+		
+		GRID.changed=false;
 	}
 	
 	if(regenerate)
