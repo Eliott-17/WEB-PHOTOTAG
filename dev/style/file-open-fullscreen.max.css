@@ -62,7 +62,7 @@ main section#fullscreen div#infocontent.displayinfo {
 
 main section#fullscreen div.ux {
 	position: absolute;
-    top: 30px;
+    top: 10px;
 	cursor: pointer;
 	height: 24px;
 	width: 24px;
@@ -81,7 +81,6 @@ main section#fullscreen div.menubackground {
     width: 105px;
     height: 43px;
     border-radius: 50px;
-	z-index: -1;
 }
 
 main section#fullscreen div.button-selection span { position: absolute }
@@ -101,17 +100,17 @@ main section#fullscreen div.button-selection.selected span.caseselected {
 
 main section#fullscreen div.button-selection
 {
-	left: 30px;
+	left: 10px;
 }
 
 main section#fullscreen div.button-return
 {
-	left: 60px;
+	left: 40px;
 }
 
 main section#fullscreen div.button-info
 {
-	left: 90px;
+	left: 70px;
 }
 
 h3#file_hd_error

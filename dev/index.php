@@ -138,24 +138,25 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/datas.php');
 				?>
 				<main>
 					<section id="fullscreen" class="hidden">
-						<div class="ux button-selection notselected">
-							<span class="material-symbols-outlined nothover">radio_button_unchecked</span>
-							<span class="material-symbols-outlined hover">check_circle</span>
-							<span class="material-symbols-outlined caseselected">check</span>
-						</div>
-						<div class="ux button-return">
-							<span class="material-symbols-outlined">close_fullscreen</span>
-						</div>
-						<div class="ux button-info">
-							<span class="material-symbols-outlined">info</span>
-						</div>
 						<div class="ux button-leftarrow arrows">
 							<span class="material-symbols-outlined">arrow_back_2</span>
 						</div>
 						<div class="ux button-rightarrow arrows">
 							<span class="material-symbols-outlined">play_arrow</span>
 						</div>
-						<div class="menubackground ux-background"></div>
+						<div class="menubackground ux-background">
+							<div class="ux button-selection notselected">
+								<span class="material-symbols-outlined nothover">radio_button_unchecked</span>
+								<span class="material-symbols-outlined hover">check_circle</span>
+								<span class="material-symbols-outlined caseselected">check</span>
+							</div>
+							<div class="ux button-return">
+								<span class="material-symbols-outlined">close_fullscreen</span>
+							</div>
+							<div class="ux button-info">
+								<span class="material-symbols-outlined">info</span>
+							</div>
+						</div>
 						<div class="media"></div>
 					</section>
 					<section class="explore hidden"></section>
