@@ -153,6 +153,9 @@ var FILEMULTISELECTION_CallBack_load = function load(force_reload=false)
 		
 	if(hash_array.length<=1)
 	{
+		DISPLAY_loading(false);
+		DISPLAY_file_info(true);
+
 		DEBUG.log("FILEMULTISELECTION",'NO data update, require two files selected');
 	}
 	else if(JSON.stringify(FILEMULTIPLESELECTION_mem)!==JSON.stringify(hash_array) || force_reload) 
@@ -168,6 +171,9 @@ var FILEMULTISELECTION_CallBack_load = function load(force_reload=false)
 	}
 	else
 	{
+		DISPLAY_loading(false);
+		DISPLAY_file_info(true);
+
 		DEBUG.log("FILEMULTISELECTION",'NO data update, unchanged selection');
 	}
 }
@@ -267,6 +273,9 @@ window.FILEMULTISELECTION_CallBack_display = function(ldata)
 	$('h3.ux-tag-location.gps').addClass('hidden');
 	$('h3.privacy_mode').removeClass('hidden');
 	$('input.conflictedit').val(JSON.stringify(datas['flag']));
+	
+	DISPLAY_loading(false);
+	DISPLAY_file_info(true);
 		
 	DEBUG.log("CALLBACK",'FILEMULTISELECTION_CallBack_load');
 }

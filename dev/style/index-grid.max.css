@@ -26,7 +26,7 @@ body {
 }
 
 /* mode sans aside */
-body.no-aside-files.no-aside-filters
+body.no-aside-files.no-aside-filters.no-aside-loading
 {
   grid-template-columns: 1fr;
   grid-template-areas:
@@ -74,9 +74,23 @@ footer {
 }
 
 body.no-aside-files aside#infocontent, 
-body.no-aside-filters aside#advancedfilters 
+body.no-aside-filters aside#advancedfilters,
+body.no-aside-loading aside#loading 
 {
 	display: none !important;
+}
+
+aside#loading
+{	
+    text-align: center;
+    display: grid;
+    align-content: center;
+}
+
+aside#loading span
+{	
+    font-size: 3em;
+	animation: rotation 2s linear infinite;
 }
 
 main section.grid 

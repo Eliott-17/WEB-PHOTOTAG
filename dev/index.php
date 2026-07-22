@@ -37,7 +37,7 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/datas.php');
 
 	<!-- BEGIN BODY -->
 
-	<body class="no-aside-files no-aside-filters">
+	<body class="no-aside-files no-aside-filters no-aside-loading">
 	
 		<nav id="main">
 			<?php
@@ -171,6 +171,12 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/datas.php');
 					<section class="grid search nodate hidden"></section>
 					<section class="grid search date hidden"></section>
 				</main>
+
+				<aside id="loading" class="ux-background">
+				
+					<span class="material-symbols-outlined">cycle</span>
+					
+				</aside>
 		
 				<aside id="advancedfilters" class="ux-background">
 				

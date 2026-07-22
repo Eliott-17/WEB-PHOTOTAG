@@ -170,6 +170,9 @@ window.FILEINFO_CallBack_load = function(force_reload=false)
 	}
 	else
 	{
+		DISPLAY_loading(false);
+		DISPLAY_file_info(true);
+
 		DEBUG.log('FILEINFO','NO data update');
 	}
 }
@@ -506,6 +509,9 @@ window.FILEINFO_CallBack_display = function(data)
 	$('aside#infocontent h3 input[type="checkbox"]').prop('disabled',false);
 	$('aside#infocontent h3#utcinfo div.edit').addClass('hidden');
 		
+	DISPLAY_loading(false);
+	DISPLAY_file_info(true);
+	
 	DEBUG.log('FILEINFO','CallBack_data');
 }
 

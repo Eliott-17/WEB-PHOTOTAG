@@ -39,7 +39,8 @@ var DISPLAY_set_view = function view_refresh(newview)
 		
 			DISPLAY_filters(false);	
 			DISPLAY_full_screen(false);
-			DISPLAY_file_info(true);
+			//DISPLAY_file_info(true);
+			DISPLAY_loading(true);
 			
 			FILEMULTISELECTION_CallBack_load();
 					
@@ -54,7 +55,8 @@ var DISPLAY_set_view = function view_refresh(newview)
 		case "fullscreen-fileinfo":
 
 			DISPLAY_full_screen(true);
-			DISPLAY_file_info(true);
+			//DISPLAY_file_info(true);
+			DISPLAY_loading(true);
 			
 			FILEINFO_CallBack_load();
 			
@@ -114,6 +116,23 @@ var DISPLAY_file_info = function display_aside(visibility = undefined)
 	if(visibility==true) 		{ lelement.removeClass('no-aside-files'); return; }
 	if(visibility==false) 		{ lelement.addClass('no-aside-files'); return; }	
 	DEBUG.log("DISPLAY","file_info bad parameter");
+}
+
+//****************************************************************
+//Gère la visibilité de l'édition des paramètres des fichier *****
+//****************************************************************	
+
+var DISPLAY_is_visible_loading = function is_visible_loading()
+{
+	return !$('body').hasClass('no-aside-files');
+}
+
+var DISPLAY_loading = function display_aside(visibility = undefined)
+{
+	let lelement=$('body');
+	if(visibility==true) 		{ lelement.removeClass('no-aside-loading'); return; }
+	if(visibility==false) 		{ lelement.addClass('no-aside-loading'); return; }	
+	DEBUG.log("DISPLAY","loading bad parameter");
 }
 
 //****************************************************************
