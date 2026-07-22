@@ -213,15 +213,6 @@ window.FILEINFO_CallBack_display = function(data)
 	
 	$('h3#file_original_name').removeClass('hidden');
 	
-	if($('main section#fullscreen div.button-info').hasClass("error"))
-	{
-		$('h3#file_hd_error').removeClass('hidden');
-	}
-	else
-	{
-		$('h3#file_hd_error').addClass('hidden');
-	}
-	
 	$('h3#file_size span').html(formatBytes(datas.file_size));
 	
 	let time_taken_at = datas.time_taken_at_date+datas.time_taken_at_zone+datas.time_taken_at_time;

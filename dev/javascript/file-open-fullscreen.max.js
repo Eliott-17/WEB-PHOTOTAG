@@ -51,9 +51,7 @@ $(document).ready(function(){
 		DISPLAY_set_view("grid");
 		DISPLAY_menu($('#flush-trash'), false);
 		GRID_load("click.gridSelect");
-		$('main').scrollTop(GRID.scroll_mem);	
-
-		$('main section#fullscreen div.button-info').removeClass("error");		
+		$('main').scrollTop(GRID.scroll_mem);		
 	});
 
 	$('section#fullscreen').on('click.gridLeftAR', 'div.button-leftarrow', function() { Arrow(0); });			
@@ -134,6 +132,8 @@ var FILEOPENFULLSCREEN_Loadmedia = function LoadMedia(id)
 
 var FILEOPENFULLSCREEN_Loadmedia = function LoadMedia(id)
 {
+	display_media_error(false);
+
     let file_type = $('div#'+GRID.section_active+'_'+id+' div.media-container').attr("data-type");
     let file_hash = $('div#'+GRID.section_active+'_'+id+' div.media-container').attr("data-src");
     let media_id = $('div#'+GRID.section_active+'_'+id+' div.media-container').attr("data-id");
@@ -155,7 +155,7 @@ var FILEOPENFULLSCREEN_Loadmedia = function LoadMedia(id)
 			
 			img.attr('src', img.attr('src').replace('hd','sd'));
 			
-			$('main section#fullscreen div.button-info').addClass("error");
+			display_media_error(true);
         });
 
         img.attr('src', 'hd-' + file_hash);
@@ -177,13 +177,16 @@ var FILEOPENFULLSCREEN_Loadmedia = function LoadMedia(id)
 
 		video.on("loadedmetadata", function () {
 
-			if (this.videoWidth === 0 || this.videoHeight === 0) $('main section#fullscreen div.button-info').addClass("error");
+			if (this.videoWidth === 0 || this.videoHeight === 0) 
+			{
+				display_media_error(true);	
+			}
 			
 		});
 		
 		video.on("error.videofullscreen", function(e) {
 
-			$('main section#fullscreen div.button-info').addClass("error");
+			display_media_error(true);
 
 		});
 
@@ -191,4 +194,19 @@ var FILEOPENFULLSCREEN_Loadmedia = function LoadMedia(id)
 
 		container.append(video);
 	}
+}
+
+function display_media_error(state)
+{
+	if(state)
+	{
+		$('main section#fullscreen div.button-info').addClass("error");
+		$('h3#file_hd_error').removeClass('hidden');
+	}
+	else
+	{
+		$('main section#fullscreen div.button-info').removeClass("error");
+		$('h3#file_hd_error').addClass('hidden');
+	}		
+	
 }

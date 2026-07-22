@@ -169,11 +169,10 @@ function scroll_refresh()
 			scroll_lock=true;
 			SECTIONS[GRID.section_active].update=true;
 			SECTIONS[GRID.section_active].offset+=50;
+			DEBUG.log("GRID","update request from SCROLL");
 			GRID_load("scroll");
 		}
 	}
-	
-	//DEBUG.log("GRID","scroll refresh");
 }
 
 function GRID_reset(from,source,searchoption=null)
@@ -223,9 +222,12 @@ function GRID_reset(from,source,searchoption=null)
 	{
 		if(offset_reset) 
 		{
-			GRID.offset_mem=SECTIONS[GRID.section_active].offset;
+			if(SECTIONS[GRID.section_active].offset!=0)
+			{
+				GRID.offset_mem=SECTIONS[GRID.section_active].offset;
+			}
 			SECTIONS[GRID.section_active].offset=0;
-			DEBUG.log("GRID","offset reset");
+			DEBUG.log("GRID","offset reset. Mem:",GRID.offset_mem);
 		}
 	}
 	
@@ -233,7 +235,9 @@ function GRID_reset(from,source,searchoption=null)
 }
 
 function GRID_load(from)
-{	
+{
+	DEBUG.log("GRID","GRID LOAD FROM",from);
+	
 	if(SECTIONS[GRID.section_active].update==true)
 	{
 		scroll_lock=true;
@@ -318,8 +322,9 @@ window.GRID_CallBack_load = function(data_array)
 				}
 				
 				SECTIONS[GRID.section_active].offset=GRID.offset_mem;
+				SECTIONS[GRID.section_active].update=false;
 				
-				DEBUG.log("GRID","Offset udated to",GRID.offset_mem);
+				DEBUG.log("GRID","Offset restored to",GRID.offset_mem);
 
 				GRID.changed=false;
 			}
