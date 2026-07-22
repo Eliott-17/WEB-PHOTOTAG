@@ -23,7 +23,17 @@ $(document).ready(function(){
 		DISPLAY_trash(false);
 		DISPLAY_selection();
 	});
+
+	$('nav').on('click.flushconfirm', 'div#flush-trash span#flush_confirm', function() {
+		
+		DEBUG.log("ON",'click.flushconfirm');	
 	
+		DISPLAY_menu($('div#flush-trash'),false); 	
+		DISPLAY_menu($('div#loading'),true); 	
+
+		CORE_post($('#flushtrash'));		
+	});
+			
 	$('nav').on('click.deleteconfirm', 'div#select-trash span#delete_confirm', function() {
 		
 		DEBUG.log("ON",'click.deleteconfirm');
@@ -56,17 +66,18 @@ $(document).ready(function(){
 		}
 		
 		//si la tableau est toujours vide, la sélection n'existe plus
+		
+		DISPLAY_trash(false);
 
 		if(hash_array.length==0)
 		{
+			NAV_CallBack_error("Fatal internal error");
 			console.error("Error trash selection"); //ce message n'est jamais censé arrivé
 			return;
 		}
 				
 		$('input.filesid').val(JSON.stringify(hash_array));
-		
-		DISPLAY_trash(false);
-		
+
 		const match = $('span#'+GRID.section_active+'_count').html().match(/\((\d+)\)/);
 
 		if(match) 
@@ -79,6 +90,8 @@ $(document).ready(function(){
 		}	
 		
 		scroll_refresh();
+		
+		DISPLAY_menu($('div#loading'),true); 
 		
 		CORE_post($('#filetrash'));
 		
@@ -335,4 +348,5 @@ window.FILEMULTISELECTION_CallBack_trash = function()
 {
 	DISPLAY_set_view('grid');
 	GRID_load_id();
+	DISPLAY_menu($('div#loading'),false); 
 }

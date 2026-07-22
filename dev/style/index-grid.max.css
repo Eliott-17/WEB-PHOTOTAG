@@ -93,6 +93,11 @@ aside#loading span
 	animation: rotation 2s linear infinite;
 }
 
+div#loading span
+{
+	animation: rotation 2s linear infinite;
+}
+
 main section.grid 
 {
 	display: grid;
@@ -287,6 +292,12 @@ div#select-status div div.deselectall:hover span.select { opacity: 0; }
 div#select-trash div span#delete_cancel:hover, 
 div#flush-trash div span#flush_confirm:hover { color: red }
 div#select-trash div span#delete_confirm:hover { color: green }
+
+div#flush-trash div
+{
+	display: flex;
+    align-items: center;
+}
 
 div#uploaddrag
 {

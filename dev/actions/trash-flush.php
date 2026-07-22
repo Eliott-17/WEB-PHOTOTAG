@@ -5,7 +5,6 @@
 	require_once($_SERVER['DOCUMENT_ROOT'].'/core/class.freturn.php');
 	require_once($_SERVER['DOCUMENT_ROOT'].'/core/class.validation.php');
 	require_once($_SERVER['DOCUMENT_ROOT'].'/includes/functions.php');
-
 	$EasyPDO = new EasyPDO($_SESSION['DB']);
 
 	$fReturn = new fReturn();
@@ -42,5 +41,6 @@
 		if(ENV=="DEV") $fReturn->addConsole(print_r($array,true));	
 	}
 	
+	$fReturn->addCallback('FILEMULTISELECTION_CallBack_trash');	
 	$fReturn->fetch();
 ?>	

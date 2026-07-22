@@ -176,11 +176,10 @@ var FILTERS_checkbox_post = function checkbox_post(is_checked=null)
 
 window.FILTERS_CallBack_trash = function(count)
 {
-	
 	$('nav#main span#filterapply').html('TRASH');	
 	$('nav#main span#filterresult').html(count);
 	
-	DISPLAY_menu($('#flush-trash'), true);
+	if(count>0) DISPLAY_menu($('#flush-trash'), true);
 }
 
 window.FILTERS_CallBack_flush = function()

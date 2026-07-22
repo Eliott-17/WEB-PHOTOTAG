@@ -120,16 +120,16 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/datas.php');
 					&nbsp;<span id="delete_cancel" class="material-symbols-outlined cursor">close_small</span>
 				</div>
 			</div>			
-			<div id="flush-trash" class="ux-infobox ux-background ux-hidden-opacity ux-hidden-zindex">Empty trash</br>			
-				<form method="post" action="actions/trash-flush.php" class="post">
-					<input type="hidden" name="token" class="token" value=""/>
-					<button class="submit">
-						<span id="flush_confirm" class="material-symbols-outlined cursor">delete_forever</span>
-					</button>
-				</form>
+			<div id="flush-trash" class="ux-infobox ux-background ux-hidden-opacity ux-hidden-zindex">Empty trash</br>	
+				<div>
+					<span id="flush_confirm" class="material-symbols-outlined cursor">delete_forever</span><span>This action cannot be undone.</span>
+				</div>
 			</div>	
 			<div id="error-message" class="ux-infobox ux-background ux-hidden-opacity ux-hidden-zindex">Error</br>			
 				<div></div>
+			</div>
+			<div id="loading" class="ux-infobox ux-background ux-hidden-opacity ux-hidden-zindex">Action is in progress</br>			
+				<span class="material-symbols-outlined">cycle</span>
 			</div>
 		</nav>
 		<?php
@@ -408,6 +408,9 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/datas.php');
 					<br/>
 				</aside>
 
+				<form method="post" id="flushtrash" action="actions/trash-flush.php" class="post">
+					<input type="hidden" name="token" class="token" value=""/>
+				</form>
 				<form method="post" id="filetrash" action="actions/file-delete.php" class="post">
 					<input type="hidden" name="token" class="token" value=""/>
 					<input type="hidden" name="files_hash" class="filesid" value=""/>

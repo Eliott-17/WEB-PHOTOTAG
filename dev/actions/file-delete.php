@@ -77,7 +77,7 @@
 			$fReturn->fetch();
 		}		
 	}
-	
+		
 	if(ENV=="DEV") $fReturn->addConsole("[PHP EXECUTED] file-delete.php");	
 	$fReturn->addCallback('FILEMULTISELECTION_CallBack_trash');
 	$fReturn->fetch();
