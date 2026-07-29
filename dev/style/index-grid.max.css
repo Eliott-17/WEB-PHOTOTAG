@@ -289,9 +289,8 @@ div#select-status div div.deselectall span.unselect { position: absolute; left: 
 div#select-status div div.deselectall span.select { opacity: 1; }
 div#select-status div div.deselectall:hover span.select { opacity: 0; }
 
-div#select-trash div span#delete_cancel:hover, 
-div#flush-trash div span#flush_confirm:hover { color: red }
-div#select-trash div span#delete_confirm:hover { color: green }
+nav#status div.check-close span.greenhover:hover { color: green }
+nav#status div.check-close span.redhover:hover { color: red }
 
 div#flush-trash div
 {

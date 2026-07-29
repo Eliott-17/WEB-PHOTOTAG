@@ -33,7 +33,7 @@ $(document).ready(function(){
 
 		CORE_post($('#flushtrash'));		
 	});
-			
+		
 	$('nav').on('click.deleteconfirm', 'div#select-trash span#delete_confirm', function() {
 		
 		DEBUG.log("ON",'click.deleteconfirm');
@@ -254,8 +254,8 @@ window.FILEMULTISELECTION_CallBack_display = function(ldata)
 			}
 			else if(key=="file_is_private")
 			{
-				$('aside#infocontent h3.lockconflict').addClass('hidden');				
-				FILEINFO_CallBack_lock(datas['mem'][key]);
+				$('aside#infocontent h3.lockconflict').addClass('hidden');	
+				FILEINFO_CallBack_lock({'lock':datas['mem'][key],'id':null});
 			}
 			else if(key=="utc")
 			{

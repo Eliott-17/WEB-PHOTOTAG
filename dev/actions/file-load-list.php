@@ -43,6 +43,7 @@
 	$EasyPDO->addFields('time_taken_at_zone');
 	$EasyPDO->addFields('time_taken_at_time');
 	$EasyPDO->addFields('file_orientation');
+	$EasyPDO->addFields('file_is_private');
 
 	$EasyPDO->addFields('file_type');
 	$EasyPDO->addFields('id');

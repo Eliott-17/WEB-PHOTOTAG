@@ -9,7 +9,8 @@ let GRID = {
 	offset_mem:null,
 	scroll_mem:0,
 	max_elements:0,
-	changed:false
+	changed:false,
+	lock:{element_locked:false,ux_user_request:false,ux_user_answer:null}
 }
 	
 //****************************************************************
@@ -151,7 +152,29 @@ $(document).ready(function(){
 		DISPLAY_set_view("fullscreen");	//order before DISPLAY_selection is important
 		DISPLAY_selection(FILEOPENFULLSCREEN.id_current,true);
 	});	
+	
+	//*******************************************************************
+	//Ajout du bouton choix d'affichage sur la grille *******************
+	//*******************************************************************	
+	
+	$('nav').on('click.lockconfirm', 'div#lock-request span#lock_confirm', function() {
+		
+		GRID.lock.ux_user_answer=true;
+		
+		$('main section.'+GRID.section_active+' div.element div.media-container').each(function () {
+			
+			$(this).find('img').attr('src', 'sd-'+$(this).attr('data-src'));			
+		});
+		
+		DISPLAY_menu($('div#lock-request'),false);		
+	});
+	
+	$('nav').on('click.lockcancel', 'div#lock-request span#lock_cancel', function() {
 
+		GRID.lock.ux_user_answer=false;		
+		
+		DISPLAY_menu($('div#lock-request'),false);
+	});
 });
 
 function scroll_refresh()
@@ -337,6 +360,8 @@ window.GRID_CallBack_load = function(data_array)
 	{
 		DEBUG.log("GRID",'Regenerated');
 		
+		GRID.lock.element_locked=false;
+		
 		if(SECTIONS[GRID.section_active].offset<=0) $("main section."+GRID.section_active).html('');
 
 		OBJ_Dest_nodate = $("main section.nodate."+GRID.section_active);
@@ -388,7 +413,13 @@ window.GRID_CallBack_load = function(data_array)
 		
 		GRID.max_elements = GRID_load_id();
 
-		DISPLAY_selection();		
+		DISPLAY_selection();	
+
+		if(GRID.lock.element_locked==true && GRID.lock.ux_user_request==false) 
+		{
+			GRID.lock.ux_user_request=true;
+			DISPLAY_menu($('div#lock-request'),true);
+		}
 	}
 
 	$('main section div.element.memselected').removeClass('memselected');
@@ -458,13 +489,23 @@ function addElement(dir, bdd)
 	
 	html+= '	<div class="media-container" data-type="'+bdd.file_type+'" data-src="'+before+bdd.file_hash+'" data-id="'+bdd.id+'" id="media_'+bdd.id+'">';
 
+	let header='sd';
+	let openfull='open_in_full';
+
+	if(bdd.file_is_private==1 && GRID.lock.ux_user_answer!=true)
+	{
+		header='bl';
+		openfull='lock_open_right';
+		GRID.lock.element_locked=true;
+	}
+
 	if(bdd.file_type == 0) 
 	{
-		html+= '		<img src="sd-'+before+bdd.file_hash+'" loading="lazy">';
+		html+= '		<img src="'+header+'-'+before+bdd.file_hash+'" loading="lazy">';
 	}
 	if(bdd.file_type == 1)
 	{
-		html+= '		<video src="hd-'+before+bdd.file_hash+'" poster="sd-'+bdd.file_hash+'" controlslist="nodownload nofullscreen noremoteplayback"></video>';
+		html+= '		<video src="hd-'+before+bdd.file_hash+'" poster="'+header+'-'+bdd.file_hash+'" controlslist="nodownload nofullscreen noremoteplayback"></video>';
 		ux = "video";
 	}
 	
@@ -478,7 +519,7 @@ function addElement(dir, bdd)
 		html+= '		<span class="material-symbols-outlined caseselected">check</span>';
 		html+= '	</div>';
 		html+= '	<div class="button-fullscreen cursor '+ux+'">';			
-		html+= '		<span class="material-symbols-outlined">open_in_full</span>';
+		html+= '		<span class="material-symbols-outlined button_grid_'+bdd.id+'">'+openfull+'</span>';
 		html+= '	</div>';
 	}
 	else

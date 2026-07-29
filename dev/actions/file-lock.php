@@ -35,6 +35,9 @@
 	$dataarray = json_decode($_POST['filesid'], true);
 
 	$return = $EasyPDO->update('photos', 'id IN', $dataarray);
+	
+	$ret['lock']=$lock_status;
+	$ret['id']=$dataarray[0];
 
 	if($return['status']!==true)
 	{
@@ -43,6 +46,6 @@
 		$fReturn->fetch();
 	}
 
-	if(ENV=="DEV") $fReturn->addCallback("FILEINFO_CallBack_lock",$lock_status);	
+	if(ENV=="DEV") $fReturn->addCallback("FILEINFO_CallBack_lock",$ret);	
 	$fReturn->fetch();
 ?>	

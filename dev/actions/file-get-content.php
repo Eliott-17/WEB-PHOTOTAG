@@ -4,7 +4,7 @@ define("SESSION_TOKEN", "no-mandatory-session");
 require_once($_SERVER['DOCUMENT_ROOT'].'/core/securityheader.php');
 require_once($_SERVER['DOCUMENT_ROOT'].'/core/class.validation.php');
 
-$errorlink=$_SERVER['DOCUMENT_ROOT'].'/includes/401.webp';
+$errorlink=$_SERVER['DOCUMENT_ROOT'].'/images/401.webp';
 $filename=$errorlink;
 $debug=false;
 
@@ -34,6 +34,7 @@ if(is_session_valid() AND $validation->isValidated())
 	{
 		if($_GET['type']=="sd") $filename_header=DIR_SD;
 		if($_GET['type']=="hd" || $_GET['type']=="dl") $filename_header=DIR_HD;
+		if($_GET['type']=='bl') $filename=$_SERVER['DOCUMENT_ROOT'].'/images/visibility-lock.webp';
 	}
 	
 	if($_GET['type']=="sd")
@@ -66,7 +67,6 @@ if(is_session_valid() AND $validation->isValidated())
 		}		
 	}
 }
-
 
 if($debug)
 {

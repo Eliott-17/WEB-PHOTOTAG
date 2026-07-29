@@ -114,15 +114,21 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/datas.php');
 					<span id="share" class="material-symbols-outlined cursor">share</span>
 				</div>
 			</div>		
-			<div id="select-trash" class="ux-infobox ux-background ux-hidden-opacity ux-hidden-zindex">Move <span class="elementscnt"></span> elements to trash ?</br>			
+			<div id="select-trash" class="ux-infobox ux-background ux-hidden-opacity ux-hidden-zindex check-close">Move <span class="elementscnt"></span> elements to trash ?</br>			
 				<div>
-					&nbsp;<span id="delete_confirm" class="material-symbols-outlined cursor">check_small</span>
-					&nbsp;<span id="delete_cancel" class="material-symbols-outlined cursor">close_small</span>
+					&nbsp;<span id="delete_confirm" class="material-symbols-outlined cursor greenhover">check_small</span>
+					&nbsp;<span id="delete_cancel" class="material-symbols-outlined cursor redhover">close_small</span>
 				</div>
 			</div>			
-			<div id="flush-trash" class="ux-infobox ux-background ux-hidden-opacity ux-hidden-zindex">Empty trash</br>	
+			<div id="lock-request" class="ux-infobox ux-background ux-hidden-opacity ux-hidden-zindex check-close">Display private element on the grid ?</br>			
 				<div>
-					<span id="flush_confirm" class="material-symbols-outlined cursor">delete_forever</span><span>This action cannot be undone.</span>
+					&nbsp;<span id="lock_confirm" class="material-symbols-outlined cursor greenhover">check_small</span>
+					&nbsp;<span id="lock_cancel" class="material-symbols-outlined cursor redhover">close_small</span>
+				</div>
+			</div>	
+			<div id="flush-trash" class="ux-infobox ux-background ux-hidden-opacity ux-hidden-zindex check-close">Empty trash</br>	
+				<div>
+					<span id="flush_confirm" class="material-symbols-outlined cursor redhover">delete_forever</span><span>This action cannot be undone.</span>
 				</div>
 			</div>	
 			<div id="error-message" class="ux-infobox ux-background ux-hidden-opacity ux-hidden-zindex">Error</br>			

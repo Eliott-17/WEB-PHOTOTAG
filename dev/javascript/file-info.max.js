@@ -495,8 +495,8 @@ window.FILEINFO_CallBack_display = function(data)
 	}
 	
 	//informations
-
-	FILEINFO_CallBack_lock(datas.file_is_private);
+	
+	FILEINFO_CallBack_lock({'lock':datas.file_is_private,'id':null});
 			
 	$('h3#time_added_at').html(formatUTCToLocalWithTimezone(datas.time_added_at));
 	
@@ -540,16 +540,35 @@ window.FILEINFO_CallBack_success = function()
 
 window.FILEINFO_CallBack_lock = function(value)
 {
+	let lock_status=value['lock'];
+	let id=value['id'];
+	
 	$('div.privacy_mode_locked').addClass('hidden');
 	$('div.privacy_mode_unlocked').addClass('hidden');
-	$('input#lock_status').val(value);
+	$('input#lock_status').val(lock_status);
 	
-	if(value==1) $('div.privacy_mode_locked').removeClass("hidden");
-	if(value==0) $('div.privacy_mode_unlocked').removeClass("hidden");
+	if(lock_status==1) $('div.privacy_mode_locked').removeClass("hidden");
+	if(lock_status==0) $('div.privacy_mode_unlocked').removeClass("hidden");
 	
 	$('aside#infocontent h3.lockconflict').addClass('hidden');
 	
-	DEBUG.log("CALLBACK","FILEINFO_lock_CallBack",value);
+	if(id!=null)
+	{
+		let src=$('div#media_'+id).attr('data-src');
+		
+		if(lock_status==1) 
+		{
+			$('div#media_'+id+' img').attr('src','bl-'+src);
+			$('span.button_grid_'+id).html('lock_open_right');
+		}
+		if(lock_status==0) 
+		{
+			$('div#media_'+id+' img').attr('src','sd-'+src);
+			$('span.button_grid_'+id).html('open_in_full');
+		}
+	}
+	
+	DEBUG.log("CALLBACK","FILEINFO_lock_CallBack",lock_status,id);
 }
 
 function processExif(data, indent = 0) {
