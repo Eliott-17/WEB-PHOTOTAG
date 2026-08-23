@@ -148,9 +148,11 @@ var FILEMULTISELECTION_unselectall = function unselect_all()
 	GRID_load("FILEMULTISELECTION_unselectall"); //recharger la grille si on à changer des photos
 }
 
+var hash_array;
+
 var FILEMULTISELECTION_CallBack_load = function load(force_reload=false)
 {
-	var hash_array=[];
+	hash_array=[];
 
 	$('main section.'+GRID.section_active+' div.element').each(function () 
 	{ 
@@ -255,7 +257,7 @@ window.FILEMULTISELECTION_CallBack_display = function(ldata)
 			else if(key=="file_is_private")
 			{
 				$('aside#infocontent h3.lockconflict').addClass('hidden');	
-				FILEINFO_CallBack_lock({'lock':datas['mem'][key],'id':null});
+				FILEINFO_CallBack_lock({'lock':datas['mem'][key],'id':hash_array});
 			}
 			else if(key=="utc")
 			{

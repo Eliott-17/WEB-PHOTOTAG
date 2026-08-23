@@ -45,6 +45,10 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/datas.php');
 			{
 				?>
 					<div id="mainmenu" class="ux-background mainmenu">				
+						<div id="privacy" class="icon hidden">
+							<button class="nothover"><span class="material-symbols-outlined">visibility_lock</span></button>
+							<button class="hover"><span class="material-symbols-outlined">visibility</span></button>
+						</div>
 						<div><button class="library"><span class="material-symbols-outlined">photo</span>&nbsp;<span>Timeline</span><span id="library_count"></span></button></div>
 						<div><button class="explore selected"><span class="material-symbols-outlined">explore</span>&nbsp;<span>Explore</span></button></div>
 						<div><button class="untagged"><span class="material-symbols-outlined">new_label</span>&nbsp;<span>Untagged</span><span id="untagged_count"></span></button></div>
@@ -120,12 +124,12 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/datas.php');
 					&nbsp;<span id="delete_cancel" class="material-symbols-outlined cursor redhover">close_small</span>
 				</div>
 			</div>			
-			<div id="lock-request" class="ux-infobox ux-background ux-hidden-opacity ux-hidden-zindex check-close">Display private element on the grid ?</br>			
+			<!--<div id="lock-request" class="ux-infobox ux-background ux-hidden-opacity ux-hidden-zindex check-close">Display private element on the grid ?</br>			
 				<div>
 					&nbsp;<span id="lock_confirm" class="material-symbols-outlined cursor greenhover">check_small</span>
 					&nbsp;<span id="lock_cancel" class="material-symbols-outlined cursor redhover">close_small</span>
 				</div>
-			</div>	
+			</div>-->	
 			<div id="flush-trash" class="ux-infobox ux-background ux-hidden-opacity ux-hidden-zindex check-close">Empty trash</br>	
 				<div>
 					<span id="flush_confirm" class="material-symbols-outlined cursor redhover">delete_forever</span><span>This action cannot be undone.</span>

@@ -547,25 +547,34 @@ window.FILEINFO_CallBack_lock = function(value)
 	$('div.privacy_mode_unlocked').addClass('hidden');
 	$('input#lock_status').val(lock_status);
 	
-	if(lock_status==1) $('div.privacy_mode_locked').removeClass("hidden");
+	if(lock_status==1) 
+	{
+		$('div.privacy_mode_locked').removeClass("hidden");
+		$('div#privacy').removeClass('hidden');
+	}
 	if(lock_status==0) $('div.privacy_mode_unlocked').removeClass("hidden");
 	
 	$('aside#infocontent h3.lockconflict').addClass('hidden');
 	
 	if(id!=null)
 	{
-		let src=$('div#media_'+id).attr('data-src');
-		
-		if(lock_status==1) 
+		$.each(id, function(value)
 		{
-			$('div#media_'+id+' img').attr('src','bl-'+src);
-			$('span.button_grid_'+id).html('lock_open_right');
-		}
-		if(lock_status==0) 
-		{
-			$('div#media_'+id+' img').attr('src','sd-'+src);
-			$('span.button_grid_'+id).html('open_in_full');
-		}
+			let src=$('div#media_'+id).attr('data-src');
+			
+			if(lock_status==1) 
+			{
+				$('div#media_'+id+' img').attr('src','bl-'+src);
+				$('div#media_'+id+' img').addClass('private');
+				$('span.button_grid_'+id).html('lock_open_right');
+			}
+			if(lock_status==0) 
+			{
+				$('div#media_'+id+' img').attr('src','sd-'+src);
+				$('div#media_'+id+' img').removeClass('private');
+				$('span.button_grid_'+id).html('open_in_full');
+			}
+		});
 	}
 	
 	DEBUG.log("CALLBACK","FILEINFO_lock_CallBack",lock_status,id);

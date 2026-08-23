@@ -31,17 +31,22 @@ nav div.mainmenu
 	}
 }
 
+nav div.mainmenu div#privacy
+{
+	width:auto !important;
+}
+
 nav div.mainmenu div
 {
 	text-align: center;
-	width: 25%;
+	width: 100%;
 	padding-top: 20px;
 	padding-bottom: 20px;
 }
 
 nav div.mainmenu div input
 {
-	padding: 12px; !important;
+	padding: 12px !important;
 }
 
 nav div.mainmenu div.last
@@ -94,6 +99,21 @@ nav div.mainmenu div button:not(.search):hover, nav div.mainmenu div.search:hove
 nav div.mainmenu div button.selected, nav div.mainmenu div input:focus
 {
 	background-color: rgba(145,200,250,0.7);
+}
+
+nav div.mainmenu div#privacy:hover button.nothover
+{
+	display: none;
+}
+
+nav div.mainmenu div#privacy button.hover
+{
+	display: none;
+}
+
+nav div.mainmenu div#privacy:hover button.hover
+{
+	display: block !important;
 }
 
 .ux-infobox {

@@ -37,7 +37,7 @@
 	$return = $EasyPDO->update('photos', 'id IN', $dataarray);
 	
 	$ret['lock']=$lock_status;
-	$ret['id']=$dataarray[0];
+	$ret['id']=$dataarray;
 
 	if($return['status']!==true)
 	{
