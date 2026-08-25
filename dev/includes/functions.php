@@ -332,8 +332,7 @@
 		file_status = 0'.$addquery.' ORDER BY 	
 		time_taken_at_date DESC,
 		time_taken_at_zone DESC, 
-		time_taken_at_time DESC, 
-		id ASC';
+		time_taken_at_time DESC';
 	}
 	
 	function tag_query()

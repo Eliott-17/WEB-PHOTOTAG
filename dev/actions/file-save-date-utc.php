@@ -27,18 +27,20 @@ define("POST_LIMIT_RATE", 1000); //30 tentatives toutes les deux secondes
 		$fReturn->addRawText($validation->Message())->fetch();
 	}
 	
+	//$EasyPDO->setDebug();
+	
 	$EasyPDO->addFields('time_taken_at_date',$_POST['date']);
 	$EasyPDO->addFields('time_taken_at_time',$_POST['time']);
 	$EasyPDO->addFields('time_taken_is_utc',1);	
 	
 	$date = new DateTime();
     $date->setTimezone(new DateTimeZone('UTC'));
-    $strdate_updated = $date->format('Y-m-d H:i:s');		
+    $strdate_updated = $date->format('Y-m-d H:i:s');	
 
 	$EasyPDO->addFields('time_modified_at',$strdate_updated); //last updated info	
 	$EasyPDO->addConditionalData('file_original_name',$_POST['filename']);
 	
-	$affectedrow = $EasyPDO->update('photos', 'file_original_name=:file_original_name');
+	$affectedrow = $EasyPDO->update('photos', 'file_original_name = :file_original_name OR REPLACE(file_original_name,\'-modifié\',\'\') = :file_original_name');
 
 	if($affectedrow['status']===true)
 	{	
@@ -48,7 +50,7 @@ define("POST_LIMIT_RATE", 1000); //30 tentatives toutes les deux secondes
 		}
 		else
 		{	
-			$fReturn->addRawText("File not found in database")->fetch();
+			$fReturn->addRawText("File not found or database already updated")->fetch();
 		}
 	}
 	else

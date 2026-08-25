@@ -41,8 +41,7 @@
 		AND '.tag_query().'
 		ORDER BY time_taken_at_date DESC,
 				 time_taken_at_zone DESC,
-				 time_taken_at_time DESC,
-				 id ASC
+				 time_taken_at_time DESC
 	');
 
 

@@ -73,7 +73,7 @@
 			$EasyPDO->addFields('file_status');
 			$EasyPDO->addFields('id');
 
-			$finalquery='file_status = 2 ORDER BY time_taken_at_date DESC, time_taken_at_zone DESC, time_taken_at_time DESC, id ASC';
+			$finalquery='file_status = 2 ORDER BY time_taken_at_date DESC, time_taken_at_zone DESC, time_taken_at_time DESC';
 
 			$EasyPDO->addConditionalData('offset',$_GET['offset']);
 

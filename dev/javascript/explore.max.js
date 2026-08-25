@@ -3,6 +3,7 @@
 //****************************************************************	
 
 let EXPLORE_search_tags=[];//Stoque les données chargées pour les réutilisées et éviter un appel  à la base de données
+let EXPLORE_checkbox_loaded=false;
 
 //****************************************************************
 //Variables locales *********************************************
@@ -68,6 +69,7 @@ window.EXPLORE_CallBack_search = function(datas)
 	$('nav#main span#filterresult').html(datas.count+ ' element'+s);
 
 	EXPLORE_search_tags=datas.tags; //stock le résultat de la recherche
+	EXPLORE_checkbox_loaded=false;
 	
 	DEBUG.log("CALLBACK","EXPLORE_CallBack_search");
 }

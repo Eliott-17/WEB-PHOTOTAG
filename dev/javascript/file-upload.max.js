@@ -191,7 +191,7 @@ function uploadMetadata(files, token)
 				
 				const formData = new FormData();
 				formData.append('token', token);
-				formData.append('filename', file.name.replace('.supplement.json',''));
+				formData.append('filename', file.name.replace('.supplement.json','').replace('.supplemental-metadata.json',''));
 				formData.append('date', YYYY+MM+DD);
 				formData.append('time', HH+MM+MM);
 

@@ -82,88 +82,93 @@ $(document).ready(function(){
 		}
 		else
 		{
-			$('aside#advancedfilters h3').addClass('hidden');		
-			$('aside#advancedfilters h2:not(.title)').addClass('hidden');
-			
-			$('aside#advancedfilters').off('click.inputFilters', 'input');
-			$('aside#advancedfilters').off('click.allCheck', 'input');
-			
 			DEBUG.log("DATAS",EXPLORE_search_tags);
 		
 			//---------------------
 			//LOOAD CHECKBOX ------
 			//---------------------
 			
-			let checkboxid=0;
-			let sizeref=0;
-			
-			if(EXPLORE_search_tags[$('#filter_tag').val()]!=undefined)
+			if(!EXPLORE_checkbox_loaded)
 			{
-				if(EXPLORE_search_tags[$('#filter_tag').val()][$('#filter_val').val()]!=undefined)
+				$('aside#advancedfilters h3').addClass('hidden');		
+				$('aside#advancedfilters h2:not(.title)').addClass('hidden');
+				
+				$('aside#advancedfilters').off('click.inputFilters', 'input');
+				$('aside#advancedfilters').off('click.allCheck', 'input');
+
+				EXPLORE_checkbox_loaded=true;
+			
+				let checkboxid=0;
+				let sizeref=0;
+				
+				if(EXPLORE_search_tags[$('#filter_tag').val()]!=undefined)
 				{
-					if(EXPLORE_search_tags[$('#filter_tag').val()][$('#filter_val').val()][0]!=undefined)
+					if(EXPLORE_search_tags[$('#filter_tag').val()][$('#filter_val').val()]!=undefined)
 					{
-						sizeref=EXPLORE_search_tags[$('#filter_tag').val()][$('#filter_val').val()][0];
+						if(EXPLORE_search_tags[$('#filter_tag').val()][$('#filter_val').val()][0]!=undefined)
+						{
+							sizeref=EXPLORE_search_tags[$('#filter_tag').val()][$('#filter_val').val()][0];
+						}
 					}
 				}
-			}
 
-			$.each(EXPLORE_search_tags, function(index0, value0) 
-			{
-				let verify='';
-				
-				if($('#filter_tag').val()=='years')
+				$.each(EXPLORE_search_tags, function(index0, value0) 
 				{
-					if(value0[0]!==undefined) if(value0[0][0]!==undefined) verify=value0[0][0];
-				}
-				else
-				{
-					if(value0[$('#filter_val').val()]!==undefined) verify = value0[$('#filter_val').val()];					
-				}
-
-				//supression des checkbox
-				if(index0==$('#filter_tag').val() && verify.length!=0) return;  //si l'élément courant est le filtre principal
-				if(value0.length==0) return; 									//si l'élement n'existe pas
-				
-				let uxelement='aside#advancedfilters h3#'+index0.replace('tag_','');
-									
-				$(uxelement+" div.value").html('');
-				
-				let count=0;
-								
-				$.each(value0, function(value1) {
+					let verify='';
 					
-					let val=value1;
-					let display=value1;
+					if($('#filter_tag').val()=='years')
+					{
+						if(value0[0]!==undefined) if(value0[0][0]!==undefined) verify=value0[0][0];
+					}
+					else
+					{
+						if(value0[$('#filter_val').val()]!==undefined) verify = value0[$('#filter_val').val()];					
+					}
+
+					//supression des checkbox
+					if(index0==$('#filter_tag').val() && verify.length!=0) return;  //si l'élément courant est le filtre principal
+					if(value0.length==0) return; 									//si l'élement n'existe pas
+					
+					let uxelement='aside#advancedfilters h3#'+index0.replace('tag_','');
+										
+					$(uxelement+" div.value").html('');
+					
 					let count=0;
-					
-					if(index0=='months' || index0=='years') 
-					{
-						val=value0[value1][0];
-						display=value0[value1][1];	
-						count=value0[value1][2];	
-					}
-					
-					if(index0=='tag_country') 
-					{
-						val=value0[value1][1];	
-						count=value0[value1][0];	
-					}
-					
-					if(count==sizeref) return; //pas de checkbox si un filtre = filtre principal
-
-					$(uxelement).removeClass('hidden');
-					$('aside#advancedfilters h2#'+$(uxelement).attr('data-title')).removeClass('hidden');
-					$(uxelement+" div.value").append(`<span><input checked="1" id="checkbox_${checkboxid}" name="${index0}" value="${val}" type="checkbox"></span>`);			
-					$(uxelement+" div.value").append(`<span>${display}</span><br>`);			
-					
-					checkboxid++;
-					count++;
+									
+					$.each(value0, function(value1) {
 						
-					if(count>1) $(uxelement).addClass('line');
-				});				
-			});
-			
+						let val=value1;
+						let display=value1;
+						let count=0;
+						
+						if(index0=='months' || index0=='years') 
+						{
+							val=value0[value1][0];
+							display=value0[value1][1];	
+							count=value0[value1][2];	
+						}
+						
+						if(index0=='tag_country') 
+						{
+							val=value0[value1][1];	
+							count=value0[value1][0];	
+						}
+						
+						if(count==sizeref) return; //pas de checkbox si un filtre = filtre principal
+
+						$(uxelement).removeClass('hidden');
+						$('aside#advancedfilters h2#'+$(uxelement).attr('data-title')).removeClass('hidden');
+						$(uxelement+" div.value").append(`<span><input checked="1" id="checkbox_${checkboxid}" name="${index0}" value="${val}" type="checkbox"></span>`);			
+						$(uxelement+" div.value").append(`<span>${display}</span><br>`);			
+						
+						checkboxid++;
+						count++;
+							
+						if(count>1) $(uxelement).addClass('line');
+					});				
+				});
+			}
+				
 			//---------------------
 			// END LOOAD CHECKBOX -
 			//---------------------	
