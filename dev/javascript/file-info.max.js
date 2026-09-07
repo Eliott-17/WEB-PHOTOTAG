@@ -515,8 +515,11 @@ window.FILEINFO_CallBack_display = function(data)
 	DEBUG.log('FILEINFO','CallBack_data');
 }
 
-window.FILEINFO_CallBack_success = function()
+window.FILEINFO_CallBack_success = function(tab=null)
 {
+	let is_tagged=tab[0];
+	let id=tab[1];
+	
 	$('main section#fullscreen').addClass("transition-on");
 	$('main section#fullscreen').addClass("success");
 	
@@ -533,9 +536,25 @@ window.FILEINFO_CallBack_success = function()
 		
 	}, 500);
 	
-	GRID_reset("FILEINFO_CallBack_success","FILES");
+	if(id!=null)
+	{
+		DEBUG.log('FILEINFO','act on main section div#media_'+id);
+		
+		if(is_tagged==true)
+		{
+			$('main section div#media_'+id).parent().addClass('is_tagged');
+		}
+		else
+		{
+			$('main section div#media_'+id).parent().addClass('is_not_tagged');
+		}
+	}
+	else
+	{
+		DEBUG.log('FILEINFO','id error: '+id);
+	}
 	
-	$('main section div.element.selected').addClass('memselected');
+	GRID_reset("FILEINFO_CallBack_success","FILES");
 }
 
 window.FILEINFO_CallBack_lock = function(value)

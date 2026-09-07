@@ -292,10 +292,10 @@ window.FILEMULTISELECTION_CallBack_display = function(ldata)
 	DISPLAY_loading(false);
 	DISPLAY_file_info(true);
 		
-	DEBUG.log("CALLBACK",'FILEMULTISELECTION_CallBack_load');
+	DEBUG.log("CALLBACK",'FILEMULTISELECTION_CallBack_display');
 }
 
-window.FILEMULTISELECTION_CallBack_success = function()
+window.FILEMULTISELECTION_CallBack_success = function(is_tagged=false)
 {
 	$('main section.'+GRID.section_active+' div.selected').addClass("transition-on");
 	$('main section.'+GRID.section_active+' div.selected').addClass("success");
@@ -317,7 +317,17 @@ window.FILEMULTISELECTION_CallBack_success = function()
 	$('span#tag').addClass('green');	
 
 	GRID.changed=true;
-	$('main section div.element.selected').addClass('memselected');
+	
+	$('main section div.element.selected').removeClass('is_tagged is_not_tagged');
+	
+	if(is_tagged==true)
+	{
+		$('main section div.element.selected').addClass('is_tagged');
+	}
+	else
+	{
+		$('main section div.element.selected').addClass('is_not_tagged');
+	}
 
 	GRID_reset("FILEMULTISELECTION_CallBack_success","FILES");
 	

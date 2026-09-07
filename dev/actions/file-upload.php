@@ -42,7 +42,7 @@ if (!empty($_FILES['file']) && !empty($_FILES['preview'])) {
 	}
 
     if (!move_uploaded_file($tmp, $targetHD)) {
-		$fReturn->addRawText("Upload fail")->fetch();
+		$fReturn->addRawText("Upload fail (".$_FILES['file']['error'].")")->fetch();
         //exit("Upload fail");
     }
 

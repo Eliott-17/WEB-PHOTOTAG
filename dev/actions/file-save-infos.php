@@ -114,11 +114,6 @@
 			
 		break;
 	}	
-	
-	/*if($tag[$_POST['save_tag']]!=$_POST['save_val'])
-	{
-		
-	}*/
 
 	$date = new DateTime();
     $date->setTimezone(new DateTimeZone('UTC'));
@@ -132,18 +127,43 @@
 	$affectedrow = $EasyPDO->update('photos', 'id IN', $dataarray);
 
 	if($affectedrow['status']===true)
-	{	
-		if($count==1)
-		{
-			$fReturn->addCallback("FILEINFO_CallBack_load",true);
-			$fReturn->addCallback("FILEINFO_CallBack_success");
-			if(isset($tag))  $fReturn->addCallback("EXPLORE_CallBack_addtags",$tag);
-		}
-		else
+	{
+		$EasyPDO->addFields('id');
+		$EasyPDO->addConditionalData('id',$dataarray[0]);
+		
+		$is_tagged=$EasyPDO->select('photos','file_status = 0 AND '.tag_query().' AND id=:id');
+			
+		if($is_tagged['status']===true)
 		{	
-			$fReturn->addCallback("FILEMULTISELECTION_CallBack_load",true);
-			$fReturn->addCallback("FILEMULTISELECTION_CallBack_success");
-			if(isset($tag))  $fReturn->addCallback("EXPLORE_CallBack_addtags",$tag);
+			if($is_tagged['count']==1)
+			{
+				$is_tagged=true;
+			}
+			else
+			{
+				$is_tagged=false;				
+			}
+	
+			if($count==1)
+			{
+				$return=array($is_tagged,$dataarray[0]);
+				
+				$fReturn->addCallback("FILEINFO_CallBack_load",true);
+				$fReturn->addCallback("FILEINFO_CallBack_success",$return);
+				if(isset($tag))  $fReturn->addCallback("EXPLORE_CallBack_addtags",$tag);
+			}
+			else
+			{
+				$fReturn->addCallback("FILEMULTISELECTION_CallBack_load",true);
+				$fReturn->addCallback("FILEMULTISELECTION_CallBack_success",$is_tagged);
+				$fReturn->addConsole("<pre>".print_r($is_tagged,true)."</pre>");
+				if(isset($tag))  $fReturn->addCallback("EXPLORE_CallBack_addtags",$tag);			
+			}
+		}	
+		else
+		{
+			$fReturn->addCallback("NAV_CallBack_error","Fatal error while reading from database");
+			if(ENV=="DEV") $fReturn->addFailMessage('Internal error')->addConsole(print_r($is_tagged,true));
 		}
 	}
 	else

@@ -328,7 +328,8 @@ function GRID_load(from)
 	}
 	else
 	{
-		$('main section div.element.memselected').removeClass('memselected');
+		$('main section div.element.is_tagged').removeClass('is_tagged');
+		$('main section div.element.is_not_tagged').removeClass('is_not_tagged');
 		
 		DEBUG.log("GRID","GRID",GRID.section_active,"no action");		
 	}
@@ -356,9 +357,30 @@ window.GRID_CallBack_load = function(data_array)
 				{
 					regenerate=false;
 					
-					DEBUG.log("GRID",'Remove elements');
+					DEBUG.log("GRID",'Remove elements in '+GRID.section_active+' '+count+' < '+SECTIONS[GRID.section_active].countmem);
 					
-					$('main section div.element.memselected').remove();
+					if(GRID.section_active=="untagged") 
+					{
+						removedcount = $('main section.'+GRID.section_active+' div.element.is_tagged').length;
+						
+						$('main section.'+GRID.section_active+' div.element.is_tagged').remove();
+						
+						SECTIONS['library'].countmem+=removedcount;
+						$('span#library_count').html(' ('+SECTIONS['library'].countmem+')');
+						
+						
+					}
+					
+					if(GRID.section_active=="library") 
+					{
+						removedcount = $('main section.'+GRID.section_active+' div.element.is_not_tagged').length;
+						
+						$('main section.'+GRID.section_active+' div.element.is_not_tagged').remove();
+
+						SECTIONS['untagged'].countmem+=removedcount;
+						$('span#untagged_count').html(' ('+SECTIONS['untagged'].countmem+')');
+					}
+					
 					DISPLAY_selection();
 					GRID_load_id();
 				}
@@ -447,8 +469,9 @@ window.GRID_CallBack_load = function(data_array)
 		}
 	}
 
-	$('main section div.element.memselected').removeClass('memselected');
-	
+	$('main section div.element.is_tagged').removeClass('is_tagged');
+	$('main section div.element.is_not_tagged').removeClass('is_not_tagged');
+		
 	scroll_lock=false;
 
 	DEBUG.log("CALLBACK","CallBack_load",SECTIONS[GRID.section_active].offset,regenerate);

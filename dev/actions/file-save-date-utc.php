@@ -1,6 +1,6 @@
 <?php
 
-define("POST_LIMIT_RATE", 1000); //30 tentatives toutes les deux secondes
+	define("POST_LIMIT_RATE", 1000); //30 tentatives toutes les deux secondes
 
 	require_once($_SERVER['DOCUMENT_ROOT'].'/core/securityheader.php');
 	require_once($_SERVER['DOCUMENT_ROOT'].'/core/class.easypdo.php');

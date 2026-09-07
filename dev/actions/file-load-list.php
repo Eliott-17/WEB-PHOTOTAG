@@ -75,8 +75,8 @@
 		$fReturn->fetch();
 	}
 
-	if($_GET['offset']==0)
-	{
+	//if($_GET['offset']==0)
+	//{
 		$EasyPDO->addFields('COUNT (*) as total');
 		$array_cnt=$EasyPDO->select('photos','file_status = 0 AND'.$conditionaldata);			
 
@@ -90,7 +90,7 @@
 			if(ENV=="DEV") $fReturn->addFailMessage('Internal error')->addConsole(print_r($array_cnt,true));
 			$fReturn->fetch();
 		}
-	}
+	//}
 	
 
 	if(ENV=="DEV") $fReturn->addConsole("[PHP EXECUTED] file-load-list.php");
