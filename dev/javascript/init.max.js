@@ -17,6 +17,7 @@ $(document).ready(function()
 	if(mem!==null && mem!=="")
 	{
 		if(mem=="search") mem="explore";
+		if(mem!="explore") CORE_get('/actions/file-load-explore.php');
 		
 		GRID.section_active=mem;
 		$('div#mainmenu div button.'+mem).addClass("selected");
