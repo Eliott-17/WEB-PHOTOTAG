@@ -79,7 +79,20 @@ function Arrow(sens)
 function Select()
 {
 	if(!DISPLAY_is_visible_full_screen()) return;
+	
+	//***********************************************
+	//Mise à jour de la sélection
+	//***********************************************
+	
+	let media_id = parseInt($('div#'+GRID.section_active+'_'+FILEOPENFULLSCREEN.id_current+' div.media-container').attr('data-id'));
 
+	if(GRID.hashes.includes(media_id)) 		GRID.hashes = GRID.hashes.filter(h => h !== media_id);
+	else 									GRID.hashes.push(media_id);
+
+	//***********************************************
+	//END - Mise à jour de la sélection
+	//***********************************************
+	
 	DISPLAY_selection(FILEOPENFULLSCREEN.id_current);		
 
 	if(!DISPLAY_is_visible_file_info() || DISPLAY_is_visible_full_screen()) return;

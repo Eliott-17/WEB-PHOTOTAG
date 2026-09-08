@@ -2,8 +2,12 @@ RewriteEngine On
 
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^style/([a-z-]{3,30})\.[0-9]+\.(min|max)\.css$ style/$1.$2.css [L]
 
-RewriteRule ^style\/([a-z-]{3,30}).[0-9]+\.(min|max)\.css$ style/$1.$2.css [L]
-RewriteRule ^javascript\/([a-z-]{3,30}).[0-9]+\.(min|max)\.js$ javascript/$1.$2.js [L]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^javascript/([a-z-]{3,30})\.[0-9]+\.(min|max)\.js$ javascript/$1.$2.js [L]
 
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(sd|hd|dl|bl)-(([0-9]{14})_)?([a-f0-9_]{64})$ actions/file-get-content.php?type=$1&time=$3&hash=$4 [L,QSA]

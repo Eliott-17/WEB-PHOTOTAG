@@ -33,7 +33,9 @@ $(document).ready(function(){
 		DEBUG.log("ON",'click.enterFilter');
 			
 		if(!$(this).hasClass('expandmenu'))
-		{		
+		{	
+			console.log($(this));
+	
 			EXPLORE_post_search($(this).attr('data-tag'),$(this).attr('data-val'),"{}");			
 		}
 	});	
@@ -44,13 +46,16 @@ function EXPLORE_post_search(tag,val,exclude)
 {
 	if($('#filter_tag').val()!=tag || $('#filter_val').val()!=val || $('input#filters_exclude').val()!=exclude)
 	{
+		DEBUG.log("EXPLORE", "Reloasd new data:","-"+$('#filter_tag').val()+'-','-'+tag+'-','-'+$('#filter_val').val()+'-','-'+val+'-','-'+$('input#filters_exclude').val()+'-','-'+exclude+'-');
 		GRID_reset("EXPLORE_post_search","SEARCH",1);
+	}
+	else
+	{
+		DEBUG.log("EXPLORE", "Restaure data");
 	}
 
 	$('#filter_tag').val(tag);
 	$('#filter_val').val(val);
-	$('.save_tag').val(tag);
-	$('.save_val').val(val);
 	$('#filters_exclude').val(exclude);
 
 	if(GRID.section_active!="search") GRID.section_mem=GRID.section_active;

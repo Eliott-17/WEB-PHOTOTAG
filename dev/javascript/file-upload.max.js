@@ -35,7 +35,7 @@ $(document).ready(function() {
 				.then(token => {
 
 					return $.ajax({
-						url: 'actions/file-exist.php',
+						url: '/actions/file-exist.php',
 						method: 'POST',
 						data: {
 							token: token,

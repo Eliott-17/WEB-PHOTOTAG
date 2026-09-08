@@ -156,7 +156,6 @@
 			{
 				$fReturn->addCallback("FILEMULTISELECTION_CallBack_load",true);
 				$fReturn->addCallback("FILEMULTISELECTION_CallBack_success",$is_tagged);
-				$fReturn->addConsole("<pre>".print_r($is_tagged,true)."</pre>");
 				if(isset($tag))  $fReturn->addCallback("EXPLORE_CallBack_addtags",$tag);			
 			}
 		}	

@@ -145,6 +145,8 @@ var FILEMULTISELECTION_unselectall = function unselect_all()
 	$('main div.element').removeClass('selected');
 	$('main div.element').addClass('notselected');
 	
+	GRID.hashes = [];
+	
 	GRID_load("FILEMULTISELECTION_unselectall"); //recharger la grille si on à changer des photos
 }
 
@@ -152,35 +154,23 @@ var hash_array;
 
 var FILEMULTISELECTION_CallBack_load = function load(force_reload=false)
 {
-	hash_array=[];
-
-	$('main section.'+GRID.section_active+' div.element').each(function () 
-	{ 
-		if($(this).hasClass('selected')) 
-		{ 
-			let id=$(this).find("div.media-container").attr('data-id');
-
-			hash_array.push(id);
-		}
-	});
-	
-	hash_array = hash_array.map(Number);
+	const hashes_json = JSON.stringify(GRID.hashes);
 		
-	if(hash_array.length<=1)
+	if(GRID.hashes.length<=1)
 	{
 		DISPLAY_loading(false);
 		DISPLAY_file_info(true);
 
 		DEBUG.log("FILEMULTISELECTION",'NO data update, require two files selected');
 	}
-	else if(JSON.stringify(FILEMULTIPLESELECTION_mem)!==JSON.stringify(hash_array) || force_reload) 
+	else if(FILEMULTIPLESELECTION_mem!==hashes_json || force_reload) 
 	{		
-		$('input.filesid').val(JSON.stringify(hash_array));
-		
-		CORE_post($('#fileinfopost'));
-		
-		FILEMULTIPLESELECTION_mem=hash_array;
+		$('input.filesid').val(hashes_json);
+			
+		FILEMULTIPLESELECTION_mem=hashes_json;
 		FILEINFO_mem=null; //forcer le rechargement des data en sélection simple
+
+		CORE_post($('#fileinfopost'));
 		
 		DEBUG.log("FILEMULTISELECTION",'Data update request');
 	}

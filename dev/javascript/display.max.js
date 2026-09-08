@@ -70,11 +70,11 @@ var DISPLAY_set_view = function view_refresh(newview)
 	DEBUG.log("DISPLAY","set_view",newview,"loaded");
 }
 
-//
-
 var DISPLAY_section = function section(section)
 {
 	GRID.section_active=section;
+	
+	localStorage.setItem(APP.userhash+'_last_page', section);
 	
 	$('div#mainmenu div button').removeClass("selected");
 	$('div#mainmenu div button.'+GRID.section_active).addClass("selected");
@@ -269,20 +269,32 @@ var DISPLAY_fileinfo_init = function fileinfo_init(multiselectionreset=true)
 
 var DISPLAY_selection = function selection(id_current=null,refreshfullscreen=false)
 {
-	DEBUG.log("DISPLAY","selection switch selection of element",id_current);
+	//DEBUG.log("DISPLAY","selection switch selection of element",id_current);
 	
-	if(id_current!=null) {
-	
+	if(id_current!=null) 
+	{
+		
+		let media_id = parseInt($('div#'+GRID.section_active+'_'+id_current+' div.media-container').attr('data-id'));
+			
 		//Manage grid selection
 
 		if(refreshfullscreen==false) 
 		{
-			$('div#'+GRID.section_active+'_'+id_current).toggleClass('selected notselected');
+			if(GRID.hashes.includes(media_id))
+			{
+				$('div#'+GRID.section_active+'_'+id_current).addClass('selected');
+				$('div#'+GRID.section_active+'_'+id_current).removeClass('notselected');
+			}
+			else
+			{
+				$('div#'+GRID.section_active+'_'+id_current).addClass('notselected');
+				$('div#'+GRID.section_active+'_'+id_current).removeClass('selected');
+			}
 		}
 		
 		//Manage fullscreen selection
 		
-		if($('div#'+GRID.section_active+'_'+id_current).hasClass('selected'))
+		if(GRID.hashes.includes(media_id))
 		{
 			$('section#fullscreen').addClass('selected');
 			$('section#fullscreen div.button-selection').addClass('selected');
@@ -295,16 +307,18 @@ var DISPLAY_selection = function selection(id_current=null,refreshfullscreen=fal
 			$('section#fullscreen div.button-selection').removeClass('selected');
 		}
 	}
+
+	DEBUG.log("DISPLAY","New display selection from",id_current,":",GRID.hashes);
 	
 	//****************************************************************
 	//Affiche le menu si on sélectionne deux photos ou plus **********
 	//****************************************************************
 	
-	let selected_ids = $('.element.selected').map(function() {
+	/*let selected_ids = $('.element.selected').map(function() {
 		return this.id;
-	}).get();
+	}).get();*/
 	
-	let loaded_files=selected_ids.length;
+	let loaded_files=GRID.hashes.length;
 
 	if(loaded_files<=1 || DISPLAY_is_visible_full_screen()) 
 	{	
@@ -318,6 +332,8 @@ var DISPLAY_selection = function selection(id_current=null,refreshfullscreen=fal
 		$('.elementscnt').html(loaded_files+" elements");
 		DISPLAY_menu($('#select-status'), true);
 	}
+	
+	
 }
 
 //****************************************************************

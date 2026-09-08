@@ -165,7 +165,7 @@ window.FILEINFO_CallBack_load = function(force_reload=false)
 	{
 		CORE_get('actions/file-load-infos.php?hash='+hash+'&lform=');
 		FILEINFO_mem=hash;
-		gFILEMULTIPLESELECTION_mem=null; //forcer le rechargement des data en sélection multiple
+		FILEMULTIPLESELECTION_mem=null; //forcer le rechargement des data en sélection multiple
 		DEBUG.log('FILEINFO','Data update request');
 	}
 	else

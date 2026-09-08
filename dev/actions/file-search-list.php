@@ -77,7 +77,7 @@
 
 			$EasyPDO->addConditionalData('offset',$_GET['offset']);
 
-			$result_data=$EasyPDO->select('photos', $finalquery." LIMIT 50 OFFSET:offset");
+			$result_data=$EasyPDO->select('photos', $finalquery." LIMIT ".GRID_ELEMENTS." OFFSET:offset");
 
 			if($result_data['status']!==true) 
 			{
@@ -240,7 +240,7 @@
 		
 		$EasyPDO->addConditionalData('offset',$_GET['offset']);
 
-		$result_data=$EasyPDO->select('photos', $finalquery." LIMIT 50 OFFSET:offset");
+		$result_data=$EasyPDO->select('photos', $finalquery." LIMIT ".GRID_ELEMENTS." OFFSET:offset");
 	
 		if($result_data['status']!==true) 
 		{

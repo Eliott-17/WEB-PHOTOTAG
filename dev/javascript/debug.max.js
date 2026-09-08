@@ -10,7 +10,8 @@ const DEBUG = {
         FILEMULTISELECTION: true,
         CALLBACK: true,
 		DATAS: true,
-		UPLOAD: true
+		UPLOAD: true,
+		EXPLORE: true,
     },
 
     log(module, ...args) {

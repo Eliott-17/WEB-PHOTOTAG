@@ -63,14 +63,12 @@ $(document).ready(function(){
 
 	$('div#searchmenu div button.return-explore').on('click', 	function() {
 
-			$('main').scrollTop(0);
-			FILEMULTISELECTION_unselectall();
-			DISPLAY_set_view('grid');
-			DISPLAY_section(GRID.section_mem);
-			DISPLAY_filters(false);
-			DISPLAY_menu($('#flush-trash'), false);
-			$('.save_tag').val('');
-			$('.save_val').val('');
+		$('main').scrollTop(0);
+		FILEMULTISELECTION_unselectall();
+		DISPLAY_set_view('grid');
+		DISPLAY_section(GRID.section_mem);
+		DISPLAY_filters(false);
+		DISPLAY_menu($('#flush-trash'), false);
 
 	});
 

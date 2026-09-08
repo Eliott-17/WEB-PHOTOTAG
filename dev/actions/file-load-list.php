@@ -61,7 +61,7 @@
 		END ASC, time_taken_at_date DESC,
 				 time_taken_at_zone DESC,
 				 time_taken_at_time DESC
-		LIMIT 50 OFFSET:offset
+		LIMIT '.GRID_ELEMENTS.' OFFSET:offset
 	');
 	
 	if($array['status']===true) 

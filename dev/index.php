@@ -6,7 +6,7 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/datas.php');
 
 ?>
 <!DOCTYPE html>
-<html data-env="<?php echo ENV; ?>">
+<html data-env="<?php echo ENV; ?>" data-griddisplay="<?php echo GRID_ELEMENTS; ?>" data-user="<?php echo $_SESSION["USER"]; ?>">
 	<!-- BEGIN HEAD -->
 	<head>
 		<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
@@ -16,19 +16,19 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/datas.php');
 
 		<!-- HEADER SCRIPTS INCLUDED ON THIS PAGE - START -->
 
-		<link rel="stylesheet" href="core/post.<?php echo DIM; ?>.css" type="text/css"/>
-		<link rel="stylesheet" href="style/common.<?php echo filemtime('style/common.'.DIM.'.css'); ?>.<?php echo DIM; ?>.css" type="text/css"/>
+		<link rel="stylesheet" href="/core/post.<?php echo DIM; ?>.css" type="text/css"/>
+		<link rel="stylesheet" href="/style/common.<?php echo filemtime('style/common.'.DIM.'.css'); ?>.<?php echo DIM; ?>.css" type="text/css"/>
 
-		<link rel="stylesheet" href="style/file-infos.<?php echo filemtime('style/file-infos.'.DIM.'.css'); ?>.<?php echo DIM; ?>.css" type="text/css"/>
-		<link rel="stylesheet" href="style/file-multi-selection-edit.<?php echo filemtime('style/file-multi-selection-edit.'.DIM.'.css'); ?>.<?php echo DIM; ?>.css" type="text/css"/>
-		<link rel="stylesheet" href="style/file-open-fullscreen.<?php echo filemtime('style/file-open-fullscreen.'.DIM.'.css'); ?>.<?php echo DIM; ?>.css" type="text/css"/>
-		<link rel="stylesheet" href="style/explore.<?php echo filemtime('style/explore.'.DIM.'.css'); ?>.<?php echo DIM; ?>.css" type="text/css"/>
-		<link rel="stylesheet" href="style/filters.<?php echo filemtime('style/filters.'.DIM.'.css'); ?>.<?php echo DIM; ?>.css" type="text/css"/>
+		<link rel="stylesheet" href="/style/file-infos.<?php echo filemtime('style/file-infos.'.DIM.'.css'); ?>.<?php echo DIM; ?>.css" type="text/css"/>
+		<link rel="stylesheet" href="/style/file-multi-selection-edit.<?php echo filemtime('style/file-multi-selection-edit.'.DIM.'.css'); ?>.<?php echo DIM; ?>.css" type="text/css"/>
+		<link rel="stylesheet" href="/style/file-open-fullscreen.<?php echo filemtime('style/file-open-fullscreen.'.DIM.'.css'); ?>.<?php echo DIM; ?>.css" type="text/css"/>
+		<link rel="stylesheet" href="/style/explore.<?php echo filemtime('style/explore.'.DIM.'.css'); ?>.<?php echo DIM; ?>.css" type="text/css"/>
+		<link rel="stylesheet" href="/style/filters.<?php echo filemtime('style/filters.'.DIM.'.css'); ?>.<?php echo DIM; ?>.css" type="text/css"/>
 	
-		<link rel="stylesheet" href="style/index-grid.<?php echo filemtime('style/index-grid.'.DIM.'.css'); ?>.<?php echo DIM; ?>.css" type="text/css"/>
-		<link rel="stylesheet" href="style/index-login.<?php echo filemtime('style/index-login.'.DIM.'.css'); ?>.<?php echo DIM; ?>.css" type="text/css"/>
-		<link rel="stylesheet" href="style/index-top.<?php echo filemtime('style/index-top.'.DIM.'.css'); ?>.<?php echo DIM; ?>.css" type="text/css"/>
-		<link rel="stylesheet" href="style/upload.<?php echo filemtime('style/upload.'.DIM.'.css'); ?>.<?php echo DIM; ?>.css" type="text/css"/>
+		<link rel="stylesheet" href="/style/index-grid.<?php echo filemtime('style/index-grid.'.DIM.'.css'); ?>.<?php echo DIM; ?>.css" type="text/css"/>
+		<link rel="stylesheet" href="/style/index-login.<?php echo filemtime('style/index-login.'.DIM.'.css'); ?>.<?php echo DIM; ?>.css" type="text/css"/>
+		<link rel="stylesheet" href="/style/index-top.<?php echo filemtime('style/index-top.'.DIM.'.css'); ?>.<?php echo DIM; ?>.css" type="text/css"/>
+		<link rel="stylesheet" href="/style/upload.<?php echo filemtime('style/upload.'.DIM.'.css'); ?>.<?php echo DIM; ?>.css" type="text/css"/>
 
 		<!-- HEADER SCRIPTS INCLUDED ON THIS PAGE - END -->
 
@@ -50,17 +50,17 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/datas.php');
 							<button class="hover"><span class="material-symbols-outlined">visibility</span></button>
 						</div>
 						<div><button class="library"><span class="material-symbols-outlined">photo</span>&nbsp;<span>Timeline</span><span id="library_count"></span></button></div>
-						<div><button class="explore selected"><span class="material-symbols-outlined">explore</span>&nbsp;<span>Explore</span></button></div>
+						<div><button class="explore"><span class="material-symbols-outlined">explore</span>&nbsp;<span>Explore</span></button></div>
 						<div><button class="untagged"><span class="material-symbols-outlined">new_label</span>&nbsp;<span>Untagged</span><span id="untagged_count"></span></button></div>
 						<div class="search"><button class="search"><span class="material-symbols-outlined">search</span>&nbsp;<span>quick search</span></button><input type="text" list="fastsearch" autocomplete="off"/></div>
-						<div class="last"><a href="actions/logout.php"><button><span class="material-symbols-outlined">logout</span>&nbsp;<span>Logout</span></button></button></a></div>
+						<div class="last"><button class="logout"><span class="material-symbols-outlined">logout</span>&nbsp;<span>Logout</span></button></div>
 					</div>
 					<div id="searchmenu" class="ux-background hidden mainmenu">				
 						<div><button class="return-explore"><span class="material-symbols-outlined">arrow_back</span>&nbsp;<span>Return</span></button></div>
 						<div><button class="advanced-filters"><span class="material-symbols-outlined">filter_arrow_right</span>&nbsp;<span id="filterapply"></span></button></div>
 						<div><button class="advanced-filters"><span class="material-symbols-outlined">equal</span>&nbsp;<span id="filterresult"></span></button></div>
 						<div class="search"><button class="search"><span class="material-symbols-outlined">search</span>&nbsp;<span>quick search</span></button><input type="text" list="fastsearch" autocomplete="off"/></div>
-						<div class="last"><a href="actions/logout.php"><button><span class="material-symbols-outlined">logout</span>&nbsp;<span>Logout</span></button></button></a></div>
+						<div class="last"><button class="logout"><span class="material-symbols-outlined">logout</span>&nbsp;<span>Logout</span></button><</div>
 					</div>
 				<?php
 			}
@@ -71,10 +71,10 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/datas.php');
 						<div class="title">Phototag</div>
 						<div></div>
 						<div></div>
-						<div class="last"><button class="login"><span class="material-symbols-outlined">login</span>&nbsp;<span>Login</span></button></button></div>
+						<div class="last"><button class="login"><span class="material-symbols-outlined">login</span>&nbsp;<span>Login</span></button></div>
 					</div>					
 					<div id="login" class="ux-background hidden">
-						<form method="post" data-return="blockreturnlogin" action="actions/login.php" class="post">
+						<form method="post" data-return="blockreturnlogin" action="/actions/login.php" class="post">
 							<input type="hidden" name="token" class="token" value=""/>
 							<h4>
 								<div>Email</div>
@@ -170,8 +170,8 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/datas.php');
 						<div class="media"></div>
 					</section>
 					<section class="explore hidden"></section>
-					<section class="grid library nodate"></section>
-					<section class="grid library date"></section>
+					<section class="grid library nodate hidden"></section>
+					<section class="grid library date hidden"></section>
 					<div id="uploaddrag">
 						<span id="uploadmedia" class="untagged hidden">Drag & drop here to add files</span>
 						<span id="uploadjson" class="untagged hidden">Google Photo supplemental-metadata.json</span>
@@ -195,7 +195,7 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/datas.php');
 					<button><span class="material-symbols-outlined">check_box_outline_blank</span>&nbsp;<span>Clear all</span></button>
 					<button><span class="material-symbols-outlined">check_box</span>&nbsp;<span>Check all</span></button>
 					
-					<form id="filters" method="post" action="actions/file-search-list.php?offset=0&tagslist=0"/>
+					<form id="filters" method="post" action="/actions/file-search-list.php?offset=0&tagslist=0"/>
 					
 						<input type="hidden" name="token" class="token" value=""/>
 						<input type="hidden" id="filter_tag" name="tag"/>
@@ -244,7 +244,7 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/datas.php');
 				</aside>
 
 				<aside id="infocontent" class="ux-background">
-					<form method="post" id="fileinfopost" action="actions/file-selection-load-tags.php" class="post">
+					<form method="post" id="fileinfopost" action="/actions/file-selection-load-tags.php" class="post">
 						<input type="hidden" name="token" class="token" value=""/>
 						<input type="hidden" name="files_hash" class="filesid" value=""/>
 					</form>
@@ -258,7 +258,7 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/datas.php');
 						<h3 id="file_exif_idf0_sensordata1" class="margin"><span></span></h3>
 					</div>
 					<h2><span class="material-symbols-outlined">calendar_clock</span><span>Date time</span></h2>
-					<form method="post" data-return="blockreturndatetime" action="actions/file-save-infos.php?form=time" class="post">
+					<form method="post" data-return="blockreturndatetime" action="/actions/file-save-infos.php?form=time" class="post">
 						<input type="hidden" name="token" class="token" value=""/>
 						<input type="hidden" name="filesid" class="filesid" value=""/>
 						<input type="hidden" name="conflictedit" class="conflictedit" value=""/>
@@ -326,7 +326,7 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/datas.php');
 						<div class="return alert alert-success"></div>
 					</div>	
 					<h2><span class="material-symbols-outlined">globe</span><span>Location&nbsp;</span><span id="tooltip-location" class="tooltip-title"></span></h2>
-					<form method="post" data-return="blockreturnloc" action="actions/file-save-infos.php?form=tag-location" class="post">		
+					<form method="post" data-return="blockreturnloc" action="/actions/file-save-infos.php?form=tag-location" class="post">		
 						<input type="hidden" name="token" class="token" value=""/>
 						<input type="hidden" name="filesid" class="filesid" value=""/>
 						<input type="hidden" name="conflictedit" class="conflictedit" value=""/>	
@@ -352,7 +352,7 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/datas.php');
 						<div class="return alert alert-success"></div>
 					</div>
 					<h2><span class="material-symbols-outlined">tag</span><span>Tags&nbsp;</span><span id="tooltip-tags" class="tooltip-title"></span></h2>
-					<form method="post" data-return="blockreturntags" action="actions/file-save-infos.php?form=tag-general" class="post">
+					<form method="post" data-return="blockreturntags" action="/actions/file-save-infos.php?form=tag-general" class="post">
 						<input type="hidden" name="token" class="token" value=""/>
 						<input type="hidden" name="filesid" class="filesid" value=""/>
 						<input type="hidden" name="conflictedit" class="conflictedit" value=""/>
@@ -463,30 +463,30 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/datas.php');
 	<!-- END BODY -->
 		
 	<!-- CORE JS FRAMEWORK - START --> 
-	<script src='javascript/jquery-3.7.0.min.js' type="text/javascript"></script>
-	<script src='javascript/heic2any.min.js' type="text/javascript"></script>
+	<script src='/javascript/jquery-3.7.0.min.js' type="text/javascript"></script>
+	<script src='/javascript/heic2any.min.js' type="text/javascript"></script>
 	<!-- CORE JS FRAMEWORK - END --> 	
 	
 	<!-- OTHER SCRIPTS INCLUDED ON THIS PAGE - START --> 
-	<script src='javascript/debug.<?php echo filemtime('javascript/debug.'.DIM.'.js'); ?>.<?php echo DIM; ?>.js'></script>
-	<script src='javascript/common.<?php echo filemtime('javascript/common.'.DIM.'.js'); ?>.<?php echo DIM; ?>.js'></script>
-	<script src='javascript/display.<?php echo filemtime('javascript/display.'.DIM.'.js'); ?>.<?php echo DIM; ?>.js'></script>
-	<script src='javascript/grid.<?php echo filemtime('javascript/grid.'.DIM.'.js'); ?>.<?php echo DIM; ?>.js'></script>
-	<script src='javascript/explore.<?php echo filemtime('javascript/explore.'.DIM.'.js'); ?>.<?php echo DIM; ?>.js'></script>
-	<script src='javascript/filters.<?php echo filemtime('javascript/filters.'.DIM.'.js'); ?>.<?php echo DIM; ?>.js'></script>
-	<script src='javascript/nav.<?php echo filemtime('javascript/nav.'.DIM.'.js'); ?>.<?php echo DIM; ?>.js'></script>
-	<script src='javascript/login.<?php echo filemtime('javascript/login.'.DIM.'.js'); ?>.<?php echo DIM; ?>.js'></script>
-	<script src='javascript/file-open-fullscreen.<?php echo filemtime('javascript/file-open-fullscreen.'.DIM.'.js'); ?>.<?php echo DIM; ?>.js'></script>
-	<script src='javascript/file-info.<?php echo filemtime('javascript/file-info.'.DIM.'.js'); ?>.<?php echo DIM; ?>.js'></script>
-	<script src='javascript/file-multi-selection-edit.<?php echo filemtime('javascript/file-multi-selection-edit.'.DIM.'.js'); ?>.<?php echo DIM; ?>.js'></script>
-	<script src='javascript/file-upload.<?php echo filemtime('javascript/file-upload.'.DIM.'.js'); ?>.<?php echo DIM; ?>.js'></script>
-	<script src='core/post.<?php echo DIM; ?>.js' type="text/javascript"></script>
+	<script src='/javascript/debug.<?php echo filemtime('javascript/debug.'.DIM.'.js'); ?>.<?php echo DIM; ?>.js'></script>
+	<script src='/javascript/common.<?php echo filemtime('javascript/common.'.DIM.'.js'); ?>.<?php echo DIM; ?>.js'></script>
+	<script src='/javascript/display.<?php echo filemtime('javascript/display.'.DIM.'.js'); ?>.<?php echo DIM; ?>.js'></script>
+	<script src='/javascript/grid.<?php echo filemtime('javascript/grid.'.DIM.'.js'); ?>.<?php echo DIM; ?>.js'></script>
+	<script src='/javascript/explore.<?php echo filemtime('javascript/explore.'.DIM.'.js'); ?>.<?php echo DIM; ?>.js'></script>
+	<script src='/javascript/filters.<?php echo filemtime('javascript/filters.'.DIM.'.js'); ?>.<?php echo DIM; ?>.js'></script>
+	<script src='/javascript/nav.<?php echo filemtime('javascript/nav.'.DIM.'.js'); ?>.<?php echo DIM; ?>.js'></script>
+	<script src='/javascript/login.<?php echo filemtime('javascript/login.'.DIM.'.js'); ?>.<?php echo DIM; ?>.js'></script>
+	<script src='/javascript/file-open-fullscreen.<?php echo filemtime('javascript/file-open-fullscreen.'.DIM.'.js'); ?>.<?php echo DIM; ?>.js'></script>
+	<script src='/javascript/file-info.<?php echo filemtime('javascript/file-info.'.DIM.'.js'); ?>.<?php echo DIM; ?>.js'></script>
+	<script src='/javascript/file-multi-selection-edit.<?php echo filemtime('javascript/file-multi-selection-edit.'.DIM.'.js'); ?>.<?php echo DIM; ?>.js'></script>
+	<script src='/javascript/file-upload.<?php echo filemtime('javascript/file-upload.'.DIM.'.js'); ?>.<?php echo DIM; ?>.js'></script>
+	<script src='/core/post.<?php echo DIM; ?>.js' type="text/javascript"></script>
 	
 	<?php 
 	
 	if(is_session_valid()) 
 	{
-		?><script src='javascript/init.<?php echo filemtime('javascript/init.'.DIM.'.js'); ?>.<?php echo DIM; ?>.js'></script><?php
+		?><script src='/javascript/init.<?php echo filemtime('javascript/init.'.DIM.'.js'); ?>.<?php echo DIM; ?>.js'></script><?php
 	}
 	?>
 	
