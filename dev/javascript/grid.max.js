@@ -20,9 +20,9 @@ let GRID = {
 //****************************************************************	
 
 let SECTIONS = {
-    library:	{update:true,offset:0,elements:GRID.configelements,memdata:null,countmem:null},
-    untagged: 	{update:true,offset:0,elements:GRID.configelements,memdata:null,countmem:null},
-    search: 	{update:true,offset:0,elements:GRID.configelements,memdata:null,countmem:null,taglist:0},
+    library:	{update:true,offset:0,elements:GRID.configelements,countmem:null},
+    untagged: 	{update:true,offset:0,elements:GRID.configelements,countmem:null},
+    search: 	{update:true,offset:0,elements:GRID.configelements,countmem:null,taglist:0},
     explore: 	{update:true} //chargé à l'init
 };
 
@@ -244,9 +244,11 @@ function scroll_refresh()
 
 function GRID_add_element_top(loffset)
 {	
+	//DEBUG.log("GRID","scrolling TOP",loffset,'>',(225*3),$('main').scrollTop(),'<',(($('section.date.'+GRID.section_active).height()+5)-(225*10)));
+
 	if(loffset>(225*3)) 
 	{
-		if($('main').scrollTop()<(($('section.date.'+GRID.section_active).height()+5)-(225*10))) //on supprime si on à 20 ligne en bas du scroll (200 éléments en mémoire) à tester 5 lignes
+		if($('main').scrollTop()<(($('section.date.'+GRID.section_active).height()+5)-(225*GRID.configelements))) //on supprime si on à 20 ligne en bas du scroll (200 éléments en mémoire) à tester 5 lignes
 		{
 			let i=0;
 			
@@ -264,19 +266,26 @@ function GRID_add_element_top(loffset)
 
 			$('main section.' + GRID.section_active + ' > div').each(function() 
 			{
-
 				if($(this).hasClass("toremove"))
-				{
+				{			
+					/*if($(this).hasClass('fullrow'))
+					{
+						displayed_date = displayed_date.filter(item => item !== $(this).find('h2').html());
+					}*/
 					$(this).remove();
 				}
 			});
 			
 			scroll_lock_down=false; //release
-			DEBUG.log("GRID","delete request from autofill page bottom");
+			
+			GRID_reset_dates();
+			GRID_load_id();
+			
+			DEBUG.log("GRID",i, "deleted from BOTTOM");
 		}
 		else
 		{
-			DEBUG.log("GRID","scrolling up no action");
+			//DEBUG.log("GRID","scrolling up no action");
 		}
 	}
 	else
@@ -302,9 +311,8 @@ function GRID_add_element_top(loffset)
 			
 			SECTIONS[GRID.section_active].update=true;
 			
-			console.log(OFFSETS[GRID.section_active],SECTIONS[GRID.section_active]);
-			
-			DEBUG.log("GRID","update request from autofill page top");
+			DEBUG.log("GRID",SECTIONS[GRID.section_active].elements,"added to top");
+			GRID_reset_dates();
 			GRID_load("scroll");
 		}
 		else
@@ -315,12 +323,14 @@ function GRID_add_element_top(loffset)
 }
 
 function GRID_add_element_bottom(loffset)
-{		
+{
 	let positionlast  = $('main section.'+GRID.section_active+' div.element').last()[0].offsetTop;
+
+	//DEBUG.log("GRID","scrolling BOTTOM",positionlast,'>=',(loffset+(225*3)),$('main').scrollTop(),'>',(225*10));
 
 	if(positionlast>=(loffset+(225*3))) //3 ligne préchargées
 	{		
-		if($('main').scrollTop()>(225*10)) //on supprime si on à 20 ligne en haut du scroll (200 éléments en mémoire) à tester 5 lignes
+		if($('main').scrollTop()>(225*GRID.configelements)) //on supprime si on à 20 ligne en haut du scroll (200 éléments en mémoire) à tester 5 lignes
 		{
 			let element_to_delete = GRID.configelements+OFFSETS[GRID.section_active].padding;
 			let last_line_index=0;
@@ -364,6 +374,11 @@ function GRID_add_element_bottom(loffset)
 
 					if($(this).hasClass("toremove"))
 					{
+						/*if($(this).hasClass('fullrow'))
+						{
+							displayed_date = displayed_date.filter(item => item !== $(this).find('h2').html());
+						}
+							*/
 						$(this).remove();
 					}
 				});
@@ -371,14 +386,17 @@ function GRID_add_element_bottom(loffset)
 				OFFSETS[GRID.section_active].deleted+=(GRID.configelements-OFFSETS[GRID.section_active].padding);
 
 				scroll_lock_up=false; //release
-				DEBUG.log("GRID","delete request from autofill page bottom");
-				
+
+				GRID_reset_dates();
 				GRID_load_id();
+
+				DEBUG.log("GRID",OFFSETS[GRID.section_active].deleted,"deleted from TOP");
+			
 			}
 		}
 		else
 		{
-			DEBUG.log("GRID","scrolling down no action");
+			//DEBUG.log("GRID","scrolling down no action");
 		}
 	}
 	else
@@ -390,7 +408,7 @@ function GRID_add_element_bottom(loffset)
 		SECTIONS[GRID.section_active].elements=GRID.configelements;	
 		
 		SECTIONS[GRID.section_active].update=true;
-		DEBUG.log("GRID","update request from autofill page bottom");
+		DEBUG.log("GRID",GRID.configelements, "added to bottom");
 		GRID_load("scroll");
 	}
 }
@@ -446,7 +464,9 @@ function GRID_reset(from,source,searchoption=null)
 			{
 				GRID.offset_mem=SECTIONS[GRID.section_active].offset;
 			}
+			
 			SECTIONS[GRID.section_active].offset=0;
+			$("main section."+GRID.section_active).html('');
 			DEBUG.log("GRID","offset reset. Mem:",GRID.offset_mem);
 		}
 	}
@@ -587,7 +607,7 @@ window.GRID_CallBack_load = function(data_array)
 		
 		GRID.lock.element_locked=false;
 		
-		if(SECTIONS[GRID.section_active].offset<=0 &&OFFSETS[GRID.section_active].fillbottom) $("main section."+GRID.section_active).html('');
+		//if(SECTIONS[GRID.section_active].offset<=0 &&OFFSETS[GRID.section_active].fillbottom) $("main section."+GRID.section_active).html('');
 
 		let OBJ_Dest_date = "";//$("main section.date."+GRID.section_active);
 
@@ -611,7 +631,10 @@ window.GRID_CallBack_load = function(data_array)
 
 			let l_date_display = l_date_test.substring(6,8) + "/" + l_date_test.substring(4,6) + "/" + l_date_test.substring(0,4);	
 			
-			if(SECTIONS[GRID.section_active].memdata==null || SECTIONS[GRID.section_active].memdata!=l_date_test)
+			if(l_date_display=="00/00/0000")  	htmldate="Undated";
+			else 								htmldate=formatDateLocale(l_date_display);
+			
+			/*if(SECTIONS[GRID.section_active].memdata==null || SECTIONS[GRID.section_active].memdata!=l_date_test)
 			{
 				let htmldate="";
 
@@ -619,11 +642,11 @@ window.GRID_CallBack_load = function(data_array)
 				else 								htmldate=formatDateLocale(l_date_display);
 
 				OBJ_Dest_date+=('<div class="fullrow"><h2>'+htmldate+'</h2></div>'); //on démarre une nouvelle grille
-			}
+			}*/
 
-			OBJ_Dest_date+=(addElement(data_array.dir, bdd));
+			OBJ_Dest_date+=(addElement(data_array.dir, bdd, htmldate));
 							
-			SECTIONS[GRID.section_active].memdata=l_date_test;
+			//SECTIONS[GRID.section_active].memdata=l_date_test;
 
 			j++;
 		});
@@ -695,21 +718,32 @@ window.GRID_CallBack_restaure = function(current_id)
 	GRID_reset("","FILES");
 }
 
-function GRID_load_id()
+let displayed_date=[];
+
+function GRID_reset_dates()
+{
+	displayed_date=[];
+	$('main section.' + GRID.section_active+' div.fullrow').remove();
+}
+
+function GRID_load_id(date)
 {
 	let id=0;
 
-	$('main section.' + GRID.section_active+' div').each(function () {
+	$('main section.' + GRID.section_active+' div.element').each(function () {
 
-		if($(this).hasClass("element"))
+		$(this).attr('id', GRID.section_active+'_'+id);
+		
+		let date=$(this).attr('data-date');
+
+		if(!displayed_date.includes(date)) 
 		{
-			$(this).attr('id', GRID.section_active+'_'+id);
-			id++;
-		}
-		else
-		{
-			$(this).attr('id', "date"+GRID.section_active+'_'+id);
-		}
+			$(this).before('<div class="fullrow"><h2>'+date+'</h2></div>'); //on démarre une nouvelle grille
+			displayed_date.push(date);
+		}		
+	
+		id++;
+
 	});
 	
 	GRID.max_elements = (id-1);
@@ -719,7 +753,7 @@ function GRID_load_id()
 	DEBUG.log("GRID","load_id");
 }
 
-function addElement(dir, bdd)
+function addElement(dir, bdd, date)
 {
 	let file_orientationtxt="landscape";
 	let trash = false;
@@ -750,7 +784,7 @@ function addElement(dir, bdd)
 		
 	let html ="";
 	let ux = "photo";
-	html+= '<div id="" class="element notselected wrapper '+file_orientationtxt+'">';
+	html+= '<div id="" data-date="'+date+'" class="element notselected wrapper '+file_orientationtxt+'">';
 	
 	html+= '	<div class="media-container" data-type="'+bdd.file_type+'" data-src="'+before+bdd.file_hash+'" data-id="'+bdd.id+'" id="media_'+bdd.id+'">';
 
