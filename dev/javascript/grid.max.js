@@ -220,7 +220,7 @@ $(document).ready(function(){
 });
 
 
-let maxelementmemory=200;
+let maxelementmemory=300;
 
 /*
 let srollMem=0;
@@ -656,7 +656,7 @@ window.GRID_CallBack_load = function(data_array)
 
 	}
 
-	DEBUG.log("CALLBACK","CallBack_load",SECTIONS[GRID.section_active].offset,regenerate);
+	DEBUG.log("CALLBACK","CallBack_load",OFFSETS[GRID.section_active],regenerate);
 }
 
 window.GRID_CallBack_restaure = function(current_id)

@@ -8,7 +8,7 @@ const DEBUG = {
         ON: false,
 		FILEINFO: true,
         FILEMULTISELECTION: true,
-        CALLBACK: false,
+        CALLBACK: true,
 		DATAS: false,
 		UPLOAD: true,
 		EXPLORE: true,
