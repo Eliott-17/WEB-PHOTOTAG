@@ -170,15 +170,12 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/datas.php');
 						<div class="media"></div>
 					</section>
 					<section class="explore hidden"></section>
-					<section class="grid library nodate hidden"></section>
 					<section class="grid library date hidden"></section>
 					<div id="uploaddrag">
 						<span id="uploadmedia" class="untagged hidden">Drag & drop here to add files</span>
 						<span id="uploadjson" class="untagged hidden">Google Photo supplemental-metadata.json</span>
 					</div>
-					<section class="grid untagged nodate hidden"></section>
 					<section class="grid untagged date hidden"></section>
-					<section class="grid search nodate hidden"></section>
 					<section class="grid search date hidden"></section>
 				</main>
 

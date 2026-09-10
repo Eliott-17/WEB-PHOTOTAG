@@ -4,12 +4,12 @@ const DEBUG = {
 
     modules: {
         GRID: true,
-        DISPLAY: true,
-        ON: true,
+        DISPLAY: false,
+        ON: false,
 		FILEINFO: true,
         FILEMULTISELECTION: true,
-        CALLBACK: true,
-		DATAS: true,
+        CALLBACK: false,
+		DATAS: false,
 		UPLOAD: true,
 		EXPLORE: true,
     },

@@ -11,6 +11,7 @@
 	$validation = new Validation();
 
 	$validation->addVerification('offset',		'int',	'offset',			0,100000			);	
+	$validation->addVerification('elements',	'int',	'elements',			0,100000			);	
 	$validation->addVerification('source',		'int',	'source',			0,1					);
 	$validation->Validate();
 	
@@ -29,10 +30,12 @@
 	if($_GET['source']==0) // tagged request
 	{		
 		$conditionaldata=tag_query();
+		$sort="DESC";
 	}
 	else //non tagged request
 	{			
 		$conditionaldata=untag_query();
+		$sort="DESC";
 	}
 	
 	$EasyPDO = new EasyPDO($_SESSION['DB']);
@@ -49,6 +52,7 @@
 	$EasyPDO->addFields('id');
 	
 	$EasyPDO->addConditionalData('offset',$_GET['offset']);
+	$EasyPDO->addConditionalData('elements',$_GET['elements']);
 
 	$array=$EasyPDO->select(
 	'photos',
@@ -58,10 +62,10 @@
 			'.$conditionaldata.'
 			THEN 0
 			ELSE 1
-		END ASC, time_taken_at_date DESC,
-				 time_taken_at_zone DESC,
-				 time_taken_at_time DESC
-		LIMIT '.GRID_ELEMENTS.' OFFSET:offset
+		END ASC, time_taken_at_date '.$sort.',
+				 time_taken_at_zone '.$sort.',
+				 time_taken_at_time '.$sort.'
+		LIMIT :elements OFFSET:offset
 	');
 	
 	if($array['status']===true) 
@@ -93,7 +97,7 @@
 	//}
 	
 
-	if(ENV=="DEV") $fReturn->addConsole("[PHP EXECUTED] file-load-list.php");
+	//if(ENV=="DEV") $fReturn->addConsole("[PHP EXECUTED] file-load-list.php");
 	$fReturn->addCallBack("GRID_CallBack_load", $bigarray)->fetch();
 
 ?>

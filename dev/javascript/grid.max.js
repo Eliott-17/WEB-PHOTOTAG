@@ -11,7 +11,8 @@ let GRID = {
 	max_elements:0,
 	changed:false,
 	lock:{element_locked:false,ux_user_request:false,ux_user_answer:null},
-	hashes:[]
+	hashes:[],
+	configelements:20
 }
 	
 //****************************************************************
@@ -19,25 +20,32 @@ let GRID = {
 //****************************************************************	
 
 let SECTIONS = {
-    library:	{update:true,offset:0,memdata:null,countmem:null},
-    untagged: 	{update:true,offset:0,memdata:null,countmem:null},
-    search: 	{update:true,offset:0,memdata:null,countmem:null,taglist:0},
+    library:	{update:true,offset:0,elements:GRID.configelements,memdata:null,countmem:null},
+    untagged: 	{update:true,offset:0,elements:GRID.configelements,memdata:null,countmem:null},
+    search: 	{update:true,offset:0,elements:GRID.configelements,memdata:null,countmem:null,taglist:0},
     explore: 	{update:true} //chargé à l'init
 };
 
-let scroll_lock = false;	//Chargement progressif: FLAG qui limite l'action scroll quand on est en train de charger la grille
+let OFFSETS = {
+    library:	{down:0,up:0,deleted:0,padding:0,fillbottom:true},
+    untagged: 	{down:0,up:0,deleted:0,padding:0,fillbottom:true},
+    search: 	{down:0,up:0,deleted:0,padding:0,fillbottom:true}
+};
+
+let scroll_lock_down = false;	//Chargement progressif: FLAG qui limite l'action scroll quand on est en train de charger la grille
+let scroll_lock_down_down = false;
 let last_select=-1;		//mémorise le dernier uniqueid sélectioné
+
+let windowheight =  $('body').height();
 
 $(document).ready(function(){
 
 	//****************************************************************
-	//Scroll progressif, chargement des élments 50/50 ****************
+	//Scroll progressif, chargement des éléments *********************
 	//****************************************************************	
 
 	$('main').on('scroll', function() {
 		
-		if (scroll_lock || SECTIONS[GRID.section_active].offset==-1) return;
-
 		scroll_refresh();
 		
 	});
@@ -210,44 +218,180 @@ $(document).ready(function(){
 		}		
 	});
 	
-	/*$('nav').on('click.lockconfirm', 'div#lock-request span#lock_confirm', function() {
-		
-		GRID.lock.ux_user_answer=true;
-		
-		$('main section.'+GRID.section_active+' div.element div.media-container').each(function () {
-			
-			$(this).find('img').attr('src', 'sd-'+$(this).attr('data-src'));			
-		});
-		
-		DISPLAY_menu($('div#lock-request'),false);		
-	});*/
-	
-	/*$('nav').on('click.lockcancel', 'div#lock-request span#lock_cancel', function() {
-
-		GRID.lock.ux_user_answer=false;		
-		
-		DISPLAY_menu($('div#lock-request'),false);
-	});*/
 });
+
+let srollMem=0;
 
 function scroll_refresh()
 {
-	let scrollTop = $('main').scrollTop();
 	let windowHeight = $('main').height();
-	let docHeight = $('section.date.'+GRID.section_active).height()+$('section.nodate.'+GRID.section_active).height();
+	let scrollTop = $('main').scrollTop();
+	let docHeight = $('section.date.'+GRID.section_active).height()+5;
+
+	if(scrollTop > srollMem && !scroll_lock_down) //scroll down
+	{
+		GRID_add_element_bottom(scrollTop+windowHeight);
+	}
+	if(scrollTop < srollMem && !scroll_lock_up) //scroll down
+	{	
+		GRID_add_element_top(scrollTop);
+	}
 	
-	let remaining = docHeight - (scrollTop + windowHeight);
+	//console.log($('main').height(),$('main').scrollTop(),$('section.date.'+GRID.section_active).height()+5);
 	
-	// déclenche quand il reste 25%
-	if (remaining < docHeight * 0.25) {
-		if(remaining>=0)
+	srollMem=scrollTop;
+}
+
+function GRID_add_element_top(loffset)
+{	
+	if(loffset>(225*3)) 
+	{
+		if($('main').scrollTop()<(($('section.date.'+GRID.section_active).height()+5)-(225*10))) //on supprime si on à 20 ligne en bas du scroll (200 éléments en mémoire) à tester 5 lignes
 		{
-			scroll_lock=true;
+			let i=0;
+			
+			$($('main section.' + GRID.section_active + ' > div').get().reverse()).each(function() {
+				
+				$(this).addClass("toremove");
+				
+				if($(this).hasClass("element")) i++;
+				
+				if(i>=20) return false;
+
+			});
+			
+			OFFSETS[GRID.section_active].up-=i;					
+
+			$('main section.' + GRID.section_active + ' > div').each(function() 
+			{
+
+				if($(this).hasClass("toremove"))
+				{
+					$(this).remove();
+				}
+			});
+			
+			scroll_lock_down=false; //release
+			DEBUG.log("GRID","delete request from autofill page bottom");
+		}
+		else
+		{
+			DEBUG.log("GRID","scrolling up no action");
+		}
+	}
+	else
+	{
+		if(OFFSETS[GRID.section_active].deleted>0)
+		{		
+			let elementstoload = OFFSETS[GRID.section_active].deleted-GRID.configelements;
+			
+			OFFSETS[GRID.section_active].fillbottom=false;		
+			
+			if(elementstoload<0)
+			{
+				SECTIONS[GRID.section_active].offset=0;
+				SECTIONS[GRID.section_active].elements=OFFSETS[GRID.section_active].deleted;				
+			}
+			else
+			{
+				SECTIONS[GRID.section_active].offset=elementstoload;
+				SECTIONS[GRID.section_active].elements=GRID.configelements;
+			}
+			
+			OFFSETS[GRID.section_active].deleted-=SECTIONS[GRID.section_active].elements;
+			
 			SECTIONS[GRID.section_active].update=true;
-			SECTIONS[GRID.section_active].offset+=APP.griddisplay;
-			DEBUG.log("GRID","update request from SCROLL");
+			
+			console.log(OFFSETS[GRID.section_active],SECTIONS[GRID.section_active]);
+			
+			DEBUG.log("GRID","update request from autofill page top");
 			GRID_load("scroll");
 		}
+		else
+		{
+			scroll_lock_up=false;//block
+		}
+	}
+}
+
+function GRID_add_element_bottom(loffset)
+{		
+	let positionlast  = $('main section.'+GRID.section_active+' div.element').last()[0].offsetTop;
+
+	if(positionlast>=(loffset+(225*3))) //3 ligne préchargées
+	{		
+		if($('main').scrollTop()>(225*10)) //on supprime si on à 20 ligne en haut du scroll (200 éléments en mémoire) à tester 5 lignes
+		{
+			let element_to_delete = GRID.configelements+OFFSETS[GRID.section_active].padding;
+			let last_line_index=0;
+			
+			if(element_to_delete!=0)
+			{
+				OFFSETS[GRID.section_active].padding=0;
+				
+				//mark to remove
+
+				$('main section.' + GRID.section_active + ' > div').each(function() {
+					
+					$(this).addClass("toremove");
+					
+					if($(this).hasClass("element")) 
+					{
+						last_line_index = this.offsetTop;
+						element_to_delete--;
+					}
+					
+					if(element_to_delete<=0) return false;
+
+				});
+				
+				//remove element ro remove on the last line to keep full line
+				
+				$('main section.' + GRID.section_active + ' div.element').each(function() {
+
+					if(this.offsetTop==last_line_index && $(this).hasClass("toremove"))
+					{
+						$(this).removeClass("toremove");
+						OFFSETS[GRID.section_active].padding++;
+
+					}
+
+				});
+
+				//effective removal
+				
+				$('main section.' + GRID.section_active + ' > div').each(function() {
+
+					if($(this).hasClass("toremove"))
+					{
+						$(this).remove();
+					}
+				});
+				
+				OFFSETS[GRID.section_active].deleted+=(GRID.configelements-OFFSETS[GRID.section_active].padding);
+
+				scroll_lock_up=false; //release
+				DEBUG.log("GRID","delete request from autofill page bottom");
+				
+				GRID_load_id();
+			}
+		}
+		else
+		{
+			DEBUG.log("GRID","scrolling down no action");
+		}
+	}
+	else
+	{
+		OFFSETS[GRID.section_active].up+=GRID.configelements;
+		OFFSETS[GRID.section_active].fillbottom=true;		
+
+		SECTIONS[GRID.section_active].offset=OFFSETS[GRID.section_active].up;
+		SECTIONS[GRID.section_active].elements=GRID.configelements;	
+		
+		SECTIONS[GRID.section_active].update=true;
+		DEBUG.log("GRID","update request from autofill page bottom");
+		GRID_load("scroll");
 	}
 }
 
@@ -316,7 +460,8 @@ function GRID_load(from)
 	
 	if(SECTIONS[GRID.section_active].update==true)
 	{
-		scroll_lock=true;
+		scroll_lock_down=true;
+		scroll_lock_up=true;	
 		
 		DEBUG.log("GRID",GRID.section_active,"update request");
 		
@@ -326,13 +471,13 @@ function GRID_load(from)
 		{
 			case "library":
 			
-				CORE_get('/actions/file-load-list.php?source=0&offset='+SECTIONS[GRID.section_active].offset);
-
+				CORE_get('/actions/file-load-list.php?source=0&elements='+SECTIONS[GRID.section_active].elements+'&offset='+SECTIONS[GRID.section_active].offset);
+				
 			break;
 			case "untagged":
 			
-				CORE_get('/actions/file-load-list.php?source=1&offset='+SECTIONS[GRID.section_active].offset);
-			
+				CORE_get('/actions/file-load-list.php?source=1&elements='+SECTIONS[GRID.section_active].elements+'&offset='+SECTIONS[GRID.section_active].offset);
+				
 			break;
 			case "search":
 			
@@ -442,12 +587,10 @@ window.GRID_CallBack_load = function(data_array)
 		
 		GRID.lock.element_locked=false;
 		
-		if(SECTIONS[GRID.section_active].offset<=0) $("main section."+GRID.section_active).html('');
+		if(SECTIONS[GRID.section_active].offset<=0 &&OFFSETS[GRID.section_active].fillbottom) $("main section."+GRID.section_active).html('');
 
-		OBJ_Dest_nodate = $("main section.nodate."+GRID.section_active);
-		OBJ_Dest_date = $("main section.date."+GRID.section_active);
-		OBJ_Select_both = $("main section.grid");
-		
+		let OBJ_Dest_date = "";//$("main section.date."+GRID.section_active);
+
 		source=data_array.datas;
 			
 		let j=0; //because i is not reliable (in case of skip)
@@ -463,35 +606,32 @@ window.GRID_CallBack_load = function(data_array)
 					return; //skip to the next element
 				}
 			}
+											
+			let l_date_test = bdd.time_taken_at_date;
+
+			let l_date_display = l_date_test.substring(6,8) + "/" + l_date_test.substring(4,6) + "/" + l_date_test.substring(0,4);	
 			
-			if(bdd.time_taken_at_date=="00000000" &&  bdd.time_taken_at_zone=="00000" && bdd.time_taken_at_time=="000000")
+			if(SECTIONS[GRID.section_active].memdata==null || SECTIONS[GRID.section_active].memdata!=l_date_test)
 			{
-				//si on à pas de date
-				if(OBJ_Dest_nodate.html()=='') OBJ_Dest_nodate.append('<div class="fullrow"><h2>Undated</h2></div>');
-				OBJ_Dest_nodate.append(addElement(data_array.dir, bdd));
-			}
-			else
-			{										
-				let l_date_test = bdd.time_taken_at_date;
+				let htmldate="";
 
-				let l_date_display = l_date_test.substring(6,8) + "/" + l_date_test.substring(4,6) + "/" + l_date_test.substring(0,4);	
-				
-				if(SECTIONS[GRID.section_active].memdata==null || SECTIONS[GRID.section_active].memdata!=l_date_test)
-				{
-					OBJ_Dest_date.append('<div class="fullrow"><h2>'+formatDateLocale(l_date_display)+'</h2></div>'); //on démarre une nouvelle grille
-				}
+				if(l_date_display=="00/00/0000")  	htmldate="Undated";
+				else 								htmldate=formatDateLocale(l_date_display);
 
-				OBJ_Dest_date.append(addElement(data_array.dir, bdd));
-								
-				SECTIONS[GRID.section_active].memdata=l_date_test;
+				OBJ_Dest_date+=('<div class="fullrow"><h2>'+htmldate+'</h2></div>'); //on démarre une nouvelle grille
 			}
-			
+
+			OBJ_Dest_date+=(addElement(data_array.dir, bdd));
+							
+			SECTIONS[GRID.section_active].memdata=l_date_test;
+
 			j++;
 		});
-			
-		if(max_display<APP.griddisplay) SECTIONS[GRID.section_active].offset=-1; //bloquage du scroll
-		
-		GRID.max_elements = GRID_load_id();
+
+		if(OFFSETS[GRID.section_active].fillbottom) $("main section.date."+GRID.section_active).append(OBJ_Dest_date);
+		else 										$("main section.date."+GRID.section_active).prepend(OBJ_Dest_date);
+
+		GRID_load_id();
 
 		DISPLAY_selection();	
 
@@ -499,14 +639,47 @@ window.GRID_CallBack_load = function(data_array)
 		{
 			GRID.lock.ux_user_request=true;
 			$('div#privacy').removeClass('hidden');
-			/*DISPLAY_menu($('div#lock-request'),true);*/
 		}
-	}
 
-	$('main section div.element.is_tagged').removeClass('is_tagged');
-	$('main section div.element.is_not_tagged').removeClass('is_not_tagged');
+		$('main section div.element.is_tagged').removeClass('is_tagged');
+		$('main section div.element.is_not_tagged').removeClass('is_not_tagged');
 		
-	scroll_lock=false;
+		//fill the grid with empty space
+	
+		if(j>=GRID.configelements) 
+		{
+			if(OFFSETS[GRID.section_active].fillbottom) 
+			{
+				GRID_add_element_bottom($('main').height());
+				
+			}
+			else 										
+			{
+				GRID_add_element_top($('main').scrollTop());
+					
+			}
+			
+			scroll_lock_down=false;
+			scroll_lock_up=false;	
+		}
+		else
+		{
+			if(OFFSETS[GRID.section_active].fillbottom) 
+			{
+				OFFSETS[GRID.section_active].up-=GRID.configelements;
+				OFFSETS[GRID.section_active].up+=j;
+				
+				scroll_lock_up=false;
+			}
+			else 										
+			{
+				scroll_lock_down=false;		
+			}
+		}
+		
+		console.log(SECTIONS[GRID.section_active].offset,scroll_lock_down);
+		
+	}
 
 	DEBUG.log("CALLBACK","CallBack_load",SECTIONS[GRID.section_active].offset,regenerate);
 }
@@ -526,10 +699,20 @@ function GRID_load_id()
 {
 	let id=0;
 
-	$('main section.' + GRID.section_active+' div.element').each(function () {
-		$(this).attr('id', GRID.section_active+'_'+id);
-		id++;
+	$('main section.' + GRID.section_active+' div').each(function () {
+
+		if($(this).hasClass("element"))
+		{
+			$(this).attr('id', GRID.section_active+'_'+id);
+			id++;
+		}
+		else
+		{
+			$(this).attr('id', "date"+GRID.section_active+'_'+id);
+		}
 	});
+	
+	GRID.max_elements = (id-1);
 	
 	return (id-1);
 	
