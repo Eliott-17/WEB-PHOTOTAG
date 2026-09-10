@@ -6,7 +6,7 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/datas.php');
 
 ?>
 <!DOCTYPE html>
-<html data-env="<?php echo ENV; ?>" data-griddisplay="<?php echo GRID_ELEMENTS; ?>" data-user="<?php echo $_SESSION["USER"]; ?>">
+<html data-env="<?php echo ENV; ?>" data-griddisplay="<?php echo GRID_ELEMENTS; ?>" data-user="<?php if(is_session_valid()) echo $_SESSION["USER"]; ?>">
 	<!-- BEGIN HEAD -->
 	<head>
 		<meta http-equiv="content-type" content="text/html;charset=UTF-8" />

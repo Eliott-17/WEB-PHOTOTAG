@@ -45,13 +45,13 @@ $(document).ready(function(){
 		
 		let fsid=$('section#fullscreen div.media').attr('data-id');
 		
-		GRID.changed=true;
+		//GRID.changed=true;
 		//$('div#media_'+fsid).parent().addClass('memselected');
 		
 		DISPLAY_set_view("grid");
 		DISPLAY_menu($('#flush-trash'), false);
-		GRID_load("click.gridSelect");
-		$('main').scrollTop(GRID.scroll_mem);		
+		//GRID_load("click.gridSelect");
+		//$('main').scrollTop(GRID.scroll_mem);		
 	});
 
 	$('section#fullscreen').on('click.gridLeftAR', 'div.button-leftarrow', function() { Arrow(0); });			
