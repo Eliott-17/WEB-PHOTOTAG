@@ -218,7 +218,7 @@ function uploadMetadata(files, token)
     chain.then(() => {
         if (errorCount === 0) {
 			DISPLAY_menu($('div#upload-status'),false);
-			NAV_open_untagg(true); // Recharge la liste des fichiers
+			GRID_reset("Upload","UPLOAD"); // Recharge la liste des fichiers
         } else {
             $('#upload-status').append(
                 `<div id="errorgeneral" class="text">
@@ -360,7 +360,7 @@ function uploadMedia(files, token) {
             bar.html('100%');
         }
 		lock=false;
-        NAV_open_untagg(true); // Recharge la liste des fichiers
+        GRID_reset("Upload","UPLOAD"); // Recharge la liste des fichiers
     });
 }
 

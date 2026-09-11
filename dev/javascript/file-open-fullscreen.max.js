@@ -51,7 +51,7 @@ $(document).ready(function(){
 		DISPLAY_set_view("grid");
 		DISPLAY_menu($('#flush-trash'), false);
 		//GRID_load("click.gridSelect");
-		//$('main').scrollTop(GRID.scroll_mem);		
+		
 	});
 
 	$('section#fullscreen').on('click.gridLeftAR', 'div.button-leftarrow', function() { Arrow(0); });			
@@ -143,7 +143,7 @@ var FILEOPENFULLSCREEN_Loadmedia = function LoadMedia(id)
 	
 	$('section#fullscreen div.media img').off("error.imgfullscreen");
 	$('section#fullscreen div.media img').on("error.imgfullscreen", function (e) {
-		console.log(e);
+		console.log("Error",e);
 	});
 		
 	if(file_type == 0) $('section#fullscreen div.media').html('<img src="hd-'+file_hash+'" loading="lazy">');

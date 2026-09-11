@@ -317,7 +317,7 @@ window.FILEMULTISELECTION_CallBack_trash = function()
 		$("#media_"+element).parent().remove();
 
 	});
-	
+
 	FILEOPENFULLSCREEN_FlushHashes();
 	GRID_reset("FILEMULTISELECTION_CallBack_trash","SEARCH");
 	DISPLAY_set_view('grid');

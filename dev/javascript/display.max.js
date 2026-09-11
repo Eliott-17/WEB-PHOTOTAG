@@ -95,10 +95,12 @@ var DISPLAY_section = function section(section)
 		$('div#mainmenu').removeClass('hidden');
 		$('div#searchmenu').addClass('hidden');
 	}
-	
-	GRID_load("DISPLAY_section");//en affichant une section on s'assure de charger les données.
 		
-	DEBUG.log("DISPLAY","section",'section.'+GRID.section_active);
+	GRID_load("DISPLAY_section");//en affichant une section on s'assure de charger les données.
+	
+	$('main').scrollTop(SECTIONS[GRID.section_active].scrolls_mem); 
+		
+	DEBUG.log("DISPLAY","section",'section.'+GRID.section_active,SECTIONS[GRID.section_active].scrolls_mem);
 }
 
 //****************************************************************
@@ -161,19 +163,18 @@ var DISPLAY_is_visible_full_screen = function is_visible_full_screen()
 	return !$('main section#fullscreen').hasClass('hidden');
 }
 
+let DISPLAY_first_element_position_mem=null;
+
 var DISPLAY_full_screen = function display_full_screen(visibility = undefined)
 {
-	//let lelement1=$('div#mainmenu');
-	//let lelement2=$('div#searchmenu');
-	
 	if(visibility==true) 		
 	{ 
+		GRID_suspend_scroll = true;
+		
 		$('main section.'+GRID.section_active).addClass('hidden');
 		$('main section#fullscreen').removeClass('hidden');
 		DEBUG.log("DISPLAY","full_screen: openned (show)");
 		$('nav#main').addClass('hidden');
-		//lelement1.addClass('hidden');
-		//lelement2.addClass('hidden');
 		return; 
 	}
 	
@@ -182,7 +183,12 @@ var DISPLAY_full_screen = function display_full_screen(visibility = undefined)
 		$('main section.'+GRID.section_active).removeClass('hidden');
 		$('main section#fullscreen').addClass('hidden');
 		$('nav#main').removeClass('hidden');
-			
+
+		requestAnimationFrame(function() {
+			GRID_suspend_scroll = false;
+			$('main').scrollTop(SECTIONS[GRID.section_active].scrolls_mem); 
+		});
+	
 		DEBUG.log("DISPLAY","full_screen: closed (hide)");		
 		return; 
 		
@@ -313,10 +319,6 @@ var DISPLAY_selection = function selection(id_current=null,refreshfullscreen=fal
 	//****************************************************************
 	//Affiche le menu si on sélectionne deux photos ou plus **********
 	//****************************************************************
-	
-	/*let selected_ids = $('.element.selected').map(function() {
-		return this.id;
-	}).get();*/
 	
 	let loaded_files=GRID.hashes.length;
 

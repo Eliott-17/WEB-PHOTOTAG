@@ -60,7 +60,7 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/datas.php');
 						<div><button class="advanced-filters"><span class="material-symbols-outlined">filter_arrow_right</span>&nbsp;<span id="filterapply"></span></button></div>
 						<div><button class="advanced-filters"><span class="material-symbols-outlined">equal</span>&nbsp;<span id="search_count"></span></button></div>
 						<div class="search"><button class="search"><span class="material-symbols-outlined">search</span>&nbsp;<span>quick search</span></button><input type="text" list="fastsearch" autocomplete="off"/></div>
-						<div class="last"><button class="logout"><span class="material-symbols-outlined">logout</span>&nbsp;<span>Logout</span></button><</div>
+						<div class="last"><button class="logout"><span class="material-symbols-outlined">logout</span>&nbsp;<span>Logout</span></button></div>
 					</div>
 				<?php
 			}

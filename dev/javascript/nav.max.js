@@ -57,13 +57,13 @@ $(document).ready(function(){
 		}
 	});
 
-	$('div#mainmenu div button.library').on('click', 	function() { if(!$(this).hasClass('selected')) { nav_tab_change(); DISPLAY_section('library'); } });	
-	$('div#mainmenu div button.explore').on('click', 	function() { if(!$(this).hasClass('selected')) { nav_tab_change(); DISPLAY_section('explore'); } });	
-	$('div#mainmenu div button.untagged').on('click', 	function() { if(!$(this).hasClass('selected')) NAV_open_untagg(); });
+	$('div#mainmenu div button.library').on('click', 	function() { if(!$(this).hasClass('selected')) { nav_tab_change(); DISPLAY_section('library');  } });	
+	$('div#mainmenu div button.explore').on('click', 	function() { if(!$(this).hasClass('selected')) { nav_tab_change(); DISPLAY_section('explore');  } });	
+	$('div#mainmenu div button.untagged').on('click', 	function() { if(!$(this).hasClass('selected')) { nav_tab_change(); DISPLAY_section('untagged'); } });
 
 	$('div#searchmenu div button.return-explore').on('click', 	function() {
 
-		$('main').scrollTop(0);
+		//$('main').scrollTop(0); DEBUG.log("Scroll reset button.return-explore");
 		FILEMULTISELECTION_unselectall();
 		DISPLAY_set_view('grid');
 		DISPLAY_section(GRID.section_mem);
@@ -179,18 +179,10 @@ $(document).ready(function(){
 
 function nav_tab_change()
 {
-	$('main').scrollTop(0);	
 	$('main div.element').removeClass('selected');
 	$('main div.element').addClass('notselected');
 
 	DISPLAY_set_view('grid');
-}
-
-window.NAV_open_untagg = function(force_reload=false)
-{
-	if(force_reload) GRID_reset("NAV_open_untagg","UPLOAD");
-	nav_tab_change();
-	DISPLAY_section('untagged');
 }
 
 window.NAV_CallBack_error = function(message)
