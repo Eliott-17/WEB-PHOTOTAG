@@ -76,7 +76,7 @@ function Arrow(sens)
 	}
 }
 
-function Select()
+function Select() //FULLSCREEN
 {
 	if(!DISPLAY_is_visible_full_screen()) return;
 	
@@ -89,15 +89,23 @@ function Select()
 	if(GRID.hashes.includes(media_id)) 		GRID.hashes = GRID.hashes.filter(h => h !== media_id);
 	else 									GRID.hashes.push(media_id);
 
+	$('input.filesid').val(JSON.stringify(GRID.hashes));
+
 	//***********************************************
 	//END - Mise à jour de la sélection
 	//***********************************************
-	
+
 	DISPLAY_selection(FILEOPENFULLSCREEN.id_current);		
 
 	if(!DISPLAY_is_visible_file_info() || DISPLAY_is_visible_full_screen()) return;
 					
 	FILEMULTISELECTION_CallBack_load(); //mettre à jour la sélection si on affiche le multifile sans full screen
+}
+
+var FILEOPENFULLSCREEN_FlushHashes= function FlushHashes()
+{
+	$('input.filesid').val("[]");
+	GRID.hashes=[];
 }
 
 function ArrowDisplay(current_id, max_id)

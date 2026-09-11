@@ -12,7 +12,7 @@ let GRID = {
 	changed:false,
 	lock:{element_locked:false,ux_user_request:false,ux_user_answer:null},
 	hashes:[],
-	configelements:20
+	configelements:40
 }
 	
 //****************************************************************
@@ -29,11 +29,13 @@ let SECTIONS = {
 let OFFSETS = {
     library:	{added:GRID.configelements,deleted:0,fillbottom:true},
     untagged: 	{added:GRID.configelements,deleted:0,fillbottom:true},
-    search: 	{added:GRID.configelements,deleted:0,fillbottom:true}
+    search: 	{added:GRID.configelements,deleted:0,fillbottom:true},
+    explore: 	{added:GRID.configelements,deleted:0,fillbottom:true}
 };
 
 let scroll_lock_down = false;	//Chargement progressif: FLAG qui limite l'action scroll quand on est en train de charger la grille
 let scroll_lock_up = false;
+let maxelementmemory=300;
 
 let last_select=-1;		//mémorise le dernier uniqueid sélectioné
 
@@ -129,11 +131,7 @@ $(document).ready(function(){
 			}
 		}
 		else
-		{
-			//***********************************************
-			//Mise à jour de la sélection
-			//***********************************************
-			
+		{			
 			let media_id = parseInt($('div#'+GRID.section_active+'_'+current_id+' div.media-container').attr('data-id'));
 
 			if(GRID.hashes.includes(media_id)) 		
@@ -146,12 +144,9 @@ $(document).ready(function(){
 				GRID.hashes.push(media_id);
 				DEBUG.log("GRID", "element added to selection");
 			}
-
-
-			//***********************************************
-			//END - Mise à jour de la sélection
-			//***********************************************
 		}
+		
+		$('input.filesid').val(JSON.stringify(GRID.hashes));
 
 		//****************************************************************
 		//Action à effectué après la sélection effective *****************
@@ -219,41 +214,6 @@ $(document).ready(function(){
 	
 });
 
-
-let maxelementmemory=300;
-
-/*
-let srollMem=0;
-
-function scroll_refresh(from)
-{
-	let WINDOWS_VIEW = $('main').height();
-	let WINDOWS_TOP =  $('main').scrollTop();
-	let WINDOWS_LOADED = $('section.date.'+GRID.section_active).height();
-	let WINDOWS_BOTTOM = WINDOWS_LOADED-(WINDOWS_VIEW+WINDOWS_TOP);
-	
-	if(WINDOWS_TOP >= srollMem && !scroll_lock_down) //scroll down
-	{
-		console.log("SROLL DOWN");
-		
-		if(WINDOWS_BOTTOM < (225*12))
-		{
-			GRID_add_element_bottom();
-		}
-	}
-	if(WINDOWS_TOP < srollMem && !scroll_lock_up) //scroll up
-	{	
-		console.log("SROLL UP");
-		
-		if(WINDOWS_TOP < (225*12))
-		{
-			GRID_add_element_top();	
-		}
-	}
-	srollMem=WINDOWS_TOP;
-}
-*/
-
 //ANTI LOOP BACK by CLAUDE
 
 function scroll_refresh()
@@ -264,23 +224,33 @@ function scroll_refresh()
 
 function check_bottom()
 {
-	if(scroll_lock_down) return;
+	if(scroll_lock_down) 
+	{
+		DEBUG.log("SCROLL","check bottom sroll locked");
+		return;
+	}
 
 	let WINDOWS_VIEW = $('main').height();
 	let WINDOWS_TOP =  $('main').scrollTop();
 	let WINDOWS_LOADED = $('section.date.'+GRID.section_active).height();
 	let WINDOWS_BOTTOM = WINDOWS_LOADED-(WINDOWS_VIEW+WINDOWS_TOP);
 
-	if(WINDOWS_BOTTOM < (225*12)) GRID_add_element_bottom();
+	if(WINDOWS_BOTTOM < (225*12))  GRID_add_element_bottom();
+	else DEBUG.log("SCROLL","check_bottom()",WINDOWS_BOTTOM,"<",(225*12));
 }
 
 function check_top()
 {
-	if(scroll_lock_up) return;
+	if(scroll_lock_up) 
+	{
+		DEBUG.log("SCROLL","check top sroll locked");
+		return;
+	}
 
 	let WINDOWS_TOP =  $('main').scrollTop();
 
 	if(WINDOWS_TOP < (225*12)) GRID_add_element_top();
+	else DEBUG.log("SCROLL","check_top()",WINDOWS_TOP,"<",(225*12));
 }
 
 function GRID_add_element_top()
@@ -310,6 +280,7 @@ function GRID_add_element_top()
 
 		if(OFFSETS[GRID.section_active].added>maxelementmemory) GRID_del_element_bottom();		
 	}
+	else DEBUG.log("SCROLL","GRID_add_element_top()",OFFSETS[GRID.section_active].deleted,">0");
 
 }
 
@@ -343,9 +314,8 @@ function GRID_del_element_bottom()
 			$(this).remove();
 		}
 	});
-
-	//console.log(OFFSETS[GRID.section_active]);	
-	DEBUG.log("GRID",OFFSETS[GRID.section_active].deleted,"deleted from bottom");
+	
+	DEBUG.log("SCROLL",OFFSETS[GRID.section_active].deleted,"deleted from bottom");
 }
 
 function GRID_add_element_bottom()
@@ -362,12 +332,12 @@ function GRID_add_element_bottom()
 				
 		SECTIONS[GRID.section_active].update=true;
 		GRID_load("scroll");
-
-		//console.log(OFFSETS[GRID.section_active]);		
+		
 		DEBUG.log("GRID",GRID.configelements, "added to bottom");
 		
 		if(OFFSETS[GRID.section_active].added>maxelementmemory) GRID_del_element_top();
 	}
+	else DEBUG.log("SCROLL","GRID_add_element_bottom()","(",OFFSETS[GRID.section_active].added,"+",GRID.configelements,")<",SECTIONS[GRID.section_active].countmem);
 }
 	
 function GRID_del_element_top()	
@@ -399,69 +369,63 @@ function GRID_del_element_top()
 		}
 	});
 	
-	//console.log(OFFSETS[GRID.section_active]);
 	DEBUG.log("GRID",OFFSETS[GRID.section_active].deleted,"deleted from TOP");
 }
 
 function GRID_reset(from,source,searchoption=null)
 {
-	offset_reset=false;
-
-	if(source=="FILES")
+	let found=false;
+	
+	if(source=="FILES" || source=="RESTAURETRASH")
 	{
-		DEBUG.log("GRID","REQUEST UPDATE library");
-		DEBUG.log("GRID","REQUEST UPDATE explore");
-		
-		SECTIONS["library"].memdata=null;	
-		SECTIONS["library"].update=true;	
-
-		SECTIONS["explore"].update=true;
-		
-		offset_reset=true;
+		GRID_system_reset("library", from);
+		found=true;
 	}
 	
-	if(source=="UPLOAD" || source=="FILES")
+	if(source=="FILES")
 	{
-		DEBUG.log("GRID","REQUEST UPDATE untagged");
-		
-		SECTIONS["untagged"].memdata=null;
-		SECTIONS["untagged"].update=true;
-
-		offset_reset=true;
+		GRID_system_reset("explore", from);	
+		found=true;		
+	}
+	
+	if(source=="UPLOAD" || source=="FILES" || source=="RESTAURETRASH")
+	{
+		GRID_system_reset("untagged", from);	
+		found=true;	
 	}
 
 	if(source=="SEARCH" || source=="FILES")
 	{
-		DEBUG.log("GRID","REQUEST UPDATE search");
-		
-		SECTIONS["search"].memdata=null;	
-		SECTIONS["search"].update=true;	
+		GRID_system_reset("search", from);
 		
 		if(searchoption!=null)
 		{
-			$('main').scrollTop(0);
 			SECTIONS["search"].taglist=searchoption;
 		}
 		
-		offset_reset=true;
+		found=true;	
+
 	}
 	
-	if(SECTIONS[GRID.section_active].offset!=undefined)
-	{
-		if(offset_reset) 
-		{
-			if(SECTIONS[GRID.section_active].offset!=0)
-			{
-				GRID.offset_mem=SECTIONS[GRID.section_active].offset;
-			}
-			
-			SECTIONS[GRID.section_active].offset=0;
-			$("main section."+GRID.section_active).html('');
-			DEBUG.log("GRID","offset reset. Mem:",GRID.offset_mem);
-		}
-	}
+	if(!found) DEBUG.log("GRID","Reset",section_active,"NOT FOUND",from);
+}
+
+function GRID_system_reset(section_active, from)
+{
+	DEBUG.log("GRID","Reset",section_active,"request from",from);
 	
-	DEBUG.log("GRID","Reset request from",from);
+	$("main section."+section_active).html('');	
+	
+	if(!$("main section."+section_active).hasClass("hiddden")) $('main').scrollTop(0);
+	
+	SECTIONS[section_active].update=true;
+	
+	SECTIONS[section_active].offset=0;
+	SECTIONS[section_active].elements=GRID.configelements;
+	
+	OFFSETS[section_active].added=GRID.configelements;
+	OFFSETS[section_active].deleted=0;
+	OFFSETS[section_active].fillbottom=true;
 }
 
 function GRID_load(from)
@@ -531,7 +495,7 @@ window.GRID_CallBack_load = function(data_array)
 		{
 			let count = data_array.count.total;
 
-			$('span#'+GRID.section_active+'_count').html(' ('+count+')');
+			$('span#'+GRID.section_active+'_count').html(count);
 			
 			localStorage.setItem(APP.userhash+'_'+GRID.section_active+'_count', count);
 			
@@ -552,7 +516,7 @@ window.GRID_CallBack_load = function(data_array)
 						$('main section.'+GRID.section_active+' div.element.is_tagged').remove();
 						
 						SECTIONS['library'].countmem+=removedcount;
-						$('span#library_count').html(' ('+SECTIONS['library'].countmem+')');
+						$('span#library_count').html(SECTIONS['library'].countmem);
 						
 						localStorage.setItem(APP.userhash+'_library_count', SECTIONS['library'].countmem);
 					}
@@ -651,12 +615,15 @@ window.GRID_CallBack_load = function(data_array)
 		//scroll_refresh(true);
 		
 		// ne continue QUE dans le sens du chargement qui vient d'avoir lieu
+		
+		DEBUG.log("CALLBACK","CallBack_load","Will add element on",GRID.section_active);
+		
 		if(OFFSETS[GRID.section_active].fillbottom) check_bottom();
 		else check_top();
 
 	}
 
-	DEBUG.log("CALLBACK","CallBack_load",OFFSETS[GRID.section_active],regenerate);
+	DEBUG.log("CALLBACK","CallBack_load",OFFSETS[GRID.section_active]);
 }
 
 window.GRID_CallBack_restaure = function(current_id)
@@ -667,7 +634,7 @@ window.GRID_CallBack_restaure = function(current_id)
 	count--;
 	$('nav#main span#filterresult').html(count);
 	
-	GRID_reset("","FILES");
+	GRID_reset("GRID_CallBack_restaure","RESTAURETRASH");
 }
 
 let displayed_date=[];

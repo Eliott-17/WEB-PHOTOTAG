@@ -49,16 +49,16 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/datas.php');
 							<button class="nothover"><span class="material-symbols-outlined">visibility_lock</span></button>
 							<button class="hover"><span class="material-symbols-outlined">visibility</span></button>
 						</div>
-						<div><button class="library"><span class="material-symbols-outlined">photo</span>&nbsp;<span>Timeline</span><span id="library_count"></span></button></div>
+						<div><button class="library"><span class="material-symbols-outlined">photo</span>&nbsp;<span>Timeline</span> (<span id="library_count"></span>)</button></div>
 						<div><button class="explore"><span class="material-symbols-outlined">explore</span>&nbsp;<span>Explore</span></button></div>
-						<div><button class="untagged"><span class="material-symbols-outlined">new_label</span>&nbsp;<span>Untagged</span><span id="untagged_count"></span></button></div>
+						<div><button class="untagged"><span class="material-symbols-outlined">new_label</span>&nbsp;<span>Untagged</span> (<span id="untagged_count"></span>)</button></div>
 						<div class="search"><button class="search"><span class="material-symbols-outlined">search</span>&nbsp;<span>quick search</span></button><input type="text" list="fastsearch" autocomplete="off"/></div>
 						<div class="last"><button class="logout"><span class="material-symbols-outlined">logout</span>&nbsp;<span>Logout</span></button></div>
 					</div>
 					<div id="searchmenu" class="ux-background hidden mainmenu">				
 						<div><button class="return-explore"><span class="material-symbols-outlined">arrow_back</span>&nbsp;<span>Return</span></button></div>
 						<div><button class="advanced-filters"><span class="material-symbols-outlined">filter_arrow_right</span>&nbsp;<span id="filterapply"></span></button></div>
-						<div><button class="advanced-filters"><span class="material-symbols-outlined">equal</span>&nbsp;<span id="filterresult"></span></button></div>
+						<div><button class="advanced-filters"><span class="material-symbols-outlined">equal</span>&nbsp;<span id="search_count"></span></button></div>
 						<div class="search"><button class="search"><span class="material-symbols-outlined">search</span>&nbsp;<span>quick search</span></button><input type="text" list="fastsearch" autocomplete="off"/></div>
 						<div class="last"><button class="logout"><span class="material-symbols-outlined">logout</span>&nbsp;<span>Logout</span></button><</div>
 					</div>
@@ -243,7 +243,7 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/datas.php');
 				<aside id="infocontent" class="ux-background">
 					<form method="post" id="fileinfopost" action="/actions/file-selection-load-tags.php" class="post">
 						<input type="hidden" name="token" class="token" value=""/>
-						<input type="hidden" name="files_hash" class="filesid" value=""/>
+						<input type="hidden" name="filesid" class="filesid" value=""/>
 					</form>
 					<h2 id="file_type"><span class="material-symbols-outlined"></span><span class="title"></span></h2>
 					<h3 id="file_hd_error" class="margin hidden"><span>Can't display HD media</span></h3>
@@ -420,7 +420,7 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/datas.php');
 				</form>
 				<form method="post" id="filetrash" action="actions/file-delete.php" class="post">
 					<input type="hidden" name="token" class="token" value=""/>
-					<input type="hidden" name="files_hash" class="filesid" value=""/>
+					<input type="hidden" name="filesid" class="filesid" value=""/>
 				</form>
 			<?php
 			}

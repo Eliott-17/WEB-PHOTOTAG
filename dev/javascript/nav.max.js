@@ -50,7 +50,7 @@ $(document).ready(function(){
 				else
 				{
 					$('#filterapply').html("No result");
-					$('main section.grid.date.search').html('');
+					$('main section.search').html('');
 					DISPLAY_section("search");
 				}
 			}

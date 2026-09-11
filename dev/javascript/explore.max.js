@@ -64,12 +64,12 @@ function EXPLORE_post_search(tag,val,exclude)
 
 window.EXPLORE_CallBack_search = function(datas) 
 {
-	let s="";
-	if(datas.count>1) s="s";
+	//let s="";
+	//if(datas.count>1) s="s";
 
 	$('nav#main span#filterapply').html(datas.tagname+': '+datas.keywordsname);	
-	$('nav#main span#filterresult').html(datas.count+ ' element'+s);
-
+	//$('nav#main span#filterresult').html(datas.count+ ' element'+s);
+	
 	EXPLORE_search_tags=datas.tags; //stock le résultat de la recherche
 	EXPLORE_checkbox_loaded=false;
 	

@@ -91,7 +91,7 @@
 
 				if($array_cnt['status']===true) 
 				{
-					$bigarray['count']=$array_cnt['datas'][0]['total'];
+					$bigarray['count']=$array_cnt['datas'][0];
 				}
 				else
 				{

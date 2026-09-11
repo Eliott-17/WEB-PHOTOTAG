@@ -65,6 +65,8 @@ window.FILTERS_CallBack_search = function(datas)
 	if(datas.count>1) s="s";
 	
 	$('nav span#filterresult').html(datas.count+ ' element'+s);
+	
+	SECTIONS[GRID.section_active].countmem=datas.count;
 
 	let element_check_callback=false;		
 
@@ -177,9 +179,11 @@ var FILTERS_checkbox_post = function checkbox_post(is_checked=null)
 window.FILTERS_CallBack_trash = function(count)
 {
 	$('nav#main span#filterapply').html('TRASH');	
-	$('nav#main span#filterresult').html(count);
+	//$('nav#main span#filterresult').html(count);
 	
 	if(count>0) DISPLAY_menu($('#flush-trash'), true);
+	
+	DEBUG.log("CALLBACK","FILTERS_CallBack_trash");
 }
 
 window.FILTERS_CallBack_flush = function()
@@ -188,5 +192,7 @@ window.FILTERS_CallBack_flush = function()
 	$('section.search').html('');
 	
 	DISPLAY_menu($('#flush-trash'), false);
+	
+	DEBUG.log("CALLBACK","FILTERS_CallBack_flush");
 	
 }

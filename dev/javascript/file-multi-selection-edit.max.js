@@ -20,8 +20,8 @@ $(document).ready(function(){
 	
 	$('nav').on('click', 'div#select-trash span#delete_cancel', function() 	{
 	
+		FILEMULTISELECTION_unselectall();
 		DISPLAY_trash(false);
-		DISPLAY_selection();
 	});
 
 	$('nav').on('click.flushconfirm', 'div#flush-trash span#flush_confirm', function() {
@@ -38,58 +38,23 @@ $(document).ready(function(){
 		
 		DEBUG.log("ON",'click.deleteconfirm');
 		
-		var hash_array=[];
-
-		$('main section.'+GRID.section_active+' div.element').each(function () 
-		{ 
-			if($(this).hasClass('delete')) 
-			{ 
-				$(this).remove();
-		
-				let id=parseInt($(this).find("div.media-container").attr('data-id'));
-
-				hash_array.push(id);
-			}
-		});
-		
-		hash_array = hash_array.map(Number);
-		
-		//si la tableu est vide, on recherche une sélection en plain écran
-		
-		if(hash_array.length==0)
-		{
-			let id=$('section#fullscreen div.media').attr('data-id');
-			
-			$('#media_'+id).parent().remove();
-			
-			hash_array.push(id);
-		}
-		
-		//si la tableau est toujours vide, la sélection n'existe plus
-		
-		DISPLAY_trash(false);
-
-		if(hash_array.length==0)
+		if(GRID.hashes.length==0)
 		{
 			NAV_CallBack_error("Fatal internal error");
-			console.error("Error trash selection"); //ce message n'est jamais censé arrivé
+			console.error("Error trash selection");
 			return;
 		}
-				
-		$('input.filesid').val(JSON.stringify(hash_array));
+						
+		//MISE A JOUT DU NOMBRE DE FICHIERS
 
-		const match = $('span#'+GRID.section_active+'_count').html().match(/\((\d+)\)/);
+		const match = $('span#'+GRID.section_active+'_count').html();
 
-		if(match) 
-		{
-			let value = parseInt(match[1], 10);
+		let value = parseInt(match[1], 10);
 
-			value-=hash_array.length;	
+		value-=GRID.hashes.length;	
 			
-			$('span#'+GRID.section_active+'_count').html(' ('+value+')');
-		}	
-		
-		scroll_refresh();
+		$('span#'+GRID.section_active+'_count').html(value);
+			
 		
 		DISPLAY_menu($('div#loading'),true); 
 		
@@ -143,9 +108,10 @@ $(document).ready(function(){
 var FILEMULTISELECTION_unselectall = function unselect_all()
 {
 	$('main div.element').removeClass('selected');
+	$('main div.element').removeClass('delete');
 	$('main div.element').addClass('notselected');
 	
-	GRID.hashes = [];
+	FILEOPENFULLSCREEN_FlushHashes();
 	
 	GRID_load("FILEMULTISELECTION_unselectall"); //recharger la grille si on à changer des photos
 }
@@ -164,9 +130,7 @@ var FILEMULTISELECTION_CallBack_load = function load(force_reload=false)
 		DEBUG.log("FILEMULTISELECTION",'NO data update, require two files selected');
 	}
 	else if(FILEMULTIPLESELECTION_mem!==hashes_json || force_reload) 
-	{		
-		$('input.filesid').val(hashes_json);
-			
+	{			
 		FILEMULTIPLESELECTION_mem=hashes_json;
 		FILEINFO_mem=null; //forcer le rechargement des data en sélection simple
 
@@ -348,6 +312,14 @@ var FILEMULTISELECTION_reset_ux = function reset_ux(obj, data)
 
 window.FILEMULTISELECTION_CallBack_trash = function()
 {
+	GRID.hashes.forEach(function (element) {
+		
+		$("#media_"+element).parent().remove();
+
+	});
+	
+	FILEOPENFULLSCREEN_FlushHashes();
+	GRID_reset("FILEMULTISELECTION_CallBack_trash","SEARCH");
 	DISPLAY_set_view('grid');
 	GRID_load_id();
 	DISPLAY_menu($('div#loading'),false); 

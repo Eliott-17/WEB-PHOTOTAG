@@ -31,14 +31,14 @@ $(document).ready(function()
 
 	if(mem!==null && mem!=="")
 	{
-		$('span#library_count').html(' ('+mem+')');
+		$('span#library_count').html(mem);
 	}
 
 	mem = localStorage.getItem(APP.userhash+'_untagged_count');
 
 	if(mem!==null && mem!=="")
 	{
-		$('span#untagged_count').html(' ('+mem+')');
+		$('span#untagged_count').html(mem);
 	}
 		
 	DISPLAY_set_view("grid");

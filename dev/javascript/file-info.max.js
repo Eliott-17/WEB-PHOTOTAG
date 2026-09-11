@@ -49,6 +49,10 @@ $(document).ready(function(){
 
 	$('aside#infocontent h4.button-trash').on('click.trashInfo', function() {
 		
+		let media_id = parseInt($('div#'+GRID.section_active+'_'+FILEOPENFULLSCREEN.id_current+' div.media-container').attr('data-id'));
+
+		if(!GRID.hashes.includes(media_id)) GRID.hashes.push(media_id);
+		
 		DEBUG.log("ON",'click.trashInfo');
 		
 		DISPLAY_menu($('#select-trash'), true);

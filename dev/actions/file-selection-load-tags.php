@@ -11,7 +11,7 @@
 	$validation = new Validation();
 
 	$validation->addVerification('token',		'sha256',	'Token');	
-	$validation->addVerification('files_hash',	'jsonArrayString',	'Hash');
+	$validation->addVerification('filesid',	'jsonArrayString',	'Hash');
 	$validation->Validate();
 
 	if(!$validation->isValidated())
@@ -21,7 +21,7 @@
 		$fReturn->fetch();
 	}
 	
-	$ids = json_decode($_POST['files_hash'], true); // true pour obtenir un tableau associatif
+	$ids = json_decode($_POST['filesid'], true); // true pour obtenir un tableau associatif
 	
 	if(json_last_error() === JSON_ERROR_NONE)
 	{
@@ -157,7 +157,7 @@
 	else
 	{
 		$fReturn->addCallback("NAV_CallBack_error","Data request error");
-		if(ENV=="DEV") $fReturn->addConsole($_POST['files_hash']);	
+		if(ENV=="DEV") $fReturn->addConsole($_POST['filesid']);	
 		$fReturn->fetch();
 	}
 ?>

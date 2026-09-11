@@ -204,13 +204,10 @@ main section.grid div.element div.button-fullscreen.video {
 
 main section.grid div.element div.button-fullscreen span.material-symbols-outlined {
   font-size: 15px;
-  background-color: #00000008;
-  border-radius: 25px;
 }
 
 main section.grid div.element div.button-select span.material-symbols-outlined {
   font-size: 25px;
-  background-color: #00000008;
   border-radius: 25px;
 }
 
@@ -226,6 +223,8 @@ main section.grid div.element span {
   transition: opacity 0.3s ease;
   color: rgba(255, 255, 255, 0.90);
   position: absolute;
+  background-color: #00000008;
+  border-radius: 25px;
 }
 
 main section.grid div.selected 
