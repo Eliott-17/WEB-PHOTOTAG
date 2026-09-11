@@ -242,8 +242,6 @@ function check_bottom()
 
 	if(WINDOWS_BOTTOM < (225*12))  GRID_add_element_bottom();
 	else DEBUG.log("SCROLL","check_bottom()",WINDOWS_BOTTOM,"<",(225*12));
-	
-	console.log("store scroll",WINDOWS_TOP,$('main section.' + GRID.section_active + ' > div').first().position().top);
 }
 
 function check_top()

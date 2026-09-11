@@ -181,7 +181,7 @@ window.FILTERS_CallBack_trash = function(count)
 	$('nav#main span#filterapply').html('TRASH');	
 	//$('nav#main span#filterresult').html(count);
 	
-	if(count>0) DISPLAY_menu($('#flush-trash'), true);
+	if(count.total>0) DISPLAY_menu($('#flush-trash'), true);
 	
 	DEBUG.log("CALLBACK","FILTERS_CallBack_trash");
 }
