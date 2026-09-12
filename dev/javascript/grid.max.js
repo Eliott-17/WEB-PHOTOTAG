@@ -19,10 +19,10 @@ let GRID_SECTIONS = {
 };
 
 let GRID_OFFSETS = {
-    library:	{addedBOTTOM:0,addedTOP:0,fillbottom:true,dates_mem:[]},
-    untagged: 	{addedBOTTOM:0,addedTOP:0,fillbottom:true,dates_mem:[]},
-    search: 	{addedBOTTOM:0,addedTOP:0,fillbottom:true,dates_mem:[]},
-    explore: 	{addedBOTTOM:0,addedTOP:0,fillbottom:true,dates_mem:[]}
+    library:	{addedBOTTOM:0,addedTOP:0,fillbottom:true},
+    untagged: 	{addedBOTTOM:0,addedTOP:0,fillbottom:true},
+    search: 	{addedBOTTOM:0,addedTOP:0,fillbottom:true},
+    explore: 	{addedBOTTOM:0,addedTOP:0,fillbottom:true}
 };
 
 let GRID_DATAS = {
@@ -56,7 +56,6 @@ function GRID_system_reset(section_to_reset, from)
 	GRID_OFFSETS[section_to_reset].addedBOTTOM=0;
 	GRID_OFFSETS[section_to_reset].addedTOP=0;
 	GRID_OFFSETS[section_to_reset].fillbottom=true;
-	GRID_OFFSETS[section_to_reset].dates_mem=[];
 
 	GRID_DATAS[section_to_reset].selection=[];
 	GRID_DATAS[section_to_reset].loaded=[];	
@@ -241,9 +240,6 @@ function scroll_refresh()
 {
 	if($('main section.'+GRID.section_active).hasClass('hidden') || GRID_scroll_locked) return;
 
-	//scroll_bottom();
-	//scroll_top();
-	
 	scroll_execute(true);
 	scroll_execute(false);
 }
@@ -277,12 +273,12 @@ function scroll_execute(sens) //bottom = true, top = false;
 	{
 		//AJOUT DE 20 PHOTOS SUPPLEMENTAIRES
 
-		if(	(((GRID_OFFSETS[GRID.section_active].addedBOTTOM+GRID.configelements)<GRID_SECTIONS[GRID.section_active].countmem) && sens) ||
+		if(	((GRID_OFFSETS[GRID.section_active].addedBOTTOM<GRID_SECTIONS[GRID.section_active].countmem) && sens) ||
 			((GRID_OFFSETS[GRID.section_active].addedTOP<0) && !sens))
 		{
 			GRID_OFFSETS[GRID.section_active].fillbottom=sens;	
 
-			if(sens) 	GRID_SECTIONS[GRID.section_active].offset =(GRID_OFFSETS[GRID.section_active].addedBOTTOM+GRID.configelements); //request
+			if(sens) 	GRID_SECTIONS[GRID.section_active].offset = GRID_OFFSETS[GRID.section_active].addedBOTTOM; //request
 			else		GRID_SECTIONS[GRID.section_active].offset=Math.abs(GRID_OFFSETS[GRID.section_active].addedTOP+GRID.configelements); //request
 			
 			GRID_SECTIONS[GRID.section_active].elements=GRID.configelements;	
@@ -315,17 +311,7 @@ function scroll_execute(sens) //bottom = true, top = false;
 				
 				$('main section.' + GRID.section_active + ' > div').each(function() 
 				{
-					if($(this).hasClass("toremove"))
-					{
-						let date = $(this).find('h2').html();
-						
-						if(sens || ($(this).hasClass("fullrow") && !sens))
-						{
-							GRID_OFFSETS[GRID.section_active].dates_mem = GRID_OFFSETS[GRID.section_active].dates_mem.filter(item => item !== date);
-						}
-						
-						$(this).remove();
-					}
+					if($(this).hasClass("toremove")) $(this).remove();
 				});
 				
 				DEBUG.log("GRID",GRID_OFFSETS[GRID.section_active].addedBOTTOM,GRID_OFFSETS[GRID.section_active].addedTOP,"deleted from",senschar);
@@ -333,144 +319,8 @@ function scroll_execute(sens) //bottom = true, top = false;
 		}
 		else DEBUG.log("SCROLL","nothing added to",senschar);
 	}
-	//else DEBUG.log("SCROLL","scroll_execute",senschar,"nothing to add");
-}
-/*
-function scroll_bottom()
-{
-	if(scroll_locked_down) 
-	{
-		DEBUG.log("SCROLL","check bottom sroll locked");
-		return;
-	}
-	
-	GRID_SECTIONS[GRID.section_active].scrolls_mem = $('main').scrollTop();
-
-	let WINDOWS_VIEW = $('main').height();
-	let WINDOWS_TOP = GRID_SECTIONS[GRID.section_active].scrolls_mem;
-	let WINDOWS_LOADED = $('section.date.'+GRID.section_active).height();
-	let WINDOWS_BOTTOM = WINDOWS_LOADED-(WINDOWS_VIEW+WINDOWS_TOP);
-
-	if(WINDOWS_BOTTOM < (225*12))
-	{
-		//AJOUT DE 20 PHOTOS SUPPLEMENTAIRES au bottom
-
-		if((GRID_OFFSETS[GRID.section_active].addedBOTTOM+GRID.configelements)<GRID_SECTIONS[GRID.section_active].countmem)
-		{
-			GRID_OFFSETS[GRID.section_active].fillbottom=true;	
-			
-			GRID_SECTIONS[GRID.section_active].offset=(GRID_OFFSETS[GRID.section_active].addedBOTTOM+GRID.configelements); //request
-			GRID_SECTIONS[GRID.section_active].elements=GRID.configelements;	
-			GRID_SECTIONS[GRID.section_active].update=true;
-			GRID_load("scroll");
-			
-			DEBUG.log("GRID",GRID.configelements, "added to bottom");
-			
-			//SUPRESSION DE 20 PHOTOS DU top
-			
-			if(GRID_OFFSETS[GRID.section_active].addedBOTTOM>maxelementmemory)
-			{
-				let i=GRID.configelements;
-				
-				GRID_OFFSETS[GRID.section_active].addedTOP-=i;
-
-				$($('main section.' + GRID.section_active + ' > div')).each(function() {
-					
-					$(this).addClass("toremove");
-					
-					if($(this).hasClass("element")) i--;
-					
-					if(i<=0) return false;
-
-				});
-				
-				$('main section.' + GRID.section_active + ' > div').each(function() 
-				{
-					if($(this).hasClass("toremove"))
-					{
-						let date = $(this).find('h2').html();	
-						GRID_OFFSETS[GRID.section_active].dates_mem = GRID_OFFSETS[GRID.section_active].dates_mem.filter(item => item !== date);
-						
-						$(this).remove();
-					}
-				});
-				
-				DEBUG.log("GRID",GRID_OFFSETS[GRID.section_active].addedTOP,"deleted from TOP");
-			}
-		}
-		else DEBUG.log("SCROLL","nothing added to bottom","(",GRID_OFFSETS[GRID.section_active].addedBOTTOM,"+",GRID.configelements,")<",GRID_SECTIONS[GRID.section_active].countmem);
-	}
-	else DEBUG.log("SCROLL","scroll_bottom()",WINDOWS_BOTTOM,"<",(225*12));
 }
 
-function scroll_top()
-{
-	if(scroll_locked_up) 
-	{
-		DEBUG.log("SCROLL","check top sroll locked");
-		return;
-	}
-
-	GRID_SECTIONS[GRID.section_active].scrolls_mem = $('main').scrollTop();
-
-	let WINDOWS_TOP = GRID_SECTIONS[GRID.section_active].scrolls_mem;
-
-	if(WINDOWS_TOP < (225*12)) 
-	{
-		//AJOUT DE 20 PHOTOS SUPPLEMENTAIRES au top
-		
-		if(GRID_OFFSETS[GRID.section_active].addedTOP<0)
-		{	
-			GRID_OFFSETS[GRID.section_active].fillbottom=false;		
-
-			GRID_SECTIONS[GRID.section_active].offset=Math.abs(GRID_OFFSETS[GRID.section_active].addedTOP+GRID.configelements);
-			GRID_SECTIONS[GRID.section_active].elements=GRID.configelements;	
-			GRID_SECTIONS[GRID.section_active].update=true;
-		
-			GRID_load("scroll");
-			
-			DEBUG.log("GRID",GRID.configelements, "added to top");
-			
-			//SUPRESSION DE 20 PHOTOS DU bottom
-
-			if(GRID_OFFSETS[GRID.section_active].addedBOTTOM>maxelementmemory)
-			{
-
-				let i=GRID.configelements;
-				
-				GRID_OFFSETS[GRID.section_active].addedBOTTOM-=i;
-
-				$($('main section.' + GRID.section_active + ' > div').get().reverse()).each(function() {
-
-					$(this).addClass("toremove");
-					
-					if($(this).hasClass("element")) i--;
-					
-					if(i<=0) return false;
-
-				});
-				
-				$('main section.' + GRID.section_active + ' > div').each(function() 
-				{
-					if($(this).hasClass("toremove"))
-					{
-						if($(this).hasClass("fullrow"))
-						{
-							let date = $(this).find('h2').html();	
-							GRID_OFFSETS[GRID.section_active].dates_mem = GRID_OFFSETS[GRID.section_active].dates_mem.filter(item => item !== date);
-						}
-						$(this).remove();
-					}
-				});
-				
-				DEBUG.log("SCROLL",GRID_OFFSETS[GRID.section_active].addedBOTTOM,"deleted from bottom");
-			}		
-		}
-		else DEBUG.log("SCROLL","nothing added to top",GRID_OFFSETS[GRID.section_active].addedTOP,">0");		
-	}
-	else DEBUG.log("SCROLL","scroll_top()",WINDOWS_TOP,"<",(225*12));
-}
-*/
 //*******************************************************************
 //chagement et reset de la grille ***********************************
 //*******************************************************************	
@@ -728,28 +578,28 @@ window.GRID_CallBack_restaure = function(current_id)
 function GRID_load_id(date)
 {
 	let id=0;
+	let prevDate=null;
+
+	$('main section.' + GRID.section_active+' div.fullrow').remove();
 
 	$('main section.' + GRID.section_active+' div.element').each(function () {
 
 		$(this).attr('id', GRID.section_active+'_'+id);
 		
-		let date=$(this).attr('data-date');
+		let currentDate=$(this).attr('data-date');
 
-		if(!GRID_OFFSETS[GRID.section_active].dates_mem.includes(date)) 
+		if(currentDate!==prevDate) 
 		{
-			$(this).before('<div class="fullrow"><h2>'+date+'</h2></div>'); //on démarre une nouvelle grille
-			GRID_OFFSETS[GRID.section_active].dates_mem.push(date);
+			$(this).before('<div class="fullrow"><h2>'+currentDate+'</h2></div>');
 		}		
 	
+		prevDate=currentDate;
 		id++;
-
 	});
 	
 	GRID.max_elements = (id-1);
 	
 	return (id-1);
-	
-	DEBUG.log("GRID","load_id");
 }
 
 function addElement(dir, bdd, date)
