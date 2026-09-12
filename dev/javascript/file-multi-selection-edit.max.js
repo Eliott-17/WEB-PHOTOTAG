@@ -38,7 +38,7 @@ $(document).ready(function(){
 		
 		DEBUG.log("ON",'click.deleteconfirm');
 		
-		if(GRID.hashes.length==0)
+		if(GRID_DATAS[GRID.section_active].selection.length==0)
 		{
 			NAV_CallBack_error("Fatal internal error");
 			console.error("Error trash selection");
@@ -51,7 +51,7 @@ $(document).ready(function(){
 
 		let value = parseInt(match[1], 10);
 
-		value-=GRID.hashes.length;	
+		value-=GRID_DATAS[GRID.section_active].selection.length;	
 			
 		$('span#'+GRID.section_active+'_count').html(value);
 			
@@ -120,9 +120,9 @@ var hash_array;
 
 var FILEMULTISELECTION_CallBack_load = function load(force_reload=false)
 {
-	const hashes_json = JSON.stringify(GRID.hashes);
+	const hashes_json = JSON.stringify(GRID_DATAS[GRID.section_active].selection);
 		
-	if(GRID.hashes.length<=1)
+	if(GRID_DATAS[GRID.section_active].selection.length<=1)
 	{
 		DISPLAY_loading(false);
 		DISPLAY_file_info(true);
@@ -312,7 +312,7 @@ var FILEMULTISELECTION_reset_ux = function reset_ux(obj, data)
 
 window.FILEMULTISELECTION_CallBack_trash = function()
 {
-	GRID.hashes.forEach(function (element) {
+	GRID_DATAS[GRID.section_active].selection.forEach(function (element) {
 		
 		$("#media_"+element).parent().remove();
 

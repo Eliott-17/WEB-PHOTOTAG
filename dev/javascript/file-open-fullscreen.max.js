@@ -86,10 +86,10 @@ function Select() //FULLSCREEN
 	
 	let media_id = parseInt($('div#'+GRID.section_active+'_'+FILEOPENFULLSCREEN.id_current+' div.media-container').attr('data-id'));
 
-	if(GRID.hashes.includes(media_id)) 		GRID.hashes = GRID.hashes.filter(h => h !== media_id);
-	else 									GRID.hashes.push(media_id);
+	if(GRID_DATAS[GRID.section_active].selection.includes(media_id)) 		GRID_DATAS[GRID.section_active].selection = GRID_DATAS[GRID.section_active].selection.filter(h => h !== media_id);
+	else 									GRID_DATAS[GRID.section_active].selection.push(media_id);
 
-	$('input.filesid').val(JSON.stringify(GRID.hashes));
+	$('input.filesid').val(JSON.stringify(GRID_DATAS[GRID.section_active].selection));
 
 	//***********************************************
 	//END - Mise à jour de la sélection
@@ -105,7 +105,7 @@ function Select() //FULLSCREEN
 var FILEOPENFULLSCREEN_FlushHashes= function FlushHashes()
 {
 	$('input.filesid').val("[]");
-	GRID.hashes=[];
+	GRID_DATAS[GRID.section_active].selection=[];
 }
 
 function ArrowDisplay(current_id, max_id)

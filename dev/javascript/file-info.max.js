@@ -51,7 +51,7 @@ $(document).ready(function(){
 		
 		let media_id = parseInt($('div#'+GRID.section_active+'_'+FILEOPENFULLSCREEN.id_current+' div.media-container').attr('data-id'));
 
-		if(!GRID.hashes.includes(media_id)) GRID.hashes.push(media_id);
+		if(!GRID_DATAS[GRID.section_active].selection.includes(media_id)) GRID_DATAS[GRID.section_active].selection.push(media_id);
 		
 		DEBUG.log("ON",'click.trashInfo');
 		
@@ -185,7 +185,7 @@ window.FILEINFO_CallBack_display = function(data)
 {	
 	DISPLAY_fileinfo_init();
 	
-	DEBUG.log("DATAS",data);
+	DEBUG.log("GRID_DATAS",data);
 	
 	let lform = data.lform;
 	let datas = data.info[0];

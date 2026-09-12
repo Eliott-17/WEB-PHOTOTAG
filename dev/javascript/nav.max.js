@@ -57,10 +57,19 @@ $(document).ready(function(){
 		}
 	});
 
-	$('div#mainmenu div button.library').on('click', 	function() { if(!$(this).hasClass('selected')) { nav_tab_change(); DISPLAY_section('library');  } });	
-	$('div#mainmenu div button.explore').on('click', 	function() { if(!$(this).hasClass('selected')) { nav_tab_change(); DISPLAY_section('explore');  } });	
-	$('div#mainmenu div button.untagged').on('click', 	function() { if(!$(this).hasClass('selected')) { nav_tab_change(); DISPLAY_section('untagged'); } });
+	$('div#mainmenu div button').on('click', function() {  
+	
+		if(!$(this).hasClass('selected'))
+		{
+			$('main div.element').removeClass('selected');
+			$('main div.element').addClass('notselected');
 
+			DISPLAY_section($(this).attr('data-section')); 
+
+			DISPLAY_set_view('grid');
+		}
+	});
+	
 	$('div#searchmenu div button.return-explore').on('click', 	function() {
 
 		//$('main').scrollTop(0); DEBUG.log("Scroll reset button.return-explore");
@@ -80,7 +89,7 @@ $(document).ready(function(){
 		}
 		else
 		{
-			DEBUG.log("DATAS",EXPLORE_search_tags);
+			DEBUG.log("GRID_DATAS",EXPLORE_search_tags);
 		
 			//---------------------
 			//LOOAD CHECKBOX ------
@@ -176,14 +185,6 @@ $(document).ready(function(){
 	});
 
 });
-
-function nav_tab_change()
-{
-	$('main div.element').removeClass('selected');
-	$('main div.element').addClass('notselected');
-
-	DISPLAY_set_view('grid');
-}
 
 window.NAV_CallBack_error = function(message)
 {

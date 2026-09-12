@@ -3,53 +3,72 @@
 //****************************************************************	
 
 let GRID = {
+	configelements:20, //nombre d'éléments à charger
 	section_active:"explore",
-	//section_active:"untagged",
 	section_mem:"",
-	offset_mem:null,
-	//scroll_mem:0,
 	max_elements:0,
 	changed:false,
-	lock:{element_locked:false,ux_user_request:false,ux_user_answer:null},
-	hashes:[],
-	configelements:20
+	lock:{element_locked:false,ux_user_request:false,ux_user_answer:null}
 }
 	
-//****************************************************************
-//Variables locales **********************************************
-//****************************************************************	
-
-let SECTIONS = {
+let GRID_SECTIONS = {
     library:	{update:true,offset:0,elements:GRID.configelements,countmem:null,scrolls_mem:null},
     untagged: 	{update:true,offset:0,elements:GRID.configelements,countmem:null,scrolls_mem:null},
     search: 	{update:true,offset:0,elements:GRID.configelements,countmem:null,scrolls_mem:null,taglist:0},
     explore: 	{update:true,scrolls_mem:null} //chargé à l'init
 };
 
-let OFFSETS = {
+let GRID_OFFSETS = {
     library:	{added:GRID.configelements,deleted:0,fillbottom:true,dates_mem:[]},
     untagged: 	{added:GRID.configelements,deleted:0,fillbottom:true,dates_mem:[]},
     search: 	{added:GRID.configelements,deleted:0,fillbottom:true,dates_mem:[]},
     explore: 	{added:GRID.configelements,deleted:0,fillbottom:true,dates_mem:[]}
 };
 
-let scroll_lock_down = false;	//Chargement progressif: FLAG qui limite l'action scroll quand on est en train de charger la grille
-let scroll_lock_up = false;
-let maxelementmemory=300;
+let GRID_DATAS = {
+    library:	{selection:[],loaded:[]},
+    untagged: 	{selection:[],loaded:[]},
+    search: 	{selection:[],loaded:[]},
+    explore: 	{selection:[],loaded:[]}
+};
 
-let last_select=-1;		//mémorise le dernier uniqueid sélectioné
+let GRID_scroll_locked = false;
+
+//****************************************************************
+//Variables locales **********************************************
+//****************************************************************	
+
+let scroll_locked_down = false;					//Chargement progressif: FLAG qui limite l'action scroll quand on est en train de charger la grille
+let scroll_locked_up = false;
+let maxelementmemory=GRID.configelements*15; 	//bon hysétésys
+let last_select=-1;								//mémorise le dernier uniqueid sélectioné
+
+function GRID_system_reset(section_to_reset, from)
+{	
+	$("main section."+section_to_reset).html('');
+	
+	GRID_SECTIONS[section_to_reset].update=true;
+	
+	GRID_SECTIONS[section_to_reset].offset=0;
+	GRID_SECTIONS[section_to_reset].elements=GRID.configelements;
+	GRID_SECTIONS[section_to_reset].scrolls_mem=null;
+	
+	GRID_OFFSETS[section_to_reset].added=GRID.configelements;
+	GRID_OFFSETS[section_to_reset].deleted=0;
+	GRID_OFFSETS[section_to_reset].fillbottom=true;
+	GRID_OFFSETS[section_to_reset].dates_mem=[];
+
+	GRID_DATAS[section_to_reset].selection=[];
+	GRID_DATAS[section_to_reset].loaded=[];	
+
+	if(section_to_reset==GRID.section_active) GRID_load("reset");
+	
+	DEBUG.log("GRID","Reset",section_to_reset,"request from",from);
+}
 
 $(document).ready(function(){
 
-	//****************************************************************
-	//Scroll progressif, chargement des éléments *********************
-	//****************************************************************	
-
-	$('main').on('scroll', function() {
-		
-		scroll_refresh(false);
-		
-	});
+	$('main').on('scroll', function() { scroll_refresh(false); });
 
 	$(document).on('keydown.fullscreen', function(e) {
 	 
@@ -92,6 +111,7 @@ $(document).ready(function(){
 		
 		CORE_get('/actions/file-restaure.php?hash='+hash+'&id='+current_id);	
 	});
+	
 	//****************************************************************
 	//Ajout du bouton de sélection d'une photo sur la grille *********
 	//****************************************************************	
@@ -113,7 +133,7 @@ $(document).ready(function(){
 					for(i=last_select;i<=current_id;i++) 
 					{
 						let media_id = parseInt($('div#'+GRID.section_active+'_'+i+' div.media-container').attr('data-id'));
-						if(!GRID.hashes.includes(media_id)) GRID.hashes.push(media_id);
+						if(!GRID_DATAS[GRID.section_active].selection.includes(media_id)) GRID_DATAS[GRID.section_active].selection.push(media_id);
 						$('div#'+GRID.section_active+'_'+i).addClass('selected');
 						$('div#'+GRID.section_active+'_'+i).removeClass('notselected');
 					}
@@ -123,7 +143,7 @@ $(document).ready(function(){
 					for(i=current_id;i<=last_select;i++) 
 					{
 						let media_id = parseInt($('div#'+GRID.section_active+'_'+i+' div.media-container').attr('data-id'));
-						if(!GRID.hashes.includes(media_id)) GRID.hashes.push(media_id);
+						if(!GRID_DATAS[GRID.section_active].selection.includes(media_id)) GRID_DATAS[GRID.section_active].selection.push(media_id);
 						$('div#'+GRID.section_active+'_'+i).addClass('selected');
 						$('div#'+GRID.section_active+'_'+i).removeClass('notselected');
 					}
@@ -134,19 +154,19 @@ $(document).ready(function(){
 		{			
 			let media_id = parseInt($('div#'+GRID.section_active+'_'+current_id+' div.media-container').attr('data-id'));
 
-			if(GRID.hashes.includes(media_id)) 		
+			if(GRID_DATAS[GRID.section_active].selection.includes(media_id)) 		
 			{
-				GRID.hashes = GRID.hashes.filter(h => h !== media_id);
+				GRID_DATAS[GRID.section_active].selection = GRID_DATAS[GRID.section_active].selection.filter(h => h !== media_id);
 				DEBUG.log("GRID", "element deleted from selection");
 			}
 			else 									
 			{
-				GRID.hashes.push(media_id);
+				GRID_DATAS[GRID.section_active].selection.push(media_id);
 				DEBUG.log("GRID", "element added to selection");
 			}
 		}
 		
-		$('input.filesid').val(JSON.stringify(GRID.hashes));
+		$('input.filesid').val(JSON.stringify(GRID_DATAS[GRID.section_active].selection));
 
 		//****************************************************************
 		//Action à effectué après la sélection effective *****************
@@ -213,171 +233,166 @@ $(document).ready(function(){
 	
 });
 
-//ANTI LOOP BACK by CLAUDE
-
-let GRID_suspend_scroll = false;
+//*******************************************************************
+//Fonction du scroll et chagement/déchargement progressif ***********
+//*******************************************************************	
 
 function scroll_refresh()
 {
-	if($('main section.'+GRID.section_active).hasClass('hidden') || GRID_suspend_scroll) return;
+	if($('main section.'+GRID.section_active).hasClass('hidden') || GRID_scroll_locked) return;
 
-	check_bottom();
-	check_top();
+	scroll_bottom();
+	scroll_top();
 }
 
-function check_bottom()
+function scroll_bottom()
 {
-	if(scroll_lock_down) 
+	if(scroll_locked_down) 
 	{
 		DEBUG.log("SCROLL","check bottom sroll locked");
 		return;
 	}
 	
-	SECTIONS[GRID.section_active].scrolls_mem = $('main').scrollTop();
+	GRID_SECTIONS[GRID.section_active].scrolls_mem = $('main').scrollTop();
 
 	let WINDOWS_VIEW = $('main').height();
-	let WINDOWS_TOP =  SECTIONS[GRID.section_active].scrolls_mem;
+	let WINDOWS_TOP =  GRID_SECTIONS[GRID.section_active].scrolls_mem;
 	let WINDOWS_LOADED = $('section.date.'+GRID.section_active).height();
 	let WINDOWS_BOTTOM = WINDOWS_LOADED-(WINDOWS_VIEW+WINDOWS_TOP);
 
-	if(WINDOWS_BOTTOM < (225*12))  GRID_add_element_bottom();
-	else DEBUG.log("SCROLL","check_bottom()",WINDOWS_BOTTOM,"<",(225*12));
+	if(WINDOWS_BOTTOM < (225*12))
+	{
+		//AJOUT DE 20 PHOTOS SUPPLEMENTAIRES au bottom
+
+		if((GRID_OFFSETS[GRID.section_active].added+GRID.configelements)<GRID_SECTIONS[GRID.section_active].countmem)
+		{
+			GRID_OFFSETS[GRID.section_active].added+=GRID.configelements;
+			GRID_OFFSETS[GRID.section_active].fillbottom=true;	
+			
+			GRID_SECTIONS[GRID.section_active].offset=GRID_OFFSETS[GRID.section_active].added;
+			GRID_SECTIONS[GRID.section_active].elements=GRID.configelements;	
+					
+			GRID_SECTIONS[GRID.section_active].update=true;
+			GRID_load("scroll");
+			
+			DEBUG.log("GRID",GRID.configelements, "added to bottom");
+			
+			//SUPRESSION DE 20 PHOTOS DU top
+			
+			if(GRID_OFFSETS[GRID.section_active].added>maxelementmemory)
+			{
+				let i=GRID.configelements;
+				
+				GRID_OFFSETS[GRID.section_active].deleted+=i;
+
+				$($('main section.' + GRID.section_active + ' > div')).each(function() {
+					
+					$(this).addClass("toremove");
+					
+					if($(this).hasClass("element")) i--;
+					
+					if(i<=0) return false;
+
+				});
+				
+				$('main section.' + GRID.section_active + ' > div').each(function() 
+				{
+					if($(this).hasClass("toremove"))
+					{
+						let date = $(this).find('h2').html();	
+						GRID_OFFSETS[GRID.section_active].dates_mem = GRID_OFFSETS[GRID.section_active].dates_mem.filter(item => item !== date);
+						
+						$(this).remove();
+					}
+				});
+				
+				DEBUG.log("GRID",GRID_OFFSETS[GRID.section_active].deleted,"deleted from TOP");
+			}
+		}
+		else DEBUG.log("SCROLL","nothing added to bottom","(",GRID_OFFSETS[GRID.section_active].added,"+",GRID.configelements,")<",GRID_SECTIONS[GRID.section_active].countmem);
+	}
+	else DEBUG.log("SCROLL","scroll_bottom()",WINDOWS_BOTTOM,"<",(225*12));
 }
 
-function check_top()
+function scroll_top()
 {
-	if(scroll_lock_up) 
+	if(scroll_locked_up) 
 	{
 		DEBUG.log("SCROLL","check top sroll locked");
 		return;
 	}
 
-	SECTIONS[GRID.section_active].scrolls_mem = $('main').scrollTop();
+	GRID_SECTIONS[GRID.section_active].scrolls_mem = $('main').scrollTop();
 
-	let WINDOWS_TOP = SECTIONS[GRID.section_active].scrolls_mem;
+	let WINDOWS_TOP = GRID_SECTIONS[GRID.section_active].scrolls_mem;
 
-	if(WINDOWS_TOP < (225*12)) GRID_add_element_top();
-	else DEBUG.log("SCROLL","check_top()",WINDOWS_TOP,"<",(225*12));
-}
-
-function GRID_add_element_top()
-{
-	//AJOUT DE 20 PHOTOS SUPPLEMENTAIRES au top
-	
-	if(OFFSETS[GRID.section_active].deleted>0)
-	{	
-		OFFSETS[GRID.section_active].deleted-=GRID.configelements;
-		OFFSETS[GRID.section_active].fillbottom=false;		
-
-		SECTIONS[GRID.section_active].offset=OFFSETS[GRID.section_active].deleted;
-		SECTIONS[GRID.section_active].elements=GRID.configelements;	
-		
-		if(SECTIONS[GRID.section_active].offset<0)
-		{
-			SECTIONS[GRID.section_active].offset=0;
-			SECTIONS[GRID.section_active].elements=OFFSETS[GRID.section_active].deleted;
-		}
-			
-		SECTIONS[GRID.section_active].update=true;
-	
-		GRID_load("scroll");
-		
-		//console.log(OFFSETS[GRID.section_active]);
-		DEBUG.log("GRID",GRID.configelements, "added to top");
-
-		if(OFFSETS[GRID.section_active].added>maxelementmemory) GRID_del_element_bottom();		
-	}
-	else DEBUG.log("SCROLL","GRID_add_element_top()",OFFSETS[GRID.section_active].deleted,">0");
-
-}
-
-function GRID_del_element_bottom()
-{
-	//SUPRESSION DE 20 PHOTOS DU bottom
-
-	let i=GRID.configelements;
-	
-	OFFSETS[GRID.section_active].added-=i;
-
-	$($('main section.' + GRID.section_active + ' > div').get().reverse()).each(function() {
-		
-		$(this).addClass("toremove");
-		
-		if($(this).hasClass("element")) i--;
-		
-		if(i<=0) return false;
-
-	});
-	
-	$('main section.' + GRID.section_active + ' > div').each(function() 
+	if(WINDOWS_TOP < (225*12)) 
 	{
-		if($(this).hasClass("toremove"))
-		{
-			if($(this).hasClass("fullrow"))
+		//AJOUT DE 20 PHOTOS SUPPLEMENTAIRES au top
+		
+		if(GRID_OFFSETS[GRID.section_active].deleted>0)
+		{	
+			GRID_OFFSETS[GRID.section_active].deleted-=GRID.configelements;
+			GRID_OFFSETS[GRID.section_active].fillbottom=false;		
+
+			GRID_SECTIONS[GRID.section_active].offset=GRID_OFFSETS[GRID.section_active].deleted;
+			GRID_SECTIONS[GRID.section_active].elements=GRID.configelements;	
+			
+			if(GRID_SECTIONS[GRID.section_active].offset<0)
 			{
-				let date = $(this).find('h2').html();	
-				OFFSETS[GRID.section_active].dates_mem = OFFSETS[GRID.section_active].dates_mem.filter(item => item !== date);
+				GRID_SECTIONS[GRID.section_active].offset=0;
+				GRID_SECTIONS[GRID.section_active].elements=GRID_OFFSETS[GRID.section_active].deleted;
 			}
-			$(this).remove();
-		}
-	});
-	
-	DEBUG.log("SCROLL",OFFSETS[GRID.section_active].deleted,"deleted from bottom");
-}
-
-function GRID_add_element_bottom()
-{
-	//AJOUT DE 20 PHOTOS SUPPLEMENTAIRES au bottom
-
-	if((OFFSETS[GRID.section_active].added+GRID.configelements)<SECTIONS[GRID.section_active].countmem)
-	{
-		OFFSETS[GRID.section_active].added+=GRID.configelements;
-		OFFSETS[GRID.section_active].fillbottom=true;	
-		
-		SECTIONS[GRID.section_active].offset=OFFSETS[GRID.section_active].added;
-		SECTIONS[GRID.section_active].elements=GRID.configelements;	
 				
-		SECTIONS[GRID.section_active].update=true;
-		GRID_load("scroll");
+			GRID_SECTIONS[GRID.section_active].update=true;
 		
-		DEBUG.log("GRID",GRID.configelements, "added to bottom");
-		
-		if(OFFSETS[GRID.section_active].added>maxelementmemory) GRID_del_element_top();
-	}
-	else DEBUG.log("SCROLL","GRID_add_element_bottom()","(",OFFSETS[GRID.section_active].added,"+",GRID.configelements,")<",SECTIONS[GRID.section_active].countmem);
-}
-	
-function GRID_del_element_top()	
-{
-	//SUPRESSION DE 20 PHOTOS DU top
-
-	let i=GRID.configelements;
-	
-	OFFSETS[GRID.section_active].deleted+=i;
-
-	$($('main section.' + GRID.section_active + ' > div')).each(function() {
-		
-		$(this).addClass("toremove");
-		
-		if($(this).hasClass("element")) i--;
-		
-		if(i<=0) return false;
-
-	});
-	
-	$('main section.' + GRID.section_active + ' > div').each(function() 
-	{
-		if($(this).hasClass("toremove"))
-		{
-			let date = $(this).find('h2').html();	
-			OFFSETS[GRID.section_active].dates_mem = OFFSETS[GRID.section_active].dates_mem.filter(item => item !== date);
+			GRID_load("scroll");
 			
-			$(this).remove();
+			DEBUG.log("GRID",GRID.configelements, "added to top");
+			
+			//SUPRESSION DE 20 PHOTOS DU bottom
+
+			if(GRID_OFFSETS[GRID.section_active].added>maxelementmemory)
+			{
+
+				let i=GRID.configelements;
+				
+				GRID_OFFSETS[GRID.section_active].added-=i;
+
+				$($('main section.' + GRID.section_active + ' > div').get().reverse()).each(function() {
+					
+					$(this).addClass("toremove");
+					
+					if($(this).hasClass("element")) i--;
+					
+					if(i<=0) return false;
+
+				});
+				
+				$('main section.' + GRID.section_active + ' > div').each(function() 
+				{
+					if($(this).hasClass("toremove"))
+					{
+						if($(this).hasClass("fullrow"))
+						{
+							let date = $(this).find('h2').html();	
+							GRID_OFFSETS[GRID.section_active].dates_mem = GRID_OFFSETS[GRID.section_active].dates_mem.filter(item => item !== date);
+						}
+						$(this).remove();
+					}
+				});
+				
+				DEBUG.log("SCROLL",GRID_OFFSETS[GRID.section_active].deleted,"deleted from bottom");
+			}		
 		}
-	});
-	
-	DEBUG.log("GRID",OFFSETS[GRID.section_active].deleted,"deleted from TOP");
+		else DEBUG.log("SCROLL","nothing added to top",GRID_OFFSETS[GRID.section_active].deleted,">0");		
+	}
+	else DEBUG.log("SCROLL","scroll_top()",WINDOWS_TOP,"<",(225*12));
 }
+
+//*******************************************************************
+//chagement et reset de la grille ***********************************
+//*******************************************************************	
 
 function GRID_reset(from,source,searchoption=null)
 {
@@ -407,7 +422,7 @@ function GRID_reset(from,source,searchoption=null)
 		
 		if(searchoption!=null)
 		{
-			SECTIONS["search"].taglist=searchoption;
+			GRID_SECTIONS["search"].taglist=searchoption;
 		}
 		
 		found=true;	
@@ -417,55 +432,36 @@ function GRID_reset(from,source,searchoption=null)
 	if(!found) DEBUG.log("GRID","Reset",source,"NOT FOUND",from);
 }
 
-function GRID_system_reset(section_to_reset, from)
-{	
-	$("main section."+section_to_reset).html('');
-	
-	SECTIONS[section_to_reset].update=true;
-	
-	SECTIONS[section_to_reset].offset=0;
-	SECTIONS[section_to_reset].elements=GRID.configelements;
-	
-	OFFSETS[section_to_reset].added=GRID.configelements;
-	OFFSETS[section_to_reset].deleted=0;
-	OFFSETS[section_to_reset].fillbottom=true;
-	OFFSETS[section_to_reset].dates_mem=[];
-
-	if(section_to_reset==GRID.section_active) GRID_load("reset");
-	
-	DEBUG.log("GRID","Reset",section_to_reset,"request from",from);
-}
-
 function GRID_load(from)
 {
 	DEBUG.log("GRID","GRID LOAD FROM",from);
 	
-	if(SECTIONS[GRID.section_active].update==true)
+	if(GRID_SECTIONS[GRID.section_active].update==true)
 	{
-		scroll_lock_down=true;
-		scroll_lock_up=true;	
+		scroll_locked_down=true;
+		scroll_locked_up=true;	
 		
 		DEBUG.log("GRID",GRID.section_active,"update request");
 		
-		SECTIONS[GRID.section_active].update=false;
+		GRID_SECTIONS[GRID.section_active].update=false;
 
 		switch(GRID.section_active)
 		{
 			case "library":
 			
-				CORE_get('/actions/file-load-list.php?source=0&elements='+SECTIONS[GRID.section_active].elements+'&offset='+SECTIONS[GRID.section_active].offset);
+				CORE_get('/actions/file-load-list.php?source=0&elements='+GRID_SECTIONS[GRID.section_active].elements+'&offset='+GRID_SECTIONS[GRID.section_active].offset);
 				
 			break;
 			case "untagged":
 			
-				CORE_get('/actions/file-load-list.php?source=1&elements='+SECTIONS[GRID.section_active].elements+'&offset='+SECTIONS[GRID.section_active].offset);
+				CORE_get('/actions/file-load-list.php?source=1&elements='+GRID_SECTIONS[GRID.section_active].elements+'&offset='+GRID_SECTIONS[GRID.section_active].offset);
 				
 			break;
 			case "search":
 			
-				$("#filters").attr('action','/actions/file-search-list.php?offset='+SECTIONS[GRID.section_active].offset+'&tagslist='+SECTIONS[GRID.section_active].taglist);
+				$("#filters").attr('action','/actions/file-search-list.php?offset='+GRID_SECTIONS[GRID.section_active].offset+'&tagslist='+GRID_SECTIONS[GRID.section_active].taglist);
 
-				SECTIONS[GRID.section_active].taglist=0; //par défaut à 0;
+				GRID_SECTIONS[GRID.section_active].taglist=0; //par défaut à 0;
 				
 				//TAGLIST=0 > "GRID_CallBack_load" + array("datas"=>$return);
 				//TAGLIST=1 > "EXPLORE_CallBack_search" + $tag); + datas
@@ -495,7 +491,7 @@ window.GRID_CallBack_load = function(data_array)
 {
 	let regenerate=true;
 	
-	DEBUG.log("DATAS",data_array);
+	DEBUG.log("GRID_DATAS",data_array);
 
 	if(data_array.count!==undefined)
 	{	
@@ -507,15 +503,15 @@ window.GRID_CallBack_load = function(data_array)
 			
 			localStorage.setItem(APP.userhash+'_'+GRID.section_active+'_count', count);
 			
-			if(SECTIONS[GRID.section_active].countmem!==null && GRID.changed)
+			if(GRID_SECTIONS[GRID.section_active].countmem!==null && GRID.changed)
 			{
-				DEBUG.log("GRID","count mem",SECTIONS[GRID.section_active].countmem);
+				DEBUG.log("GRID","count mem",GRID_SECTIONS[GRID.section_active].countmem);
 
-				if(count<SECTIONS[GRID.section_active].countmem)
+				if(count<GRID_SECTIONS[GRID.section_active].countmem)
 				{
 					regenerate=false;
 					
-					DEBUG.log("GRID",'Remove elements in '+GRID.section_active+' '+count+' < '+SECTIONS[GRID.section_active].countmem);
+					DEBUG.log("GRID",'Remove elements in '+GRID.section_active+' '+count+' < '+GRID_SECTIONS[GRID.section_active].countmem);
 					
 					if(GRID.section_active=="untagged") 
 					{
@@ -523,10 +519,10 @@ window.GRID_CallBack_load = function(data_array)
 						
 						$('main section.'+GRID.section_active+' div.element.is_tagged').remove();
 						
-						SECTIONS['library'].countmem+=removedcount;
-						$('span#library_count').html(SECTIONS['library'].countmem);
+						GRID_SECTIONS['library'].countmem+=removedcount;
+						$('span#library_count').html(GRID_SECTIONS['library'].countmem);
 						
-						localStorage.setItem(APP.userhash+'_library_count', SECTIONS['library'].countmem);
+						localStorage.setItem(APP.userhash+'_library_count', GRID_SECTIONS['library'].countmem);
 					}
 					
 					if(GRID.section_active=="library") 
@@ -535,10 +531,10 @@ window.GRID_CallBack_load = function(data_array)
 						
 						$('main section.'+GRID.section_active+' div.element.is_not_tagged').remove();
 
-						SECTIONS['untagged'].countmem+=removedcount;
-						$('span#untagged_count').html(' ('+SECTIONS['untagged'].countmem+')');
+						GRID_SECTIONS['untagged'].countmem+=removedcount;
+						$('span#untagged_count').html(' ('+GRID_SECTIONS['untagged'].countmem+')');
 						
-						localStorage.setItem(APP.userhash+'_untagged_count', SECTIONS['untagged'].countmem);
+						localStorage.setItem(APP.userhash+'_untagged_count', GRID_SECTIONS['untagged'].countmem);
 
 					}
 					
@@ -546,20 +542,17 @@ window.GRID_CallBack_load = function(data_array)
 					GRID_load_id();
 				}
 
-				if(count==SECTIONS[GRID.section_active].countmem)
+				if(count==GRID_SECTIONS[GRID.section_active].countmem)
 				{
 					regenerate=false;
 				}
 				
-				SECTIONS[GRID.section_active].offset=GRID.offset_mem;
-				SECTIONS[GRID.section_active].update=false;
+				GRID_SECTIONS[GRID.section_active].update=false;
 				
-				DEBUG.log("GRID","Offset restored to",GRID.offset_mem);
-
 				GRID.changed=false;
 			}
 			
-			SECTIONS[GRID.section_active].countmem=count;
+			GRID_SECTIONS[GRID.section_active].countmem=count;
 		}
 	}
 	
@@ -595,11 +588,13 @@ window.GRID_CallBack_load = function(data_array)
 			else 								htmldate=formatDateLocale(l_date_display);
 
 			OBJ_Dest_date+=(addElement(data_array.dir, bdd, htmldate));
+			
+			if(GRID_OFFSETS[GRID.section_active].fillbottom && !GRID_DATAS[GRID.section_active].loaded.includes(bdd.id)) GRID_DATAS[GRID.section_active].loaded.push(bdd.id); //store all loaded elements
 
 			j++;
 		});
 
-		if(OFFSETS[GRID.section_active].fillbottom) $("main section.date."+GRID.section_active).append(OBJ_Dest_date);
+		if(GRID_OFFSETS[GRID.section_active].fillbottom) $("main section.date."+GRID.section_active).append(OBJ_Dest_date);
 		else 										$("main section.date."+GRID.section_active).prepend(OBJ_Dest_date);
 
 		GRID_load_id();
@@ -617,21 +612,17 @@ window.GRID_CallBack_load = function(data_array)
 		
 		//fill the grid with empty space
 
-		scroll_lock_up=false;
-		scroll_lock_down=false;	
+		scroll_locked_up=false;
+		scroll_locked_down=false;	
 
-		//scroll_refresh(true);
-		
-		// ne continue QUE dans le sens du chargement qui vient d'avoir lieu
-		
 		DEBUG.log("CALLBACK","CallBack_load","Will add element on",GRID.section_active);
 		
-		if(OFFSETS[GRID.section_active].fillbottom) check_bottom();
-		else check_top();
+		if(GRID_OFFSETS[GRID.section_active].fillbottom) scroll_bottom();
+		else scroll_top();
 
 	}
 
-	DEBUG.log("CALLBACK","CallBack_load",OFFSETS[GRID.section_active]);
+	DEBUG.log("CALLBACK","CallBack_load",GRID_OFFSETS[GRID.section_active]);
 }
 
 window.GRID_CallBack_restaure = function(current_id)
@@ -655,10 +646,10 @@ function GRID_load_id(date)
 		
 		let date=$(this).attr('data-date');
 
-		if(!OFFSETS[GRID.section_active].dates_mem.includes(date)) 
+		if(!GRID_OFFSETS[GRID.section_active].dates_mem.includes(date)) 
 		{
 			$(this).before('<div class="fullrow"><h2>'+date+'</h2></div>'); //on démarre une nouvelle grille
-			OFFSETS[GRID.section_active].dates_mem.push(date);
+			GRID_OFFSETS[GRID.section_active].dates_mem.push(date);
 		}		
 	
 		id++;

@@ -98,9 +98,9 @@ var DISPLAY_section = function section(section)
 		
 	GRID_load("DISPLAY_section");//en affichant une section on s'assure de charger les données.
 	
-	$('main').scrollTop(SECTIONS[GRID.section_active].scrolls_mem); 
+	$('main').scrollTop(GRID_SECTIONS[GRID.section_active].scrolls_mem); 
 		
-	DEBUG.log("DISPLAY","section",'section.'+GRID.section_active,SECTIONS[GRID.section_active].scrolls_mem);
+	DEBUG.log("DISPLAY","section",'section.'+GRID.section_active,GRID_SECTIONS[GRID.section_active].scrolls_mem);
 }
 
 //****************************************************************
@@ -169,7 +169,7 @@ var DISPLAY_full_screen = function display_full_screen(visibility = undefined)
 {
 	if(visibility==true) 		
 	{ 
-		GRID_suspend_scroll = true;
+		GRID_scroll_locked = true;
 		
 		$('main section.'+GRID.section_active).addClass('hidden');
 		$('main section#fullscreen').removeClass('hidden');
@@ -185,8 +185,8 @@ var DISPLAY_full_screen = function display_full_screen(visibility = undefined)
 		$('nav#main').removeClass('hidden');
 
 		requestAnimationFrame(function() {
-			GRID_suspend_scroll = false;
-			$('main').scrollTop(SECTIONS[GRID.section_active].scrolls_mem); 
+			GRID_scroll_locked = false;
+			$('main').scrollTop(GRID_SECTIONS[GRID.section_active].scrolls_mem); 
 		});
 	
 		DEBUG.log("DISPLAY","full_screen: closed (hide)");		
@@ -286,7 +286,7 @@ var DISPLAY_selection = function selection(id_current=null,refreshfullscreen=fal
 
 		if(refreshfullscreen==false) 
 		{
-			if(GRID.hashes.includes(media_id))
+			if(GRID_DATAS[GRID.section_active].selection.includes(media_id))
 			{
 				$('div#'+GRID.section_active+'_'+id_current).addClass('selected');
 				$('div#'+GRID.section_active+'_'+id_current).removeClass('notselected');
@@ -300,7 +300,7 @@ var DISPLAY_selection = function selection(id_current=null,refreshfullscreen=fal
 		
 		//Manage fullscreen selection
 		
-		if(GRID.hashes.includes(media_id))
+		if(GRID_DATAS[GRID.section_active].selection.includes(media_id))
 		{
 			$('section#fullscreen').addClass('selected');
 			$('section#fullscreen div.button-selection').addClass('selected');
@@ -314,13 +314,13 @@ var DISPLAY_selection = function selection(id_current=null,refreshfullscreen=fal
 		}
 	}
 
-	DEBUG.log("DISPLAY","New display selection from",id_current,":",GRID.hashes);
+	DEBUG.log("DISPLAY","New display selection from",id_current,":",GRID_DATAS[GRID.section_active].selection);
 	
 	//****************************************************************
 	//Affiche le menu si on sélectionne deux photos ou plus **********
 	//****************************************************************
 	
-	let loaded_files=GRID.hashes.length;
+	let loaded_files=GRID_DATAS[GRID.section_active].selection.length;
 
 	if(loaded_files<=1 || DISPLAY_is_visible_full_screen()) 
 	{	

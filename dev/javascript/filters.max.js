@@ -66,7 +66,7 @@ window.FILTERS_CallBack_search = function(datas)
 	
 	$('nav span#filterresult').html(datas.count+ ' element'+s);
 	
-	SECTIONS[GRID.section_active].countmem=datas.count;
+	GRID_SECTIONS[GRID.section_active].countmem=datas.count;
 
 	let element_check_callback=false;		
 

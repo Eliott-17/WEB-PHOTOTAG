@@ -20,13 +20,14 @@ $(document).ready(function()
 		if(mem!="explore") CORE_get('/actions/file-load-explore.php');
 		
 		GRID.section_active=mem;
-		$('div#mainmenu div button.'+mem).addClass("selected");
+		DISPLAY_section(mem); 
+		DISPLAY_set_view('grid');
 	}
 	else
 	{
-		$('div#mainmenu div button.explore').addClass("selected");
+		DISPLAY_section("explore"); 
 	}
-
+	
 	mem = localStorage.getItem(APP.userhash+'_library_count');
 
 	if(mem!==null && mem!=="")
