@@ -4,7 +4,7 @@ const DEBUG = {
 
     modules: {
         GRID: true,
-		SCROLL: false,
+		SCROLL: true,
         DISPLAY: false,
         ON: false,
 		FILEINFO: true,

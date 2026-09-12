@@ -49,9 +49,9 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/datas.php');
 							<button class="nothover"><span class="material-symbols-outlined">visibility_lock</span></button>
 							<button class="hover"><span class="material-symbols-outlined">visibility</span></button>
 						</div>
-						<div><button class="library" data-section="library"><span class="material-symbols-outlined">photo</span>&nbsp;<span>Timeline</span> (<span id="library_count"></span>)</button></div>
-						<div><button class="explore" data-section="explore"><span class="material-symbols-outlined">explore</span>&nbsp;<span>Explore</span></button></div>
-						<div><button class="untagged" data-section="untagged"><span class="material-symbols-outlined">new_label</span>&nbsp;<span>Untagged</span> (<span id="untagged_count"></span>)</button></div>
+						<div class="nav"><button class="library" data-section="library"><span class="material-symbols-outlined">photo</span>&nbsp;<span>Timeline</span> (<span id="library_count"></span>)</button></div>
+						<div class="nav"><button class="explore" data-section="explore"><span class="material-symbols-outlined">explore</span>&nbsp;<span>Explore</span></button></div>
+						<div class="nav"><button class="untagged" data-section="untagged"><span class="material-symbols-outlined">new_label</span>&nbsp;<span>Untagged</span> (<span id="untagged_count"></span>)</button></div>
 						<div class="search"><button class="search"><span class="material-symbols-outlined">search</span>&nbsp;<span>quick search</span></button><input type="text" list="fastsearch" autocomplete="off"/></div>
 						<div class="last"><button class="logout"><span class="material-symbols-outlined">logout</span>&nbsp;<span>Logout</span></button></div>
 					</div>

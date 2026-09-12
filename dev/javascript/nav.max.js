@@ -57,7 +57,7 @@ $(document).ready(function(){
 		}
 	});
 
-	$('div#mainmenu div button').on('click', function() {  
+	$('div#mainmenu div.nav button').on('click', function() {  
 	
 		if(!$(this).hasClass('selected'))
 		{
