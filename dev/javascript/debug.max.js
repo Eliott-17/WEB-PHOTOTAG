@@ -10,7 +10,7 @@ const DEBUG = {
 		FILEINFO: true,
         FILEMULTISELECTION: true,
         CALLBACK: true,
-		GRID_DATAS: false,
+		DATAS: true,
 		UPLOAD: true,
 		EXPLORE: true,
     },

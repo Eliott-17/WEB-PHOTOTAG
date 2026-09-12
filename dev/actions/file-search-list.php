@@ -352,7 +352,7 @@
 		if($_GET['tagslist']==2) $fReturn->addCallBack("FILTERS_CallBack_search", $tag);			
 	}
 
-	$fReturn->addCallBack("GRID_CallBack_load", array("datas"=>$result_data['datas'],'count'=>$result_count['datas'][0]['total']));
+	$fReturn->addCallBack("GRID_CallBack_load", array("datas"=>$result_data['datas'],'count'=>$result_count['datas'][0]));
 	$fReturn->addConsole("[PHP EXECUTED] file-search-list.php");
 	$fReturn->fetch();	
 ?>
