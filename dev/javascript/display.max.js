@@ -274,48 +274,40 @@ var DISPLAY_fileinfo_init = function fileinfo_init(multiselectionreset=true)
 //Gère l'affichage lors de la sélection des photos ***************
 //****************************************************************	
 
-var DISPLAY_selection = function selection(id_current=null,refreshfullscreen=false)
+var DISPLAY_selection = function selection()
 {
-	//DEBUG.log("DISPLAY","selection switch selection of element",id_current);
-	
-	if(id_current!=null) 
+	$.each(GRID_DATAS[GRID.section_active].loaded, function(key,value) 
 	{
-		
-		let media_id = parseInt($('div#'+GRID.section_active+'_'+id_current+' div.media-container').attr('data-id'));
-			
-		//Manage grid selection
+		let element = $('section.grid.'+GRID.section_active+' div div#media_'+value).parent();
 
-		if(refreshfullscreen==false) 
+		if(GRID_DATAS[GRID.section_active].selection.includes(value))
 		{
-			if(GRID_DATAS[GRID.section_active].selection.includes(media_id))
-			{
-				$('div#'+GRID.section_active+'_'+id_current).addClass('selected');
-				$('div#'+GRID.section_active+'_'+id_current).removeClass('notselected');
-			}
-			else
-			{
-				$('div#'+GRID.section_active+'_'+id_current).addClass('notselected');
-				$('div#'+GRID.section_active+'_'+id_current).removeClass('selected');
-			}
-		}
-		
-		//Manage fullscreen selection
-		
-		if(GRID_DATAS[GRID.section_active].selection.includes(media_id))
-		{
+			//Manage grid selection
+
+			element.addClass('selected');
+			element.removeClass('notselected');
+			
+			//Manage fullscreen selection
+			
 			$('section#fullscreen').addClass('selected');
 			$('section#fullscreen div.button-selection').addClass('selected');
 			$('section#fullscreen div.button-selection').removeClass('notselected');
+			
 		}
 		else
 		{
+			//Manage grid selection
+
+			element.addClass('notselected');
+			element.removeClass('selected');
+			
+			//Manage fullscreen selection
+			
 			$('section#fullscreen').removeClass('selected');
 			$('section#fullscreen div.button-selection').addClass('notselected');
 			$('section#fullscreen div.button-selection').removeClass('selected');
 		}
-	}
-
-	DEBUG.log("DISPLAY","New display selection from",id_current,":",GRID_DATAS[GRID.section_active].selection);
+	});
 	
 	//****************************************************************
 	//Affiche le menu si on sélectionne deux photos ou plus **********
@@ -335,8 +327,8 @@ var DISPLAY_selection = function selection(id_current=null,refreshfullscreen=fal
 		$('.elementscnt').html(loaded_files+" elements");
 		DISPLAY_menu($('#select-status'), true);
 	}
-	
-	
+
+	DEBUG.log("DISPLAY","Selection updated");	
 }
 
 //****************************************************************

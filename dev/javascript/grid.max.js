@@ -117,52 +117,46 @@ $(document).ready(function(){
 
 	$('main').on('click.gridSelect', 'div.button-select', function(e) {
 		
-		let current_id = parseInt($(this).parent().attr('id').replace(GRID.section_active+'_',''));
+		let media_id = parseInt($(this).parent().children().first().attr('data-id'));
 				
 		//****************************************************************
 		//Logique de sélection en lot avec la touche SHIFT ***************
 		//****************************************************************	
-
+		
 		if(e.shiftKey)
-		{	
-			if(last_select>=0)
-			{	
-				if(current_id>last_select)
-				{					
-					for(i=last_select;i<=current_id;i++) 
-					{
-						let media_id = parseInt($('div#'+GRID.section_active+'_'+i+' div.media-container').attr('data-id'));
-						if(!GRID_DATAS[GRID.section_active].selection.includes(media_id)) GRID_DATAS[GRID.section_active].selection.push(media_id);
-						$('div#'+GRID.section_active+'_'+i).addClass('selected');
-						$('div#'+GRID.section_active+'_'+i).removeClass('notselected');
-					}
+		{
+			let index_last_select = GRID_DATAS[GRID.section_active].loaded.indexOf(last_select);
+			let index_current_id = 	GRID_DATAS[GRID.section_active].loaded.indexOf(media_id);
+	
+			if(index_last_select>=0 && index_current_id>=0 && index_last_select!=index_current_id)
+			{
+				if(index_current_id>index_last_select)
+				{
+					index_current_id++;
+					index_last_select++;
 				}
 				else
-				{				
-					for(i=current_id;i<=last_select;i++) 
-					{
-						let media_id = parseInt($('div#'+GRID.section_active+'_'+i+' div.media-container').attr('data-id'));
-						if(!GRID_DATAS[GRID.section_active].selection.includes(media_id)) GRID_DATAS[GRID.section_active].selection.push(media_id);
-						$('div#'+GRID.section_active+'_'+i).addClass('selected');
-						$('div#'+GRID.section_active+'_'+i).removeClass('notselected');
-					}
-				}	
+				{
+					index_last_select++;
+					index_last_select--;
+				}
+				
+				let index_min=Math.min(index_current_id, index_last_select);
+				let index_max=Math.max(index_current_id, index_last_select);
+				
+				let result = GRID_DATAS[GRID.section_active].loaded.slice(index_min,index_max);
+				
+				DEBUG.log("GRID","loaded index from",index_min,index_max);
+				
+				$.each(result, function(key,value)
+				{
+					change_selection(value);
+				});
 			}
 		}
 		else
 		{			
-			let media_id = parseInt($('div#'+GRID.section_active+'_'+current_id+' div.media-container').attr('data-id'));
-
-			if(GRID_DATAS[GRID.section_active].selection.includes(media_id)) 		
-			{
-				GRID_DATAS[GRID.section_active].selection = GRID_DATAS[GRID.section_active].selection.filter(h => h !== media_id);
-				DEBUG.log("GRID", "element deleted from selection");
-			}
-			else 									
-			{
-				GRID_DATAS[GRID.section_active].selection.push(media_id);
-				DEBUG.log("GRID", "element added to selection");
-			}
+			change_selection(media_id);
 		}
 		
 		$('input.filesid').val(JSON.stringify(GRID_DATAS[GRID.section_active].selection));
@@ -171,7 +165,7 @@ $(document).ready(function(){
 		//Action à effectué après la sélection effective *****************
 		//****************************************************************
 
-		DISPLAY_selection(current_id);
+		DISPLAY_selection();
 		
 		if(IS_VISIBLE_menu($('div#select-trash'))) OBJ_Select_both.find('div.selected').addClass('delete');
 		
@@ -180,7 +174,9 @@ $(document).ready(function(){
 			FILEMULTISELECTION_CallBack_load(); //On rafraichi les informations affichés au changement de sélection
 		}
 		
-		last_select=current_id;
+		last_select=media_id;
+		
+		DEBUG.log("GRID","last index slsection",last_select);
 				
 	});
 
@@ -231,6 +227,20 @@ $(document).ready(function(){
 	});
 	
 });
+
+function change_selection(media_id)
+{
+	if(GRID_DATAS[GRID.section_active].selection.includes(media_id)) 		
+	{
+		GRID_DATAS[GRID.section_active].selection = GRID_DATAS[GRID.section_active].selection.filter(h => h !== media_id);
+	}
+	else 									
+	{
+		GRID_DATAS[GRID.section_active].selection.push(media_id);
+	}
+	
+	DEBUG.log("DATA", "Selection updated",GRID_DATAS[GRID.section_active].selection);
+}
 
 //*******************************************************************
 //Fonction du scroll et chagement/déchargement progressif ***********
@@ -526,12 +536,14 @@ window.GRID_CallBack_load = function(data_array)
 			GRID_OFFSETS[local_section_active].addedBOTTOM+=j;
 			DEBUG.log("GRID", "Write into",local_section_active);
 			$("main section.date."+local_section_active).append(OBJ_Dest_date);
+			DISPLAY_selection();
 		}
 		else 										
 		{
 			GRID_OFFSETS[local_section_active].addedTOP+=j;
 			DEBUG.log("GRID", "Write into",local_section_active);
 			$("main section.date."+local_section_active).prepend(OBJ_Dest_date);
+			DISPLAY_selection();
 		}
 
 		GRID_load_id();
