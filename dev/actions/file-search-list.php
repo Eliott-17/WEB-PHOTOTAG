@@ -12,13 +12,13 @@
 	$fReturn = new fReturn();
 	$validation = new Validation();
 
-	$validation->addVerification('token',				'sha256',			'Token');	
-	$validation->addVerification('offset',				'int',				'Offset'			);	
-	$validation->addVerification('tag',					'string',			'Tag',					4,100	);
-	$validation->addVerification('value',				'string',			'Value',				0,100	);
-	$validation->addVerification('tagslist',			'int_interval',		'Taglist incorrect',  	0,2		);	
-	$validation->addVerification('filters',				'jsonArrayString',	'filters',  			);
-	$validation->addVerification('filters',				'jsonArrayString',	'lastchecked',  		);	
+	$validation->addVerification('token',				'sha256',			'Token'								);	
+	$validation->addVerification('offset',				'int',				'Offset'							);	
+	$validation->addVerification('tag',					'string',			'Tag',					4,100		);
+	$validation->addVerification('value',				'string',			'Value',				0,100		);
+	$validation->addVerification('tagslist',			'int_interval',		'Taglist incorrect',  	0,2			);	
+	$validation->addVerification('filters',				'jsonArrayString',	'filters',  						);
+	$validation->addVerification('sectionactive', 		'in_array', 		'sectionactive', 	  	['search']	);
 	$validation->Validate(false,true);
 	
 	if(!$validation->isValidated())
@@ -352,7 +352,7 @@
 		if($_GET['tagslist']==2) $fReturn->addCallBack("FILTERS_CallBack_search", $tag);			
 	}
 
-	$fReturn->addCallBack("GRID_CallBack_load", array("datas"=>$result_data['datas'],'count'=>$result_count['datas'][0]));
+	$fReturn->addCallBack("GRID_CallBack_load", array("datas"=>$result_data['datas'],'count'=>$result_count['datas'][0],'sectionactive'=>$_GET['sectionactive']));
 	$fReturn->addConsole("[PHP EXECUTED] file-search-list.php");
 	$fReturn->fetch();	
 ?>

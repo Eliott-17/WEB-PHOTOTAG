@@ -6,7 +6,7 @@ const DEBUG = {
         GRID: true,
 		SCROLL: true,
         DISPLAY: false,
-        ON: false,
+        ON: true,
 		FILEINFO: true,
         FILEMULTISELECTION: true,
         CALLBACK: true,

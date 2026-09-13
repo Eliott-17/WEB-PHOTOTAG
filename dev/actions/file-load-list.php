@@ -10,9 +10,10 @@
 	$fReturn = new fReturn();
 	$validation = new Validation();
 
-	$validation->addVerification('offset',		'int',	'offset',			0,100000			);	
-	$validation->addVerification('elements',	'int',	'elements',			0,100000			);	
-	$validation->addVerification('source',		'int',	'source',			0,1					);
+	$validation->addVerification('offset',			'int',			'offset',				0,100000									);	
+	$validation->addVerification('elements',		'int',			'elements',				0,100000									);	
+	$validation->addVerification('sectionactive', 	'in_array', 	'sectionactive', 		['library', 'untagged']);
+	//$validation->addVerification('sectionactive',		'string',			'sectionactive',  		6,8);	
 	$validation->Validate();
 	
 	$bigarray['datas']=[];
@@ -27,15 +28,22 @@
 	
 	//source TAG ou UNTAG
 
-	if($_GET['source']==0) // tagged request
+	if($_GET['sectionactive']=="library") // tagged request
 	{		
 		$conditionaldata=tag_query();
 		$sort="DESC";
 	}
-	else //non tagged request
+	else if($_GET['sectionactive']=="untagged") // tagged request
+		//non tagged request
 	{			
 		$conditionaldata=untag_query();
 		$sort="DESC";
+	}
+	else
+	{
+		$fReturn->addCallback("NAV_CallBack_error","Fatal error while selecting sectionactive");
+		if(ENV=="DEV") $fReturn->addFailMessage('Internal error')->addConsole($_GET['sectionactive']);
+		$fReturn->fetch();		
 	}
 	
 	$EasyPDO = new EasyPDO($_SESSION['DB']);
@@ -96,7 +104,8 @@
 		}
 	//}
 	
-
+	$bigarray['sectionactive']=$_GET['sectionactive'];
+	
 	//if(ENV=="DEV") $fReturn->addConsole("[PHP EXECUTED] file-load-list.php");
 	$fReturn->addCallBack("GRID_CallBack_load", $bigarray)->fetch();
 

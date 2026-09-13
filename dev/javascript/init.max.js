@@ -32,17 +32,17 @@ $(document).ready(function()
 
 	if(mem!==null && mem!=="")
 	{
-		$('span#library_count').html(mem);
+		DISPLAY_media_count('library',mem);
 	}
 
 	mem = localStorage.getItem(APP.userhash+'_untagged_count');
 
 	if(mem!==null && mem!=="")
 	{
-		$('span#untagged_count').html(mem);
+		DISPLAY_media_count('untagged',mem);
 	}
 		
 	DISPLAY_set_view("grid");
-	GRID_load("init");
+	//GRID_load("init");
 	
 });

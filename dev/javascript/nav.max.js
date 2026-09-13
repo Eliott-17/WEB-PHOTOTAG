@@ -57,7 +57,9 @@ $(document).ready(function(){
 		}
 	});
 
-	$('div#mainmenu div.nav button').on('click', function() {  
+	$('div#mainmenu div.nav button').on('click.navbutton', function() {  
+	
+		DEBUG.log("ON",'click.navbutton');
 	
 		if(!$(this).hasClass('selected'))
 		{
@@ -70,7 +72,9 @@ $(document).ready(function(){
 		}
 	});
 	
-	$('div#searchmenu div button.return-explore').on('click', 	function() {
+	$('div#searchmenu div button.return-explore').on('click.returnexplore', function() {
+
+		DEBUG.log("ON",'click.returnexplore');
 
 		//$('main').scrollTop(0); DEBUG.log("Scroll reset button.return-explore");
 		FILEMULTISELECTION_unselectall();
@@ -81,7 +85,9 @@ $(document).ready(function(){
 
 	});
 
-	$('div#searchmenu div button.advanced-filters').on('click', 	function() {
+	$('div#searchmenu div button.advanced-filters').on('click.advancedfilters', function() {
+
+		DEBUG.log("ON",'click.advancedfilters');
 
 		if(DISPLAY_is_visible_filters())
 		{

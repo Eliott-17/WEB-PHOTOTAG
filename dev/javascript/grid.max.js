@@ -380,17 +380,17 @@ function GRID_load(from)
 		{
 			case "library":
 			
-				CORE_get('/actions/file-load-list.php?source=0&elements='+GRID_SECTIONS[GRID.section_active].elements+'&offset='+GRID_SECTIONS[GRID.section_active].offset);
+				CORE_get('/actions/file-load-list.php?sectionactive='+GRID.section_active+'&elements='+GRID_SECTIONS[GRID.section_active].elements+'&offset='+GRID_SECTIONS[GRID.section_active].offset);
 				
 			break;
 			case "untagged":
 			
-				CORE_get('/actions/file-load-list.php?source=1&elements='+GRID_SECTIONS[GRID.section_active].elements+'&offset='+GRID_SECTIONS[GRID.section_active].offset);
+				CORE_get('/actions/file-load-list.php?sectionactive='+GRID.section_active+'&elements='+GRID_SECTIONS[GRID.section_active].elements+'&offset='+GRID_SECTIONS[GRID.section_active].offset);
 				
 			break;
 			case "search":
 			
-				$("#filters").attr('action','/actions/file-search-list.php?offset='+GRID_SECTIONS[GRID.section_active].offset+'&tagslist='+GRID_SECTIONS[GRID.section_active].taglist);
+				$("#filters").attr('action','/actions/file-search-list.php?sectionactive='+GRID.section_active+'&offset='+GRID_SECTIONS[GRID.section_active].offset+'&tagslist='+GRID_SECTIONS[GRID.section_active].taglist);
 
 				GRID_SECTIONS[GRID.section_active].taglist=0; //par défaut à 0;
 				
@@ -420,70 +420,66 @@ function GRID_load(from)
 
 window.GRID_CallBack_load = function(data_array)
 {
-	let regenerate=true;
-	
 	DEBUG.log("GRID_DATAS",data_array);
+	
+	if(data_array.sectionactive !== GRID.section_active)
+	{
+		scroll_lock_up = false;
+		scroll_lock_down = false;
+
+		GRID_system_reset(data_array.sectionactive, "GRID_CallBack_load section mismatch");
+		return;
+	}
+	
+	let regenerate=true;
+	let local_section_active=GRID.section_active;
 
 	if(data_array.count!==undefined)
 	{	
 		if(data_array.count.total!==undefined)
 		{
 			let count = data_array.count.total;
-
-			$('span#'+GRID.section_active+'_count').html(count);
 			
-			localStorage.setItem(APP.userhash+'_'+GRID.section_active+'_count', count);
+			DISPLAY_media_count(local_section_active,count);
 			
-			if(GRID_SECTIONS[GRID.section_active].countmem!==null && GRID.changed)
+			if(GRID_SECTIONS[local_section_active].countmem!==null && GRID.changed)
 			{
-				DEBUG.log("GRID","count mem",GRID_SECTIONS[GRID.section_active].countmem);
+				DEBUG.log("GRID","count mem",GRID_SECTIONS[local_section_active].countmem);
 
-				if(count<GRID_SECTIONS[GRID.section_active].countmem)
+				if(count<GRID_SECTIONS[local_section_active].countmem)
 				{
 					regenerate=false;
 					
-					DEBUG.log("GRID",'Remove elements in '+GRID.section_active+' '+count+' < '+GRID_SECTIONS[GRID.section_active].countmem);
+					DEBUG.log("GRID",'Remove elements in '+local_section_active+' '+count+' < '+GRID_SECTIONS[local_section_active].countmem);
 					
-					if(GRID.section_active=="untagged") 
-					{
-						removedcount = $('main section.'+GRID.section_active+' div.element.is_tagged').length;
-						
-						$('main section.'+GRID.section_active+' div.element.is_tagged').remove();
-						
-						GRID_SECTIONS['library'].countmem+=removedcount;
-						$('span#library_count').html(GRID_SECTIONS['library'].countmem);
-						
-						localStorage.setItem(APP.userhash+'_library_count', GRID_SECTIONS['library'].countmem);
-					}
+					let removelement=null;
 					
-					if(GRID.section_active=="library") 
+					if(local_section_active=="untagged") removelement="is_tagged";
+					if(local_section_active=="library")  removelement="is_not_tagged";
+					
+					if(removelement!=null)
 					{
-						removedcount = $('main section.'+GRID.section_active+' div.element.is_not_tagged').length;
-						
-						$('main section.'+GRID.section_active+' div.element.is_not_tagged').remove();
-
-						GRID_SECTIONS['untagged'].countmem+=removedcount;
-						$('span#untagged_count').html(' ('+GRID_SECTIONS['untagged'].countmem+')');
-						
-						localStorage.setItem(APP.userhash+'_untagged_count', GRID_SECTIONS['untagged'].countmem);
-
+						removedcount = $('main section.'+local_section_active+' div.element.is_not_tagged').length;
+						$('main section.'+local_section_active+' div.element.is_not_tagged').remove();			
+						GRID_SECTIONS[local_section_active].countmem+=removedcount;
+						DISPLAY_media_count(local_section_active,GRID_SECTIONS[local_section_active].countmem);
 					}
 					
 					DISPLAY_selection();
 					GRID_load_id();
 				}
 
-				if(count==GRID_SECTIONS[GRID.section_active].countmem)
+				if(count==GRID_SECTIONS[local_section_active].countmem)
 				{
 					regenerate=false;
 				}
 				
-				GRID_SECTIONS[GRID.section_active].update=false;
+				GRID_SECTIONS[local_section_active].update=false;
 				
 				GRID.changed=false;
 			}
 			
-			GRID_SECTIONS[GRID.section_active].countmem=count;
+			GRID_SECTIONS[local_section_active].countmem=count;
 		}
 	}
 	
@@ -520,20 +516,22 @@ window.GRID_CallBack_load = function(data_array)
 
 			OBJ_Dest_date+=(addElement(data_array.dir, bdd, htmldate));
 			
-			if(!GRID_DATAS[GRID.section_active].loaded.includes(bdd.id)) GRID_DATAS[GRID.section_active].loaded.push(bdd.id); //store all loaded elements
+			if(!GRID_DATAS[local_section_active].loaded.includes(bdd.id)) GRID_DATAS[local_section_active].loaded.push(bdd.id); //store all loaded elements
 
 			j++;
 		});
 
-		if(GRID_OFFSETS[GRID.section_active].fillbottom) 
+		if(GRID_OFFSETS[local_section_active].fillbottom) 
 		{
-			GRID_OFFSETS[GRID.section_active].addedBOTTOM+=j;
-			$("main section.date."+GRID.section_active).append(OBJ_Dest_date);
+			GRID_OFFSETS[local_section_active].addedBOTTOM+=j;
+			DEBUG.log("GRID", "Write into",local_section_active);
+			$("main section.date."+local_section_active).append(OBJ_Dest_date);
 		}
 		else 										
 		{
-			GRID_OFFSETS[GRID.section_active].addedTOP+=j;
-			$("main section.date."+GRID.section_active).prepend(OBJ_Dest_date);
+			GRID_OFFSETS[local_section_active].addedTOP+=j;
+			DEBUG.log("GRID", "Write into",local_section_active);
+			$("main section.date."+local_section_active).prepend(OBJ_Dest_date);
 		}
 
 		GRID_load_id();
@@ -554,14 +552,14 @@ window.GRID_CallBack_load = function(data_array)
 		scroll_locked_up=false;
 		scroll_locked_down=false;	
 
-		DEBUG.log("CALLBACK","CallBack_load","Will add element on",GRID.section_active);
+		DEBUG.log("CALLBACK","CallBack_load","Will add element on",local_section_active);
 		
-		if(GRID_OFFSETS[GRID.section_active].fillbottom) scroll_execute(true);
+		if(GRID_OFFSETS[local_section_active].fillbottom) scroll_execute(true);
 		else scroll_execute(false);
 
 	}
 
-	DEBUG.log("CALLBACK","CallBack_load",GRID_OFFSETS[GRID.section_active]);
+	DEBUG.log("CALLBACK","CallBack_load",GRID_OFFSETS[local_section_active]);
 }
 
 window.GRID_CallBack_restaure = function(current_id)

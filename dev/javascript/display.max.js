@@ -74,17 +74,18 @@ var DISPLAY_section = function section(section)
 {
 	GRID.section_active=section;
 	
-	localStorage.setItem(APP.userhash+'_last_page', section);
+	localStorage.setItem(APP.userhash+'_last_page', GRID.section_active);
 	
 	$('div#mainmenu div button').removeClass("selected");
-	$('div#mainmenu div button.'+GRID.section_active).addClass("selected");
+	$('div#mainmenu div.'+GRID.section_active+' button').addClass("selected");
 	
 	$('section').addClass("hidden");
 	$('section.'+GRID.section_active).removeClass("hidden");
 
 	$('div#uploaddrag span').addClass("hidden");
 	$('div.'+GRID.section_active).removeClass("hidden");
-	$('span.'+GRID.section_active).removeClass("hidden");	
+	$('span.'+GRID.section_active).removeClass("hidden");
+	
 	if(GRID.section_active=="search")	
 	{
 		$('div#mainmenu').addClass('hidden');
@@ -149,8 +150,8 @@ var DISPLAY_is_visible_filters = function is_visible_filters()
 var DISPLAY_filters = function display_filters(visibility = undefined)
 {
 	let lelement=$('body');
-	if(visibility==true) 		{ lelement.removeClass('no-aside-filters'); return; }
-	if(visibility==false) 		{ lelement.addClass('no-aside-filters'); return; }	
+	if(visibility==true) 		{ lelement.removeClass('no-aside-filters'); $('div#searchmenu div button.advanced-filters span.material-symbols-outlined').html('filter_alt'); return; }
+	if(visibility==false) 		{ lelement.addClass('no-aside-filters'); $('div#searchmenu div button.advanced-filters span.material-symbols-outlined').html('filter_alt_off'); return; }	
 	DEBUG.log("DISPLAY","fiters bad parameter");
 }
 
@@ -354,4 +355,18 @@ var DISPLAY_trash = function trash(display)
 		DISPLAY_menu($('div#select-trash'),false); 
 		$('main section.'+GRID.section_active+' div.selected').removeClass('delete');
 	}
+}
+
+//****************************************************************
+//Gère l'affichage du compte de média dans le menu nav -**********
+//****************************************************************
+
+var DISPLAY_media_count = function media_count(section,count)
+{
+	$('div.nav.'+section+' span.count').html(count);
+	$('div.nav.'+section+' span.mem_count_l').html(' (');
+	$('div.nav.'+section+' span.mem_count_r').html(')');
+	
+	localStorage.setItem(APP.userhash+'_'+section+'_count', GRID_SECTIONS[section].countmem);
+	
 }
