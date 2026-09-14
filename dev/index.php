@@ -28,6 +28,7 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/datas.php');
 		<link rel="stylesheet" href="/style/index-grid.<?php echo filemtime('style/index-grid.'.DIM.'.css'); ?>.<?php echo DIM; ?>.css" type="text/css"/>
 		<link rel="stylesheet" href="/style/index-login.<?php echo filemtime('style/index-login.'.DIM.'.css'); ?>.<?php echo DIM; ?>.css" type="text/css"/>
 		<link rel="stylesheet" href="/style/index-top.<?php echo filemtime('style/index-top.'.DIM.'.css'); ?>.<?php echo DIM; ?>.css" type="text/css"/>
+		<link rel="stylesheet" href="/style/index-scrollbar.<?php echo filemtime('style/index-scrollbar.'.DIM.'.css'); ?>.<?php echo DIM; ?>.css" type="text/css"/>
 		<link rel="stylesheet" href="/style/upload.<?php echo filemtime('style/upload.'.DIM.'.css'); ?>.<?php echo DIM; ?>.css" type="text/css"/>
 
 		<!-- HEADER SCRIPTS INCLUDED ON THIS PAGE - END -->
@@ -142,6 +143,11 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/datas.php');
 				<span class="material-symbols-outlined">cycle</span>
 			</div>
 		</nav>
+		<nav id="magicscrollbar">
+		
+			<div><div>
+		
+		</nav>
 		<?php
 			if(is_session_valid())
 			{
@@ -174,6 +180,7 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/datas.php');
 					<div id="uploaddrag">
 						<span id="uploadmedia" class="untagged hidden">Drag & drop here to add files</span>
 						<span id="uploadjson" class="untagged hidden">Google Photo supplemental-metadata.json</span>
+						<span id="scrollbarspace" class="untagged"></span>
 					</div>
 					<section class="grid untagged date hidden"></section>
 					<section class="grid search date hidden"></section>
@@ -472,6 +479,7 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/datas.php');
 	<script src='/javascript/explore.<?php echo filemtime('javascript/explore.'.DIM.'.js'); ?>.<?php echo DIM; ?>.js'></script>
 	<script src='/javascript/filters.<?php echo filemtime('javascript/filters.'.DIM.'.js'); ?>.<?php echo DIM; ?>.js'></script>
 	<script src='/javascript/nav.<?php echo filemtime('javascript/nav.'.DIM.'.js'); ?>.<?php echo DIM; ?>.js'></script>
+	<script src='/javascript/scroll.<?php echo filemtime('javascript/scroll.'.DIM.'.js'); ?>.<?php echo DIM; ?>.js'></script>
 	<script src='/javascript/login.<?php echo filemtime('javascript/login.'.DIM.'.js'); ?>.<?php echo DIM; ?>.js'></script>
 	<script src='/javascript/file-open-fullscreen.<?php echo filemtime('javascript/file-open-fullscreen.'.DIM.'.js'); ?>.<?php echo DIM; ?>.js'></script>
 	<script src='/javascript/file-info.<?php echo filemtime('javascript/file-info.'.DIM.'.js'); ?>.<?php echo DIM; ?>.js'></script>

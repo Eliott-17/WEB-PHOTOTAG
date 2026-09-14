@@ -12,9 +12,9 @@ let GRID = {
 }
 	
 let GRID_SECTIONS = {
-    library:	{update:true,offset:0,elements:GRID.configelements,countmem:null,scrolls_mem:null},
-    untagged: 	{update:true,offset:0,elements:GRID.configelements,countmem:null,scrolls_mem:null},
-    search: 	{update:true,offset:0,elements:GRID.configelements,countmem:null,scrolls_mem:null,taglist:0},
+    library:	{update:true,offset:0,elements:GRID.configelements,countmem:0,scrolls_mem:null},
+    untagged: 	{update:true,offset:0,elements:GRID.configelements,countmem:0,scrolls_mem:null},
+    search: 	{update:true,offset:0,elements:GRID.configelements,countmem:0,scrolls_mem:null,taglist:0},
     explore: 	{update:true,scrolls_mem:null} //chargé à l'init
 };
 
@@ -48,9 +48,9 @@ function GRID_system_reset(section_to_reset, from)
 	$("main section."+section_to_reset).html('');
 	
 	GRID_SECTIONS[section_to_reset].update=true;
-	
 	GRID_SECTIONS[section_to_reset].offset=0;
 	GRID_SECTIONS[section_to_reset].elements=GRID.configelements;
+	GRID_SECTIONS[section_to_reset].countmem=0;
 	GRID_SECTIONS[section_to_reset].scrolls_mem=null;
 	
 	GRID_OFFSETS[section_to_reset].addedBOTTOM=0;
@@ -390,17 +390,17 @@ function GRID_load(from)
 		{
 			case "library":
 			
-				CORE_get('/actions/file-load-list.php?sectionactive='+GRID.section_active+'&elements='+GRID_SECTIONS[GRID.section_active].elements+'&offset='+GRID_SECTIONS[GRID.section_active].offset);
+				CORE_get('/actions/file-load-list.php?countmem='+GRID_SECTIONS[GRID.section_active].countmem+'&sectionactive='+GRID.section_active+'&elements='+GRID_SECTIONS[GRID.section_active].elements+'&offset='+GRID_SECTIONS[GRID.section_active].offset);
 				
 			break;
 			case "untagged":
 			
-				CORE_get('/actions/file-load-list.php?sectionactive='+GRID.section_active+'&elements='+GRID_SECTIONS[GRID.section_active].elements+'&offset='+GRID_SECTIONS[GRID.section_active].offset);
+				CORE_get('/actions/file-load-list.php?countmem='+GRID_SECTIONS[GRID.section_active].countmem+'&sectionactive='+GRID.section_active+'&elements='+GRID_SECTIONS[GRID.section_active].elements+'&offset='+GRID_SECTIONS[GRID.section_active].offset);
 				
 			break;
 			case "search":
 			
-				$("#filters").attr('action','/actions/file-search-list.php?sectionactive='+GRID.section_active+'&offset='+GRID_SECTIONS[GRID.section_active].offset+'&tagslist='+GRID_SECTIONS[GRID.section_active].taglist);
+				$("#filters").attr('action','/actions/file-search-list.php?countmem='+GRID_SECTIONS[GRID.section_active].countmem+'&sectionactive='+GRID.section_active+'&offset='+GRID_SECTIONS[GRID.section_active].offset+'&tagslist='+GRID_SECTIONS[GRID.section_active].taglist);
 
 				GRID_SECTIONS[GRID.section_active].taglist=0; //par défaut à 0;
 				
@@ -452,7 +452,7 @@ window.GRID_CallBack_load = function(data_array)
 			
 			DISPLAY_media_count(local_section_active,count);
 			
-			if(GRID_SECTIONS[local_section_active].countmem!==null && GRID.changed)
+			if(GRID_SECTIONS[local_section_active].countmem!==0 && GRID.changed)
 			{
 				DEBUG.log("GRID","count mem",GRID_SECTIONS[local_section_active].countmem);
 

@@ -25,7 +25,7 @@
 			$validation->addVerification('date',		'string',				'Date',			10,10);	
 			$validation->addVerification('time',		'string',				'Time',			8,8);	
 			$validation->addVerification('zone',		'string',				'Zone',			5,5);
-			$validation->addVerification('utcflag',		'int',					'UTC Flag',		0,1);
+			$validation->addVerification('utcflag',		'int_interval',			'UTC Flag',		0,1);
 			
 		break;
 		case "tag-location":

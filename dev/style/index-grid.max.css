@@ -46,8 +46,9 @@ nav div {
 main {
 	grid-area: main;
 	min-height: 0;
-	overflow-y: auto;
+	overflow-y: scroll;
 	overflow-x: hidden;
+	scrollbar-width: none;
 }
 
 img,video {
@@ -306,7 +307,7 @@ div#uploaddrag
 	display: flex;
 }
 
-div#uploaddrag span
+div#uploaddrag span:not(#scrollbarspace)
 {	
 	color: #494949bb;
 	border: 2px dashed #494949bb;
@@ -324,5 +325,9 @@ span#uploadmedia
 span#uploadjson
 {
 	flex: 1;
-}	
+}
 
+span#scrollbarspace	
+{
+	width: 50px;
+}

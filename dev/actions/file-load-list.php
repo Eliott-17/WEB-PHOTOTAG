@@ -10,9 +10,10 @@
 	$fReturn = new fReturn();
 	$validation = new Validation();
 
-	$validation->addVerification('offset',			'int',			'offset',				0,100000									);	
-	$validation->addVerification('elements',		'int',			'elements',				0,100000									);	
-	$validation->addVerification('sectionactive', 	'in_array', 	'sectionactive', 		['library', 'untagged']);
+	$validation->addVerification('offset',			'int',			'offset');	
+	$validation->addVerification('elements',		'int',			'elements');	
+	$validation->addVerification('countmem',		'int',			'countmem');
+	$validation->addVerification('sectionactive', 	'in_array', 	'sectionactive', 		['library', 'untagged'] );
 	//$validation->addVerification('sectionactive',		'string',			'sectionactive',  		6,8);	
 	$validation->Validate();
 	
@@ -47,7 +48,7 @@
 	}
 	
 	$EasyPDO = new EasyPDO($_SESSION['DB']);
-	
+		
 	$EasyPDO->addFields('file_status');
 	$EasyPDO->addFields('file_hash');
 	$EasyPDO->addFields('time_taken_at_date');
@@ -86,15 +87,55 @@
 		if(ENV=="DEV") $fReturn->addFailMessage('Internal error')->addConsole(print_r($array,true));
 		$fReturn->fetch();
 	}
-
+	
 	//if($_GET['offset']==0)
 	//{
+
 		$EasyPDO->addFields('COUNT (*) as total');
 		$array_cnt=$EasyPDO->select('photos','file_status = 0 AND'.$conditionaldata);			
 
 		if($array_cnt['status']===true) 
 		{
 			$bigarray['count']=$array_cnt['datas'][0];
+			
+			if($_GET['countmem']!=$bigarray['count']['total'])
+			{
+				if(ENV=="DEV") $fReturn->addConsole("Require update grid disposition (".$_GET['countmem']." - ".$bigarray['count']['total'].")");
+				
+				//$EasyPDO->setDebug();
+				
+				$EasyPDO->addFields('time_taken_at_date AS date');
+				$EasyPDO->addFields('COUNT(*) AS total');
+				$EasyPDO->addFields('GROUP_CONCAT(file_orientation, \',\') AS orientations');
+				
+				$virtual_grid=$EasyPDO->select(
+				'photos',
+				'file_status = 0 AND '.$conditionaldata.' GROUP BY time_taken_at_date ORDER BY
+					CASE
+						WHEN
+						'.$conditionaldata.'
+						THEN 0
+						ELSE 1
+					END ASC, time_taken_at_date '.$sort.',
+							 time_taken_at_zone '.$sort.',
+							 time_taken_at_time '.$sort.'
+				');
+							
+				//$virtual_grid=$EasyPDO->select('photos','file_status = 0 AND'.$conditionaldata.' GROUP BY time_taken_at_date');	
+
+				if($virtual_grid['status']===true) 
+				{
+					$fReturn->addCallBack("SCROLL_CallBack_load", $virtual_grid['datas']);
+					//if(ENV=="DEV") $fReturn->addConsole(print_r($virtual_grid,true));
+
+				}
+				else
+				{
+					$fReturn->addCallback("NAV_CallBack_error","Fatal error while selecting grid from database");
+					if(ENV=="DEV") $fReturn->addFailMessage('Internal error')->addConsole(print_r($virtual_grid,true));
+					$fReturn->fetch();
+				}
+			}
 		}
 		else
 		{
@@ -106,7 +147,7 @@
 	
 	$bigarray['sectionactive']=$_GET['sectionactive'];
 	
-	//if(ENV=="DEV") $fReturn->addConsole("[PHP EXECUTED] file-load-list.php");
+	if(ENV=="DEV") $fReturn->addConsole("[PHP EXECUTED] file-load-list.php");
 	$fReturn->addCallBack("GRID_CallBack_load", $bigarray)->fetch();
 
 ?>

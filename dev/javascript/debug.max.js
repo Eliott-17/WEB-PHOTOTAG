@@ -3,17 +3,18 @@ const DEBUG = {
     enabled: false,
 
     modules: {
-        GRID: true,
+        GRID: false,
 		SCROLL: false,
         DISPLAY: false,
         ON: false,
-		FILEINFO: true,
-        FILEMULTISELECTION: true,
-        CALLBACK: true,
+		FILEINFO: false,
+        FILEMULTISELECTION: false,
+        CALLBACK: false,
 		DATAS: false,
-		UPLOAD: true,
-		EXPLORE: true,
-    },
+		UPLOAD: false,
+		EXPLORE: false,
+		SCROLLBAR: true
+},
 
     log(module, ...args) {
 

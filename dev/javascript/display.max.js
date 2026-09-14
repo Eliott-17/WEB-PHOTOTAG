@@ -359,6 +359,5 @@ var DISPLAY_media_count = function media_count(section,count)
 	$('div.nav.'+section+' span.mem_count_l').html(' (');
 	$('div.nav.'+section+' span.mem_count_r').html(')');
 	
-	localStorage.setItem(APP.userhash+'_'+section+'_count', GRID_SECTIONS[section].countmem);
-	
+	localStorage.setItem(APP.userhash+'_'+section+'_count', GRID_SECTIONS[section].countmem);	
 }

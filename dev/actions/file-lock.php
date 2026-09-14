@@ -15,7 +15,7 @@
 
 	$validation->addVerification('token',		'sha256',				'Token'				);	
 	$validation->addVerification('filesid',		'jsonArrayString',		'Files id'			);	
-	$validation->addVerification('lock_status',	'int',					'status',	0,1		);	
+	$validation->addVerification('lock_status',	'int_interval',			'status',	0,1		);	
 
 	$validation->Validate();
 
