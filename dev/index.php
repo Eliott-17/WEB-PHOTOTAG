@@ -145,7 +145,8 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/datas.php');
 		</nav>
 		<nav id="magicscrollbar">
 		
-			<div><div>
+			<div class="bar"><div class="pointer"></div></div>
+			
 		
 		</nav>
 		<?php

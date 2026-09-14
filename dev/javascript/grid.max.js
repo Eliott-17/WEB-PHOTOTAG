@@ -252,6 +252,8 @@ function scroll_refresh()
 
 	scroll_execute(true);
 	scroll_execute(false);
+	
+	SCROLL_set_cursor();
 }
 
 function scroll_execute(sens) //bottom = true, top = false;
@@ -275,7 +277,7 @@ function scroll_execute(sens) //bottom = true, top = false;
 	let WINDOWS_TOP = GRID_SECTIONS[GRID.section_active].scrolls_mem;
 	let WINDOWS_LOADED = $('section.date.'+GRID.section_active).height();
 	let WINDOWS_BOTTOM = WINDOWS_LOADED-(WINDOWS_VIEW+WINDOWS_TOP);
-	
+
 	if(sens) 	senslimit=WINDOWS_BOTTOM;
 	else 		senslimit=WINDOWS_TOP;
 
@@ -327,7 +329,10 @@ function scroll_execute(sens) //bottom = true, top = false;
 				DEBUG.log("GRID",GRID_OFFSETS[GRID.section_active].addedBOTTOM,GRID_OFFSETS[GRID.section_active].addedTOP,"deleted from",senschar);
 			}
 		}
-		else DEBUG.log("SCROLL","nothing added to",senschar);
+		else 
+		{
+			DEBUG.log("SCROLL","nothing added to",senschar);
+		}
 	}
 }
 
