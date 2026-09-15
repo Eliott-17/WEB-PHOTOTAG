@@ -249,11 +249,13 @@ function change_selection(media_id)
 function scroll_refresh()
 {
 	if($('main section.'+GRID.section_active).hasClass('hidden') || GRID_scroll_locked) return;
+	
+	if(!SCROLL_flag_loaded) SCROLL_Load_Scroll_Bar();
 
 	scroll_execute(true);
 	scroll_execute(false);
 	
-	SCROLL_set_cursor();
+	SCROLL_block_position();
 }
 
 function scroll_execute(sens) //bottom = true, top = false;
@@ -297,42 +299,51 @@ function scroll_execute(sens) //bottom = true, top = false;
 			GRID_SECTIONS[GRID.section_active].update=true;
 			GRID_load("scroll");
 			
-			DEBUG.log("GRID",GRID.configelements, "added to",senschar);
+			DEBUG.log("GRID",GRID_OFFSETS[GRID.section_active], "added to",senschar);
 			
 			//SUPRESSION DE 20 PHOTOS
 			
-			if(GRID_OFFSETS[GRID.section_active].addedBOTTOM>maxelementmemory)
-			{
-				let i=GRID.configelements;
-				
-				if(sens) 	GRID_OFFSETS[GRID.section_active].addedTOP-=i;
-				else 		GRID_OFFSETS[GRID.section_active].addedBOTTOM-=i;
-
-				if(sens) 	elements = $('main section.' + GRID.section_active + ' > div')
-				else 		elements = $('main section.' + GRID.section_active + ' > div').get().reverse();
-
-				$(elements).each(function() {
-					
-					$(this).addClass("toremove");
-					
-					if($(this).hasClass("element")) i--;
-					
-					if(i<=0) return false;
-
-				});
-				
-				$('main section.' + GRID.section_active + ' > div').each(function() 
-				{
-					if($(this).hasClass("toremove")) $(this).remove();
-				});
-				
-				DEBUG.log("GRID",GRID_OFFSETS[GRID.section_active].addedBOTTOM,GRID_OFFSETS[GRID.section_active].addedTOP,"deleted from",senschar);
-			}
+			//à faire aprsè la mise à jour de l'index en add
 		}
 		else 
 		{
 			DEBUG.log("SCROLL","nothing added to",senschar);
 		}
+	}
+}
+
+function GRID_delete(sens)
+{
+	if(sens) 	senschar="top";
+	else 		senschar="bottom";
+	
+	if(GRID_OFFSETS[GRID.section_active].addedBOTTOM>maxelementmemory)
+	{
+		let i=GRID.configelements;
+		
+		if(sens) 	GRID_OFFSETS[GRID.section_active].addedTOP-=i;
+		else 		GRID_OFFSETS[GRID.section_active].addedBOTTOM-=i;
+
+		if(sens) 	elements = $('main section.' + GRID.section_active + ' > div')
+		else 		elements = $('main section.' + GRID.section_active + ' > div').get().reverse();
+
+		$(elements).each(function() {
+			
+			$(this).addClass("toremove");
+			
+			if($(this).hasClass("element")) i--;
+			
+			if(i<=0) return false;
+
+		});
+		
+		$('main section.' + GRID.section_active + ' > div').each(function() 
+		{
+			if($(this).hasClass("toremove")) $(this).remove();
+		});
+		DEBUG.log("GRID",GRID_OFFSETS[GRID.section_active],"deleted from",senschar);
+		
+		SCROLL_Load_Offsets();
 	}
 }
 
@@ -522,14 +533,7 @@ window.GRID_CallBack_load = function(data_array)
 				}
 			}
 											
-			let l_date_test = bdd.time_taken_at_date;
-
-			let l_date_display = l_date_test.substring(6,8) + "/" + l_date_test.substring(4,6) + "/" + l_date_test.substring(0,4);	
-			
-			if(l_date_display=="00/00/0000")  	htmldate="Undated";
-			else 								htmldate=formatDateLocale(l_date_display);
-
-			OBJ_Dest_date+=(addElement(data_array.dir, bdd, htmldate));
+			OBJ_Dest_date+=(addElement(data_array.dir, bdd, bdd.time_taken_at_date));
 			
 			if(!GRID_DATAS[local_section_active].loaded.includes(bdd.id)) GRID_DATAS[local_section_active].loaded.push(bdd.id); //store all loaded elements
 
@@ -542,6 +546,7 @@ window.GRID_CallBack_load = function(data_array)
 			DEBUG.log("GRID", "Write into",local_section_active);
 			$("main section.date."+local_section_active).append(OBJ_Dest_date);
 			DISPLAY_selection();
+			GRID_delete(true);
 		}
 		else 										
 		{
@@ -549,6 +554,7 @@ window.GRID_CallBack_load = function(data_array)
 			DEBUG.log("GRID", "Write into",local_section_active);
 			$("main section.date."+local_section_active).prepend(OBJ_Dest_date);
 			DISPLAY_selection();
+			GRID_delete(false);
 		}
 
 		GRID_load_id();
@@ -605,7 +611,12 @@ function GRID_load_id(date)
 
 		if(currentDate!==prevDate) 
 		{
-			$(this).before('<div class="fullrow"><h2>'+currentDate+'</h2></div>');
+			let l_date_display = currentDate.substring(6,8) + "/" + currentDate.substring(4,6) + "/" + currentDate.substring(0,4);	
+			
+			if(l_date_display=="00/00/0000")  	htmldate="Undated";
+			else 								htmldate=formatDateLocale(l_date_display);
+			
+			$(this).before('<div id="'+currentDate+'" class="fullrow"><h2>'+htmldate+'</h2></div>');
 		}		
 	
 		prevDate=currentDate;
@@ -617,7 +628,7 @@ function GRID_load_id(date)
 	return (id-1);
 }
 
-function addElement(dir, bdd, date)
+function addElement(dir, bdd, rawdate)
 {
 	let file_orientationtxt="landscape";
 	let trash = false;
@@ -648,7 +659,7 @@ function addElement(dir, bdd, date)
 		
 	let html ="";
 	let ux = "photo";
-	html+= '<div id="" data-date="'+date+'" class="element notselected wrapper '+file_orientationtxt+'">';
+	html+= '<div id="" data-date="'+rawdate+'" class="element notselected wrapper '+file_orientationtxt+'">';
 	
 	html+= '	<div class="media-container" data-type="'+bdd.file_type+'" data-src="'+before+bdd.file_hash+'" data-id="'+bdd.id+'" id="media_'+bdd.id+'">';
 

@@ -107,6 +107,7 @@ main section.grid
 	width: 100%;
 	grid-auto-rows: auto;
 	min-width: 0;
+	margin-bottom: 5px;
 }
 
 main section.nodate
