@@ -78,18 +78,20 @@ function Arrow(sens)
 
 function Select() //FULLSCREEN
 {
+	let = section_active=GRID_Get_SectionActive();
+	
 	if(!DISPLAY_is_visible_full_screen()) return;
 	
 	//***********************************************
 	//Mise à jour de la sélection
 	//***********************************************
 	
-	let media_id = parseInt($('div#'+GRID.section_active+'_'+FILEOPENFULLSCREEN.id_current+' div.media-container').attr('data-id'));
+	let media_id = parseInt($('div#'+section_active+'_'+FILEOPENFULLSCREEN.id_current+' div.media-container').attr('data-id'));
 
-	if(GRID_DATAS[GRID.section_active].selection.includes(media_id)) 		GRID_DATAS[GRID.section_active].selection = GRID_DATAS[GRID.section_active].selection.filter(h => h !== media_id);
-	else 									GRID_DATAS[GRID.section_active].selection.push(media_id);
+	if(GRID_DATAS[section_active].selection.includes(media_id)) 		GRID_DATAS[section_active].selection = GRID_DATAS[section_active].selection.filter(h => h !== media_id);
+	else 									GRID_DATAS[section_active].selection.push(media_id);
 
-	$('input.filesid').val(JSON.stringify(GRID_DATAS[GRID.section_active].selection));
+	$('input.filesid').val(JSON.stringify(GRID_DATAS[section_active].selection));
 
 	//***********************************************
 	//END - Mise à jour de la sélection
@@ -104,8 +106,10 @@ function Select() //FULLSCREEN
 
 var FILEOPENFULLSCREEN_FlushHashes= function FlushHashes()
 {
+	let = section_active=GRID_Get_SectionActive();
+	
 	$('input.filesid').val("[]");
-	GRID_DATAS[GRID.section_active].selection=[];
+	GRID_DATAS[section_active].selection=[];
 }
 
 function ArrowDisplay(current_id, max_id)
@@ -134,10 +138,12 @@ function ArrowDisplay(current_id, max_id)
 }
 
 var FILEOPENFULLSCREEN_Loadmedia = function LoadMedia(id)
-{	
-	let file_type = $('div#'+GRID.section_active+'_'+id+' div.media-container').attr("data-type");
-	let file_hash = $('div#'+GRID.section_active+'_'+id+' div.media-container').attr("data-src");
-	let media_id =  $('div#'+GRID.section_active+'_'+id+' div.media-container').attr("data-id");
+{
+	let = section_active=GRID_Get_SectionActive();
+	
+	let file_type = $('div#'+section_active+'_'+id+' div.media-container').attr("data-type");
+	let file_hash = $('div#'+section_active+'_'+id+' div.media-container').attr("data-src");
+	let media_id =  $('div#'+section_active+'_'+id+' div.media-container').attr("data-id");
 	
 	$('section#fullscreen div.media').attr('data-id',media_id);
 	
@@ -153,11 +159,13 @@ var FILEOPENFULLSCREEN_Loadmedia = function LoadMedia(id)
 
 var FILEOPENFULLSCREEN_Loadmedia = function LoadMedia(id)
 {
+	let = section_active=GRID_Get_SectionActive();
+	
 	display_media_error(false);
 
-    let file_type = $('div#'+GRID.section_active+'_'+id+' div.media-container').attr("data-type");
-    let file_hash = $('div#'+GRID.section_active+'_'+id+' div.media-container').attr("data-src");
-    let media_id = $('div#'+GRID.section_active+'_'+id+' div.media-container').attr("data-id");
+    let file_type = $('div#'+section_active+'_'+id+' div.media-container').attr("data-type");
+    let file_hash = $('div#'+section_active+'_'+id+' div.media-container').attr("data-src");
+    let media_id = $('div#'+section_active+'_'+id+' div.media-container').attr("data-id");
 
     let container = $('section#fullscreen div.media');
 

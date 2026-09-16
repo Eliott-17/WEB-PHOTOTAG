@@ -38,7 +38,9 @@ $(document).ready(function(){
 		
 		DEBUG.log("ON",'click.deleteconfirm');
 		
-		if(GRID_DATAS[GRID.section_active].selection.length==0)
+		let = section_active=GRID_Get_SectionActive();
+		
+		if(GRID_DATAS[section_active].selection.length==0)
 		{
 			NAV_CallBack_error("Fatal internal error");
 			console.error("Error trash selection");
@@ -47,13 +49,13 @@ $(document).ready(function(){
 						
 		//MISE A JOUT DU NOMBRE DE FICHIERS
 
-		const match = $('span#'+GRID.section_active+'_count').html();
+		const match = $('span#'+section_active+'_count').html();
 
 		let value = parseInt(match[1], 10);
 
-		value-=GRID_DATAS[GRID.section_active].selection.length;	
+		value-=GRID_DATAS[section_active].selection.length;	
 			
-		$('span#'+GRID.section_active+'_count').html(value);
+		$('span#'+section_active+'_count').html(value);
 			
 		
 		DISPLAY_menu($('div#loading'),true); 
@@ -120,9 +122,11 @@ var hash_array;
 
 var FILEMULTISELECTION_CallBack_load = function load(force_reload=false)
 {
-	const hashes_json = JSON.stringify(GRID_DATAS[GRID.section_active].selection);
+	let = section_active=GRID_Get_SectionActive();
+	
+	const hashes_json = JSON.stringify(GRID_DATAS[section_active].selection);
 		
-	if(GRID_DATAS[GRID.section_active].selection.length<=1)
+	if(GRID_DATAS[section_active].selection.length<=1)
 	{
 		DISPLAY_loading(false);
 		DISPLAY_file_info(true);
@@ -251,16 +255,18 @@ window.FILEMULTISELECTION_CallBack_display = function(ldata)
 
 window.FILEMULTISELECTION_CallBack_success = function(is_tagged=false)
 {
-	$('main section.'+GRID.section_active+' div.selected').addClass("transition-on");
-	$('main section.'+GRID.section_active+' div.selected').addClass("success");
+	let = section_active=GRID_Get_SectionActive();
+	
+	$('main section.'+section_active+' div.selected').addClass("transition-on");
+	$('main section.'+section_active+' div.selected').addClass("success");
 	
 	setTimeout(function() { 
 		
-		$('main section.'+GRID.section_active+' div.selected').removeClass("success"); 
+		$('main section.'+section_active+' div.selected').removeClass("success"); 
 		
 		setTimeout(function() { 
 		
-			$('main section.'+GRID.section_active+' div.selected').removeClass("transition-on"); 
+			$('main section.'+section_active+' div.selected').removeClass("transition-on"); 
 		
 		}, 500);
 		
@@ -312,7 +318,9 @@ var FILEMULTISELECTION_reset_ux = function reset_ux(obj, data)
 
 window.FILEMULTISELECTION_CallBack_trash = function()
 {
-	GRID_DATAS[GRID.section_active].selection.forEach(function (element) {
+	let = section_active=GRID_Get_SectionActive();
+	
+	GRID_DATAS[section_active].selection.forEach(function (element) {
 		
 		$("#media_"+element).parent().remove();
 

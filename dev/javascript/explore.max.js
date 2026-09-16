@@ -42,6 +42,8 @@ $(document).ready(function(){
 
 function EXPLORE_post_search(tag,val,exclude)
 {
+	let = section_active=GRID_Get_SectionActive();
+	
 	if($('#filter_tag').val()!=tag || $('#filter_val').val()!=val || $('input#filters_exclude').val()!=exclude)
 	{
 		GRID_reset("EXPLORE_post_search","SEARCH",1);
@@ -55,7 +57,7 @@ function EXPLORE_post_search(tag,val,exclude)
 	$('#filter_val').val(val);
 	$('#filters_exclude').val(exclude);
 
-	if(GRID.section_active!="search") GRID.section_mem=GRID.section_active;
+	if(section_active!="search") GRID.section_mem=section_active;
 
 	DISPLAY_menu($('#select-status'),false);
 	DISPLAY_set_view('grid');		

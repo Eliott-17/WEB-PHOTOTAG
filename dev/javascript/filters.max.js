@@ -61,12 +61,14 @@ $(document).ready(function()
 
 window.FILTERS_CallBack_search = function(datas) 
 {
+	let = section_active=GRID_Get_SectionActive();
+	
 	let s="";
 	if(datas.count>1) s="s";
 	
 	$('nav span#filterresult').html(datas.count+ ' element'+s);
 	
-	GRID_SECTIONS[GRID.section_active].countmem=datas.count;
+	GRID_SECTIONS[section_active].countmem=datas.count;
 
 	let element_check_callback=false;		
 

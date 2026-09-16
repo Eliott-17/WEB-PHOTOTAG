@@ -72,21 +72,24 @@ var DISPLAY_set_view = function view_refresh(newview)
 
 var DISPLAY_section = function section(section)
 {
+	GRID_Release_Scroll();
 	GRID.section_active=section;
 	
-	localStorage.setItem(APP.userhash+'_last_page', GRID.section_active);
+	let = section_active=GRID_Get_SectionActive();
+	
+	localStorage.setItem(APP.userhash+'_last_page', section_active);
 	
 	$('div#mainmenu div button').removeClass("selected");
-	$('div#mainmenu div.'+GRID.section_active+' button').addClass("selected");
+	$('div#mainmenu div.'+section_active+' button').addClass("selected");
 	
 	$('section').addClass("hidden");
-	$('section.'+GRID.section_active).removeClass("hidden");
+	$('section.'+section_active).removeClass("hidden");
 
 	$('div#uploaddrag span').addClass("hidden");
-	$('div.'+GRID.section_active).removeClass("hidden");
-	$('span.'+GRID.section_active).removeClass("hidden");
+	$('div.'+section_active).removeClass("hidden");
+	$('span.'+section_active).removeClass("hidden");
 	
-	if(GRID.section_active=="search")	
+	if(section_active=="search")	
 	{
 		$('div#mainmenu').addClass('hidden');
 		$('div#searchmenu').removeClass('hidden');
@@ -99,9 +102,9 @@ var DISPLAY_section = function section(section)
 		
 	GRID_load("DISPLAY_section");//en affichant une section on s'assure de charger les données.
 	
-	$('main').scrollTop(GRID_SECTIONS[GRID.section_active].scrolls_mem); 
+	$('main').scrollTop(GRID_SECTIONS[section_active].scrolls_mem); 
 		
-	DEBUG.log("DISPLAY","section",'section.'+GRID.section_active,GRID_SECTIONS[GRID.section_active].scrolls_mem);
+	DEBUG.log("DISPLAY","section",'section.'+section_active,GRID_SECTIONS[section_active].scrolls_mem);
 }
 
 //****************************************************************
@@ -168,11 +171,13 @@ let DISPLAY_first_element_position_mem=null;
 
 var DISPLAY_full_screen = function display_full_screen(visibility = undefined)
 {
+	let = section_active=GRID_Get_SectionActive();
+	
 	if(visibility==true) 		
 	{ 
 		GRID_scroll_locked = true;
 		
-		$('main section.'+GRID.section_active).addClass('hidden');
+		$('main section.'+section_active).addClass('hidden');
 		$('main section#fullscreen').removeClass('hidden');
 		DEBUG.log("DISPLAY","full_screen: openned (show)");
 		$('nav#main').addClass('hidden');
@@ -181,13 +186,13 @@ var DISPLAY_full_screen = function display_full_screen(visibility = undefined)
 	
 	if(visibility==false) 		
 	{ 
-		$('main section.'+GRID.section_active).removeClass('hidden');
+		$('main section.'+section_active).removeClass('hidden');
 		$('main section#fullscreen').addClass('hidden');
 		$('nav#main').removeClass('hidden');
 
 		requestAnimationFrame(function() {
 			GRID_scroll_locked = false;
-			$('main').scrollTop(GRID_SECTIONS[GRID.section_active].scrolls_mem); 
+			$('main').scrollTop(GRID_SECTIONS[section_active].scrolls_mem); 
 		});
 	
 		DEBUG.log("DISPLAY","full_screen: closed (hide)");		
@@ -276,11 +281,13 @@ var DISPLAY_fileinfo_init = function fileinfo_init(multiselectionreset=true)
 
 var DISPLAY_selection = function selection()
 {
-	$.each(GRID_DATAS[GRID.section_active].loaded, function(key,value) 
+	let = section_active=GRID_Get_SectionActive();
+	
+	$.each(GRID_DATAS[section_active].loaded, function(key,value) 
 	{
-		let element = $('section.grid.'+GRID.section_active+' div div#media_'+value).parent();
+		let element = $('section.grid.'+section_active+' div div#media_'+value).parent();
 
-		if(GRID_DATAS[GRID.section_active].selection.includes(value))
+		if(GRID_DATAS[section_active].selection.includes(value))
 		{
 			//Manage grid selection
 
@@ -313,7 +320,7 @@ var DISPLAY_selection = function selection()
 	//Affiche le menu si on sélectionne deux photos ou plus **********
 	//****************************************************************
 	
-	let loaded_files=GRID_DATAS[GRID.section_active].selection.length;
+	let loaded_files=GRID_DATAS[section_active].selection.length;
 
 	if(loaded_files<=1 || DISPLAY_is_visible_full_screen()) 
 	{	
@@ -340,12 +347,12 @@ var DISPLAY_trash = function trash(display)
 	if(display==true)
 	{
 		DISPLAY_menu($('div#select-trash'),true); 
-		$('main section.'+GRID.section_active+' div.selected').addClass('delete'); 
+		$('main section.'+section_active+' div.selected').addClass('delete'); 
 	}
 	else
 	{		
 		DISPLAY_menu($('div#select-trash'),false); 
-		$('main section.'+GRID.section_active+' div.selected').removeClass('delete');
+		$('main section.'+section_active+' div.selected').removeClass('delete');
 	}
 }
 

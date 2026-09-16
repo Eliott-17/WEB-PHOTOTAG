@@ -49,9 +49,11 @@ $(document).ready(function(){
 
 	$('aside#infocontent h4.button-trash').on('click.trashInfo', function() {
 		
-		let media_id = parseInt($('div#'+GRID.section_active+'_'+FILEOPENFULLSCREEN.id_current+' div.media-container').attr('data-id'));
+		let = section_active=GRID_Get_SectionActive();
+		
+		let media_id = parseInt($('div#'+section_active+'_'+FILEOPENFULLSCREEN.id_current+' div.media-container').attr('data-id'));
 
-		if(!GRID_DATAS[GRID.section_active].selection.includes(media_id)) GRID_DATAS[GRID.section_active].selection.push(media_id);
+		if(!GRID_DATAS[section_active].selection.includes(media_id)) GRID_DATAS[section_active].selection.push(media_id);
 		
 		DEBUG.log("ON",'click.trashInfo');
 		

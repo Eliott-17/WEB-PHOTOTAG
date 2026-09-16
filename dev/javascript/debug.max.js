@@ -3,7 +3,7 @@ const DEBUG = {
     enabled: false,
 
     modules: {
-        GRID: false,
+        GRID: true,
 		SCROLL: false,
         DISPLAY: false,
         ON: false,
@@ -13,7 +13,7 @@ const DEBUG = {
 		DATAS: false,
 		UPLOAD: false,
 		EXPLORE: false,
-		SCROLLBAR: true
+		SCROLLBAR: false
 },
 
     log(module, ...args) {
