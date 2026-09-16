@@ -110,8 +110,8 @@ window.SCROLL_Load_Scroll_Bar= function Load_Scroll_Bar(offset=null)
 	});
 	
 	if(init) 	SCROLL[section_active].total_lignes=total_lignes;
-	else 		SCROLL[section_active].offset=(SCROLL[section_active].total_ligne-total_lignes)*225;
-
+	else 		SCROLL[section_active].offset=(SCROLL[section_active].total_lignes-total_lignes)*225;
+	
 	DEBUG.log("SCROLLBAR",init,SCROLL[section_active]);	
 }
 

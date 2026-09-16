@@ -3,7 +3,7 @@ const DEBUG = {
     enabled: false,
 
     modules: {
-        GRID: true,
+        GRID: false,
 		SCROLL: false,
         DISPLAY: false,
         ON: false,
