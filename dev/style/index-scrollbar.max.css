@@ -1,21 +1,42 @@
 
-nav#magicscrollbar div.bar
+nav#magicscrollbar
 {
-    position:  fixed;
-    width: 20px;
-    background-color: red;
-    right: 20px;
-    top: 104px;
-    bottom: 20px;
-	border-radius: 20px;
+	height: auto;
+	width: 20px;
+	background-color: #fafafa;
+	margin-left: 5px;
+	box-shadow: -4px 0px 12px rgba(0,0,0,0.1);
+	border: 1px solid red;
+
 }
 
 nav#magicscrollbar div.pointer
 {
+	display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+	
+	position: absolute;
     text-align: center;
-    height: 0%;
-    left: 5px;
-    width: 20px;
-    border-bottom: 2px solid black;
+
     background-color: transparent;
+}
+
+nav#magicscrollbar div.pointer span
+{
+	font-size: 20px;
+	position: relative;
+}
+
+nav#magicscrollbar ul
+{
+	position: absolute;
+	margin: 0px;
+	padding: 0px;
+}
+
+
+nav#magicscrollbar ul li
+{
+	font-size: 20px;
 }

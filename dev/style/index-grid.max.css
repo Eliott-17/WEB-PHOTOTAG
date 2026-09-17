@@ -15,12 +15,12 @@ html, body
 body {
 	margin: 0;
 	display: grid;
-	grid-template-columns: 1fr 350px;
+	grid-template-columns: 1fr 20px 350px;
 	grid-template-rows: auto 1fr auto;
 	grid-template-areas:
-		"nav nav"
-		"main aside"
-		"footer footer";
+		"nav nav nav"
+		"main scrollbar aside"
+		"footer footer footer";
 	overflow: hidden;
 	font-family: calibri;
 }
@@ -30,13 +30,17 @@ body.no-aside-files.no-aside-filters.no-aside-loading
 {
   grid-template-columns: 1fr;
   grid-template-areas:
-    "nav"
-    "main"
-    "footer";
+    "nav nav"
+    "main scrollbar"
+    "footer footer";
 }
 
-nav {
+nav#main {
 	grid-area: nav;
+}
+
+nav#magicscrollbar {
+	grid-area: scrollbar;
 }
 
 nav div {
@@ -160,7 +164,6 @@ main section.grid div.landscape {
 
 main section.grid div.fullrow h2 
 {
-	padding: 10px;
 	margin: 0px;
 	font-weight: normal; 
 	color: #494949;
@@ -170,9 +173,14 @@ main section.grid div.fullrow h2
 
 main section.grid div.fullrow {
     grid-column: 1 / -1;
-    height: auto;
+    height: 50px;
     min-height: unset;
     align-self: start;
+	
+	display: flex;
+    align-items: center;
+	
+	padding-left: 10px;
 }
 
 main section.grid div.element

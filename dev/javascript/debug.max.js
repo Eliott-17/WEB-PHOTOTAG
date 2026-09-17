@@ -13,7 +13,7 @@ const DEBUG = {
 		DATAS: false,
 		UPLOAD: false,
 		EXPLORE: false,
-		SCROLLBAR: false
+		SCROLLBAR: true
 },
 
     log(module, ...args) {

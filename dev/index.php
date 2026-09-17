@@ -145,8 +145,13 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/datas.php');
 		</nav>
 		<nav id="magicscrollbar">
 		
-			<div class="bar"><div class="pointer"></div></div>
-			
+			<div class="pointer"><span class=" material-symbols-outlined">drag_handle</span></div>
+			<ul>
+				<li class="material-symbols-outlined">more_horiz</li>
+				<li class="material-symbols-outlined">more_horiz</li>
+				<li class="material-symbols-outlined">more_horiz</li>
+				<li class="material-symbols-outlined">more_horiz</li>
+			</ul>
 		
 		</nav>
 		<?php

@@ -321,11 +321,11 @@ function scroll_execute(sens) //bottom = true, top = false;
 		}
 		else 
 		{
+			SCROLL_set_position();
 			DEBUG.log("SCROLL","nothing added to",senschar);
 		}
 	}
-	
-	SCROLL_set_position();
+	else SCROLL_set_position();
 }
 
 function GRID_delete(sens)

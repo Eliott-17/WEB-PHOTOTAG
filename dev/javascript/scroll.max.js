@@ -3,15 +3,17 @@
 //****************************************************************	
 
 let SCROLL = {
-    library:	{loaded:false,datas:[],total_lignes:0,total_height:0,offset:0},
-    untagged: 	{loaded:false,datas:[],total_lignes:0,total_height:0,offset:0},
-    search: 	{loaded:false,datas:[],total_lignes:0,total_height:0,offset:0}
+    library:	{loaded:false,datas:[],total_lignes:0,total_height:0,offset:0,ux:[]},
+    untagged: 	{loaded:false,datas:[],total_lignes:0,total_height:0,offset:0,ux:[]},
+    search: 	{loaded:false,datas:[],total_lignes:0,total_height:0,offset:0,ux:[]}
 };
 
 //****************************************************************
 //Variables locales **********************************************
 //****************************************************************	
 
+let SCROLL_height_media = 220;
+let SCROLL_height_date = 50;
 
 $(document).ready(function(){
 
@@ -73,6 +75,8 @@ window.SCROLL_Load_Scroll_Bar= function Load_Scroll_Bar(offset=null)
 		let increment;
 		let elements=0;
 		
+		SCROLL[section_active].ux.date
+		
 		let datas = data.orientations.split(',').reverse();
 
 		$.each(datas, function(id_, data_) {
@@ -105,12 +109,36 @@ window.SCROLL_Load_Scroll_Bar= function Load_Scroll_Bar(offset=null)
 		
 		total_lignes+=countlines;
 		
-		if(init) SCROLL[section_active].total_height+=(countlines*225)+48
+		if(init) 
+		{
+			let blockheight = (countlines*SCROLL_height_media)+SCROLL_height_date;
+
+			SCROLL[section_active].total_height+=blockheight;
+			
+			(SCROLL[section_active].ux[id] ??= {}).date = data.date;
+			(SCROLL[section_active].ux[id] ??= {}).blockheight = blockheight;
+
+			(SCROLL[section_active].datas[id] ??= {}).lines = countlines;
+			
+		}
 
 	});
 	
-	if(init) 	SCROLL[section_active].total_lignes=total_lignes;
-	else 		SCROLL[section_active].offset=(SCROLL[section_active].total_lignes-total_lignes)*225;
+	if(init) 	
+	{
+		SCROLL[section_active].total_lignes=total_lignes;
+		
+		SCROLL[section_active].total_height+=((total_lignes-1)*5); //5 pixel media gap
+		
+		SCROLL[section_active].total_height+=(SCROLL[section_active].datas.length*5); //5 pixel media gap		
+	}
+	else 		
+	{
+		let current_line = (SCROLL[section_active].total_lignes-total_lignes);
+		
+		SCROLL[section_active].offset=(current_line*SCROLL_height_media);
+		SCROLL[section_active].offset+=(current_line-1)*5;
+	}
 	
 	DEBUG.log("SCROLLBAR",init,SCROLL[section_active]);	
 }
@@ -132,22 +160,54 @@ window.SCROLL_set_position = function set_position()
 	
 	if(SCROLL[section_active]==undefined) return;
 	
+	let uxoffset=get_ux_offset(section_active);
+	
+	let element = $('main section.' + section_active + ' div.fullrow').first().next();	
+	/*let uxheight = $('nav#magicscrollbar').height();*/
+
+	let total = SCROLL[section_active].total_height-$('main').height();
+	
+	let scrolled = Math.abs(element.position().top-uxoffset-SCROLL[section_active].offset);
+	
+	if(scrolled>total) scrolled=total;
+	
+	let scrollbar_total_height = $('nav#magicscrollbar').height();
+	
+	let a = (scrollbar_total_height - 20) / total;
+	let b = 20;//scrollbar_total_height-(total*a);
+	
+	let height = Math.round((scrolled * a) + b);
+	
+	if(height<=20) height=20;
+	
+	if(element.attr('id')==section_active+"_0") $('nav#magicscrollbar div.pointer').css('height',height+'px');
+	
+	DEBUG.log("SCROLLBAR",element.attr('id'),scrolled,total,a,b,height);
+}
+
+function get_ux_offset(section_active)
+{
 	let uxoffset=0;
 	
-	uxoffset+=84; // TOP NAVBAR
-	uxoffset+=48; //First line date	
+	uxoffset+=$('div#mainmenu').height();
 	
-	if(section_active=="untagged") uxoffset+=62; //DROP FILES ZONE
+	uxoffset+=SCROLL_height_date; //First date
 	
-	element = $('main section.' + section_active + ' div.fullrow').first().next();
+	uxoffset+=5; //margin bottom
 
-	let total = SCROLL[section_active].total_height-1125-uxoffset;
+	if(section_active=="untagged") uxoffset+=$('div#uploaddrag').height(); 
+	return uxoffset;
 	
-	let position = Math.abs(element.position().top-uxoffset)+SCROLL[section_active].offset;
-	
-	let precent = Math.round(position*1000/total)/10;
-	
-	if(element.attr('id')==section_active+"_0") $('nav#magicscrollbar div.pointer').css('height',precent+'%');
-	
-	DEBUG.log("SCROLLBAR",element.attr('id'),total,SCROLL[section_active].offset,position,precent);
 }
+
+let old_width = $(window).width();
+
+$(window).on('resize', function() {
+    let width = $(window).width();
+
+    if (width !== old_width) {
+		SCROLL_set_position();
+        old_width = width;
+        // largeur réellement modifiée
+    }
+});
