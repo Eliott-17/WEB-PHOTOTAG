@@ -143,16 +143,8 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/datas.php');
 				<span class="material-symbols-outlined">cycle</span>
 			</div>
 		</nav>
-		<nav id="magicscrollbar">
-		
-			<div class="pointer"><span class=" material-symbols-outlined">drag_handle</span></div>
-			<ul>
-				<li class="material-symbols-outlined">more_horiz</li>
-				<li class="material-symbols-outlined">more_horiz</li>
-				<li class="material-symbols-outlined">more_horiz</li>
-				<li class="material-symbols-outlined">more_horiz</li>
-			</ul>
-		
+		<nav id="magicscrollbar">		
+			<ul></ul>
 		</nav>
 		<?php
 			if(is_session_valid())
@@ -184,9 +176,9 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/datas.php');
 					<section class="explore hidden"></section>
 					<section class="grid library date hidden"></section>
 					<div id="uploaddrag">
-						<span id="uploadmedia" class="untagged hidden">Drag & drop here to add files</span>
+						<!--<span id="uploadmedia" class="untagged hidden">Drag & drop here to add files</span>
 						<span id="uploadjson" class="untagged hidden">Google Photo supplemental-metadata.json</span>
-						<span id="scrollbarspace" class="untagged"></span>
+						<span id="scrollbarspace" class="untagged"></span>-->
 					</div>
 					<section class="grid untagged date hidden"></section>
 					<section class="grid search date hidden"></section>

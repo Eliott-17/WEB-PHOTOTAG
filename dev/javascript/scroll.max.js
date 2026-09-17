@@ -14,6 +14,7 @@ let SCROLL = {
 
 let SCROLL_height_media = 220;
 let SCROLL_height_date = 50;
+let SCROLL_height_gap = 5;
 
 $(document).ready(function(){
 
@@ -120,6 +121,12 @@ window.SCROLL_Load_Scroll_Bar= function Load_Scroll_Bar(offset=null)
 
 			(SCROLL[section_active].datas[id] ??= {}).lines = countlines;
 			
+			if(id==0) 	(SCROLL[section_active].datas[id] ??= {}).offset=0;
+			else  		(SCROLL[section_active].datas[id] ??= {}).offset=SCROLL[section_active].datas[id-1].offset;
+			
+			SCROLL[section_active].datas[id].offset+=(SCROLL_height_media+SCROLL_height_gap)*countlines;
+			SCROLL[section_active].datas[id].offset+=SCROLL_height_date+SCROLL_height_gap;
+			
 		}
 
 	});
@@ -127,10 +134,30 @@ window.SCROLL_Load_Scroll_Bar= function Load_Scroll_Bar(offset=null)
 	if(init) 	
 	{
 		SCROLL[section_active].total_lignes=total_lignes;
+		SCROLL[section_active].total_height+=((total_lignes-1)*5); //5 pixel media gap		
+		SCROLL[section_active].total_height+=(SCROLL[section_active].datas.length*5); //5 pixel media gap	
+
+		let offset=0;
 		
-		SCROLL[section_active].total_height+=((total_lignes-1)*5); //5 pixel media gap
-		
-		SCROLL[section_active].total_height+=(SCROLL[section_active].datas.length*5); //5 pixel media gap		
+		$.each(SCROLL[section_active].datas, function(id,data)
+		{
+			let html='<li id="date_'+data.date+'" class="material-symbols-outlined">more_horiz</li>';
+			
+			if(id==0) 
+			{	
+				$('nav#magicscrollbar ul').html('<li class="material-symbols-outlined cursor">drag_handle</span></li>');
+				$('nav#magicscrollbar ul').append(html);	
+				$('nav#magicscrollbar ul li#date_'+data.date).css('top','-10px');
+			}
+			else
+			{
+				let a = ($('nav#magicscrollbar').height()) / (SCROLL[section_active].total_height-$('main').height());
+				let height = Math.round((SCROLL[section_active].datas[id-1].offset) * a);
+
+				$('nav#magicscrollbar ul').append(html);
+				$('nav#magicscrollbar ul li#date_'+data.date).css('top',height-10+'px');
+			}
+		});
 	}
 	else 		
 	{
@@ -139,13 +166,13 @@ window.SCROLL_Load_Scroll_Bar= function Load_Scroll_Bar(offset=null)
 		SCROLL[section_active].offset=(current_line*SCROLL_height_media);
 		SCROLL[section_active].offset+=(current_line-1)*5;
 	}
-	
+
 	DEBUG.log("SCROLLBAR",init,SCROLL[section_active]);	
 }
 
 window.SCROLL_get_grid_width = function get_grid_width()
 {
-	let section_active=GRID_Get_SectionActive();;
+	let section_active=GRID_Get_SectionActive();
 	
 	let columns = getComputedStyle(
 		$('main section.' + section_active)[0]
@@ -160,29 +187,14 @@ window.SCROLL_set_position = function set_position()
 	
 	if(SCROLL[section_active]==undefined) return;
 	
-	let uxoffset=get_ux_offset(section_active);
-	
 	let element = $('main section.' + section_active + ' div.fullrow').first().next();	
-	/*let uxheight = $('nav#magicscrollbar').height();*/
 
-	let total = SCROLL[section_active].total_height-$('main').height();
+	let a = ($('nav#magicscrollbar').height()) / (SCROLL[section_active].total_height-$('main').height());
+	let height = Math.round(Math.abs((element.position().top-get_ux_offset(section_active))) * a);
 	
-	let scrolled = Math.abs(element.position().top-uxoffset-SCROLL[section_active].offset);
+	if(element.attr('id')==section_active+"_0") $('nav#magicscrollbar ul li.cursor').css('top',height-10+'px');
 	
-	if(scrolled>total) scrolled=total;
-	
-	let scrollbar_total_height = $('nav#magicscrollbar').height();
-	
-	let a = (scrollbar_total_height - 20) / total;
-	let b = 20;//scrollbar_total_height-(total*a);
-	
-	let height = Math.round((scrolled * a) + b);
-	
-	if(height<=20) height=20;
-	
-	if(element.attr('id')==section_active+"_0") $('nav#magicscrollbar div.pointer').css('height',height+'px');
-	
-	DEBUG.log("SCROLLBAR",element.attr('id'),scrolled,total,a,b,height);
+	DEBUG.log("SCROLLBAR",element.attr('id'),height);
 }
 
 function get_ux_offset(section_active)

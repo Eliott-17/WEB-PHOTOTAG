@@ -6,8 +6,8 @@ nav#magicscrollbar
 	background-color: #fafafa;
 	margin-left: 5px;
 	box-shadow: -4px 0px 12px rgba(0,0,0,0.1);
-	border: 1px solid red;
-
+	padding-top: 10px;
+	padding-bottom: 10px;
 }
 
 nav#magicscrollbar div.pointer
@@ -38,5 +38,6 @@ nav#magicscrollbar ul
 
 nav#magicscrollbar ul li
 {
+	position: absolute;
 	font-size: 20px;
 }

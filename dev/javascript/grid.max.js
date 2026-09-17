@@ -3,7 +3,7 @@
 //****************************************************************	
 
 let GRID = {
-	configelements:20, //nombre d'éléments à charger
+	configelements:40, //nombre d'éléments à charger
 	section_active:"explore",
 	section_mem:"",
 	max_elements:0,
@@ -268,6 +268,8 @@ function scroll_refresh()
 	
 	scroll_execute(true);
 	scroll_execute(false);
+	
+	SCROLL_set_position();
 }
 
 function scroll_execute(sens) //bottom = true, top = false;
@@ -321,11 +323,9 @@ function scroll_execute(sens) //bottom = true, top = false;
 		}
 		else 
 		{
-			SCROLL_set_position();
 			DEBUG.log("SCROLL","nothing added to",senschar);
 		}
 	}
-	else SCROLL_set_position();
 }
 
 function GRID_delete(sens)
@@ -602,6 +602,7 @@ window.GRID_CallBack_load = function(data_array)
 		//fill the grid with empty space
 
 		GRID_Release_Scroll();
+		SCROLL_set_position();
 
 		DEBUG.log("CALLBACK","CallBack_load","Will add element on",section_active);
 		
