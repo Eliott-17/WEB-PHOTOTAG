@@ -144,7 +144,7 @@
 				$is_tagged=false;				
 			}
 	
-			if($count==1)
+			/*if($count==1)
 			{
 				$return=array($is_tagged,$dataarray[0]);
 				
@@ -157,7 +157,26 @@
 				$fReturn->addCallback("FILEMULTISELECTION_CallBack_load",true);
 				$fReturn->addCallback("FILEMULTISELECTION_CallBack_success",$is_tagged);
 				if(isset($tag))  $fReturn->addCallback("EXPLORE_CallBack_addtags",$tag);			
+			}*/
+
+			if($count==1)
+			{
+				$fReturn->addCallback("FILEINFO_CallBack_load",true);
+				$fReturn->addCallback("FILEINFO_CallBack_success");
+				$id = $dataarray[0];
+				
 			}
+			else
+			{
+				$fReturn->addCallback("FILEMULTISELECTION_CallBack_load",true);
+				$fReturn->addCallback("FILEMULTISELECTION_CallBack_success");
+				$id = null;
+						
+			}
+			
+			$fReturn->addCallback("GRID_CallBack_switched",array($is_tagged,$id));
+			
+			if(isset($tag))  $fReturn->addCallback("EXPLORE_CallBack_addtags",$tag);	
 		}	
 		else
 		{

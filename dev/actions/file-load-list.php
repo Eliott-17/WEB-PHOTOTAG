@@ -10,10 +10,10 @@
 	$fReturn = new fReturn();
 	$validation = new Validation();
 
-	$validation->addVerification('offset',			'int',			'offset');	
-	$validation->addVerification('elements',		'int',			'elements');	
-	$validation->addVerification('countmem',		'int',			'countmem');
-	$validation->addVerification('sectionactive', 	'in_array', 	'sectionactive', 		['library', 'untagged'] );
+	$validation->addVerification('offset',				'int',			'offset');	
+	$validation->addVerification('elements',			'int',			'elements');	
+	$validation->addVerification('scrolldatalenght',	'int',			'scrolldatalenght');
+	$validation->addVerification('sectionactive', 		'in_array', 	'sectionactive', 		['library', 'untagged'] );
 	//$validation->addVerification('sectionactive',		'string',			'sectionactive',  		6,8);	
 	$validation->Validate();
 	
@@ -98,9 +98,9 @@
 		{
 			$bigarray['count']=$array_cnt['datas'][0];
 			
-			if($_GET['countmem']!=$bigarray['count']['total'])
+			if($_GET['scrolldatalenght']==0)
 			{
-				if(ENV=="DEV") $fReturn->addConsole("Require update grid disposition (".$_GET['countmem']." - ".$bigarray['count']['total'].")");
+				if(ENV=="DEV") $fReturn->addConsole("Require update grid disposition");
 				
 				//$EasyPDO->setDebug();
 				

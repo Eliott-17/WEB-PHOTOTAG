@@ -45,6 +45,8 @@ let last_select=-1;								//mémorise le dernier uniqueid sélectioné
 
 function GRID_system_reset(section_to_reset, from)
 {
+	DEBUG.log("GRID","Reset",section_to_reset,"request from",from);
+
 	$("main section."+section_to_reset).html('');
 	
 	GRID_SECTIONS[section_to_reset].update=true;
@@ -67,8 +69,6 @@ function GRID_system_reset(section_to_reset, from)
 	SCROLL[section_to_reset].offset=0;
 
 	if(section_to_reset==GRID.section_active) GRID_load("reset");
-	
-	DEBUG.log("GRID","Reset",section_to_reset,"request from",from);
 }
 
 $(document).ready(function(){
@@ -207,7 +207,7 @@ $(document).ready(function(){
 		ArrowDisplay(media_id, max); 
 		FILEOPENFULLSCREEN_Loadmedia(media_id);
 		DISPLAY_set_view("fullscreen");	//order before DISPLAY_selection is important
-		DISPLAY_selection(FILEOPENFULLSCREEN.id_current,true);
+		DISPLAY_selection(FILEOPENFULLSCREEN.id_current);
 	});	
 	
 	//*******************************************************************
@@ -429,31 +429,22 @@ function GRID_load(from)
 		DEBUG.log("GRID",section_active,"update request");
 		
 		GRID_SECTIONS[section_active].update=false;
-		
-		if(section_active!="explore")
-		{
-			if(SCROLL[section_active].datas.length==0)
-			{
-				SCROLL[section_active].loaded=false;
-				GRID_SECTIONS[section_active].countmem=-1;
-			}
-		}
 
 		switch(section_active)
 		{
 			case "library":
 			
-				CORE_get('/actions/file-load-list.php?countmem='+GRID_SECTIONS[section_active].countmem+'&sectionactive='+section_active+'&elements='+GRID_SECTIONS[section_active].elements+'&offset='+GRID_SECTIONS[section_active].offset);
+				CORE_get('/actions/file-load-list.php?scrolldatalenght='+SCROLL[section_active].datas.length+'&sectionactive='+section_active+'&elements='+GRID_SECTIONS[section_active].elements+'&offset='+GRID_SECTIONS[section_active].offset);
 				
 			break;
 			case "untagged":
 			
-				CORE_get('/actions/file-load-list.php?countmem='+GRID_SECTIONS[section_active].countmem+'&sectionactive='+section_active+'&elements='+GRID_SECTIONS[section_active].elements+'&offset='+GRID_SECTIONS[section_active].offset);
+				CORE_get('/actions/file-load-list.php?scrolldatalenght='+SCROLL[section_active].datas.length+'&sectionactive='+section_active+'&elements='+GRID_SECTIONS[section_active].elements+'&offset='+GRID_SECTIONS[section_active].offset);
 				
 			break;
 			case "search":
 			
-				$("#filters").attr('action','/actions/file-search-list.php?countmem='+GRID_SECTIONS[section_active].countmem+'&sectionactive='+section_active+'&offset='+GRID_SECTIONS[section_active].offset+'&tagslist='+GRID_SECTIONS[section_active].taglist);
+				$("#filters").attr('action','/actions/file-search-list.php?sectionactive='+section_active+'&offset='+GRID_SECTIONS[section_active].offset+'&tagslist='+GRID_SECTIONS[section_active].taglist);
 
 				GRID_SECTIONS[section_active].taglist=0; //par défaut à 0;
 				
@@ -481,11 +472,80 @@ function GRID_load(from)
 	}
 }
 
+function GRID_remove_switched_element()
+{
+	let = section_active=GRID_Get_SectionActive();
+	
+	DEBUG.log("GRID",'Remove elements in '+section_active);
+		
+	let removelement=null;
+		
+	if(section_active=="untagged") removelement="is_tagged";
+	if(section_active=="library")  removelement="is_not_tagged";
+
+	if(removelement!=null)
+	{
+		let removelementcnt=0;
+		
+		$('main section.'+section_active+' div.element.'+removelement+' div.media-container').each(function(){
+			
+			GRID_DATAS[section_active].selection = GRID_DATAS[section_active].selection.filter(h => h !== $(this).attr('data-id'));
+			
+			console.log($(this).attr('data-id'));
+			
+			$(this).parent().remove();
+			removelementcnt++;
+
+		});
+		
+		if(removelementcnt!=0)
+		{
+			DEBUG.log("GRID",removelementcnt,"removed");
+			
+			if(section_active=="untagged")  DISPLAY_set_media_count('library',DISPLAY_get_media_count('library')+removelementcnt); 
+			if(section_active=="library")   DISPLAY_set_media_count('untagged',DISPLAY_get_media_count('untagged')+removelementcnt); 
+
+			DISPLAY_set_media_count(section_active,DISPLAY_get_media_count(section_active)-removelementcnt); 
+		}
+		
+		GRID_load_id();
+		DISPLAY_selection();
+	}
+	
+	DEBUG.log("GRID","GRID_remove_switched_element");
+}
+
+window.GRID_CallBack_switched = function(array)
+{
+	let is_tagged=array[0];
+	let id=array[1];	
+	
+	if(id==null) { $.each(GRID_DATAS[section_active].selection, function(index, value) { 	switch_class(section_active,is_tagged,value); }); }
+	else 																					switch_class(section_active,is_tagged,id);
+
+	if(section_active!="library") GRID_system_reset("library", "FILEMULTISELECTION_CallBack_success");
+	if(section_active!="untagged") GRID_system_reset("untagged", "FILEMULTISELECTION_CallBack_success");
+	if(section_active!="search") GRID_system_reset("search", "FILEMULTISELECTION_CallBack_success");
+	GRID_system_reset("explore", "FILEMULTISELECTION_CallBack_success");
+
+	DEBUG.log("GRID","GRID_CallBack_switched",section_active,GRID_DATAS[section_active].selection);
+}
+
+function switch_class(section_active,is_tagged,value)
+{
+	let element = $('main section.'+section_active+' div.element div#media_'+value);
+	
+	element.parent().removeClass('is_tagged is_not_tagged');
+
+	if(is_tagged==true) element.parent().addClass('is_tagged'); 
+	else element.parent().addClass('is_not_tagged');	
+}
+
 window.GRID_CallBack_load = function(data_array)
 {
 	let = section_active=GRID_Get_SectionActive();
 	
-	DEBUG.log("GRID_DATAS",data_array);
+	DEBUG.log("DATAS",data_array);
 	
 	if(data_array.sectionactive==undefined)
 	{
@@ -504,57 +564,8 @@ window.GRID_CallBack_load = function(data_array)
 	
 	let regenerate=true;
 
-	if(data_array.count!==undefined)
-	{	
-		if(data_array.count.total!==undefined)
-		{
-			let count = data_array.count.total;
-			
-			GRID_SECTIONS[section_active].countmem=count;
-			
-			DISPLAY_set_media_count(section_active);
-			
-			if(GRID_SECTIONS[section_active].countmem!==0 && GRID.changed)
-			{
-				DEBUG.log("GRID","count mem",GRID_SECTIONS[section_active].countmem);
+	DISPLAY_set_media_count(section_active,data_array.count.total);
 
-				if(count<GRID_SECTIONS[section_active].countmem)
-				{
-					regenerate=false;
-					
-					DEBUG.log("GRID",'Remove elements in '+section_active+' '+count+' < '+GRID_SECTIONS[section_active].countmem);
-					
-					let removelement=null;
-					
-					if(section_active=="untagged") removelement="is_tagged";
-					if(section_active=="library")  removelement="is_not_tagged";
-					
-					if(removelement!=null)
-					{
-						removedcount = $('main section.'+section_active+' div.element.is_not_tagged').length;
-						$('main section.'+section_active+' div.element.is_not_tagged').remove();			
-						GRID_SECTIONS[section_active].countmem+=removedcount;
-						DISPLAY_set_media_count(section_active);
-					}
-					
-					DISPLAY_selection();
-					GRID_load_id();
-				}
-
-				if(count==GRID_SECTIONS[section_active].countmem)
-				{
-					regenerate=false;
-				}
-				
-				GRID_SECTIONS[section_active].update=false;
-				
-				GRID.changed=false;
-			}
-			
-			GRID_SECTIONS[section_active].countmem=count;
-		}
-	}
-	
 	if(regenerate)
 	{
 		DEBUG.log("GRID",'Regenerated');
@@ -589,7 +600,6 @@ window.GRID_CallBack_load = function(data_array)
 		if(GRID_OFFSETS[section_active].fillbottom) 
 		{
 			GRID_OFFSETS[section_active].addedBOTTOM+=j;
-			DEBUG.log("GRID", "Write into",section_active);
 			$("main section.date."+section_active).append(OBJ_Dest_date);
 			DISPLAY_selection();
 			GRID_delete(true);
@@ -597,11 +607,12 @@ window.GRID_CallBack_load = function(data_array)
 		else 										
 		{
 			GRID_OFFSETS[section_active].addedTOP+=j;
-			DEBUG.log("GRID", "Write into",section_active);
 			$("main section.date."+section_active).prepend(OBJ_Dest_date);
 			DISPLAY_selection();
 			GRID_delete(false);
 		}
+
+		DEBUG.log("GRID", "Write",data_array.count.total," elements into",section_active);
 
 		GRID_load_id();
 
@@ -644,7 +655,7 @@ window.GRID_CallBack_restaure = function(current_id)
 
 function GRID_load_id(date)
 {
-		let = section_active=GRID_Get_SectionActive();
+	let = section_active=GRID_Get_SectionActive();
 	
 	let id=0;
 	let prevDate=null;

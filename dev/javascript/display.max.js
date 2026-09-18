@@ -288,9 +288,15 @@ var DISPLAY_fileinfo_init = function fileinfo_init(multiselectionreset=true)
 //Gère l'affichage lors de la sélection des photos ***************
 //****************************************************************	
 
-var DISPLAY_selection = function selection()
+var DISPLAY_selection = function selection(current_id=null)
 {
 	let = section_active=GRID_Get_SectionActive();
+	let media_id=null;
+	
+	if(current_id!=null)
+	{
+		media_id = parseInt($('div#'+section_active+'_'+current_id+' div.media-container').attr('data-id'));
+	}
 	
 	$.each(GRID_DATAS[section_active].loaded, function(key,value) 
 	{
@@ -305,10 +311,12 @@ var DISPLAY_selection = function selection()
 			
 			//Manage fullscreen selection
 			
-			$('section#fullscreen').addClass('selected');
-			$('section#fullscreen div.button-selection').addClass('selected');
-			$('section#fullscreen div.button-selection').removeClass('notselected');
-			
+			if(media_id==value)
+			{			
+				$('section#fullscreen').addClass('selected');
+				$('section#fullscreen div.button-selection').addClass('selected');
+				$('section#fullscreen div.button-selection').removeClass('notselected');
+			}			
 		}
 		else
 		{
@@ -319,9 +327,12 @@ var DISPLAY_selection = function selection()
 			
 			//Manage fullscreen selection
 			
-			$('section#fullscreen').removeClass('selected');
-			$('section#fullscreen div.button-selection').addClass('notselected');
-			$('section#fullscreen div.button-selection').removeClass('selected');
+			if(media_id==value)
+			{				
+				$('section#fullscreen').removeClass('selected');
+				$('section#fullscreen div.button-selection').addClass('notselected');
+				$('section#fullscreen div.button-selection').removeClass('selected');
+			}
 		}
 	});
 	
@@ -344,7 +355,7 @@ var DISPLAY_selection = function selection()
 		DISPLAY_menu($('#select-status'), true);
 	}
 
-	DEBUG.log("DISPLAY","Selection updated");	
+	DEBUG.log("DISPLAY","Selection updated",media_id);	
 }
 
 //****************************************************************
@@ -369,11 +380,24 @@ var DISPLAY_trash = function trash(display)
 //Gère l'affichage du compte de média dans le menu nav -**********
 //****************************************************************
 
-var DISPLAY_set_media_count = function media_count(section)
+var DISPLAY_set_media_count = function media_count(section,uxnumber=null)
 {
-	$('div.nav.'+section+' span.count').html(GRID_SECTIONS[section].countmem);
+	if(uxnumber!=null) 	
+	{
+		$('div.nav.'+section+' span.count').html(uxnumber);
+		GRID_SECTIONS[section].countmem=uxnumber;
+	}
+	else 				$('div.nav.'+section+' span.count').html(GRID_SECTIONS[section].countmem);
+	
 	$('div.nav.'+section+' span.mem_count_l').html(' (');
 	$('div.nav.'+section+' span.mem_count_r').html(')');
 	
+	DEBUG.log("DISPLAY","store",GRID_SECTIONS[section].countmem,'into',section);
+	
 	localStorage.setItem(APP.userhash+'_'+section+'_count', GRID_SECTIONS[section].countmem);	
 }
+
+var DISPLAY_get_media_count = function media_count(section)
+{
+	return parseInt($('div.nav.'+section+' span.count').html());
+}	

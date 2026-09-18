@@ -5,7 +5,8 @@
 let SCROLL = {
     library:	{loaded:false,datas:[],total_lignes:0,total_height:0,offset:0,ux:[]},
     untagged: 	{loaded:false,datas:[],total_lignes:0,total_height:0,offset:0,ux:[]},
-    search: 	{loaded:false,datas:[],total_lignes:0,total_height:0,offset:0,ux:[]}
+    search: 	{loaded:false,datas:[],total_lignes:0,total_height:0,offset:0,ux:[]},
+    explore: 	{loaded:false,datas:[],total_lignes:0,total_height:0,offset:0,ux:[]}
 };
 
 //****************************************************************
@@ -158,6 +159,8 @@ window.SCROLL_Load_Scroll_Bar= function Load_Scroll_Bar(offset=null)
 				$('nav#magicscrollbar ul li#date_'+data.date).css('top',height-10+'px');
 			}
 		});
+		
+		SCROLL_set_position();
 	}
 	else 		
 	{
@@ -188,6 +191,8 @@ window.SCROLL_set_position = function set_position()
 	if(SCROLL[section_active]==undefined) return;
 	
 	let element = $('main section.' + section_active + ' div.fullrow').first().next();	
+	
+	if (element.length === 0) return false;
 
 	let a = ($('nav#magicscrollbar').height()) / (SCROLL[section_active].total_height-$('main').height());
 	let height = Math.round(Math.abs((element.position().top-get_ux_offset(section_active))) * a);

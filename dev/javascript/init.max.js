@@ -29,6 +29,8 @@ $(document).ready(function()
 	}
 	
 	mem = localStorage.getItem(APP.userhash+'_library_count');
+	
+	DEBUG.log("INIT",'library mem',mem);
 
 	if(mem!==null && mem!=="")
 	{
@@ -37,12 +39,16 @@ $(document).ready(function()
 	}
 
 	mem = localStorage.getItem(APP.userhash+'_untagged_count');
+	
+	DEBUG.log("INIT",'untagged mem',mem);
 
 	if(mem!==null && mem!=="")
 	{
 		GRID_SECTIONS['untagged'].countmem=mem;
 		DISPLAY_set_media_count('untagged');
 	}
+	
+	DEBUG.log("INIT",GRID_SECTIONS);	
 		
 	DISPLAY_set_view("grid");
 	//GRID_load("init");

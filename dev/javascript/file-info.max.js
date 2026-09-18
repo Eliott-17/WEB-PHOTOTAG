@@ -184,7 +184,9 @@ window.FILEINFO_CallBack_load = function(force_reload=false)
 }
 
 window.FILEINFO_CallBack_display = function(data)
-{	
+{
+	let = section_active=GRID_Get_SectionActive();
+	
 	DISPLAY_fileinfo_init();
 	
 	DEBUG.log("GRID_DATAS",data);
@@ -193,6 +195,7 @@ window.FILEINFO_CallBack_display = function(data)
 	let datas = data.info[0];
 	
 	$('input.filesid').val("["+data.info[0].id+"]");
+	
 	$('input.conflictedit').val('{"date":0,"time":0,"zone":0,"continent":0,"country":0,"city":0,"place":0,"activity":0,"comment":0,"people":0,"other":0,"private":0,"utc":0}');
 	$('input.utcflag').val(datas.time_taken_is_utc);
 	
@@ -518,13 +521,13 @@ window.FILEINFO_CallBack_display = function(data)
 	DISPLAY_loading(false);
 	DISPLAY_file_info(true);
 	
-	DEBUG.log('FILEINFO','CallBack_data');
+	DEBUG.log('CALLBACK','FILEINFO_CallBack_display');
 }
 
-window.FILEINFO_CallBack_success = function(tab=null)
+window.FILEINFO_CallBack_success = function()//tab=null)
 {
-	let is_tagged=tab[0];
-	let id=tab[1];
+	//let is_tagged=tab[0];
+	//let id=tab[1];
 	
 	$('main section#fullscreen').addClass("transition-on");
 	$('main section#fullscreen').addClass("success");
@@ -542,7 +545,7 @@ window.FILEINFO_CallBack_success = function(tab=null)
 		
 	}, 500);
 	
-	if(id!=null)
+	/*if(id!=null)
 	{
 		DEBUG.log('FILEINFO','act on main section div#media_'+id);
 		
@@ -560,7 +563,7 @@ window.FILEINFO_CallBack_success = function(tab=null)
 		DEBUG.log('FILEINFO','id error: '+id);
 	}
 	
-	GRID_reset("FILEINFO_CallBack_success","FILES");
+	GRID_reset("FILEINFO_CallBack_success","FILES");*/
 }
 
 window.FILEINFO_CallBack_lock = function(value)

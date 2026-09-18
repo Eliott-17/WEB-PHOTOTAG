@@ -68,6 +68,8 @@ $(document).ready(function(){
 		DISPLAY_menu($('#select-status'),false);			
 		DISPLAY_set_view("grid");
 		
+		GRID_remove_switched_element();
+		
 	});	
 	
 	$('nav').on('click.statusTag', 'div#select-status span#tag', function() {
@@ -83,7 +85,8 @@ $(document).ready(function(){
 			DISPLAY_set_view("grid-fileinfo");
 		}
 		
-		GRID_load("click.statusTag"); //recharger la grille si on à changer des photos
+		GRID_remove_switched_element();
+		//GRID_load("click.statusTag"); //recharger la grille si on à changer des photos
 			
 	});
 	
@@ -104,9 +107,11 @@ $(document).ready(function(){
 
 var FILEMULTISELECTION_unselectall = function unselect_all()
 {
-	$('main div.element').removeClass('selected');
-	$('main div.element').removeClass('delete');
-	$('main div.element').addClass('notselected');
+	let = section_active=GRID_Get_SectionActive();
+
+	$('main section.'+section_active+' div.element').removeClass('selected');
+	$('main section.'+section_active+' div.element').removeClass('delete');
+	$('main section.'+section_active+' div.element').addClass('notselected');
 	
 	FILEOPENFULLSCREEN_FlushHashes();
 	
@@ -248,7 +253,7 @@ window.FILEMULTISELECTION_CallBack_display = function(ldata)
 	DEBUG.log("CALLBACK",'FILEMULTISELECTION_CallBack_display');
 }
 
-window.FILEMULTISELECTION_CallBack_success = function(is_tagged=false)
+window.FILEMULTISELECTION_CallBack_success = function()
 {
 	let = section_active=GRID_Get_SectionActive();
 	
@@ -269,23 +274,7 @@ window.FILEMULTISELECTION_CallBack_success = function(is_tagged=false)
 	}, 500);
 	
 	$('span#tag').html('refresh');
-	$('span#tag').addClass('green');	
-
-	GRID.changed=true;
-	
-	$('main section div.element.selected').removeClass('is_tagged is_not_tagged');
-	
-	if(is_tagged==true)
-	{
-		$('main section div.element.selected').addClass('is_tagged');
-	}
-	else
-	{
-		$('main section div.element.selected').addClass('is_not_tagged');
-	}
-
-	GRID_reset("FILEMULTISELECTION_CallBack_success","FILES");
-	
+	$('span#tag').addClass('green');
 }
 
 var FILEMULTISELECTION_reset_ux = function reset_ux(obj, data)

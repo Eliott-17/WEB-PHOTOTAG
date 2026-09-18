@@ -43,14 +43,12 @@ $(document).ready(function(){
 
 	$('section#fullscreen div.button-return').on('click.gridSelect', function() {
 		
-		let fsid=$('section#fullscreen div.media').attr('data-id');
-		
-		//GRID.changed=true;
-		//$('div#media_'+fsid).parent().addClass('memselected');
-		
+		let = section_active=GRID_Get_SectionActive();
+
 		DISPLAY_set_view("grid");
 		DISPLAY_menu($('#flush-trash'), false);
-		//GRID_load("click.gridSelect");
+		
+		GRID_remove_switched_element();
 		
 	});
 
@@ -70,7 +68,7 @@ function Arrow(sens)
 	{	
 		FILEOPENFULLSCREEN_Loadmedia(FILEOPENFULLSCREEN.id_current);
 		ArrowDisplay(FILEOPENFULLSCREEN.id_current, FILEOPENFULLSCREEN.id_max);
-		DISPLAY_selection(FILEOPENFULLSCREEN.id_current,true);
+		DISPLAY_selection(FILEOPENFULLSCREEN.id_current);
 
 		if(DISPLAY_is_visible_file_info()) FILEINFO_CallBack_load();			
 	}
@@ -87,9 +85,11 @@ function Select() //FULLSCREEN
 	//***********************************************
 	
 	let media_id = parseInt($('div#'+section_active+'_'+FILEOPENFULLSCREEN.id_current+' div.media-container').attr('data-id'));
+	
+	DEBUG.log('DISPLAY','add',media_id,'to selection');
 
 	if(GRID_DATAS[section_active].selection.includes(media_id)) 		GRID_DATAS[section_active].selection = GRID_DATAS[section_active].selection.filter(h => h !== media_id);
-	else 									GRID_DATAS[section_active].selection.push(media_id);
+	else 																GRID_DATAS[section_active].selection.push(media_id);
 
 	$('input.filesid').val(JSON.stringify(GRID_DATAS[section_active].selection));
 
