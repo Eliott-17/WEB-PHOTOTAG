@@ -99,7 +99,16 @@ var DISPLAY_section = function section(section)
 		$('div#mainmenu').removeClass('hidden');
 		$('div#searchmenu').addClass('hidden');
 	}
-		
+	
+	if(section_active=="explore")	
+	{
+		$('nav#magicscrollbar').addClass('hidden');
+	}
+	else 							
+	{
+		$('nav#magicscrollbar').removeClass('hidden');
+	}
+	
 	GRID_load("DISPLAY_section");//en affichant une section on s'assure de charger les données.
 	
 	$('main').scrollTop(GRID_SECTIONS[section_active].scrolls_mem); 
@@ -360,9 +369,9 @@ var DISPLAY_trash = function trash(display)
 //Gère l'affichage du compte de média dans le menu nav -**********
 //****************************************************************
 
-var DISPLAY_media_count = function media_count(section,count)
+var DISPLAY_set_media_count = function media_count(section)
 {
-	$('div.nav.'+section+' span.count').html(count);
+	$('div.nav.'+section+' span.count').html(GRID_SECTIONS[section].countmem);
 	$('div.nav.'+section+' span.mem_count_l').html(' (');
 	$('div.nav.'+section+' span.mem_count_r').html(')');
 	

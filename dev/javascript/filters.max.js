@@ -66,7 +66,7 @@ window.FILTERS_CallBack_search = function(datas)
 	let s="";
 	if(datas.count>1) s="s";
 	
-	$('nav span#filterresult').html(datas.count+ ' element'+s);
+	$('nav span#search_count').html(datas.count+ ' element'+s);
 	
 	GRID_SECTIONS[section_active].countmem=datas.count;
 
@@ -178,10 +178,12 @@ var FILTERS_checkbox_post = function checkbox_post(is_checked=null)
 	GRID_load("FILTERS_checkbox_post");
 }
 
-window.FILTERS_CallBack_trash = function(count)
+window.FILTERS_CallBack_trash = function(data)
 {
+	let count=data.total;
+	
 	$('nav#main span#filterapply').html('TRASH');	
-	//$('nav#main span#filterresult').html(count);
+	$('nav#main span#search_count').html(count);
 	
 	if(count.total>0) DISPLAY_menu($('#flush-trash'), true);
 	
@@ -190,7 +192,7 @@ window.FILTERS_CallBack_trash = function(count)
 
 window.FILTERS_CallBack_flush = function()
 {	
-	$('nav#main span#filterresult').html(0);
+	$('nav#main span#search_count').html(0);
 	$('section.search').html('');
 	
 	DISPLAY_menu($('#flush-trash'), false);

@@ -429,6 +429,15 @@ function GRID_load(from)
 		DEBUG.log("GRID",section_active,"update request");
 		
 		GRID_SECTIONS[section_active].update=false;
+		
+		if(section_active!="explore")
+		{
+			if(SCROLL[section_active].datas.length==0)
+			{
+				SCROLL[section_active].loaded=false;
+				GRID_SECTIONS[section_active].countmem=-1;
+			}
+		}
 
 		switch(section_active)
 		{
@@ -478,6 +487,12 @@ window.GRID_CallBack_load = function(data_array)
 	
 	DEBUG.log("GRID_DATAS",data_array);
 	
+	if(data_array.sectionactive==undefined)
+	{
+		DEBUG.log("GRID","ERROR","section_active not defined");
+		return;		
+	}
+	
 	if(data_array.sectionactive !== section_active)
 	{
 		scroll_lock_up = false;
@@ -495,7 +510,9 @@ window.GRID_CallBack_load = function(data_array)
 		{
 			let count = data_array.count.total;
 			
-			DISPLAY_media_count(section_active,count);
+			GRID_SECTIONS[section_active].countmem=count;
+			
+			DISPLAY_set_media_count(section_active);
 			
 			if(GRID_SECTIONS[section_active].countmem!==0 && GRID.changed)
 			{
@@ -517,7 +534,7 @@ window.GRID_CallBack_load = function(data_array)
 						removedcount = $('main section.'+section_active+' div.element.is_not_tagged').length;
 						$('main section.'+section_active+' div.element.is_not_tagged').remove();			
 						GRID_SECTIONS[section_active].countmem+=removedcount;
-						DISPLAY_media_count(section_active,GRID_SECTIONS[section_active].countmem);
+						DISPLAY_set_media_count(section_active);
 					}
 					
 					DISPLAY_selection();
@@ -618,9 +635,9 @@ window.GRID_CallBack_restaure = function(current_id)
 {
 	$('div#'+current_id).remove();
 	
-	let count=parseInt($('nav#main span#filterresult').html());
+	let count=parseInt($('nav#main span#search_count').html());
 	count--;
-	$('nav#main span#filterresult').html(count);
+	$('nav#main span#search_count').html(count);
 	
 	GRID_reset("GRID_CallBack_restaure","RESTAURETRASH");
 }

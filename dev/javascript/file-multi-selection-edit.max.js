@@ -47,16 +47,11 @@ $(document).ready(function(){
 			return;
 		}
 						
-		//MISE A JOUT DU NOMBRE DE FICHIERS
+		//MISE A JOUR DU NOMBRE DE FICHIERS
 
-		const match = $('span#'+section_active+'_count').html();
-
-		let value = parseInt(match[1], 10);
-
-		value-=GRID_DATAS[section_active].selection.length;	
-			
-		$('span#'+section_active+'_count').html(value);
-			
+		GRID_SECTIONS[section_active].countmem-=GRID_DATAS[section_active].selection.length;
+		
+		DISPLAY_set_media_count(section_active);
 		
 		DISPLAY_menu($('div#loading'),true); 
 		

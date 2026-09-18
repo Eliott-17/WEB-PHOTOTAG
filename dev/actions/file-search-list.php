@@ -98,9 +98,10 @@
 					$bigarray['count']="UNK";
 				}
 				
-				//$fReturn->addConsole(print_r($result_data['datas'],true));
+				$fReturn->addConsole(print_r($result_data['datas'],true));
 				$return = $result_data['datas'];		
-				$fReturn->addCallBack("GRID_CallBack_load", array("datas"=>$return,'count'=>$bigarray['count']));				
+				//$fReturn->addCallBack("GRID_CallBack_load", array("datas"=>$return,'count'=>$bigarray['count']));				
+				$fReturn->addCallBack("GRID_CallBack_load", array("datas"=>$return,'count'=>$bigarray['count'],'sectionactive'=>$_GET['sectionactive']));
 				$fReturn->addCallBack("FILTERS_CallBack_trash",$bigarray['count']);
 			}
 			

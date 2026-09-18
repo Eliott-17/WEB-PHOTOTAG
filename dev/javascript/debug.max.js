@@ -3,14 +3,14 @@ const DEBUG = {
     enabled: false,
 
     modules: {
-        GRID: false,
+        GRID: true,
 		SCROLL: false,
-        DISPLAY: false,
-        ON: false,
+        DISPLAY: true,
+        ON: true,
 		FILEINFO: false,
         FILEMULTISELECTION: false,
-        CALLBACK: false,
-		DATAS: false,
+        CALLBACK: true,
+		DATAS: true,
 		UPLOAD: false,
 		EXPLORE: false,
 		SCROLLBAR: true

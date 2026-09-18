@@ -32,14 +32,16 @@ $(document).ready(function()
 
 	if(mem!==null && mem!=="")
 	{
-		DISPLAY_media_count('library',mem);
+		GRID_SECTIONS['library'].countmem=mem;
+		DISPLAY_set_media_count('library');
 	}
 
 	mem = localStorage.getItem(APP.userhash+'_untagged_count');
 
 	if(mem!==null && mem!=="")
 	{
-		DISPLAY_media_count('untagged',mem);
+		GRID_SECTIONS['untagged'].countmem=mem;
+		DISPLAY_set_media_count('untagged');
 	}
 		
 	DISPLAY_set_view("grid");
