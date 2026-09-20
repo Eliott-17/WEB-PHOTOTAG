@@ -87,18 +87,16 @@ var DISPLAY_section = function section(section)
 	
 	if(section_active=="search")	
 	{
-		$('nav#magicscrollbar').addClass("hidden");
 		$('div#mainmenu').addClass('hidden');
 		$('div#searchmenu').removeClass('hidden');
 	}
 	else 							
 	{
-		$('nav#magicscrollbar').removeClass("hidden");
 		$('div#mainmenu').removeClass('hidden');
 		$('div#searchmenu').addClass('hidden');
 	}
 	
-	if(section_active=="explore")	
+	if(section_active=="explore" || section_active=="search")	
 	{
 		$('nav#magicscrollbar').addClass('hidden');
 	}

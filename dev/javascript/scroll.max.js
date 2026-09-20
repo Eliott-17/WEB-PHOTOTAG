@@ -17,6 +17,8 @@ let SCROLL_height_media = 220;
 let SCROLL_height_date = 50;
 let SCROLL_height_gap = 5;
 
+let SCROLL_height_margin_bottom = 5;
+
 $(document).ready(function(){
 
 	//****************************************************************
@@ -144,20 +146,24 @@ window.SCROLL_Load_Scroll_Bar= function Load_Scroll_Bar(offset=null)
 		{
 			let html='<li id="date_'+data.date+'" class="material-symbols-outlined">more_horiz</li>';
 			
+			let position=0;
+			let uxoffset=0;
+			
+			if(section_active=="untagged") uxoffset+=$('div#uploaddrag').height(); 
+			
+			
 			if(id==0) 
 			{	
 				$('nav#magicscrollbar ul').html('<li class="material-symbols-outlined cursor">drag_handle</span></li>');
-				$('nav#magicscrollbar ul').append(html);	
-				$('nav#magicscrollbar ul li#date_'+data.date).css('top','-10px');
+				position=fn_height(uxoffset);
 			}
 			else
 			{
-				let a = ($('nav#magicscrollbar').height()) / (SCROLL[section_active].total_height-$('main').height());
-				let height = Math.round((SCROLL[section_active].datas[id-1].offset) * a);
-
-				$('nav#magicscrollbar ul').append(html);
-				$('nav#magicscrollbar ul li#date_'+data.date).css('top',height-10+'px');
+				position=fn_height(uxoffset+SCROLL[section_active].datas[id-1].offset);
 			}
+			
+			$('nav#magicscrollbar ul').append(html);
+			$('nav#magicscrollbar ul li#date_'+data.date).css('top',(position-10)+'px');
 		});
 		
 		SCROLL_set_position();
@@ -194,12 +200,12 @@ window.SCROLL_set_position = function set_position()
 	
 	if (element.length === 0) return false;
 
-	let a = ($('nav#magicscrollbar').height()) / (SCROLL[section_active].total_height-$('main').height()+5);
-	let height = Math.round(Math.abs((element.position().top-get_ux_offset(section_active))) * a);
-	
-	if(element.attr('id')==section_active+"_0") $('nav#magicscrollbar ul li.cursor').css('top',height-10+'px');
-	
-	DEBUG.log("SCROLLBAR",element.attr('id'),height);
+	if(element.attr('id')==section_active+"_0") 
+	{
+		let height = fn_height(element.position().top-get_ux_offset(section_active));
+		$('nav#magicscrollbar ul li.cursor').css('top',(height-10)+'px');
+		DEBUG.log("SCROLLBAR",height);		
+	}
 }
 
 function get_ux_offset(section_active)
@@ -207,15 +213,16 @@ function get_ux_offset(section_active)
 	let uxoffset=0;
 	
 	uxoffset+=$('div#mainmenu').height();
-	
-	uxoffset+=SCROLL_height_date; //First date
-	
-	uxoffset+=5; //margin bottom
+	uxoffset+=SCROLL_height_date; //First date	
+	uxoffset+=SCROLL_height_margin_bottom; //margin bottom
 
 	if(section_active=="untagged") uxoffset+=$('div#uploaddrag').height(); 
 	return uxoffset;
 	
 }
+
+function fn_height(position) { return Math.round(Math.abs(position) * fn_a()); }
+function fn_a() { return ($('nav#magicscrollbar').height()) / (SCROLL[section_active].total_height-$('main').height()+SCROLL_height_margin_bottom); }
 
 let old_width = $(window).width();
 

@@ -6,7 +6,7 @@ const DEBUG = {
 		INIT: false,
         GRID: false,
 		SCROLL: false,
-        DISPLAY: false,
+        DISPLAY: true,
         ON: false,
 		FILEINFO: false,
         FILEMULTISELECTION: false,
@@ -14,7 +14,7 @@ const DEBUG = {
 		DATAS: false,
 		UPLOAD: false,
 		EXPLORE: false,
-		SCROLLBAR: false
+		SCROLLBAR: true
 },
 
     log(module, ...args) {

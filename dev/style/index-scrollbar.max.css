@@ -40,3 +40,8 @@ nav#magicscrollbar ul li
 	position: absolute;
 	font-size: 20px;
 }
+
+nav#magicscrollbar ul li:not(.cursor)
+{
+	color: rgba(145,200,250,0.7);
+}
