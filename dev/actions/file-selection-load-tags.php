@@ -17,7 +17,7 @@
 	if(!$validation->isValidated())
 	{
 		$fReturn->addCallback("NAV_CallBack_error","Data request error");
-		if(ENV=="DEV") $fReturn->addConsole($validation->Message());	
+		if(ENV=="DEV" && PHPDEBUG=="DEV") $fReturn->addConsole($validation->Message());	
 		$fReturn->fetch();
 	}
 	
@@ -35,7 +35,7 @@
 		if($result['status']!==true)
 		{
 			$fReturn->addCallback("NAV_CallBack_error","Fatal error while selecting from database");
-			if(ENV=="DEV") $fReturn->addFailMessage('Internal error')->addConsole(print_r($result,true));	
+			if(ENV=="DEV" && PHPDEBUG=="DEV") $fReturn->addFailMessage('Internal error')->addConsole(print_r($result,true));	
 			$fReturn->fetch();
 		}
 
@@ -157,7 +157,7 @@
 	else
 	{
 		$fReturn->addCallback("NAV_CallBack_error","Data request error");
-		if(ENV=="DEV") $fReturn->addConsole($_POST['filesid']);	
+		if(ENV=="DEV" && PHPDEBUG=="DEV") $fReturn->addConsole($_POST['filesid']);	
 		$fReturn->fetch();
 	}
 ?>

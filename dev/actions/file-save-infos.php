@@ -56,7 +56,7 @@
 	{
 		$fReturn->addFailMessage("One field has an incorrect value");
 		$fReturn->addCallback("NAV_CallBack_error",$validation->Message());
-		//if(ENV=="DEV") $fReturn->addConsole($validation->Message());	
+		//if(ENV=="DEV" && PHPDEBUG=="DEV") $fReturn->addConsole($validation->Message());	
 		$fReturn->fetch();
 	}
 	
@@ -181,15 +181,15 @@
 		else
 		{
 			$fReturn->addCallback("NAV_CallBack_error","Fatal error while reading from database");
-			if(ENV=="DEV") $fReturn->addFailMessage('Internal error')->addConsole(print_r($is_tagged,true));
+			if(ENV=="DEV" && PHPDEBUG=="DEV") $fReturn->addFailMessage('Internal error')->addConsole(print_r($is_tagged,true));
 		}
 	}
 	else
 	{
 		$fReturn->addCallback("NAV_CallBack_error","Fatal error while updating to database");
-		if(ENV=="DEV") $fReturn->addFailMessage('Internal error')->addConsole(print_r($affectedrow,true));
+		if(ENV=="DEV" && PHPDEBUG=="DEV") $fReturn->addFailMessage('Internal error')->addConsole(print_r($affectedrow,true));
 	}
 
-	if(ENV=="DEV") $fReturn->addConsole("[PHP EXECUTED] file-save-infos.php");	
+	if(ENV=="DEV" && PHPDEBUG=="DEV") $fReturn->addConsole("[PHP EXECUTED] file-save-infos.php");	
 	$fReturn->fetch();
 ?>	

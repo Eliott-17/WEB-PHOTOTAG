@@ -38,7 +38,7 @@
 	else
 	{
 		$fReturn->addCallback("NAV_CallBack_error","Fatal error while deleting to database");
-		if(ENV=="DEV") $fReturn->addConsole(print_r($array,true));	
+		if(ENV=="DEV" && PHPDEBUG=="DEV") $fReturn->addConsole(print_r($array,true));	
 	}
 	
 	$fReturn->addCallback('FILEMULTISELECTION_CallBack_trash');	

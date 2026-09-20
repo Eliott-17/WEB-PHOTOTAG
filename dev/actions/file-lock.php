@@ -22,7 +22,7 @@
 	if(!$validation->isValidated())
 	{
 		$fReturn->addCallback("NAV_CallBack_error","Data request error".print_r($_POST,true));
-		if(ENV=="DEV") $fReturn->addConsole($validation->Message());	
+		if(ENV=="DEV" && PHPDEBUG=="DEV") $fReturn->addConsole($validation->Message());	
 		$fReturn->fetch();
 	}
 	
@@ -42,10 +42,10 @@
 	if($return['status']!==true)
 	{
 		$fReturn->addCallback("NAV_CallBack_error","Fatal error while updating to database");
-		if(ENV=="DEV") $fReturn->addFailMessage('Internal error')->addConsole(print_r($return,true));
+		if(ENV=="DEV" && PHPDEBUG=="DEV") $fReturn->addFailMessage('Internal error')->addConsole(print_r($return,true));
 		$fReturn->fetch();
 	}
 
-	if(ENV=="DEV") $fReturn->addCallback("FILEINFO_CallBack_lock",$ret);	
+	if(ENV=="DEV" && PHPDEBUG=="DEV") $fReturn->addCallback("FILEINFO_CallBack_lock",$ret);	
 	$fReturn->fetch();
 ?>	

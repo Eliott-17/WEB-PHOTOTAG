@@ -65,7 +65,7 @@ if (!empty($_FILES['file']) && !empty($_FILES['preview'])) {
 		{
 			$ffmpegfail=true;
 			$fReturn->addConsole("[PHP] Can't generate preview ffmpeg");
-			if(ENV=="DEV") $fReturn->addConsole(print_r($returnencode,true));	
+			if(ENV=="DEV" && PHPDEBUG=="DEV") $fReturn->addConsole(print_r($returnencode,true));	
 		}
 	}
 	
@@ -181,7 +181,7 @@ if (!empty($_FILES['file']) && !empty($_FILES['preview'])) {
 		if(is_file($targetSD)) unlink($targetSD);	
 		
 		$fReturn->addConsole("[PHP] SQL error while recording file");
-		if(ENV=="DEV") $fReturn->addConsole(print_r($return,true));	
+		if(ENV=="DEV" && PHPDEBUG=="DEV") $fReturn->addConsole(print_r($return,true));	
 		
 		$fReturn->addRawText("Already in database")->fetch();
 	}

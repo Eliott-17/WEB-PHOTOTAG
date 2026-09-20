@@ -12,8 +12,8 @@ let GRID = {
 }
 	
 let GRID_SECTIONS = {
-    library:	{update:true,offset:0,elements:GRID.configelements,countmem:0,scrolls_mem:null},
-    untagged: 	{update:true,offset:0,elements:GRID.configelements,countmem:0,scrolls_mem:null},
+    library:	{update:true,offset:0,elements:GRID.configelements,countmem:0,scrolls_mem:null,taglist:0},
+    untagged: 	{update:true,offset:0,elements:GRID.configelements,countmem:0,scrolls_mem:null,taglist:0},
     search: 	{update:true,offset:0,elements:GRID.configelements,countmem:0,scrolls_mem:null,taglist:0},
     explore: 	{update:true,scrolls_mem:null} //chargé à l'init
 };
@@ -26,10 +26,10 @@ let GRID_OFFSETS = {
 };
 
 let GRID_DATAS = {
-    library:	{selection:[],loaded:[]},
-    untagged: 	{selection:[],loaded:[]},
-    search: 	{selection:[],loaded:[]},
-    explore: 	{selection:[],loaded:[]}
+    library:	{selection:[],loaded:[],hasSwitched:false},
+    untagged: 	{selection:[],loaded:[],hasSwitched:false},
+    search: 	{selection:[],loaded:[],hasSwitched:false},
+    explore: 	{selection:[],loaded:[],hasSwitched:false}
 };
 
 let GRID_scroll_locked = false;
@@ -54,6 +54,7 @@ function GRID_system_reset(section_to_reset, from)
 	GRID_SECTIONS[section_to_reset].elements=GRID.configelements;
 	GRID_SECTIONS[section_to_reset].countmem=0;
 	GRID_SECTIONS[section_to_reset].scrolls_mem=null;
+	GRID_SECTIONS[section_to_reset].taglist=0;
 	
 	GRID_OFFSETS[section_to_reset].addedBOTTOM=0;
 	GRID_OFFSETS[section_to_reset].addedTOP=0;
@@ -61,6 +62,7 @@ function GRID_system_reset(section_to_reset, from)
 
 	GRID_DATAS[section_to_reset].selection=[];
 	GRID_DATAS[section_to_reset].loaded=[];	
+	GRID_DATAS[section_to_reset].hasSwitched=false;	
 	
 	SCROLL[section_to_reset].loaded=false;
 	SCROLL[section_to_reset].datas=[];
@@ -366,6 +368,85 @@ function GRID_delete(sens)
 }
 
 //*******************************************************************
+//Bascule visuel des éléments entre taggeed et untagged *************
+//*******************************************************************
+
+function GRID_remove_switched_element()
+{
+	let = section_active=GRID_Get_SectionActive();
+	
+	DEBUG.log("GRID",'Remove elements in '+section_active);
+		
+	let removelement=null;
+		
+	if(section_active=="untagged") removelement="is_tagged";
+	if(section_active=="library")  removelement="is_not_tagged";
+
+	if(removelement!=null)
+	{
+		let removelementcnt=0;
+		
+		$('main section.'+section_active+' div.element.'+removelement+' div.media-container').each(function(){
+			
+			GRID_DATAS[section_active].selection = GRID_DATAS[section_active].selection.filter(h => h !== $(this).attr('data-id'));
+			
+			console.log($(this).attr('data-id'));
+			
+			$(this).parent().remove();
+			removelementcnt++;
+
+		});
+		
+		if(removelementcnt!=0)
+		{
+			DEBUG.log("GRID",removelementcnt,"removed");
+			
+			if(section_active=="untagged")  DISPLAY_set_media_count('library',DISPLAY_get_media_count('library')+removelementcnt); 
+			if(section_active=="library")   DISPLAY_set_media_count('untagged',DISPLAY_get_media_count('untagged')+removelementcnt); 
+
+			DISPLAY_set_media_count(section_active,DISPLAY_get_media_count(section_active)-removelementcnt); 
+		}
+		
+		GRID_load_id();
+		DISPLAY_selection();
+	}
+	
+	DEBUG.log("GRID","GRID_remove_switched_element");
+}
+
+window.GRID_CallBack_switched = function(array)
+{
+	let = section_active=GRID_Get_SectionActive();
+
+	let is_tagged=array[0];
+	let id=array[1];	
+	
+	if(id==null) { $.each(GRID_DATAS[section_active].selection, function(index, value) { 	switch_class(section_active,is_tagged,value); }); }
+	else 																					switch_class(section_active,is_tagged,id);
+
+	if(section_active!="library") GRID_system_reset("library", "FILEMULTISELECTION_CallBack_success");
+	if(section_active!="untagged") GRID_system_reset("untagged", "FILEMULTISELECTION_CallBack_success");
+	if(section_active!="search") GRID_system_reset("search", "FILEMULTISELECTION_CallBack_success");
+	
+	GRID_system_reset("explore", "FILEMULTISELECTION_CallBack_success");
+	GRID_DATAS[section_active].hasSwitched=true;
+
+	DEBUG.log("GRID","GRID_CallBack_switched",section_active,GRID_DATAS[section_active].selection);
+}
+
+function switch_class(section_active,is_tagged,value)
+{
+	let element = $('main section.'+section_active+' div.element div#media_'+value);
+	
+	element.parent().removeClass('is_tagged is_not_tagged');
+
+	if(is_tagged==true) element.parent().addClass('is_tagged'); 
+	else element.parent().addClass('is_not_tagged');	
+	
+	DEBUG.log("GRID","switch_class/GRID_CallBack_switched",section_active,is_tagged,value);
+}
+
+//*******************************************************************
 //chagement et reset de la grille ***********************************
 //*******************************************************************	
 
@@ -472,75 +553,6 @@ function GRID_load(from)
 	}
 }
 
-function GRID_remove_switched_element()
-{
-	let = section_active=GRID_Get_SectionActive();
-	
-	DEBUG.log("GRID",'Remove elements in '+section_active);
-		
-	let removelement=null;
-		
-	if(section_active=="untagged") removelement="is_tagged";
-	if(section_active=="library")  removelement="is_not_tagged";
-
-	if(removelement!=null)
-	{
-		let removelementcnt=0;
-		
-		$('main section.'+section_active+' div.element.'+removelement+' div.media-container').each(function(){
-			
-			GRID_DATAS[section_active].selection = GRID_DATAS[section_active].selection.filter(h => h !== $(this).attr('data-id'));
-			
-			console.log($(this).attr('data-id'));
-			
-			$(this).parent().remove();
-			removelementcnt++;
-
-		});
-		
-		if(removelementcnt!=0)
-		{
-			DEBUG.log("GRID",removelementcnt,"removed");
-			
-			if(section_active=="untagged")  DISPLAY_set_media_count('library',DISPLAY_get_media_count('library')+removelementcnt); 
-			if(section_active=="library")   DISPLAY_set_media_count('untagged',DISPLAY_get_media_count('untagged')+removelementcnt); 
-
-			DISPLAY_set_media_count(section_active,DISPLAY_get_media_count(section_active)-removelementcnt); 
-		}
-		
-		GRID_load_id();
-		DISPLAY_selection();
-	}
-	
-	DEBUG.log("GRID","GRID_remove_switched_element");
-}
-
-window.GRID_CallBack_switched = function(array)
-{
-	let is_tagged=array[0];
-	let id=array[1];	
-	
-	if(id==null) { $.each(GRID_DATAS[section_active].selection, function(index, value) { 	switch_class(section_active,is_tagged,value); }); }
-	else 																					switch_class(section_active,is_tagged,id);
-
-	if(section_active!="library") GRID_system_reset("library", "FILEMULTISELECTION_CallBack_success");
-	if(section_active!="untagged") GRID_system_reset("untagged", "FILEMULTISELECTION_CallBack_success");
-	if(section_active!="search") GRID_system_reset("search", "FILEMULTISELECTION_CallBack_success");
-	GRID_system_reset("explore", "FILEMULTISELECTION_CallBack_success");
-
-	DEBUG.log("GRID","GRID_CallBack_switched",section_active,GRID_DATAS[section_active].selection);
-}
-
-function switch_class(section_active,is_tagged,value)
-{
-	let element = $('main section.'+section_active+' div.element div#media_'+value);
-	
-	element.parent().removeClass('is_tagged is_not_tagged');
-
-	if(is_tagged==true) element.parent().addClass('is_tagged'); 
-	else element.parent().addClass('is_not_tagged');	
-}
-
 window.GRID_CallBack_load = function(data_array)
 {
 	let = section_active=GRID_Get_SectionActive();
@@ -562,13 +574,13 @@ window.GRID_CallBack_load = function(data_array)
 		return;
 	}
 	
-	let regenerate=true;
+	//let regenerate=true;
 
 	DISPLAY_set_media_count(section_active,data_array.count.total);
 
-	if(regenerate)
-	{
-		DEBUG.log("GRID",'Regenerated');
+	//if(regenerate)
+	//{
+		//DEBUG.log("GRID",'Regenerated');
 		
 		GRID.lock.element_locked=false;
 		
@@ -612,7 +624,7 @@ window.GRID_CallBack_load = function(data_array)
 			GRID_delete(false);
 		}
 
-		DEBUG.log("GRID", "Write",data_array.count.total," elements into",section_active);
+		DEBUG.log("GRID", "Write",data_array.count.total,"elements into",section_active);
 
 		GRID_load_id();
 
@@ -637,9 +649,9 @@ window.GRID_CallBack_load = function(data_array)
 		if(GRID_OFFSETS[section_active].fillbottom) scroll_execute(true);
 		else scroll_execute(false);
 
-	}
+	//}
 
-	DEBUG.log("CALLBACK","CallBack_load",GRID_OFFSETS[section_active]);
+	DEBUG.log("CALLBACK","CallBack_load",section_active,GRID_OFFSETS[section_active]);
 }
 
 window.GRID_CallBack_restaure = function(current_id)

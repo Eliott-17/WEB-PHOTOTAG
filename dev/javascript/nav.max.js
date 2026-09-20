@@ -60,15 +60,21 @@ $(document).ready(function(){
 	$('div#mainmenu div.nav button').on('click.navbutton', function() {  
 	
 		DEBUG.log("ON",'click.navbutton');
+
+		let = old_section_active=GRID_Get_SectionActive();
 	
 		if(!$(this).hasClass('selected'))
 		{
 			$('main div.element').removeClass('selected');
 			$('main div.element').addClass('notselected');
+			
+			let new_section = $(this).attr('data-section');
 
 			DISPLAY_section($(this).attr('data-section')); 
 
 			DISPLAY_set_view('grid');
+			
+			if(GRID_DATAS[old_section_active].hasSwitched) GRID_system_reset(old_section_active,"click.navbutton"); //after display new section
 		}
 	});
 	

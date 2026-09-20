@@ -24,7 +24,7 @@
 	if(!$validation->isValidated())
 	{
 		$fReturn->addCallback("NAV_CallBack_error","Data request error");
-		if(ENV=="DEV") $fReturn->addConsole($validation->Message());	
+		if(ENV=="DEV" && PHPDEBUG=="DEV") $fReturn->addConsole($validation->Message());	
 		$fReturn->fetch();
 	}
 	
@@ -82,7 +82,7 @@
 			if($result_data['status']!==true) 
 			{
 				$fReturn->addCallback("NAV_CallBack_error","Fatal error while selecting from database");
-				if(ENV=="DEV") $fReturn->addFailMessage('Internal error')->addConsole(print_r($result_data,true));	
+				if(ENV=="DEV" && PHPDEBUG=="DEV") $fReturn->addFailMessage('Internal error')->addConsole(print_r($result_data,true));	
 			}
 			else
 			{
@@ -201,7 +201,7 @@
 		
 		if($result_tags['status']!==true)
 		{
-			if(ENV=="DEV") $fReturn->addConsole(print_r($result_tags,true));
+			if(ENV=="DEV" && PHPDEBUG=="DEV") $fReturn->addConsole(print_r($result_tags,true));
 			$fReturn->addConsole("[PHP] SQL error while loading tags")->fetch();	
 		}
 	}
@@ -219,7 +219,7 @@
 	if($result_count['status']!==true)
 	{
 		$fReturn->addCallback("NAV_CallBack_error","Fatal error while selecting from database");
-		if(ENV=="DEV") $fReturn->addFailMessage('Internal error')->addConsole(print_r($result_count,true));	
+		if(ENV=="DEV" && PHPDEBUG=="DEV") $fReturn->addFailMessage('Internal error')->addConsole(print_r($result_count,true));	
 		$fReturn->fetch();
 	}
 	
@@ -246,7 +246,7 @@
 		if($result_data['status']!==true) 
 		{
 			$fReturn->addCallback("NAV_CallBack_error","Fatal error while selecting from database");
-			if(ENV=="DEV") $fReturn->addFailMessage('Internal error')->addConsole(print_r($result_data,true));	
+			if(ENV=="DEV" && PHPDEBUG=="DEV") $fReturn->addFailMessage('Internal error')->addConsole(print_r($result_data,true));	
 			$fReturn->fetch();
 		}
 	}
@@ -278,7 +278,7 @@
 			else
 			{
 				$fReturn->addCallback("NAV_CallBack_error","Fatal error while selecting from database");
-				if(ENV=="DEV") $fReturn->addFailMessage('Internal error')->addConsole(print_r($result_adv,true));	
+				if(ENV=="DEV" && PHPDEBUG=="DEV") $fReturn->addFailMessage('Internal error')->addConsole(print_r($result_adv,true));	
 				$fReturn->fetch();
 			}
 		}

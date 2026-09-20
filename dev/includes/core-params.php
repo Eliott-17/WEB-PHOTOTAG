@@ -20,6 +20,6 @@ if(stristr($_SERVER['DOCUMENT_ROOT'], 'wamp64')) //sur wamp la bdd doit être lo
 }
 
 define("GRID_ELEMENTS",20);
-
+define("PHPDEBUG",false);
 
 ?>

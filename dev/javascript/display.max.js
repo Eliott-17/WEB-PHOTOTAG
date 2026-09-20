@@ -72,10 +72,14 @@ var DISPLAY_set_view = function view_refresh(newview)
 
 var DISPLAY_section = function section(section)
 {
+	DEBUG.log("DISPLAY","swicth from",GRID_Get_SectionActive(),"to",section);
+	
 	GRID_Release_Scroll();
 	GRID.section_active=section;
 	
 	let = section_active=GRID_Get_SectionActive();
+
+	DEBUG.log("DISPLAY","updated",section_active);
 	
 	localStorage.setItem(APP.userhash+'_last_page', section_active);
 	
@@ -109,7 +113,7 @@ var DISPLAY_section = function section(section)
 		$('nav#magicscrollbar').removeClass('hidden');
 	}
 	
-	GRID_load("DISPLAY_section");//en affichant une section on s'assure de charger les données.
+	GRID_load(section_active);//en affichant une section on s'assure de charger les données.
 	
 	$('main').scrollTop(GRID_SECTIONS[section_active].scrolls_mem); 
 		
@@ -355,7 +359,7 @@ var DISPLAY_selection = function selection(current_id=null)
 		DISPLAY_menu($('#select-status'), true);
 	}
 
-	DEBUG.log("DISPLAY","Selection updated",media_id);	
+	DEBUG.log("DISPLAY","Selection updated");	
 }
 
 //****************************************************************

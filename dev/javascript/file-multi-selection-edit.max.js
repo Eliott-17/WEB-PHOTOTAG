@@ -68,7 +68,7 @@ $(document).ready(function(){
 		DISPLAY_menu($('#select-status'),false);			
 		DISPLAY_set_view("grid");
 		
-		GRID_remove_switched_element();
+		//GRID_remove_switched_element();->elements are marked as switched
 		
 	});	
 	
@@ -115,7 +115,7 @@ var FILEMULTISELECTION_unselectall = function unselect_all()
 	
 	FILEOPENFULLSCREEN_FlushHashes();
 	
-	GRID_load("FILEMULTISELECTION_unselectall"); //recharger la grille si on à changer des photos
+	//GRID_load("FILEMULTISELECTION_unselectall"); //recharger la grille si on à changer des photos
 }
 
 var hash_array;

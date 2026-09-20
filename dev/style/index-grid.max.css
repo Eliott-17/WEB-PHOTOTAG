@@ -262,6 +262,11 @@ main section.grid div.selected.delete, main section#fullscreen.delete
 	border-color: #e04848
 }	
 
+main section.untagged div.is_tagged img, main section.library div.is_not_tagged img
+{
+	opacity: 0.5
+}
+
 main section.grid div.selected :where(img,video) { border-radius: 5px; }
 
 main section.grid div.notselected span.hover { opacity: 0; }

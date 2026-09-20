@@ -49,7 +49,7 @@
 			if(!rename($filenametestHD, $filenametestHDtrash)) 
 			{
 				$fReturn->addCallback("NAV_CallBack_error","Fatal error while moving HD file");
-				if(ENV=="DEV") $fReturn->addFailMessage('Internal error')->addConsole($filenametestHDtrash);
+				if(ENV=="DEV" && PHPDEBUG=="DEV") $fReturn->addFailMessage('Internal error')->addConsole($filenametestHDtrash);
 				$fReturn->fetch();
 			}
 		}
@@ -58,7 +58,7 @@
 			if(!rename($filenametestSD, $filenametestSDtrash)) 
 			{
 				$fReturn->addCallback("NAV_CallBack_error","Fatal error while moving SD file");
-				if(ENV=="DEV") $fReturn->addFailMessage('Internal error')->addConsole($filenametestSDtrash);
+				if(ENV=="DEV" && PHPDEBUG=="DEV") $fReturn->addFailMessage('Internal error')->addConsole($filenametestSDtrash);
 				$fReturn->fetch();
 			}
 		}	
@@ -73,12 +73,12 @@
 		if($return['status']!==true)
 		{			
 			$fReturn->addCallback("NAV_CallBack_error","Fatal error while updating to database");
-			if(ENV=="DEV") $fReturn->addFailMessage('Internal error')->addConsole(print_r($return,true));
+			if(ENV=="DEV" && PHPDEBUG=="DEV") $fReturn->addFailMessage('Internal error')->addConsole(print_r($return,true));
 			$fReturn->fetch();
 		}		
 	}
 		
-	if(ENV=="DEV") $fReturn->addConsole("[PHP EXECUTED] file-delete.php");	
+	if(ENV=="DEV" && PHPDEBUG=="DEV") $fReturn->addConsole("[PHP EXECUTED] file-delete.php");	
 	$fReturn->addCallback('FILEMULTISELECTION_CallBack_trash');
 	$fReturn->fetch();
 	

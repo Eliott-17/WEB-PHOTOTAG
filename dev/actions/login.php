@@ -29,7 +29,7 @@ else
 	if(!$validation->isValidated())
 	{
 		//$fReturn->addCallback("NAV_CallBack_error","Data request error");
-		if(ENV=="DEV") $fReturn->addFailMessage($validation->Message());	
+		if(ENV=="DEV" && PHPDEBUG=="DEV") $fReturn->addFailMessage($validation->Message());	
 		$fReturn->fetch();
 	}
 	
@@ -93,7 +93,7 @@ else
 	
 		//redirection
 	
-		if(ENV=="DEV") $fReturn->addConsole($a2f_code);
+		if(ENV=="DEV" && PHPDEBUG=="DEV") $fReturn->addConsole($a2f_code);
 		
 		//TODO send_a2f_email($_POST['email'],$a2f_code);
 		$fReturn->addInfoMessage("Please enter the security code received by email")->addCallBack("LOGIN_CallBack_a2fverif")->fetch(); //CallBack faire apparaitre le chanmp CODE en javascript
@@ -118,7 +118,7 @@ else
 		{
 			if(empty($_POST['code'])) 
 			{
-				if(ENV=="DEV") $fReturn->addConsole($result['datas'][0]['a2f_code']);
+				if(ENV=="DEV" && PHPDEBUG=="DEV") $fReturn->addConsole($result['datas'][0]['a2f_code']);
 				
 				$fReturn->addInfoMessage("Please enter the security code received by email")->addCallBack("LOGIN_CallBack_a2fverif")->fetch();
 			}
@@ -206,7 +206,7 @@ else
 				if(!mkdir($value, 0777, true))
 				{
 					$fReturn->addErrorMessage("Fatal error, unable to create user directory.");	
-					if(ENV=="DEV") $fReturn->addConsole("Unable to create user dir ".$value);				
+					if(ENV=="DEV" && PHPDEBUG=="DEV") $fReturn->addConsole("Unable to create user dir ".$value);				
 					$fReturn->fetch();
 				}
 			}
@@ -252,18 +252,18 @@ else
 					{
 						if(rename($dbfile_original,$dbfile_migration)) //rename OK
 						{
-							if(ENV=="DEV") $fReturn->addConsole("Migration processed file ".$dbfile_migration);
+							if(ENV=="DEV" && PHPDEBUG=="DEV") $fReturn->addConsole("Migration processed file ".$dbfile_migration);
 						}
 						else
 						{
 							$commits=[]; //empty array = no modification
-							if(ENV=="DEV") $fReturn->addConsole("[FAIL] Temp name for ".$dbfile_migration);
+							if(ENV=="DEV" && PHPDEBUG=="DEV") $fReturn->addConsole("[FAIL] Temp name for ".$dbfile_migration);
 						}
 					}
 					else
 					{
 						$commits=[]; //enmpty array = no modification
-						if(ENV=="DEV") $fReturn->addConsole("[FAIL] Backup for ".$dbfile_migration);
+						if(ENV=="DEV" && PHPDEBUG=="DEV") $fReturn->addConsole("[FAIL] Backup for ".$dbfile_migration);
 					}
 					 
 					break;
@@ -278,7 +278,7 @@ else
 		
 		if(!empty($commits))
 		{
-			if(ENV=="DEV") $fReturn->addConsole("Commits queue ".print_r($commits,true));
+			if(ENV=="DEV" && PHPDEBUG=="DEV") $fReturn->addConsole("Commits queue ".print_r($commits,true));
 
 			$EasyPDOUser = new EasyPDO('sqlite:'.$dbfile_migration);
 			
@@ -354,7 +354,7 @@ else
 			else
 			{
 				$_SESSION["lockdown"]=true;
-				if(ENV=="DEV") $fReturn->addConsole("[FAIL] Backup for ".$migration_errors);
+				if(ENV=="DEV" && PHPDEBUG=="DEV") $fReturn->addConsole("[FAIL] Backup for ".$migration_errors);
 				$fReturn->addErrorMessage("Fatal error, contact service immediately!")->fetch();						
 			}	
 		}
