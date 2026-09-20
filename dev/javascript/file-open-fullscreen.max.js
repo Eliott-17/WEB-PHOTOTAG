@@ -68,7 +68,7 @@ function Arrow(sens)
 	{	
 		FILEOPENFULLSCREEN_Loadmedia(FILEOPENFULLSCREEN.id_current);
 		ArrowDisplay(FILEOPENFULLSCREEN.id_current, FILEOPENFULLSCREEN.id_max);
-		DISPLAY_selection(FILEOPENFULLSCREEN.id_current);
+		DISPLAY_selection("Arrow",FILEOPENFULLSCREEN.id_current);
 
 		if(DISPLAY_is_visible_file_info()) FILEINFO_CallBack_load();			
 	}
@@ -97,7 +97,7 @@ function Select() //FULLSCREEN
 	//END - Mise à jour de la sélection
 	//***********************************************
 
-	DISPLAY_selection(FILEOPENFULLSCREEN.id_current);		
+	DISPLAY_selection("Select",FILEOPENFULLSCREEN.id_current);		
 
 	if(!DISPLAY_is_visible_file_info() || DISPLAY_is_visible_full_screen()) return;
 					

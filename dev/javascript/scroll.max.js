@@ -188,8 +188,8 @@ window.SCROLL_set_position = function set_position()
 {
 	let section_active=GRID_Get_SectionActive();
 	
-	if(SCROLL[section_active]==undefined) return;
-	
+	if(SCROLL[section_active]==undefined || SCROLL[section_active].loaded==false)  return;
+
 	let element = $('main section.' + section_active + ' div.fullrow').first().next();	
 	
 	if (element.length === 0) return false;

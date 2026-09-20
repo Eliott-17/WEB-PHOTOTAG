@@ -1,9 +1,3 @@
-$(document).ready(function()
-{ 
-	DISPLAY_view=0;
-	DISPLAY_view_mem=0;
-});
-
 //****************************************************************
 //Gère la vue générale *******************************************
 //****************************************************************	
@@ -23,7 +17,7 @@ var DISPLAY_set_view = function view_refresh(newview)
 		
 			DISPLAY_file_info(false);
 			FILEMULTISELECTION_unselectall();
-			DISPLAY_selection();
+			DISPLAY_selection("DISPLAY_set_view");
 			DISPLAY_filters(true);	
 			
 		break;
@@ -31,7 +25,7 @@ var DISPLAY_set_view = function view_refresh(newview)
 		
 			DISPLAY_full_screen(false);
 			DISPLAY_file_info(false);
-			DISPLAY_selection();
+			DISPLAY_selection("DISPLAY_set_view");
 			DISPLAY_menu(null,false);//fermer tous les menus affichés
 		
 		break;
@@ -72,15 +66,13 @@ var DISPLAY_set_view = function view_refresh(newview)
 
 var DISPLAY_section = function section(section)
 {
-	DEBUG.log("DISPLAY","swicth from",GRID_Get_SectionActive(),"to",section);
+	let old = GRID_Get_SectionActive();
 	
 	GRID_Release_Scroll();
 	GRID.section_active=section;
 	
 	let = section_active=GRID_Get_SectionActive();
 
-	DEBUG.log("DISPLAY","updated",section_active);
-	
 	localStorage.setItem(APP.userhash+'_last_page', section_active);
 	
 	$('div#mainmenu div button').removeClass("selected");
@@ -95,11 +87,13 @@ var DISPLAY_section = function section(section)
 	
 	if(section_active=="search")	
 	{
+		$('nav#magicscrollbar').addClass("hidden");
 		$('div#mainmenu').addClass('hidden');
 		$('div#searchmenu').removeClass('hidden');
 	}
 	else 							
 	{
+		$('nav#magicscrollbar').removeClass("hidden");
 		$('div#mainmenu').removeClass('hidden');
 		$('div#searchmenu').addClass('hidden');
 	}
@@ -117,7 +111,7 @@ var DISPLAY_section = function section(section)
 	
 	$('main').scrollTop(GRID_SECTIONS[section_active].scrolls_mem); 
 		
-	DEBUG.log("DISPLAY","section",'section.'+section_active,GRID_SECTIONS[section_active].scrolls_mem);
+	DEBUG.log("DISPLAY","switch",old,"to",section);
 }
 
 //****************************************************************
@@ -292,7 +286,7 @@ var DISPLAY_fileinfo_init = function fileinfo_init(multiselectionreset=true)
 //Gère l'affichage lors de la sélection des photos ***************
 //****************************************************************	
 
-var DISPLAY_selection = function selection(current_id=null)
+var DISPLAY_selection = function selection(from, current_id=null)
 {
 	let = section_active=GRID_Get_SectionActive();
 	let media_id=null;
@@ -359,7 +353,7 @@ var DISPLAY_selection = function selection(current_id=null)
 		DISPLAY_menu($('#select-status'), true);
 	}
 
-	DEBUG.log("DISPLAY","Selection updated");	
+	DEBUG.log("DISPLAY","DISPLAY_selection from",from);	
 }
 
 //****************************************************************

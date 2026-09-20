@@ -98,14 +98,14 @@ $(document).ready(function(){
 			e.preventDefault();
 			$('main section.'+section_active+' div.element').addClass('selected');
 			$('main section.'+section_active+' div.element').removeClass('notselected');
-			DISPLAY_selection();
+			DISPLAY_selection("keydown.fullscreen");
 		}
 
 		if (e.key === "Escape") //undelect all
 		{
 			$('main div.element').removeClass('selected');
 			$('main div.element').addClass('notselected');
-			DISPLAY_selection();
+			DISPLAY_selection("keydown.fullscreen");
 		}	
 	});
 
@@ -177,7 +177,7 @@ $(document).ready(function(){
 		//Action à effectué après la sélection effective *****************
 		//****************************************************************
 
-		DISPLAY_selection();
+		DISPLAY_selection("click.gridSelect");
 		
 		if(IS_VISIBLE_menu($('div#select-trash'))) OBJ_Select_both.find('div.selected').addClass('delete');
 		
@@ -209,7 +209,7 @@ $(document).ready(function(){
 		ArrowDisplay(media_id, max); 
 		FILEOPENFULLSCREEN_Loadmedia(media_id);
 		DISPLAY_set_view("fullscreen");	//order before DISPLAY_selection is important
-		DISPLAY_selection(FILEOPENFULLSCREEN.id_current);
+		DISPLAY_selection("click.gridOpen",FILEOPENFULLSCREEN.id_current);
 	});	
 	
 	//*******************************************************************
@@ -408,7 +408,7 @@ function GRID_remove_switched_element()
 		}
 		
 		GRID_load_id();
-		DISPLAY_selection();
+		DISPLAY_selection("GRID_remove_switched_element");
 	}
 	
 	DEBUG.log("GRID","GRID_remove_switched_element");
@@ -613,22 +613,20 @@ window.GRID_CallBack_load = function(data_array)
 		{
 			GRID_OFFSETS[section_active].addedBOTTOM+=j;
 			$("main section.date."+section_active).append(OBJ_Dest_date);
-			DISPLAY_selection();
+			DISPLAY_selection("GRID_CallBack_load");
 			GRID_delete(true);
 		}
 		else 										
 		{
 			GRID_OFFSETS[section_active].addedTOP+=j;
 			$("main section.date."+section_active).prepend(OBJ_Dest_date);
-			DISPLAY_selection();
+			DISPLAY_selection("GRID_CallBack_load");
 			GRID_delete(false);
 		}
 
 		DEBUG.log("GRID", "Write",data_array.count.total,"elements into",section_active);
 
 		GRID_load_id();
-
-		DISPLAY_selection();	
 
 		if(GRID.lock.element_locked==true && GRID.lock.ux_user_request==false) 
 		{
