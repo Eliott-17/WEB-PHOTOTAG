@@ -525,7 +525,7 @@ function GRID_load(from)
 			break;
 			case "search":
 			
-				$("#filters").attr('action','/actions/file-search-list.php?sectionactive='+section_active+'&offset='+GRID_SECTIONS[section_active].offset+'&tagslist='+GRID_SECTIONS[section_active].taglist);
+				$("#filters").attr('action','/actions/file-search-list.php?sectionactive='+section_active+'&elements='+GRID_SECTIONS[section_active].elements+'&offset='+GRID_SECTIONS[section_active].offset+'&tagslist='+GRID_SECTIONS[section_active].taglist);
 
 				GRID_SECTIONS[section_active].taglist=0; //par défaut à 0;
 				

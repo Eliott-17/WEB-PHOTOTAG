@@ -17,7 +17,7 @@
 	if(!$validation->isValidated())
 	{
 		$fReturn->addCallback("NAV_CallBack_error","Data request error");
-		if(ENV=="DEV" && PHPDEBUG=="DEV") $fReturn->addConsole($validation->Message());	
+		if(ENV=="DEV" && PHPDEBUG>=PHPDEBUGLVL_WARN) $fReturn->addConsole($validation->Message());	
 		$fReturn->fetch();
 	}
 	
@@ -35,7 +35,7 @@
 		if($result['status']!==true)
 		{
 			$fReturn->addCallback("NAV_CallBack_error","Fatal error while selecting from database");
-			if(ENV=="DEV" && PHPDEBUG=="DEV") $fReturn->addFailMessage('Internal error')->addConsole(print_r($result,true));	
+			if(ENV=="DEV" && PHPDEBUG>=PHPDEBUGLVL_ERR) $fReturn->addFailMessage('Internal error')->addConsole(print_r($result,true));	
 			$fReturn->fetch();
 		}
 
@@ -151,13 +151,13 @@
 		$bigarray['total_size']=$total_size;			
 		$bigarray['filedata']=$filedata;
 		
-		$fReturn->addConsole("[PHP EXECUTED] file-selection-load-tags.php");			
+		if(ENV=="DEV" && PHPDEBUG>=PHPDEBUGLVL_INFO) $fReturn->addConsole("[PHP EXECUTED] file-selection-load-tags.php");			
 		$fReturn->addCallBack("FILEMULTISELECTION_CallBack_display", $bigarray)->fetch();		
 	}
 	else
 	{
 		$fReturn->addCallback("NAV_CallBack_error","Data request error");
-		if(ENV=="DEV" && PHPDEBUG=="DEV") $fReturn->addConsole($_POST['filesid']);	
+		if(ENV=="DEV" && PHPDEBUG>=PHPDEBUGLVL_ERR) $fReturn->addConsole($_POST['filesid']);	
 		$fReturn->fetch();
 	}
 ?>

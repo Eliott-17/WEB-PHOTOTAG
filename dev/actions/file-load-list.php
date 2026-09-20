@@ -23,7 +23,7 @@
 	if(!$validation->isValidated())
 	{
 		$fReturn->addCallback("NAV_CallBack_error","Data request error");
-		if(ENV=="DEV" && PHPDEBUG=="DEV") $fReturn->addConsole($validation->Message());	
+		if(ENV=="DEV" && PHPDEBUG>=PHPDEBUGLVL_WARN) $fReturn->addConsole($validation->Message());	
 		$fReturn->fetch();
 	}
 	
@@ -43,7 +43,7 @@
 	else
 	{
 		$fReturn->addCallback("NAV_CallBack_error","Fatal error while selecting sectionactive");
-		if(ENV=="DEV" && PHPDEBUG=="DEV") $fReturn->addFailMessage('Internal error')->addConsole($_GET['sectionactive']);
+		if(ENV=="DEV" && PHPDEBUG>=PHPDEBUGLVL_ERR) $fReturn->addConsole($_GET['sectionactive']);
 		$fReturn->fetch();		
 	}
 	
@@ -84,7 +84,7 @@
 	else
 	{
 		$fReturn->addCallback("NAV_CallBack_error","Fatal error while selecting from database");
-		if(ENV=="DEV" && PHPDEBUG=="DEV") $fReturn->addFailMessage('Internal error')->addConsole(print_r($array,true));
+		if(ENV=="DEV" && PHPDEBUG>=PHPDEBUGLVL_ERR) $fReturn->addConsole(print_r($array,true));
 		$fReturn->fetch();
 	}
 	
@@ -100,7 +100,7 @@
 			
 			if($_GET['scrolldatalenght']==0)
 			{
-				if(ENV=="DEV" && PHPDEBUG=="DEV") $fReturn->addConsole("Require update grid disposition");
+				if(ENV=="DEV" && PHPDEBUG>=PHPDEBUGLVL_INFO) $fReturn->addConsole("Require update grid disposition");
 				
 				//$EasyPDO->setDebug();
 				
@@ -126,13 +126,12 @@
 				if($virtual_grid['status']===true) 
 				{
 					$fReturn->addCallBack("SCROLL_CallBack_load", $virtual_grid['datas']);
-					//if(ENV=="DEV" && PHPDEBUG=="DEV") $fReturn->addConsole(print_r($virtual_grid,true));
 
 				}
 				else
 				{
 					$fReturn->addCallback("NAV_CallBack_error","Fatal error while selecting grid from database");
-					if(ENV=="DEV" && PHPDEBUG=="DEV") $fReturn->addFailMessage('Internal error')->addConsole(print_r($virtual_grid,true));
+					if(ENV=="DEV" && PHPDEBUG>=PHPDEBUGLVL_ERR) $fReturn->addConsole(print_r($virtual_grid,true));
 					$fReturn->fetch();
 				}
 			}
@@ -140,14 +139,14 @@
 		else
 		{
 			$fReturn->addCallback("NAV_CallBack_error","Fatal error while selecting from database");
-			if(ENV=="DEV" && PHPDEBUG=="DEV") $fReturn->addFailMessage('Internal error')->addConsole(print_r($array_cnt,true));
+			if(ENV=="DEV" && PHPDEBUG>=PHPDEBUGLVL_ERR) $fReturn->addConsole(print_r($array_cnt,true));
 			$fReturn->fetch();
 		}
 	//}
 	
 	$bigarray['sectionactive']=$_GET['sectionactive'];
 	
-	if(ENV=="DEV" && PHPDEBUG=="DEV") $fReturn->addConsole("[PHP EXECUTED] file-load-list.php");
+	if(ENV=="DEV" && PHPDEBUG>=PHPDEBUGLVL_INFO) $fReturn->addConsole("[PHP EXECUTED] file-load-list.php");
 	$fReturn->addCallBack("GRID_CallBack_load", $bigarray)->fetch();
 
 ?>

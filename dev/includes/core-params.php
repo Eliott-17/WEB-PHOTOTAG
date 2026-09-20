@@ -19,7 +19,11 @@ if(stristr($_SERVER['DOCUMENT_ROOT'], 'wamp64')) //sur wamp la bdd doit être lo
 	if(!defined("ERR")) define("ERR","On");
 }
 
-define("GRID_ELEMENTS",20);
-define("PHPDEBUG",false);
+define("PHPDEBUGLVL_INFO",3);
+define("PHPDEBUGLVL_WARN",2);
+define("PHPDEBUGLVL_ERR",1);
+define("PHPDEBUGLVL_OFF",0);
+
+define("PHPDEBUG",PHPDEBUGLVL_WARN);
 
 ?>

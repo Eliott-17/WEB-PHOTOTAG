@@ -69,7 +69,7 @@
 	else
 	{
 		$fReturn->addCallback("NAV_CallBack_error","Fatal error while selecting from database");
-		if(ENV=="DEV" && PHPDEBUG=="DEV") $fReturn->addFailMessage('Internal error')->addConsole(print_r($array_lib,true));
+		if(ENV=="DEV" && PHPDEBUG>=PHPDEBUGLVL_ERR) $fReturn->addConsole(print_r($array_lib,true));
 		$fReturn->fetch();
 	}
 		
@@ -82,11 +82,11 @@
 	else
 	{
 		$fReturn->addCallback("NAV_CallBack_error","Fatal error while selecting from database");
-		if(ENV=="DEV" && PHPDEBUG=="DEV") $fReturn->addFailMessage('Internal error')->addConsole(print_r($array_lib,true));
+		if(ENV=="DEV" && PHPDEBUG>=PHPDEBUGLVL_ERR) $fReturn->addConsole(print_r($array_lib,true));
 		$fReturn->fetch();
 	}
 			
-	if(ENV=="DEV" && PHPDEBUG=="DEV") $fReturn->addConsole("[PHP EXECUTED] file-load-explore.php");
+	if(ENV=="DEV" && PHPDEBUG>=PHPDEBUGLVL_INFO) $fReturn->addConsole("[PHP EXECUTED] file-load-explore.php");
 	$fReturn->addCallBack("EXPLORE_CallBack_load", $bigarray)->fetch();
 
 ?>

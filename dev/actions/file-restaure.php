@@ -24,7 +24,7 @@
 	if(!$validation->isValidated())
 	{
 		$fReturn->addCallback("NAV_CallBack_error","Data request error");
-		if(ENV=="DEV" && PHPDEBUG=="DEV") $fReturn->addConsole($validation->Message());	
+		if(ENV=="DEV" && PHPDEBUG>=PHPDEBUGLVL_WARN) $fReturn->addConsole($validation->Message());	
 		$fReturn->fetch();
 	}
 	
@@ -55,7 +55,7 @@
 		if($after == null)
 		{
 			$fReturn->addCallback("NAV_CallBack_error","Inconsistent file name");
-			if(ENV=="DEV" && PHPDEBUG=="DEV") $fReturn->addFailMessage('Internal error')->addConsole($filename);
+			if(ENV=="DEV" && PHPDEBUG>=PHPDEBUGLVL_ERR) $fReturn->addConsole($filename);
 			$fReturn->fetch();
 		}
 		else
@@ -74,8 +74,8 @@
 				if(!rename($filenametestHDtrash, $filenametestHD)) 
 				{		
 					$fReturn->addCallback("NAV_CallBack_error","Fatal error while moving HD file");
-					if(ENV=="DEV" && PHPDEBUG=="DEV") $fReturn->addFailMessage('Internal error')->addConsole($filenametestHDtrash);
-					if(ENV=="DEV" && PHPDEBUG=="DEV") $fReturn->addFailMessage('Internal error')->addConsole($filenametestHD);
+					if(ENV=="DEV" && PHPDEBUG>=PHPDEBUGLVL_ERR) $fReturn->addConsole($filenametestHDtrash);
+					if(ENV=="DEV" && PHPDEBUG>=PHPDEBUGLVL_ERR) $fReturn->addConsole($filenametestHD);
 					$fReturn->fetch();
 				}
 			}
@@ -84,8 +84,8 @@
 				if(!rename($filenametestSDtrash, $filenametestSD)) 
 				{
 					$fReturn->addCallback("NAV_CallBack_error","Fatal error while moving SD file");
-					if(ENV=="DEV" && PHPDEBUG=="DEV") $fReturn->addFailMessage('Internal error')->addConsole($filenametestSDtrash);
-					if(ENV=="DEV" && PHPDEBUG=="DEV") $fReturn->addFailMessage('Internal error')->addConsole($filenametestSD);
+					if(ENV=="DEV" && PHPDEBUG>=PHPDEBUGLVL_ERR) $fReturn->addConsole($filenametestSDtrash);
+					if(ENV=="DEV" && PHPDEBUG>=PHPDEBUGLVL_ERR) $fReturn->addConsole($filenametestSD);
 					$fReturn->fetch();
 				}
 			}
@@ -108,7 +108,7 @@
 			else
 			{
 				$fReturn->addCallback("NAV_CallBack_error","Fatal error while updating to database");
-				if(ENV=="DEV" && PHPDEBUG=="DEV") $fReturn->addFailMessage('Internal error')->addConsole(print_r($return,true));
+				if(ENV=="DEV" && PHPDEBUG>=PHPDEBUGLVL_ERR) $fReturn->addConsole(print_r($return,true));
 				$fReturn->fetch();
 			}
 		}
@@ -116,7 +116,7 @@
 	else
 	{
 		$fReturn->addCallback("NAV_CallBack_error","Fatal error while selecting from database");
-		if(ENV=="DEV" && PHPDEBUG=="DEV") $fReturn->addFailMessage('Internal error')->addConsole(print_r($return,true));
+		if(ENV=="DEV" && PHPDEBUG>=PHPDEBUGLVL_ERR) $fReturn->addConsole(print_r($return,true));
 		$fReturn->fetch();
 	}	
 ?>	

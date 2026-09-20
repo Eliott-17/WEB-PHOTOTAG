@@ -14,6 +14,7 @@
 
 	$validation->addVerification('token',				'sha256',			'Token'								);	
 	$validation->addVerification('offset',				'int',				'Offset'							);	
+	$validation->addVerification('elements',			'int',				'Elements'							);	
 	$validation->addVerification('tag',					'string',			'Tag',					4,100		);
 	$validation->addVerification('value',				'string',			'Value',				0,100		);
 	$validation->addVerification('tagslist',			'int_interval',		'Taglist incorrect',  	0,2			);	
@@ -24,7 +25,7 @@
 	if(!$validation->isValidated())
 	{
 		$fReturn->addCallback("NAV_CallBack_error","Data request error");
-		if(ENV=="DEV" && PHPDEBUG=="DEV") $fReturn->addConsole($validation->Message());	
+		if(ENV=="DEV" && PHPDEBUG>=PHPDEBUGLVL_WARN) $fReturn->addConsole($validation->Message());	
 		$fReturn->fetch();
 	}
 	
@@ -42,7 +43,7 @@
 			$key = array_search($_POST['value'], $DATAS_country);
 
 			if ($key === false) {
-				$fReturn->addConsole("[PHP] Country value ".$_POST['value']." invalid");
+				if(ENV=="DEV" && PHPDEBUG>=PHPDEBUGLVL_WARN) $fReturn->addConsole("[PHP] Country value ".$_POST['value']." invalid");
 				break;
 			}
 			else
@@ -76,13 +77,14 @@
 			$finalquery='file_status = 2 ORDER BY time_taken_at_date DESC, time_taken_at_zone DESC, time_taken_at_time DESC';
 
 			$EasyPDO->addConditionalData('offset',$_GET['offset']);
-
-			$result_data=$EasyPDO->select('photos', $finalquery." LIMIT ".GRID_ELEMENTS." OFFSET:offset");
+			$EasyPDO->addConditionalData('elements',$_GET['elements']);
+			
+			$result_data=$EasyPDO->select('photos', $finalquery." LIMIT:elements OFFSET:offset");
 
 			if($result_data['status']!==true) 
 			{
 				$fReturn->addCallback("NAV_CallBack_error","Fatal error while selecting from database");
-				if(ENV=="DEV" && PHPDEBUG=="DEV") $fReturn->addFailMessage('Internal error')->addConsole(print_r($result_data,true));	
+				if(ENV=="DEV" && PHPDEBUG>=PHPDEBUGLVL_ERR) $fReturn->addConsole(print_r($result_data,true));	
 			}
 			else
 			{
@@ -98,9 +100,8 @@
 					$bigarray['count']="UNK";
 				}
 				
-				$fReturn->addConsole(print_r($result_data['datas'],true));
-				$return = $result_data['datas'];		
-				//$fReturn->addCallBack("GRID_CallBack_load", array("datas"=>$return,'count'=>$bigarray['count']));				
+				if(ENV=="DEV" && PHPDEBUG>=PHPDEBUGLVL_INFO) $fReturn->addConsole(print_r($result_data['datas'],true));
+				$return = $result_data['datas'];					
 				$fReturn->addCallBack("GRID_CallBack_load", array("datas"=>$return,'count'=>$bigarray['count'],'sectionactive'=>$_GET['sectionactive']));
 				$fReturn->addCallBack("FILTERS_CallBack_trash",$bigarray['count']);
 			}
@@ -109,7 +110,7 @@
 
 		break;
 		default: 
-			$fReturn->addConsole("[PHP] Tag ".$_POST['tag']." invalid")->fetch();		
+			if(ENV=="DEV" && PHPDEBUG>=PHPDEBUGLVL_INFO) $fReturn->addConsole("[PHP] Tag ".$_POST['tag']." invalid")->fetch();		
 		break;
 	}
 
@@ -201,7 +202,7 @@
 		
 		if($result_tags['status']!==true)
 		{
-			if(ENV=="DEV" && PHPDEBUG=="DEV") $fReturn->addConsole(print_r($result_tags,true));
+			if(ENV=="DEV" && PHPDEBUG>=PHPDEBUGLVL_INFO) $fReturn->addConsole(print_r($result_tags,true));
 			$fReturn->addConsole("[PHP] SQL error while loading tags")->fetch();	
 		}
 	}
@@ -219,7 +220,7 @@
 	if($result_count['status']!==true)
 	{
 		$fReturn->addCallback("NAV_CallBack_error","Fatal error while selecting from database");
-		if(ENV=="DEV" && PHPDEBUG=="DEV") $fReturn->addFailMessage('Internal error')->addConsole(print_r($result_count,true));	
+		if(ENV=="DEV" && PHPDEBUG>=PHPDEBUGLVL_ERR) $fReturn->addConsole(print_r($result_count,true));	
 		$fReturn->fetch();
 	}
 	
@@ -240,13 +241,14 @@
 		$EasyPDO->addFields('id');
 		
 		$EasyPDO->addConditionalData('offset',$_GET['offset']);
+		$EasyPDO->addConditionalData('elements',$_GET['elements']);
 
-		$result_data=$EasyPDO->select('photos', $finalquery." LIMIT ".GRID_ELEMENTS." OFFSET:offset");
+		$result_data=$EasyPDO->select('photos', $finalquery." LIMIT:elements OFFSET:offset");
 	
 		if($result_data['status']!==true) 
 		{
 			$fReturn->addCallback("NAV_CallBack_error","Fatal error while selecting from database");
-			if(ENV=="DEV" && PHPDEBUG=="DEV") $fReturn->addFailMessage('Internal error')->addConsole(print_r($result_data,true));	
+			if(ENV=="DEV" && PHPDEBUG>=PHPDEBUGLVL_ERR) $fReturn->addConsole(print_r($result_data,true));	
 			$fReturn->fetch();
 		}
 	}
@@ -278,7 +280,7 @@
 			else
 			{
 				$fReturn->addCallback("NAV_CallBack_error","Fatal error while selecting from database");
-				if(ENV=="DEV" && PHPDEBUG=="DEV") $fReturn->addFailMessage('Internal error')->addConsole(print_r($result_adv,true));	
+				if(ENV=="DEV" && PHPDEBUG>=PHPDEBUGLVL_ERR) $fReturn->addConsole(print_r($result_adv,true));	
 				$fReturn->fetch();
 			}
 		}
@@ -354,6 +356,6 @@
 	}
 
 	$fReturn->addCallBack("GRID_CallBack_load", array("datas"=>$result_data['datas'],'count'=>$result_count['datas'][0],'sectionactive'=>$_GET['sectionactive']));
-	$fReturn->addConsole("[PHP EXECUTED] file-search-list.php");
+	if(ENV=="DEV" && PHPDEBUG>=PHPDEBUGLVL_INFO) $fReturn->addConsole("[PHP EXECUTED] file-search-list.php");
 	$fReturn->fetch();	
 ?>
