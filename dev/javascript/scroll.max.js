@@ -194,7 +194,7 @@ window.SCROLL_set_position = function set_position()
 	
 	if (element.length === 0) return false;
 
-	let a = ($('nav#magicscrollbar').height()) / (SCROLL[section_active].total_height-$('main').height());
+	let a = ($('nav#magicscrollbar').height()) / (SCROLL[section_active].total_height-$('main').height()+5);
 	let height = Math.round(Math.abs((element.position().top-get_ux_offset(section_active))) * a);
 	
 	if(element.attr('id')==section_active+"_0") $('nav#magicscrollbar ul li.cursor').css('top',height-10+'px');
