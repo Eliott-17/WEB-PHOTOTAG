@@ -373,7 +373,7 @@
 		$ffprobe = 'C:\\ffmpeg\\bin\\ffprobe.exe';
 		
 		$cmd = sprintf(
-			'"%s" -y -ss 1 -i %s -frames:v 1 -vf scale=320:-1 -c:v libwebp -quality 70 %s 2>&1',
+			'"%s" -y -ss 1 -i %s -frames:v 1 -vf scale=-1:225 -c:v libwebp -quality 90 %s 2>&1',
 			$ffmpeg,
 			escapeshellarg($input),
 			escapeshellarg($output)
@@ -410,10 +410,76 @@
 
 		return $response;
 	}
+
+	function generateImageThumbnail($source_path, $dest_path)
+	{
+		$target_height = 225;
+		$quality = 90;
+
+		$info = getimagesize($source_path);
+		if(!$info) return false;
+
+		[$width, $height, $type] = $info;
+
+		switch($type)
+		{
+			case IMAGETYPE_JPEG: $image = imagecreatefromjpeg($source_path); break;
+			case IMAGETYPE_PNG:  $image = imagecreatefrompng($source_path);  break;
+			case IMAGETYPE_WEBP: $image = imagecreatefromwebp($source_path); break;
+			case IMAGETYPE_GIF:  $image = imagecreatefromgif($source_path);  break;
+			default: return false;
+		}
+
+		// correction de l'orientation EXIF (uniquement pertinent pour les JPEG)
+		if($type == IMAGETYPE_JPEG && function_exists('exif_read_data'))
+		{
+			$exif = @exif_read_data($source_path);
+			
+			if(!empty($exif['Orientation']))
+			{
+				switch($exif['Orientation'])
+				{
+					case 3: $image = imagerotate($image, 180, 0); break;
+					case 6: $image = imagerotate($image, -90, 0); break;
+					case 8: $image = imagerotate($image, 90, 0); break;
+				}
+
+				// si rotation de 90/270°, largeur et hauteur sont inversées
+				if(in_array($exif['Orientation'], [6, 8]))
+				{
+					[$width, $height] = [$height, $width];
+				}
+			}
+		}
+
+		$ratio = $target_height / $height;
+		$target_width = (int) round($width * $ratio);
+
+		$resized = imagecreatetruecolor($target_width, $target_height);
+
+		imagealphablending($resized, false);
+		imagesavealpha($resized, true);
+		$transparent = imagecolorallocatealpha($resized, 0, 0, 0, 127);
+		imagefilledrectangle($resized, 0, 0, $target_width, $target_height, $transparent);
+
+		imagecopyresampled($resized, $image, 0, 0, 0, 0, $target_width, $target_height, $width, $height);
+
+		$result = imagewebp($resized, $dest_path, $quality);
+
+		imagedestroy($image);
+		imagedestroy($resized);
+
+		return $result;
+
+	}
+	
+	if (PHP_SAPI !== 'cli') {
 		
-	define("DIR_USER", $_SERVER['DOCUMENT_ROOT'].'/multimedia/'.$_SESSION["USER"].'/');
-	define("DIR_TRASH",DIR_USER.'trash/');
-	define("DIR_HD",DIR_USER.'hd/');
-	define("DIR_SD",DIR_USER.'sd/');	
+		define("DIR_USER", $_SERVER['DOCUMENT_ROOT'].'/multimedia/'.$_SESSION["USER"].'/');
+		define("DIR_TRASH",DIR_USER.'trash/');
+		define("DIR_HD",DIR_USER.'hd/');
+		define("DIR_SD",DIR_USER.'sd/');
+
+	}	
 	
 ?>

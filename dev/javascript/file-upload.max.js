@@ -609,8 +609,11 @@ function generateThumbnail(file, ThumbnailFileType)
             {
                 try
                 {
-                    const width = Math.max(1, Math.round(img.width / 4));
-                    const height = Math.max(1, Math.round(img.height / 4));
+					const height = 225;
+					const width = Math.max(1, Math.round((height * img.width) / img.height));
+					
+                    //const width = Math.max(1, Math.round(img.width / 4));
+                    //const height = Math.max(1, Math.round(img.height / 4));
 
                     canvas.width = width;
                     canvas.height = height;
@@ -631,7 +634,7 @@ function generateThumbnail(file, ThumbnailFileType)
                             orientation: orientation(img.width, img.height)
                         });
 
-                    }, "image/webp", 0.3);
+                    }, "image/webp", 0.9);
 
                 }
                 catch(e)
@@ -667,7 +670,7 @@ function generateThumbnail(file, ThumbnailFileType)
                     const convertedBlob = await heic2any({
                         blob: file,
                         toType: "image/jpeg",
-                        quality: 0.8
+                        quality: 0.9
                     });
 
 
@@ -791,9 +794,14 @@ function generateThumbnail(file, ThumbnailFileType)
                 }
 
 
-                canvas.width = 320;
+                /*canvas.width = 320;
                 canvas.height = Math.round(
                     (video.videoHeight / video.videoWidth) * 320
+                );*/
+
+                canvas.height = 225;
+                canvas.width = Math.round(
+                    (video.videoWidth / video.videoHeight) * 225
                 );
 
 
@@ -804,7 +812,6 @@ function generateThumbnail(file, ThumbnailFileType)
             video.onseeked = function()
             {
                 DEBUG.log("UPLOAD", file.name, "Video seeked");
-
 
                 try
                 {
@@ -828,7 +835,6 @@ function generateThumbnail(file, ThumbnailFileType)
 
                         URL.revokeObjectURL(videoURL);
 
-
                         success({
                             file: file,
                             preview: blob,
@@ -839,7 +845,7 @@ function generateThumbnail(file, ThumbnailFileType)
                         });
 
 
-                    }, "image/webp", 0.3);
+                    }, "image/webp", 0.9);
 
                 }
                 catch(e)

@@ -204,7 +204,7 @@ window.SCROLL_set_position = function set_position()
 	{
 		let height = fn_height(element.position().top-get_ux_offset(section_active));
 		$('nav#magicscrollbar ul li.cursor').css('top',(height-10)+'px');
-		DEBUG.log("SCROLLBAR",height);		
+		//DEBUG.log("SCROLLBAR",height);		
 	}
 }
 
