@@ -359,6 +359,7 @@ function uploadMedia(files, token) {
 			bar.css('width', '100%');
             bar.html('100%');
         }
+		heicalert=false;
 		lock=false;
         GRID_reset("Upload","UPLOAD"); // Recharge la liste des fichiers
     });

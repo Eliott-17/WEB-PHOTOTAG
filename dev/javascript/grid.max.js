@@ -387,11 +387,11 @@ function GRID_remove_switched_element()
 		let removelementcnt=0;
 		
 		$('main section.'+section_active+' div.element.'+removelement+' div.media-container').each(function(){
-			
-			GRID_DATAS[section_active].selection = GRID_DATAS[section_active].selection.filter(h => h !== $(this).attr('data-id'));
-			
-			console.log($(this).attr('data-id'));
-			
+		
+			let media_id=parseInt($(this).attr('data-id'));
+
+			GRID_DATAS[section_active].selection = GRID_DATAS[section_active].selection.filter(h => h !== media_id);
+						
 			$(this).parent().remove();
 			removelementcnt++;
 

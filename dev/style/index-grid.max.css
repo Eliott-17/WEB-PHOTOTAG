@@ -262,7 +262,7 @@ main section.grid div.selected.delete, main section#fullscreen.delete
 	border-color: #e04848
 }	
 
-main section.untagged div.is_tagged img, main section.library div.is_not_tagged img
+main section.untagged div.is_tagged img, main section.library div.is_not_tagged img, main section.untagged div.is_tagged video, main section.library div.is_not_tagged video
 {
 	opacity: 0.5
 }

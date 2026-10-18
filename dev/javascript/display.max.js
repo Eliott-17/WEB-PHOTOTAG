@@ -217,12 +217,7 @@ var IS_VISIBLE_menu = function is_visible_menu(object)
 //****************************************************************	
 
 var DISPLAY_menu = function display_menu(object=undefined, visibility=undefined)
-{
-	if(Object==null)
-	{
-		object=$('nav#status div');
-	}
-	
+{	
 	if(visibility==true && object!=undefined)
 	{
 		object.removeClass("ux-hidden-zindex");	

@@ -32,13 +32,15 @@
 	if($_GET['sectionactive']=="library") // tagged request
 	{		
 		$conditionaldata=tag_query();
-		$sort="DESC";
+		$sort_date="DESC";
+		$sort_time="ASC";
 	}
 	else if($_GET['sectionactive']=="untagged") // tagged request
 		//non tagged request
 	{			
 		$conditionaldata=untag_query();
-		$sort="DESC";
+		$sort_date="DESC";
+		$sort_time="ASC";
 	}
 	else
 	{
@@ -71,9 +73,9 @@
 			'.$conditionaldata.'
 			THEN 0
 			ELSE 1
-		END ASC, time_taken_at_date '.$sort.',
-				 time_taken_at_zone '.$sort.',
-				 time_taken_at_time '.$sort.'
+		END ASC, time_taken_at_date '.$sort_date.',
+				 time_taken_at_zone '.$sort_time.',
+				 time_taken_at_time '.$sort_time.'
 		LIMIT :elements OFFSET:offset
 	');
 	
@@ -116,9 +118,9 @@
 						'.$conditionaldata.'
 						THEN 0
 						ELSE 1
-					END ASC, time_taken_at_date '.$sort.',
-							 time_taken_at_zone '.$sort.',
-							 time_taken_at_time '.$sort.'
+					END ASC, time_taken_at_date '.$sort_date.',
+							 time_taken_at_zone '.$sort_time.',
+							 time_taken_at_time '.$sort_time.'
 				');
 							
 				//$virtual_grid=$EasyPDO->select('photos','file_status = 0 AND'.$conditionaldata.' GROUP BY time_taken_at_date');	

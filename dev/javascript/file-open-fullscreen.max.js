@@ -104,12 +104,14 @@ function Select() //FULLSCREEN
 	FILEMULTISELECTION_CallBack_load(); //mettre à jour la sélection si on affiche le multifile sans full screen
 }
 
-var FILEOPENFULLSCREEN_FlushHashes= function FlushHashes()
+var FILEOPENFULLSCREEN_FlushHashes = function FlushHashes()
 {
 	let = section_active=GRID_Get_SectionActive();
 	
 	$('input.filesid').val("[]");
 	GRID_DATAS[section_active].selection=[];
+	
+	DEBUG.log("FILEOPENFULLSCREEN_FlushHashes",section_active,GRID_DATAS[section_active].selection);
 }
 
 function ArrowDisplay(current_id, max_id)

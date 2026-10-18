@@ -180,12 +180,12 @@ var FILTERS_checkbox_post = function checkbox_post(is_checked=null)
 
 window.FILTERS_CallBack_trash = function(data)
 {
-	let count=data.total;
+	let count=parseInt(data.total);
 	
 	$('nav#main span#filterapply').html('TRASH');	
 	$('nav#main span#search_count').html(count);
 	
-	if(count.total>0) DISPLAY_menu($('#flush-trash'), true);
+	if(count>0) DISPLAY_menu($('#flush-trash'), true);
 	
 	DEBUG.log("CALLBACK","FILTERS_CallBack_trash");
 }
