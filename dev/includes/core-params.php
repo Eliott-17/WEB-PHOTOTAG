@@ -9,7 +9,7 @@ if(!defined("POST_LIMIT_RATE"))	define("POST_LIMIT_RATE", 10);
 if(stristr($_SERVER['DOCUMENT_ROOT'], 'dev')) //environement dev par aborescente répertoire
 {
 	define("ENV", "DEV");
-	define("DIM", "max");
+	//define("DIM", "max");
 	define("ERR","On");
 }
 
@@ -19,11 +19,13 @@ if(stristr($_SERVER['DOCUMENT_ROOT'], 'wamp64')) //sur wamp la bdd doit être lo
 	if(!defined("ERR")) define("ERR","On");
 }
 
+define("DIM", "max");
+
 define("PHPDEBUGLVL_INFO",3);
 define("PHPDEBUGLVL_WARN",2);
 define("PHPDEBUGLVL_ERR",1);
 define("PHPDEBUGLVL_OFF",0);
 
-define("PHPDEBUG",PHPDEBUGLVL_WARN);
+define("PHPDEBUG",PHPDEBUGLVL_INFO);
 
 ?>

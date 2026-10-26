@@ -34,9 +34,14 @@ else
 	}
 	
 	//INITIALISATION BDD
-
-	$EasyPDOAuth = new EasyPDO('sqlite:'.$_SERVER['DOCUMENT_ROOT'].'/multimedia/users.db');
 	
+	$db = dirname($_SERVER['DOCUMENT_ROOT']).'/multimedia/users.db';
+	$mode = "";
+	
+	if(BDD=="LOC")  $mode = '?mode=ro';
+
+	$EasyPDOAuth = new EasyPDO('sqlite:file:'.$db.$mode);
+		
 	//status = 0 require a2f
 	//status = 1 OK
 	
@@ -52,6 +57,11 @@ else
 	  a2f_exp DATETIME,
 	  a2f_next DATETIME);"
 	);
+	
+	if(!is_file($db) || !is_readable($db) || !is_writable($db))
+	{
+		$fReturn->addErrorMessage("Fatal error, unable to access user database")->fetch();	
+	}
 	 
 	//VERIF SI LE USER EXISTE
 	
@@ -280,7 +290,7 @@ else
 		{
 			if(ENV=="DEV" && PHPDEBUG>=PHPDEBUGLVL_INFO) $fReturn->addConsole("Commits queue ".print_r($commits,true));
 
-			$EasyPDOUser = new EasyPDO('sqlite:'.$dbfile_migration);
+			$EasyPDOUser = new EasyPDO('sqlite:file:'.$dbfile_migration.$mode);
 			
 			$migration_errors=0;
 		
@@ -361,7 +371,7 @@ else
 		
 		if(!isset($dbfile_final)) $fReturn->addErrorMessage("Unable to access database.")->fetch();
 		
-		$_SESSION["DB"] = 'sqlite:'.$dbfile_final;
+		$_SESSION["DB"] = 'sqlite:file:'.$dbfile_final.$mode;
 	
 		create_session();
 		  	

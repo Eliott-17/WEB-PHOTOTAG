@@ -368,13 +368,10 @@
 	}
 
 	function generateVideoThumbnail($input, $output)
-	{
-		$ffmpeg = 'C:\\ffmpeg\\bin\\ffmpeg.exe';
-		$ffprobe = 'C:\\ffmpeg\\bin\\ffprobe.exe';
-		
+	{		
 		$cmd = sprintf(
 			'"%s" -y -ss 1 -i %s -frames:v 1 -vf scale=-1:225 -c:v libwebp -quality 90 %s 2>&1',
-			$ffmpeg,
+			ffmpeg,
 			escapeshellarg($input),
 			escapeshellarg($output)
 		);
@@ -393,7 +390,7 @@
 		{
 			$cmd = sprintf(
 				'"%s" -v error -select_streams v:0 -show_entries stream=width,height -of csv=s=x:p=0 %s 2>&1',
-				$ffprobe,
+				ffprobe,
 				escapeshellarg($input)
 			);
 
@@ -475,11 +472,21 @@
 	
 	if (PHP_SAPI !== 'cli') {
 		
-		define("DIR_USER", $_SERVER['DOCUMENT_ROOT'].'/multimedia/'.$_SESSION["USER"].'/');
+		define("DIR_USER", dirname($_SERVER['DOCUMENT_ROOT']).'/multimedia/'.$_SESSION["USER"].'/');
 		define("DIR_TRASH",DIR_USER.'trash/');
 		define("DIR_HD",DIR_USER.'hd/');
 		define("DIR_SD",DIR_USER.'sd/');
 
-	}	
-	
+	}
+
+	if(stristr($_SERVER['DOCUMENT_ROOT'], 'wamp64')) //sur wamp la bdd doit être locale	
+	{
+		define("ffmpeg",'C:\\ffmpeg\\bin\\ffmpeg.exe');
+		define("ffprobe",'C:\\ffmpeg\\bin\\ffprobe.exe');		
+	}
+	else		
+	{
+		define("ffmpeg",'ffmpeg');
+		define("ffprobe",'ffprobe');
+	}
 ?>

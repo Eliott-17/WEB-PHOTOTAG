@@ -39,3 +39,5 @@ multimedia
 /backup
 PXL_20231216_140553518.jpg.supplemental-metadata.json
 dev/javascript/debug.max.js
+*.ffs_db
+/verif_chat
