@@ -4,6 +4,7 @@
 
 let EXPLORE_search_tags=[];//Stoque les données chargées pour les réutilisées et éviter un appel  à la base de données
 let EXPLORE_checkbox_loaded=false;
+let EXPLORE_data=[];
 
 //****************************************************************
 //Variables locales *********************************************
@@ -38,7 +39,51 @@ $(document).ready(function(){
 		}
 	});	
 	
+	$(window).on('resize', function() {
+		EXPLORE_CallBack_load(EXPLORE_data);
+	});
+		
 });
+
+function EXPLORE_max_elements()
+{
+	const element_width = 150;
+	const border_width = 20;
+	
+	let section_width=$("section.explore").innerWidth();
+
+	let total_width = 0;
+	let total_elements = 0;
+	
+	do
+	{
+		total_width+=element_width;
+		
+		if(total_width>section_width)
+		{
+			break;
+		}
+		
+		console.log(section_width,total_width,total_elements);
+		
+		total_width+=border_width;
+		
+		if(total_width>section_width)
+		{
+			break;
+		}
+
+		console.log(section_width,total_width,total_elements);
+
+		total_elements++;
+
+	}
+	while(1);
+	
+	console.log(section_width,total_width,total_elements);
+	
+	return total_elements;
+}
 
 function EXPLORE_post_search(tag,val,exclude)
 {
@@ -119,7 +164,9 @@ window.EXPLORE_CallBack_addtags = function(tags)
 //****************************************************************	
 
 window.EXPLORE_CallBack_load = function(datas) 
-{	
+{
+	EXPLORE_data=datas;
+	
 	let html = '';
 	let htmlfull = '';
 	let htmlfilter = '';
@@ -129,21 +176,10 @@ window.EXPLORE_CallBack_load = function(datas)
 	let filtermem='';
 	let img;
 
-	const cols = Math.floor(($('main').width() + 20) / 170);
-	let max_elements;
-
-	switch(cols)
-	{
-		case 3: max_elements=8; break;
-		case 4: max_elements=7; break;
-		case 5: max_elements=9; break;
-		case 6: max_elements=6; break;
-		case 7: max_elements=7; break; 
-		case 8: max_elements=8; break;
-		default: max_elements=9; break;
-	}
+	let top_elements = EXPLORE_max_elements();
+	let max_elements = top_elements;
 	
-	let top_elements = max_elements;
+	console.log("Line elements:"+max_elements);
 
 	const array_config_tag_show = {
 		tag_country: ["Visited countries",1],
@@ -188,7 +224,7 @@ window.EXPLORE_CallBack_load = function(datas)
 				if(filtermem!=index)
 				{
 					visibility="";
-					filtercount=0;
+					filtercount=1;
 					top_elements=max_elements;
 				}
 
@@ -196,13 +232,15 @@ window.EXPLORE_CallBack_load = function(datas)
 				let name="";
 				
 				if(!date)
-				{									
+				{	
 					if(ovdata[1].length>3) img='sd-'+ovdata[1];
 					if(ovdata[1].length==3) img='images/flags/'+ovdata[1]+'.svg';
 					
+					//console.log(filtercount,top_elements);
+					
 					if(filtercount>=top_elements) 
 					{						
-						top_elements+=(max_elements+1);
+						top_elements+=(max_elements);
 						
 						filtergroup++;
 						let name=filtergroup+'_filter';						
@@ -259,5 +297,4 @@ window.EXPLORE_CallBack_load = function(datas)
 	});
 	
 	$('span#totaldisk').html(formatBytes(size_files+size_webp)+' (including '+formatBytes(size_webp)+' of thumbnail)');
-
 }
