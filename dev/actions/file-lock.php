@@ -45,7 +45,6 @@
 		if(ENV=="DEV" && PHPDEBUG>=PHPDEBUGLVL_ERR) $fReturn->addConsole(print_r($return,true));
 		$fReturn->fetch();
 	}
-
-	if(ENV=="DEV" && PHPDEBUG>=PHPDEBUGLVL_INFO) $fReturn->addCallback("FILEINFO_CallBack_lock",$ret);	
-	$fReturn->fetch();
+	
+	$fReturn->addCallback("FILEINFO_CallBack_lock",$ret)->fetch();
 ?>	

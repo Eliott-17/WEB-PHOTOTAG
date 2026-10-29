@@ -190,3 +190,8 @@ aside div.exifmargin60
 {
 	margin-left: 60px;
 }
+
+aside div.privacy_mode_loading span
+{
+	animation: rotation 2s linear infinite;
+}

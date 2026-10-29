@@ -6,16 +6,22 @@ define("ContentSecurityPolicy","default-src 'self'; script-src 'self' 'unsafe-ev
 
 if(!defined("POST_LIMIT_RATE"))	define("POST_LIMIT_RATE", 10);
 
-if(stristr($_SERVER['DOCUMENT_ROOT'], 'dev')) //environement dev par aborescente répertoire
+if(0) ///debug on prod
 {
 	define("ENV", "DEV");
-	//define("DIM", "max");
 	define("ERR","On");
+}
+
+if(stristr($_SERVER['DOCUMENT_ROOT'], 'dev')) //environement dev par aborescente répertoire
+{
+	if(!defined("ENV"))define("ENV", "DEV");
+	if(!defined("ERR")) define("ERR","On");
+	//define("DIM", "max");
 }
 
 if(stristr($_SERVER['DOCUMENT_ROOT'], 'wamp64')) //sur wamp la bdd doit être locale
 {
-	define("BDD", "LOC");	
+	if(!defined("BDD"))define("BDD", "LOC");	
 	if(!defined("ERR")) define("ERR","On");
 }
 

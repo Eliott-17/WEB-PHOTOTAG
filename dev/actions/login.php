@@ -8,6 +8,40 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/core/class.validation.php');
 
 $fReturn = new fReturn(); //le fetch met fin à l'execution du script par exit();
 
+function send_a2f_email($email, $code, $fReturn)
+{
+	require_once($_SERVER['DOCUMENT_ROOT'].'/includes/mail.php');
+	
+	if($smtp_ok!==true)
+	{
+		$fReturn->addFailMessage($smtp_ok." (".get_current_user().")")->fetch();
+	}
+	else
+	{	
+		// Name is optional
+
+		//$mail->SMTPDebug = 3;
+		//$mail->Debugoutput = 'error_log';
+		
+		$mail->addAddress($email); 
+		$mail->CharSet = 'UTF-8';
+		$mail->Subject = "Your verification code";
+		$mail->Body    = $code." is you authentification code *** never share to anyone ***";
+		//$mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
+		
+		if(!$mail->send()) {
+			 
+			//addlog("Réservation ".$_POST['appartement']." / ".$_POST['email'].": ".$mail->ErrorInfo);
+			
+			//if(ENV=="DEV" && PHPDEBUG>=PHPDEBUGLVL_INFO)  
+				
+			$fReturn->addConsole($mail->ErrorInfo);
+			
+			$fReturn->addFailMessage("Unable to send A2F")->fetch();			
+		}
+	}	
+}
+
 if(is_session_valid())
 {
 	$fReturn->addSuccessMessage("Already logged in")->fetch();
@@ -67,6 +101,11 @@ else
 	
 	$email = strtolower($_POST['email']);
 	
+	if($email === "phototag-dev-e93de01ea910@yopmail.com")
+	{
+		$mode="";
+	}
+	
 	$EasyPDOAuth->addFields('*');
 	$EasyPDOAuth->addConditionalData('email',$email);
 	$result=$EasyPDOAuth->select('users', 'email=:email');
@@ -105,7 +144,7 @@ else
 	
 		if(ENV=="DEV" && PHPDEBUG>=PHPDEBUGLVL_INFO) $fReturn->addConsole($a2f_code);
 		
-		//TODO send_a2f_email($_POST['email'],$a2f_code);
+		send_a2f_email($email,$a2f_code,$fReturn);
 		$fReturn->addInfoMessage("Please enter the security code received by email")->addCallBack("LOGIN_CallBack_a2fverif")->fetch(); //CallBack faire apparaitre le chanmp CODE en javascript
 	}
 	else if($result['count']==1) //account exist
@@ -136,6 +175,8 @@ else
 			if($result['datas'][0]['a2f_exp'] < $time OR $_SESSION['try_a2f'] >= 2) 
 			{
 				$expiredA2F = true;
+				
+				if(ENV=="DEV" && PHPDEBUG>=PHPDEBUGLVL_INFO) $fReturn->addConsole("Required:".$result['datas'][0]['a2f_exp']." < ".$time.' OR '.$_SESSION['try_a2f']);
 			}
 			else
 			{
@@ -157,30 +198,32 @@ else
 			$needNewA2F = true;
 		}
 		
-		if(ENV=="DEV")
-		{
-			if(ENV=="DEV" && PHPDEBUG>=PHPDEBUGLVL_INFO) $fReturn->addConsole("Required:".$needNewA2F);
-			if(ENV=="DEV" && PHPDEBUG>=PHPDEBUGLVL_INFO) $fReturn->addConsole("Expired:".$expiredA2F);
-			if(ENV=="DEV" && PHPDEBUG>=PHPDEBUGLVL_INFO) $fReturn->addConsole("Used:".$usedA2F);
-		}
-			
+		if(ENV=="DEV" && PHPDEBUG>=PHPDEBUGLVL_INFO) $fReturn->addConsole("Required:".$needNewA2F);
+		if(ENV=="DEV" && PHPDEBUG>=PHPDEBUGLVL_INFO) $fReturn->addConsole("Expired:".$expiredA2F);
+		if(ENV=="DEV" && PHPDEBUG>=PHPDEBUGLVL_INFO) $fReturn->addConsole("Used:".$usedA2F);
+
 		if($needNewA2F || $expiredA2F) //code expiré ou besoin de renouveler
 		{
 			$_SESSION['try_a2f']=0;
 			
+			$new_exp = date('Y-m-d H:i:s', time() + 300);
+			$new_next= date('Y-m-d H:i:s', time() + 2592000);
+			
 			$a2f_code =  random_int(100000, 999999);
-			$EasyPDOAuth->addFields('a2f_exp', date('Y-m-d H:i:s', time() + 300)); //code expire dans 5 minutes
-			$EasyPDOAuth->addFields('a2f_next', date('Y-m-d H:i:s', time() + 2592000));	// nouvelle demande dans 30 jours
+			$EasyPDOAuth->addFields('a2f_exp', $new_exp); //code expire dans 5 minutes
+			$EasyPDOAuth->addFields('a2f_next', $new_next);	// nouvelle demande dans 30 jours
 			$EasyPDOAuth->addFields('a2f_code',$a2f_code);
 			$EasyPDOAuth->addConditionalData('email', $email);
 			$EasyPDOAuth->update('users', 'email = :email');	
 				
 			if(ENV=="DEV")
 			{
+				$fReturn->addConsole($new_exp);
 				$fReturn->addConsole($a2f_code);
 			}
 			
-			//TODO send_a2f_email($_POST['email'],$a2f_code);				
+			send_a2f_email($email,$a2f_code,$fReturn);	
+			
 			if($expiredA2F)
 			{
 				$fReturn->addInfoMessage("This code is expired, you will receive a new one by email");

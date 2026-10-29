@@ -194,6 +194,7 @@ var DISPLAY_full_screen = function display_full_screen(visibility = undefined)
 		$('main section.'+section_active).removeClass('hidden');
 		$('main section#fullscreen').addClass('hidden');
 		$('nav#main').removeClass('hidden');
+		$('main section#fullscreen div.media').html('');
 
 		requestAnimationFrame(function() {
 			GRID_scroll_locked = false;

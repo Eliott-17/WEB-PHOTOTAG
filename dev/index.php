@@ -379,26 +379,32 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/datas.php');
 						<div class="return alert alert-success"></div>
 					</div>
 					<h2><span class="material-symbols-outlined cursor">shield_lock</span><span>Privacy option</span></h2>						
-					<form method="post" action="actions/file-lock.php" class="post">
+					<form method="post" action="actions/file-lock.php" class="post" data-return="blockreturnprivacy">
 						<input type="hidden" name="token" class="token" value=""/>
 						<input type="hidden" name="filesid" class="filesid" value=""/>
 						<input type="hidden" id="lock_status" name="lock_status" value=""/>
 						<h3 class="legend hidden lockconflict">Different value detected, select global option below.</h3>
-						<div class="privacy_mode_unlocked hidden">
-							<h3>The file is available for sharing feature.</h3>
-							<h4>
-								<button class="submit">
-									<span class="material-symbols-outlined">lock_open_right</span><span>Protect my file</span>
-								</button>
-							</h4>
-						</div>
-						<div class="privacy_mode_locked hidden">
-							<h3>This file is limited for sharing feature.</h3>
-							<h4>
-								<button class="security submit">
-									<span class="material-symbols-outlined">lock</span><span>My file is protected</span>
-								</button>
-							</h4>
+						<div id="blockreturnprivacy" class="blockreturn">
+							<div class="loading"><span class="material-symbols-outlined">cycle</span></div>		
+							<div class="return alert alert-success"></div>
+							<div class="hideloading">
+								<div class="privacy_mode_unlocked hidden">
+									<h3>The file is available for sharing feature.</h3>
+									<h4>
+										<button class="submit">
+											<span class="material-symbols-outlined">lock_open_right</span><span>Protect my file</span>
+										</button>
+									</h4>
+								</div>
+								<div class="privacy_mode_locked hidden">
+									<h3>This file is limited for sharing feature.</h3>
+									<h4>
+										<button class="security submit">
+											<span class="material-symbols-outlined">lock</span><span>My file is protected</span>
+										</button>
+									</h4>
+								</div>
+							</div>
 						</div>
 					</form>
 					<div class="informations">

@@ -750,8 +750,9 @@ function addElement(dir, bdd, rawdate)
 	}
 	if(bdd.file_type == 1)
 	{
-		html+= '		<video class="'+classp+'" src="hd-'+before+bdd.file_hash+'" poster="'+header+'-'+bdd.file_hash+'" controlslist="nodownload nofullscreen noremoteplayback"></video>';
-		ux = "video";
+		html+= '		<img class="'+classp+'" src="'+header+'-'+before+bdd.file_hash+'" loading="lazy">';
+		//html+= '		<video class="'+classp+'" src="hd-'+before+bdd.file_hash+'" poster="'+header+'-'+bdd.file_hash+'" controlslist="nodownload nofullscreen noremoteplayback"></video>';
+		openfull = "play_circle";
 	}
 	
 	html+= '	</div>';
