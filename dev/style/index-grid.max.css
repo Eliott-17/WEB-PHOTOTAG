@@ -92,15 +92,19 @@ aside#loading
     align-content: center;
 }
 
-aside#loading span
-{	
-    font-size: 3em;
+aside#loading span, section.explore span.loading, div#loading span
+{
 	animation: rotation 2s linear infinite;
 }
 
-div#loading span
+section.explore span.loading
 {
-	animation: rotation 2s linear infinite;
+	margin-top: 50px;
+}
+
+aside#loading span, section.explore span.loading
+{	
+    font-size: 3em;
 }
 
 main section.grid 

@@ -59,28 +59,16 @@ function EXPLORE_max_elements()
 	{
 		total_width+=element_width;
 		
-		if(total_width>section_width)
-		{
-			break;
-		}
-		
-		console.log(section_width,total_width,total_elements);
-		
+		if(total_width>section_width) break;
+
 		total_width+=border_width;
 		
-		if(total_width>section_width)
-		{
-			break;
-		}
-
-		console.log(section_width,total_width,total_elements);
+		if(total_width>section_width) break;
 
 		total_elements++;
 
 	}
 	while(1);
-	
-	console.log(section_width,total_width,total_elements);
 	
 	return total_elements;
 }
@@ -179,8 +167,6 @@ window.EXPLORE_CallBack_load = function(datas)
 	let top_elements = EXPLORE_max_elements();
 	let max_elements = top_elements;
 	
-	console.log("Line elements:"+max_elements);
-
 	const array_config_tag_show = {
 		tag_country: ["Visited countries",1],
 		tag_city: ["Visited cities",1],

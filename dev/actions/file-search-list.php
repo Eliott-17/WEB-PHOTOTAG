@@ -197,7 +197,8 @@
 		$EasyPDO->addFields('tag_comment');
 		$EasyPDO->addFields('tag_people');
 		$EasyPDO->addFields('tag_other');
-	
+		$EasyPDO->addFields('file_is_private');
+		
 		$result_tags=$EasyPDO->select('photos', $finalquery);
 		
 		if($result_tags['status']!==true)

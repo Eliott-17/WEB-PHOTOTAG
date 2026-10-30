@@ -207,6 +207,10 @@
 	function retreive_sort_tags($array_lib,$array_tags,$DATAS_country,$DATAS_months)
 	{		
 		$return="";
+		
+		//PREPARATION
+
+		$max_tags = count($array_tags)-3;
 
 		foreach ($array_lib as $index => $row) {
 			
@@ -249,20 +253,55 @@
 							if (!isset($array_tags[$key][$val])) 
 							{
 								$array_tags[$key][$val][0] = 1;
-								$array_tags[$key][$val][1] = $array_lib[$index]['file_hash'];
+								$array_tags[$key][$val][1]=[];
 							}
 							else
 							{
 								$array_tags[$key][$val][0]++;	
+							}
+							
+							if(count($array_tags[$key][$val][1])<$max_tags AND $array_lib[$index]['file_is_private']==0) 
+							{
+								array_push($array_tags[$key][$val][1],$array_lib[$index]['file_hash']);
 							}
 						}
 					}
 				}
 			}
 		}
-		
+			
 		unset($array_tags['time_taken_at_date']);
+		
+		$lp1_start=microtime(true);
 	
+		//CLEAN COVER
+
+		$used_cover=[];
+
+		foreach ($array_tags as $tag => $data_values)  //tag_city => array()
+		{
+			if($tag!='months' AND $tag!='years' AND $tag!='tag_country')
+			{
+				foreach ($data_values as $tag_value => $cover)  // Aix en Provence => array
+				{
+					$last="";
+					
+					foreach($array_tags[$tag][$tag_value][1] as $value)
+					{
+						$last = $value;
+						
+						if(!isset($used_cover[$value]))
+						{
+							$used_cover[$value]=true;
+							break;
+						}
+					}
+					
+					$array_tags[$tag][$tag_value][1] = $last;
+				}
+			}
+		}
+
 		//MONTH SORT
 		
 		if(isset($array_tags['months']))

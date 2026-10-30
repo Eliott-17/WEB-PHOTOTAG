@@ -23,6 +23,7 @@
 	$EasyPDO->addFields('time_taken_at_zone');
 	$EasyPDO->addFields('time_taken_at_time');
 	$EasyPDO->addFields('file_orientation');
+	$EasyPDO->addFields('file_is_private');
 
 	$EasyPDO->addFields('tag_country');
 	$EasyPDO->addFields('tag_city');
@@ -57,8 +58,12 @@
 	];
 	
 	if($array_lib['status']===true)
-	{		
+	{	
+		//if(ENV=="DEV") $fReturn->addConsole(print_r($array_lib['datas'],true));
+
 		$bigarray['tags']=retreive_sort_tags($array_lib['datas'],$array_tags,$DATAS_country,$DATAS_months);
+
+		//if(ENV=="DEV") $fReturn->addConsole(print_r($bigarray['tags'],true));
 		
 		unset($array_tags['time_taken_at_date']);
 		

@@ -173,7 +173,7 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/includes/datas.php');
 						</div>
 						<div class="media"></div>
 					</section>
-					<section class="explore hidden"></section>
+					<section class="explore hidden"><span class="loading material-symbols-outlined">cycle</span></section>
 					<section class="grid library date hidden"></section>
 					<div id="uploaddrag">
 						<span id="uploadmedia" class="untagged hidden">Drag & drop here to add files</span>
